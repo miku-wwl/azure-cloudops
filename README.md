@@ -1,96 +1,86 @@
-# Azure Cloud Operations & Incident Response
+# Azure Cloud Operations & Enterprise Infrastructure
 
 > **Repository:** `azure-cloudops`  
-> **Status:** Planning / Not yet validated on live Azure resources  
-> **Focus:** Azure Networking · Identity · PowerShell Automation · Azure Monitor / KQL · Incident Response · Recovery
+> **Status:** Learning roadmap / no live Azure validation recorded in this repository  
+> **Focus:** Enterprise Azure architecture · Networking · Identity & Governance · Terraform/IaC · Observability · Incident Response · Recovery
 
-## Overview
+## Purpose
 
-Azure Cloud Operations & Incident Response is a hands-on engineering portfolio focused on operating, diagnosing, securing, and recovering Azure workloads in a **controlled non-production environment**.
+This repository is an **evidence-driven Azure engineering learning plan**, not a new cloud platform product. Its purpose is to close the gap between certification-level knowledge and practical cloud infrastructure engineering: **designing, deploying, troubleshooting, securing, and recovering Azure resources** in a controlled, authorized, non-production environment.
 
-The repository documents repeatable training exercises, scripts, KQL queries, incident investigations, and verified recovery evidence. Each completed scenario follows a consistent engineering workflow:
+For each exercise, the expected loop is:
 
-**Architecture design → Deployment → Baseline verification → Controlled fault → Diagnosis → Recovery → RCA → Cleanup.**
+**Design & trade-offs → Deployment or configuration → Baseline verification → Controlled failure/change → Diagnosis → Recovery or rollback → Evidence & RCA → Cleanup.**
 
-This is not a replacement for production operations experience and does not claim that the exercises run in a real enterprise environment.
+A design document, a passing static check, and an Azure deployment are **different levels of evidence**. Do not report an exercise as validated without execution records.
 
-## Why this project exists
+## What changed in the learning scope
 
-This project complements [KPCP (kube-platform-control-plane)](https://github.com/miku-wwl/kube-platform-control-plane):
+The original focus on Azure CloudOps and incident response is retained. The roadmap additionally covers the enterprise-infrastructure competencies commonly expected in senior Cloud / Platform / Infrastructure Engineer roles:
 
-| KPCP focus | Azure CloudOps focus |
+- **Azure Landing Zone design:** management-group/subscription structure, policies, identity boundaries, connectivity and operational ownership. Start with a **reference architecture and design decisions**; do not build a full enterprise landing zone for a personal lab.
+- **Terraform engineering:** small reusable modules, version pinning, state design, isolation between environments, CI validation and review/approval of changes.
+- **Security and governance:** least-privilege Azure RBAC, managed identities, Azure Policy, private connectivity and auditable changes.
+- **Operational readiness:** actionable telemetry, KQL, incident troubleshooting, rollback/restore verification, costs and post-exercise cleanup.
+
+**Out of scope:** a second Kubernetes control plane; a cloud management UI; multi-tenant provisioning service; production-like claims; expensive always-on enterprise networking; and pursuing more certificates for their own sake.
+
+## Relationship to KPCP
+
+| KPCP | Azure CloudOps |
 |---|---|
-| Kubernetes controllers, Terraform orchestration, infrastructure lifecycle | Azure networking and connectivity diagnostics |
-| Saved-plan approvals, provisioning and reconciliation | Entra ID, RBAC, managed identity and access incidents |
-| Platform automation and local E2E | PowerShell/Azure CLI operational scripting |
-| Controller recovery and platform reliability | Azure Monitor, KQL, alerting, incident response and data restore |
+| Kubernetes controllers and platform reconciliation | Azure-specific infrastructure architecture and operations |
+| Infrastructure lifecycle orchestration | Azure networking, Entra ID / RBAC and governance |
+| Approval and workflow mechanics | Enterprise IaC practices and cloud change evidence |
+| Platform design and local integration | Azure Monitor / KQL, troubleshooting and disaster recovery |
 
-**Non-goals:** another Terraform control plane, Kubernetes management UI, custom cloud dashboard, enterprise-scale landing zone, or simulated production employment history.
+The goal is complementary hands-on evidence, **not duplicating KPCP's product scope**.
 
 ## Learning tracks
 
-| Track | Scope | Suggested official source | Status |
-|---|---|---|---|
-| AZ-305 design | Network / identity / governance / logging architecture decisions | [Microsoft AZ-305 case studies](https://microsoftlearning.github.io/AZ-305-DesigningMicrosoftAzureInfrastructureSolutions/) | Planned |
-| Azure networking | VNet, Peering, NSG, routing, Private DNS/Endpoints | [AZ-700 exercises](https://microsoftlearning.github.io/AZ-700-Designing-and-Implementing-Microsoft-Azure-Networking-Solutions/) | Planned |
-| Identity / governance | Entra ID, RBAC, managed identity, Azure Policy | [AZ-104 labs](https://microsoftlearning.github.io/AZ-104-MicrosoftAzureAdministrator/) | Planned |
-| Observability | Log Analytics, KQL, Monitor, actionable alerts | [Log Analytics tutorial](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-tutorial) | Planned |
-| Operations automation | Read-only resource inventory and repeatable PowerShell tooling | [Microsoft ARI](https://github.com/microsoft/ARI) | Planned |
-| Recovery | Azure Backup, restore validation and RCA | [AZ-104 Lab 10](https://microsoftlearning.github.io/AZ-104-MicrosoftAzureAdministrator/Instructions/Labs/LAB_10-Implement_Data_Protection.html) | Planned |
+| Priority | Track | What to demonstrate |
+|---|---|---|
+| P0 | Enterprise architecture / Landing Zone | Management-group and subscription topology, connectivity, identity, policies, ADRs and trade-offs |
+| P0 | Azure networking & diagnostics | VNet, peering, routing, NSG, Private Endpoint, Private DNS and Network Watcher diagnosis |
+| P0 | Terraform / infrastructure delivery | Versioned modules, remote-state design, validation, plan review and safe rollback/teardown |
+| P1 | Identity & governance | Scoped RBAC, managed identity, Key Vault access and Azure Policy allowed/denied cases |
+| P1 | Monitoring & incident response | KQL, Azure Monitor signals/alerts, repeatable fault investigation, RCA |
+| P1 | Recovery & continuity | Backup **and restore verification**, RPO/RTO assumptions and measured recovery |
+| P2 | Operational scripting | Read-only PowerShell / Azure CLI resource inventory with tests and predictable error handling |
+| P2 | Hybrid architecture (design first) | On-premises connectivity scenarios, DNS, routing and security trade-offs; no costly mandatory deployment |
 
-See **[Azure Specialty Roadmap](docs/AZURE_SPECIALTY_ROADMAP.md)** for the eight modules, checklists, recommended 3-week progression, gates, costs and links.
+The detailed order, study outcomes, experiment gates and cost boundaries are in [AZURE_SPECIALTY_ROADMAP.md](AZURE_SPECIALTY_ROADMAP.md).
 
-## Engineering outcomes
+## Evidence-based outcomes (targets, not completed work)
 
-The target evidence set, **not yet claimed as completed**, is:
+A portfolio-ready version of this repository should contain evidence of:
 
-1. At least one design decision record relating to Azure network/identity/monitoring choices.
-2. Two reproducible non-production incidents, including diagnosis, rollback/recovery, and root-cause analyses.
-3. One scoped, read-only PowerShell inventory or compliance script with offline tests.
-4. Five documented KQL queries, with verified schema/data source and sample output.
-5. One backup **and actual restore verification**, including recorded recovery time.
-6. Deployment and cleanup evidence, including a checked Azure cost estimate and post-cleanup resource inventory.
+1. **One enterprise Azure architecture decision package:** Landing Zone boundaries, network topology, identity/Policy model, ADRs and diagrams.
+2. **One small Terraform-managed lab:** reviewed configuration, reproducible `fmt` / `validate` / `plan` results, explicit state design and verified cleanup. CI checks alone do not prove a live deployment.
+3. **Two independently diagnosed incidents:** preferably one DNS/network incident and one RBAC/identity or alerting incident, each with baseline, symptoms, diagnostic commands, recovery evidence and RCA.
+4. **Five reproducible KQL queries** with known data sources and interpreted results; demo queries must be marked as demo-only.
+5. **One read-only resource-inventory script** with error handling and tests.
+6. **One completed backup-to-restore drill** with data-integrity verification and recorded elapsed recovery time.
+7. **Cost and security evidence:** pre-execution cost review, redacted artifacts and post-teardown inventory.
 
-## Proposed repository structure
+If a live Azure subscription is unavailable, complete the **design/offline** portion and label the live validation **NOT RUN**, rather than presenting design as hands-on proof.
 
-```text
-azure-cloudops/
-├── README.md
-├── docs/
-│   ├── AZURE_SPECIALTY_ROADMAP.md
-│   ├── JD_SKILL_MAPPING.md
-│   ├── STATUS.md
-│   ├── incidents/
-│   └── templates/
-│       ├── EXPERIMENT.md
-│       └── INCIDENT_RCA.md
-├── automation/              # Scoped PowerShell scripts (future)
-├── monitoring/
-│   └── kql/                 # Verified KQL queries (future)
-└── evidence/                # Sanitized, shareable evidence only
-```
+## Execution and verification rules
 
-The repository intentionally does not contain live Azure deployment modules or incident results until they have been implemented and validated.
+- **Plan before provisioning.** Identify subscription permissions, region, scope, expected cost and teardown steps before each paid experiment.
+- **Use an authorized, isolated non-production scope.** No employer, shared, customer or production fault injection.
+- **Separate evidence states:** `PLANNED`, `DESIGNED`, `STATIC_CHECK_PASS`, `DEPLOYED`, `LIVE_VERIFIED`, `RECOVERED`, `CLEANED_UP`, and `BLOCKED` / `NOT_RUN` where appropriate.
+- **Avoid secrets in Git.** Redact tenant/subscription IDs, principal identifiers, private DNS names, tokens, keys and sensitive logs before publishing.
+- **Use least privilege.** Avoid broad Owner assignments and long-lived credentials; consider federated identity for CI when live deployments are introduced.
+- **Budget alerts are not spending caps.** Private Endpoints, VMs, log ingestion, public IPs, backup retention and Azure Firewall can incur costs even while idle. Review actual pricing and check for retained resources after cleanup.
+- **No fabricated screenshots, run outputs or production experience.** An unchecked item remains unchecked until there is verifiable evidence.
 
-## Safety and cost controls
+## Current repository status
 
-- Exercises run only in a subscription or resource group explicitly authorized for testing.
-- Never inject faults into employer, shared, or production resources.
-- Start with [the free Log Analytics demo](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-tutorial) before deploying billable resources.
-- Review Azure regional pricing and access prerequisites **before** each live exercise.
-- Use narrow permissions, explicit resource tags, scoped deployment, and short-lived resources.
-- Azure budget alerts are **notifications, not hard spending limits**.
-- Remove or redact all tenant IDs, subscription IDs, usernames, tokens, keys, resource IDs and private URLs before committing evidence.
-- Record teardown verification; deleting a resource group may not remove every dependent or retained resource (for example, backup data).
+At the time of this documentation update, this repository contains **planning documents only**. The roadmap describes proposed work; it does **not** claim successful Terraform execution, Azure deployment, cloud incident, automated test or recovery drill.
 
-## Portfolio use
+**Next action:** start with the roadmap's first architecture decision and the lowest-cost networking/diagnostics lab. Record validation evidence only after the corresponding activity has really been performed.
 
-For Azure CloudOps/Operations-heavy job descriptions, this evidence-based work can occupy the second project position on a tailored résumé **once real exercises have been completed**. For Java/Full Stack roles, LedgerCore or another full-stack project may be a stronger second choice.
+## Reference material
 
-## Upstream resources and attribution
-
-This independent training repository references Microsoft learning labs and open-source examples. The examples remain owned by their respective authors. If actual upstream source code is copied into this repository, preserve its applicable copyright and license obligations.
-
-## Status
-
-**Planning only.** No live Azure experiment, cloud deployment, incident drill, certification assessment, or automated test is represented as completed by the current repository scaffold.
+Use the [Azure Specialty Roadmap](AZURE_SPECIALTY_ROADMAP.md) to choose official Microsoft documentation, labs and assessment resources. This repository intentionally does not mirror or copy third-party learning materials.
