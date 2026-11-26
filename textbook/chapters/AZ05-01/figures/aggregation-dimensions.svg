@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560">
+<defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L0,10 L11,5 z" fill="#17324d"/></marker></defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="34" y="42" font-family="Aptos,Arial,sans-serif" font-size="27" font-weight="700" fill="#17324d" text-anchor="start">聚合方式与维度拆分会改变被比较的值</text>
+<text x="34" y="74" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#5d7183" text-anchor="start">合成例：server-a=40，server-b=96，阈值为 90；指标单位与服务定义仍须核对</text>
+<rect x="40" y="150" width="220" height="126" rx="17" fill="#edf5f7" stroke="#087f8c" stroke-width="2.5"/>
+<text x="150" y="184" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#087f8c" text-anchor="middle">两个维度系列</text>
+<text x="150" y="218" font-family="Aptos,Arial,sans-serif" font-size="20" font-weight="400" fill="#273b4d" text-anchor="middle">server-a  →  40</text>
+<text x="150" y="245" font-family="Aptos,Arial,sans-serif" font-size="20" font-weight="400" fill="#273b4d" text-anchor="middle">server-b  →  96</text>
+<rect x="360" y="128" width="330" height="140" rx="17" fill="#fff3e5" stroke="#c96a18" stroke-width="2.5"/>
+<text x="525" y="162" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#c96a18" text-anchor="middle">跨系列 Average</text>
+<text x="525" y="196" font-family="Aptos,Arial,sans-serif" font-size="20" font-weight="400" fill="#273b4d" text-anchor="middle">(40 + 96) / 2 = 68</text>
+<text x="525" y="223" font-family="Aptos,Arial,sans-serif" font-size="20" font-weight="400" fill="#273b4d" text-anchor="middle">68 &gt; 90 ?   否</text>
+<rect x="360" y="328" width="330" height="140" rx="17" fill="#f2edfb" stroke="#684bb1" stroke-width="2.5"/>
+<text x="525" y="362" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#684bb1" text-anchor="middle">跨系列 Maximum</text>
+<text x="525" y="396" font-family="Aptos,Arial,sans-serif" font-size="20" font-weight="400" fill="#273b4d" text-anchor="middle">max(40, 96) = 96</text>
+<text x="525" y="423" font-family="Aptos,Arial,sans-serif" font-size="20" font-weight="400" fill="#273b4d" text-anchor="middle">96 &gt; 90 ?   是</text>
+<rect x="812" y="150" width="330" height="126" rx="17" fill="#fff0f1" stroke="#aa4052" stroke-width="2.5"/>
+<text x="977" y="184" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#aa4052" text-anchor="middle">不拆分维度</text>
+<text x="977" y="218" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="400" fill="#273b4d" text-anchor="middle">一个汇总条件</text>
+<text x="977" y="245" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="400" fill="#273b4d" text-anchor="middle">平均值可能掩盖局部热点</text>
+<rect x="812" y="328" width="330" height="140" rx="17" fill="#eaf6ef" stroke="#23764d" stroke-width="2.5"/>
+<text x="977" y="362" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#23764d" text-anchor="middle">按 server 拆分</text>
+<text x="977" y="396" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="400" fill="#273b4d" text-anchor="middle">server-a: 40 → 不触发</text>
+<text x="977" y="423" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="400" fill="#273b4d" text-anchor="middle">server-b: 96 → 单独触发</text>
+<path d="M260,211 L350,198" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M260,220 L350,398" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M690,198 L802,198" fill="none" stroke="#c96a18" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M690,398 L802,398" fill="none" stroke="#23764d" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="600" y="525" font-family="Aptos,Arial,sans-serif" font-size="18" font-weight="700" fill="#17324d" text-anchor="middle">Count 是样本/记录数，不是数值相加；Average、Sum、Min、Max 必须符合指标语义。</text>
+</svg>

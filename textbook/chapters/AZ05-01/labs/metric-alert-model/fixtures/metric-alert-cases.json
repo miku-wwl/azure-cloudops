@@ -1,0 +1,192 @@
+[
+  {
+    "id": "average-rollup-hides-a-hot-series",
+    "mode": "metric_rule",
+    "points": [
+      {"minute": 1, "value": 40, "dimensions": {"server": "a"}},
+      {"minute": 1, "value": 96, "dimensions": {"server": "b"}}
+    ],
+    "split_by": [],
+    "aggregation": "Average",
+    "lookback_minutes": 5,
+    "evaluation_minutes": [1],
+    "operator": "GreaterThan",
+    "threshold": 90,
+    "stateful": true,
+    "expected": {"series": ["All"], "last_values": {"All": 68}, "events": []}
+  },
+  {
+    "id": "maximum-catches-the-same-spike",
+    "mode": "metric_rule",
+    "points": [
+      {"minute": 1, "value": 40, "dimensions": {"server": "a"}},
+      {"minute": 1, "value": 96, "dimensions": {"server": "b"}}
+    ],
+    "split_by": [],
+    "aggregation": "Maximum",
+    "lookback_minutes": 5,
+    "evaluation_minutes": [1],
+    "operator": "GreaterThan",
+    "threshold": 90,
+    "stateful": true,
+    "expected": {
+      "series": ["All"],
+      "last_values": {"All": 96},
+      "events": [{"series": "All", "minute": 1, "type": "Fired", "notification_sent": true}]
+    }
+  },
+  {
+    "id": "split-dimension-finds-the-hot-server",
+    "mode": "metric_rule",
+    "points": [
+      {"minute": 1, "value": 40, "dimensions": {"server": "a"}},
+      {"minute": 1, "value": 96, "dimensions": {"server": "b"}}
+    ],
+    "split_by": ["server"],
+    "aggregation": "Average",
+    "lookback_minutes": 5,
+    "evaluation_minutes": [1],
+    "operator": "GreaterThan",
+    "threshold": 90,
+    "stateful": true,
+    "expected": {
+      "series": ["server=a", "server=b"],
+      "last_values": {"server=a": 40, "server=b": 96},
+      "events": [{"series": "server=b", "minute": 1, "type": "Fired", "notification_sent": true}]
+    }
+  },
+  {
+    "id": "count-counts-records-not-their-values",
+    "mode": "metric_rule",
+    "points": [
+      {"minute": 1, "value": 0},
+      {"minute": 1, "value": 0},
+      {"minute": 1, "value": 0}
+    ],
+    "split_by": [],
+    "aggregation": "Count",
+    "lookback_minutes": 2,
+    "evaluation_minutes": [1],
+    "operator": "GreaterThan",
+    "threshold": 2,
+    "stateful": true,
+    "expected": {
+      "series": ["All"],
+      "last_values": {"All": 3},
+      "events": [{"series": "All", "minute": 1, "type": "Fired", "notification_sent": true}]
+    }
+  },
+  {
+    "id": "rolling-lookback-windows-overlap",
+    "mode": "metric_rule",
+    "points": [
+      {"minute": 1, "value": 95},
+      {"minute": 2, "value": 70},
+      {"minute": 3, "value": 70}
+    ],
+    "split_by": [],
+    "aggregation": "Maximum",
+    "lookback_minutes": 3,
+    "evaluation_minutes": [1, 2, 3],
+    "operator": "GreaterThan",
+    "threshold": 90,
+    "stateful": true,
+    "expected": {
+      "series": ["All"],
+      "last_values": {"All": 95},
+      "events": [{"series": "All", "minute": 1, "type": "Fired", "notification_sent": true}]
+    }
+  },
+  {
+    "id": "stateful-alert-resolves-after-three-good-checks",
+    "mode": "metric_rule",
+    "points": [
+      {"minute": 1, "value": 95},
+      {"minute": 2, "value": 95},
+      {"minute": 3, "value": 70},
+      {"minute": 4, "value": 70},
+      {"minute": 5, "value": 70},
+      {"minute": 6, "value": 95}
+    ],
+    "split_by": [],
+    "aggregation": "Maximum",
+    "lookback_minutes": 1,
+    "evaluation_minutes": [1, 2, 3, 4, 5, 6],
+    "operator": "GreaterThan",
+    "threshold": 90,
+    "stateful": true,
+    "resolve_after_checks": 3,
+    "expected": {
+      "series": ["All"],
+      "last_values": {"All": 95},
+      "events": [
+        {"series": "All", "minute": 1, "type": "Fired", "notification_sent": true},
+        {"series": "All", "minute": 5, "type": "Resolved", "notification_sent": true},
+        {"series": "All", "minute": 6, "type": "Fired", "notification_sent": true}
+      ]
+    }
+  },
+  {
+    "id": "stateless-alert-repeats-without-resolving",
+    "mode": "metric_rule",
+    "points": [
+      {"minute": 1, "value": 95},
+      {"minute": 2, "value": 96},
+      {"minute": 3, "value": 70}
+    ],
+    "split_by": [],
+    "aggregation": "Maximum",
+    "lookback_minutes": 1,
+    "evaluation_minutes": [1, 2, 3],
+    "operator": "GreaterThan",
+    "threshold": 90,
+    "stateful": false,
+    "expected": {
+      "series": ["All"],
+      "last_values": {"All": 70},
+      "events": [
+        {"series": "All", "minute": 1, "type": "Fired", "notification_sent": true},
+        {"series": "All", "minute": 2, "type": "Fired", "notification_sent": true}
+      ]
+    }
+  },
+  {
+    "id": "processing-rule-suppresses-action-not-condition",
+    "mode": "metric_rule",
+    "points": [{"minute": 1, "value": 95}],
+    "split_by": [],
+    "aggregation": "Maximum",
+    "lookback_minutes": 1,
+    "evaluation_minutes": [1],
+    "operator": "GreaterThan",
+    "threshold": 90,
+    "stateful": true,
+    "suppress_notifications": true,
+    "expected": {
+      "series": ["All"],
+      "last_values": {"All": 95},
+      "events": [{"series": "All", "minute": 1, "type": "Fired", "notification_sent": false}]
+    }
+  },
+  {
+    "id": "dynamic-threshold-lacks-three-days-and-thirty-samples",
+    "mode": "dynamic_history",
+    "days": 2,
+    "samples": 40,
+    "expected": {"status": "DYNAMIC_HISTORY_INSUFFICIENT"}
+  },
+  {
+    "id": "dynamic-threshold-has-minimum-history-not-weekly-seasonality",
+    "mode": "dynamic_history",
+    "days": 5,
+    "samples": 35,
+    "expected": {"status": "DYNAMIC_BASELINE_READY_WEEKLY_PATTERN_PENDING"}
+  },
+  {
+    "id": "dynamic-threshold-has-three-weeks-of-history",
+    "mode": "dynamic_history",
+    "days": 21,
+    "samples": 140,
+    "expected": {"status": "DYNAMIC_WEEKLY_HISTORY_AVAILABLE"}
+  }
+]

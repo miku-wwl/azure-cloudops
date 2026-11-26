@@ -378,3 +378,28 @@ Research date: 2026-11-27. Microsoft Learn is the primary source. The lab is an 
 - https://learn.microsoft.com/en-us/azure/azure-sql/database/recovery-using-backups
 - https://learn.microsoft.com/en-us/azure/azure-sql/database/business-continuity-high-availability-disaster-recover-hadr-overview
 - https://learn.microsoft.com/en-us/azure/azure-sql/database/troubleshoot-common-errors-issues
+
+## AZ05-01 — Azure Monitor metrics and alerts
+
+Research date: 2026-11-27. Microsoft Learn is the primary source. The lab is an offline evaluator for synthetic metric buckets; it does not call Azure Monitor or reproduce the platform's provider-side metrics pipeline or dynamic-threshold model.
+
+| Chapter section / figure | Claim or teaching point | Source anchor | Classification and limit |
+|---|---|---|---|
+| AZ05-01 §01, Fig 14-1 | Metrics are time-series values associated with a resource, namespace/name and dimensions; alert detection and downstream response are distinct stages | Metrics data platform; alert rule creation; alert processing rules | SOURCE-ANALYSED; diagram is an explanatory synthesis, no metric or alert was queried |
+| AZ05-01 §02, Fig 14-2 | Average may hide a hot member; Max and per-dimension evaluation answer different questions; Count is record count, while aggregation must match provider metric semantics | Metrics aggregation/display; create metric alert rule; metric-alert troubleshooting | SOURCE-ANALYSED; examples use synthetic values and do not describe a particular Azure resource metric |
+| AZ05-01 §03, Fig 14-3 | Check frequency controls how often a rule evaluates; aggregation granularity/lookback controls the data period considered; charts and rules should be aligned when troubleshooting | Create metric alert rule; metric-alert troubleshooting; metrics aggregation/display | SOURCE-ANALYSED; half-open windows are an explicit lab abstraction, not a claim about raw Azure bucket internals |
+| AZ05-01 §04, Fig 14-4 | Static thresholds use an operator/value; dynamic thresholds learn historical patterns and have minimum sample/history and longer seasonality requirements | Create metric alert rule; dynamic thresholds | SOURCE-ANALYSED; the lab only classifies sample-history readiness and does not train or predict Azure thresholds |
+| AZ05-01 §05, Fig 14-5 | Stateful/stateless monitor condition behavior is separate from user response state and from action/processing-rule handling | Alerts overview; alert types; alert processing rules | SOURCE-ANALYSED; no notification, action group or processing rule was created or changed |
+| AZ05-01 §06–08 | 11 synthetic fixtures and 23 tests cover aggregation, dimensions, windows, state transitions, suppression and dynamic-history gates | `chapters/AZ05-01/labs/metric-alert-model` | LOCAL_VERIFIED 2026-11-27; Windows and WSL suites each passed 240 tests across 14 directories; no service emulation |
+| AZ05-01 cost / authorization | No Azure sign-in, metric query, alert/action configuration, notification, resource mutation or billing query was performed | Session and command execution record | LIVE_NOT_RUN; actual cumulative spend remains NOT_VERIFIED |
+
+### AZ05-01 primary references
+
+- https://learn.microsoft.com/en-us/azure/azure-monitor/metrics/data-platform-metrics
+- https://learn.microsoft.com/en-us/azure/azure-monitor/metrics/metrics-aggregation-explained
+- https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-create-metric-alert-rule
+- https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-troubleshoot-metric
+- https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-dynamic-thresholds
+- https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-overview
+- https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-types
+- https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-processing-rules

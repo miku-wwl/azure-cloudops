@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="510" viewBox="0 0 1200 510">
+<defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L0,10 L11,5 z" fill="#17324d"/></marker></defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="34" y="42" font-family="Aptos,Arial,sans-serif" font-size="27" font-weight="700" fill="#17324d" text-anchor="start">动态阈值需要足够历史，历史就绪不等于告警已验证</text>
+<text x="34" y="74" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#5d7183" text-anchor="start">官方文档列出最低样本历史与更长季节性历史要求；服务行为应结合具体指标和规则检查</text>
+<path d="M115,250 L1080,250" stroke="#91a7b6" stroke-width="3"/>
+<rect x="115" y="186" width="255" height="125" rx="16" fill="#fff0f1" stroke="#aa4052" stroke-width="2"/>
+<text x="242" y="220" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#aa4052" text-anchor="middle">不足 3 天</text>
+<text x="242" y="255" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">或不足 30 个样本</text>
+<text x="242" y="287" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="700" fill="#aa4052" text-anchor="middle">历史不足</text>
+<rect x="398" y="186" width="352" height="125" rx="16" fill="#fff3e5" stroke="#c96a18" stroke-width="2"/>
+<text x="574" y="220" font-family="Aptos,Arial,sans-serif" font-size="20" font-weight="700" fill="#c96a18" text-anchor="middle">≥ 3 天且 ≥ 30 个样本</text>
+<text x="574" y="255" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">可建立基本阈值基线</text>
+<text x="574" y="287" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="700" fill="#c96a18" text-anchor="middle">周周期模式仍可能不足</text>
+<rect x="778" y="186" width="310" height="125" rx="16" fill="#eaf6ef" stroke="#23764d" stroke-width="2"/>
+<text x="933" y="220" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#23764d" text-anchor="middle">约 3 周历史</text>
+<text x="933" y="255" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">支持学习周季节性</text>
+<text x="933" y="287" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="700" fill="#23764d" text-anchor="middle">仍需观察与调参</text>
+<circle cx="115" cy="250" r="8" fill="#aa4052"/>
+<circle cx="370" cy="250" r="8" fill="#c96a18"/>
+<circle cx="750" cy="250" r="8" fill="#23764d"/>
+<circle cx="1080" cy="250" r="8" fill="#23764d"/>
+<text x="600" y="382" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#17324d" text-anchor="middle">历史门槛用于规划就绪度；本地模型只分类天数与样本数，不训练 Azure 的动态阈值模型。</text>
+<text x="600" y="430" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#5d7183" text-anchor="middle">检查告警规则的维度、观测数据、无数据行为、历史范围、误报和漏报，再决定是否启用。</text>
+</svg>

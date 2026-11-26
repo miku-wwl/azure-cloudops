@@ -36,7 +36,7 @@ Verification states are independent. A documented or local result does not estab
 
 Every lecture and incident will receive its own evidence and limitations before a release milestone is considered.
 
-## Current Stage 1 evidence (2026-11-26)
+## Current Stage 1 evidence (2026-11-27)
 
 | Lecture | Evidence | Limit |
 |---|---|---|
@@ -53,6 +53,7 @@ Every lecture and incident will receive its own evidence and limitations before 
 | AZ04-02 | ACCEPTED; 7-page PDF, 4 figures, 16 local tests; Windows + WSL suites each passed 166 tests across 11 lab directories | Synthetic slot swap, warm-up filter, revision/app-scope separation, readiness policy and traffic rollback; no Azure query or resource operation |
 | AZ04-03 | ACCEPTED; 9-page PDF, 5 figures, 21 local tests; Windows + WSL suites each passed 187 tests across 12 lab directories | Synthetic scheduling, scale eligibility, identity matching, ACR authorization, readiness, DNS, PDB and version skew; Docker engine unavailable; no Azure or Kubernetes API operation |
 | AZ04-04 | ACCEPTED; 8-page PDF, 5 figures, 28 fixture cases, 30 local tests; Windows + WSL suites each passed 217 tests across 13 lab directories | Synthetic DNS/network/auth/data and recovery selection; no Azure query, Storage/SQL request, restore or billing check |
-| AZ05-01 onward | PLANNED | Not yet authored or run |
+| AZ05-01 | ACCEPTED; 6-page PDF, 5 figures, 11 fixture cases, 23 local tests; Windows + WSL suites each passed 240 tests across 14 lab directories | Synthetic metrics, aggregation, series, alert events and history gate; no Azure metric/alert/action request or billing check |
+| AZ05-02 onward | PLANNED | Not yet authored or run |
 
-All thirteen accepted lecture PDFs are independent outputs in textbook/dist/pdf/. Package verification awaits all 23 chapters.
+All fourteen accepted lecture PDFs are independent outputs in textbook/dist/pdf/. Package verification awaits all 23 chapters.

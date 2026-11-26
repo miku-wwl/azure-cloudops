@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="580" viewBox="0 0 1200 580">
+<defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L0,10 L11,5 z" fill="#17324d"/></marker></defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="34" y="42" font-family="Aptos,Arial,sans-serif" font-size="27" font-weight="700" fill="#17324d" text-anchor="start">监控条件、通知动作与人工响应属于不同状态</text>
+<text x="34" y="74" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#5d7183" text-anchor="start">状态型规则默认会抑制持续 Fired 期间的重复告警；处理规则可影响动作处理，不改写检测条件</text>
+<text x="52" y="136" font-family="Aptos,Arial,sans-serif" font-size="18" font-weight="700" fill="#aa4052" text-anchor="start">检测条件（示意）</text>
+<rect x="50" y="164" width="220" height="104" rx="17" fill="#fff0f1" stroke="#aa4052" stroke-width="2.5"/>
+<text x="160" y="198" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#aa4052" text-anchor="middle">阈值违规</text>
+<text x="160" y="232" font-family="Aptos,Arial,sans-serif" font-size="18" font-weight="400" fill="#273b4d" text-anchor="middle">condition = Fired</text>
+<rect x="340" y="164" width="230" height="104" rx="17" fill="#f2edfb" stroke="#684bb1" stroke-width="2.5"/>
+<text x="455" y="198" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#684bb1" text-anchor="middle">状态型规则</text>
+<text x="455" y="232" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">首次违规时发出</text>
+<text x="455" y="259" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">满足恢复条件后 Resolved</text>
+<rect x="640" y="164" width="220" height="104" rx="17" fill="#eaf6ef" stroke="#23764d" stroke-width="2.5"/>
+<text x="750" y="198" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#23764d" text-anchor="middle">动作处理</text>
+<text x="750" y="232" font-family="Aptos,Arial,sans-serif" font-size="18" font-weight="400" fill="#273b4d" text-anchor="middle">action group</text>
+<text x="750" y="259" font-family="Aptos,Arial,sans-serif" font-size="18" font-weight="400" fill="#273b4d" text-anchor="middle">processing rule</text>
+<rect x="930" y="164" width="220" height="104" rx="17" fill="#eaf1f8" stroke="#17324d" stroke-width="2.5"/>
+<text x="1040" y="198" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#17324d" text-anchor="middle">人工响应</text>
+<text x="1040" y="232" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">New → Acknowledged</text>
+<text x="1040" y="259" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">→ Closed</text>
+<path d="M270,216 L330,216" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M570,216 L630,216" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M860,216 L920,216" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="602" y="342" font-family="Aptos,Arial,sans-serif" font-size="18" font-weight="700" fill="#17324d" text-anchor="middle">两个并行状态</text>
+<path d="M90,390 L1100,390" stroke="#aa4052" stroke-width="4"/>
+<circle cx="180" cy="390" r="11" fill="#aa4052"/>
+<circle cx="360" cy="390" r="11" fill="#aa4052"/>
+<circle cx="540" cy="390" r="11" fill="#c96a18"/>
+<circle cx="720" cy="390" r="11" fill="#23764d"/>
+<circle cx="900" cy="390" r="11" fill="#aa4052"/>
+<text x="180" y="427" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="700" fill="#aa4052" text-anchor="middle">Fired</text>
+<text x="360" y="427" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="700" fill="#aa4052" text-anchor="middle">持续违规</text>
+<text x="540" y="427" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="700" fill="#c96a18" text-anchor="middle">正常 1</text>
+<text x="720" y="427" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="700" fill="#23764d" text-anchor="middle">正常 3：Resolved</text>
+<text x="900" y="427" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="700" fill="#aa4052" text-anchor="middle">再次违规</text>
+<path d="M90,482 L1100,482" stroke="#17324d" stroke-width="3" stroke-dasharray="10 7"/>
+<circle cx="180" cy="482" r="9" fill="#17324d"/>
+<circle cx="520" cy="482" r="9" fill="#17324d"/>
+<circle cx="800" cy="482" r="9" fill="#17324d"/>
+<circle cx="1050" cy="482" r="9" fill="#17324d"/>
+<text x="180" y="519" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="700" fill="#17324d" text-anchor="middle">New</text>
+<text x="520" y="519" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="700" fill="#17324d" text-anchor="middle">Acknowledged</text>
+<text x="800" y="519" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="700" fill="#17324d" text-anchor="middle">Closed</text>
+<text x="1050" y="519" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="700" fill="#17324d" text-anchor="middle">人员工作流</text>
+<text x="600" y="560" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#5d7183" text-anchor="middle">确认/关闭是使用者响应；不等于监控条件已恢复。具体恢复时间与配置应按规则核实。</text>
+</svg>
