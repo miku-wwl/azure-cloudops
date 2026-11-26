@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="590" viewBox="0 0 1200 590">
+<defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L0,10 L11,5 z" fill="#17324d"/></marker></defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="34" y="42" font-family="Aptos,Arial,sans-serif" font-size="27" font-weight="700" fill="#17324d" text-anchor="start">RPO 和 RTO 的终点要按业务定义测量</text>
+<text x="34" y="75" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#5d7183" text-anchor="start">RPO 看故障时刻和数据恢复点；RTO 到数据与应用验证通过</text>
+<text x="600" y="142" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="700" fill="#5d7183" text-anchor="middle">示意时间线 · 单位：分钟</text>
+<path d="M124,226 L1080,226" stroke="#91a7b6" stroke-width="3"/>
+<path d="M180,215 L180,238" stroke="#91a7b6" stroke-width="2"/><text x="180" y="204" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#5d7183" text-anchor="middle">09:52</text>
+<path d="M500,215 L500,238" stroke="#91a7b6" stroke-width="2"/><text x="500" y="204" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#5d7183" text-anchor="middle">10:00</text>
+<path d="M686,215 L686,238" stroke="#91a7b6" stroke-width="2"/><text x="686" y="204" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#5d7183" text-anchor="middle">10:05</text>
+<path d="M1000,215 L1000,238" stroke="#91a7b6" stroke-width="2"/><text x="1000" y="204" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#5d7183" text-anchor="middle">10:43</text>
+<rect x="58" y="280" width="220" height="96" rx="16" fill="#edf5f7" stroke="#087f8c" stroke-width="2.5"/>
+<text x="168" y="314" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#087f8c" text-anchor="middle">Recovery point</text>
+<text x="168" y="346" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">09:52</text>
+<rect x="390" y="280" width="220" height="96" rx="16" fill="#fff0f1" stroke="#aa4052" stroke-width="2.5"/>
+<text x="500" y="314" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#aa4052" text-anchor="middle">Failure detected</text>
+<text x="500" y="346" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">10:00</text>
+<rect x="628" y="280" width="220" height="96" rx="16" fill="#fff3e5" stroke="#c96a18" stroke-width="2.5"/>
+<text x="738" y="314" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#c96a18" text-anchor="middle">Restore starts</text>
+<text x="738" y="346" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">10:05</text>
+<rect x="890" y="280" width="260" height="96" rx="16" fill="#eaf6ef" stroke="#23764d" stroke-width="2.5"/>
+<text x="1020" y="314" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#23764d" text-anchor="middle">Service verified</text>
+<text x="1020" y="346" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">10:43 · checks pass</text>
+<path d="M278,328 L380,328" fill="none" stroke="#aa4052" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="330" y="309" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="700" fill="#aa4052" text-anchor="middle">RPO = 8m</text>
+<path d="M500,397 L1000,397" fill="none" stroke="#23764d" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="750" y="423" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="700" fill="#23764d" text-anchor="middle">RTO = 43m (业务中断 → 服务验证)</text>
+<rect x="202" y="445" width="796" height="80" rx="16" fill="#eaf1f8" stroke="#17324d" stroke-width="2.5"/>
+<text x="600" y="479" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#17324d" text-anchor="middle">Integrity + application gates</text>
+<text x="600" y="511" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">checksum / record invariants → DB recovery → identity &amp; dependencies → user-path probe</text>
+<text x="600" y="557" font-family="Aptos,Arial,sans-serif" font-size="18" font-weight="700" fill="#17324d" text-anchor="middle">VM running 不是 RTO 终点；以恢复并验证的业务服务为终点。</text>
+</svg>

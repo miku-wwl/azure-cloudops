@@ -462,3 +462,34 @@ Research date: 2026-11-27. Microsoft Learn is the primary source. The local lab 
 - https://learn.microsoft.com/en-us/powershell/module/az.resourcegraph/search-azgraph?view=azps-17.0.0
 - https://learn.microsoft.com/en-us/cli/azure/resource?view=azure-cli-latest
 - https://learn.microsoft.com/en-us/azure/governance/resource-graph/troubleshoot/general
+
+## AZ06-01 — Azure Backup, recovery and Site Recovery
+
+Research date: 2026-11-27. Microsoft Learn is the primary source. The offline lab evaluates six synthetic recovery cases and makes no Azure request.
+
+| Chapter section / figure | Claim or teaching point | Source anchor | Classification and limit |
+|---|---|---|---|
+| AZ06-01 §01, Fig 17-1 | Azure Backup retains policy-governed recovery points while Site Recovery replicates changes and orchestrates failover; their recovery objectives differ | Azure Backup architecture; Azure-to-Azure Site Recovery architecture | SOURCE-ANALYSED; no vault, protected VM, replication stream or recovery plan was inspected |
+| AZ06-01 §02, Fig 17-2 | Application, file-system and crash consistency imply different recovery expectations; a consistency label alone does not prove application or ledger correctness | About Azure VM backup; Backup architecture | SOURCE-ANALYSED; consistency outcomes are taught from documentation and checked only with synthetic fixture fields |
+| AZ06-01 §03, Fig 17-3 | VM recovery can target a new/alternate location, disks, original location or files; restore scope changes overwrite and validation risks | About the Azure VM restore process; recovery-point management | SOURCE-ANALYSED; restore options were not invoked |
+| AZ06-01 §04 | Backup vault security, redundancy, cross-region restore and retention have workload/region constraints and do not by themselves prove application recovery | Azure Backup reliability; secure Azure Backup deployment; Backup guidance and enhanced policy | SOURCE-ANALYSED; no vault setting, region support, retention policy or price was queried |
+| AZ06-01 §05, Fig 17-4 | Site Recovery `Latest` can process delivered pending data for a newer point; `Latest processed` uses already processed data; test failover, cleanup, reprotect and failback are distinct lifecycle steps | Azure-to-Azure disaster recovery architecture; Site Recovery failover and common questions; test failover; recovery plans | SOURCE-ANALYSED; local cases model only the stated timing trade-off and isolation/cleanup gates |
+| AZ06-01 §05–06, Fig 17-5 | Operational RPO is measured from business failure/data-loss start to recovery-point time; this chapter's measured RTO contract runs from disruption to verified service, including detection and recovery-start delay | Recovery-point management; Site Recovery failover and recovery plans; chapter's explicit measurement contract | SOURCE-ANALYSED + locally specified acceptance definition; no Azure SLA or workload objective is claimed |
+| AZ06-01 §06–07 | Six synthetic cases exercise numeric RPO/RTO objectives, integrity, row count, application probe, failover isolation and cleanup; 16 tests cover time arithmetic and recovery acceptance | `chapters/AZ06-01/labs/recovery-model` | LOCAL_VERIFIED 2026-11-27; Windows and WSL suites each passed 280 tests across 17 directories; no Azure service emulation |
+| AZ06-01 cost / authorization | No Azure sign-in, identity/context enumeration, Backup/Site Recovery call, restore, resource operation, network probe or billing request was performed | Session and command execution record | LIVE_NOT_RUN; actual cumulative spend remains NOT_VERIFIED |
+
+### AZ06-01 primary references
+
+- https://learn.microsoft.com/en-us/azure/backup/backup-azure-vms-introduction
+- https://learn.microsoft.com/en-us/azure/backup/backup-architecture
+- https://learn.microsoft.com/en-us/azure/backup/about-azure-vm-restore
+- https://learn.microsoft.com/en-us/azure/reliability/reliability-backup
+- https://learn.microsoft.com/en-us/azure/backup/secure-backup
+- https://learn.microsoft.com/en-us/azure/backup/guidance-best-practices
+- https://learn.microsoft.com/en-us/azure/backup/backup-azure-vms-enhanced-policy
+- https://learn.microsoft.com/en-us/azure/site-recovery/azure-to-azure-architecture
+- https://learn.microsoft.com/en-us/azure/site-recovery/site-recovery-failover
+- https://learn.microsoft.com/en-us/azure/site-recovery/azure-to-azure-common-questions
+- https://learn.microsoft.com/en-us/azure/backup/manage-recovery-points
+- https://learn.microsoft.com/en-us/azure/site-recovery/site-recovery-test-failover-to-azure
+- https://learn.microsoft.com/en-us/azure/site-recovery/recovery-plan-overview

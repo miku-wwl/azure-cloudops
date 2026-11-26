@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="590" viewBox="0 0 1200 590">
+<defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L0,10 L11,5 z" fill="#17324d"/></marker></defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="34" y="42" font-family="Aptos,Arial,sans-serif" font-size="27" font-weight="700" fill="#17324d" text-anchor="start">Site Recovery 编排 VM 故障转移和应用依赖</text>
+<text x="34" y="75" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#5d7183" text-anchor="start">测试与正式 failover 有不同目标；正式切换后还要建立反向保护</text>
+<rect x="34" y="190" width="220" height="130" rx="16" fill="#f2edfb" stroke="#684bb1" stroke-width="2.5"/>
+<text x="144" y="224" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#684bb1" text-anchor="middle">Primary workload</text>
+<text x="144" y="256" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">disk write changes</text>
+<text x="144" y="281" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">replication agent / flow</text>
+<rect x="338" y="110" width="286" height="124" rx="16" fill="#edf5f7" stroke="#087f8c" stroke-width="2.5"/>
+<text x="481" y="144" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#087f8c" text-anchor="middle">Latest processed</text>
+<text x="481" y="176" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">already applied point</text>
+<text x="481" y="201" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">low start-up delay</text>
+<rect x="338" y="296" width="286" height="124" rx="16" fill="#fff3e5" stroke="#c96a18" stroke-width="2.5"/>
+<text x="481" y="330" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#c96a18" text-anchor="middle">Latest</text>
+<text x="481" y="362" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">process data already sent</text>
+<text x="481" y="387" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">lower RPO · may wait longer</text>
+<rect x="716" y="110" width="198" height="124" rx="16" fill="#eaf1f8" stroke="#17324d" stroke-width="2.5"/>
+<text x="815" y="144" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#17324d" text-anchor="middle">Recovery plan</text>
+<text x="815" y="176" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">DB → API → web</text>
+<text x="815" y="201" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">dependency order</text>
+<rect x="716" y="296" width="198" height="124" rx="16" fill="#eaf6ef" stroke="#23764d" stroke-width="2.5"/>
+<text x="815" y="330" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#23764d" text-anchor="middle">Isolated test</text>
+<text x="815" y="362" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">validate and cleanup</text>
+<text x="815" y="387" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">no production claim</text>
+<rect x="982" y="204" width="184" height="140" rx="16" fill="#fff0f1" stroke="#aa4052" stroke-width="2.5"/>
+<text x="1074" y="238" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#aa4052" text-anchor="middle">Production failover</text>
+<text x="1074" y="270" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">verify service</text>
+<text x="1074" y="295" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">reprotect</text>
+<text x="1074" y="320" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">plan failback</text>
+<path d="M254,230 L328,170" fill="none" stroke="#087f8c" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M254,270 L328,356" fill="none" stroke="#c96a18" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M624,170 L706,170" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M624,356 L706,356" fill="none" stroke="#23764d" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M914,172 L972,238" fill="none" stroke="#aa4052" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M914,356 L972,302" fill="none" stroke="#23764d" stroke-width="3" stroke-dasharray="9 7" marker-end="url(#arrow)"/>
+<text x="600" y="495" font-family="Aptos,Arial,sans-serif" font-size="18" font-weight="700" fill="#aa4052" text-anchor="middle">Site Recovery 只能处理已经送达服务的数据；latest 不是零 RPO。</text>
+<text x="600" y="535" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#5d7183" text-anchor="middle">正式 failover 后，目标 VM 起初处于未保护状态；reprotect 是后续步骤。</text>
+</svg>

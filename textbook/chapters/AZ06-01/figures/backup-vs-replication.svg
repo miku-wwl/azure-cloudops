@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="590" viewBox="0 0 1200 590">
+<defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L0,10 L11,5 z" fill="#17324d"/></marker></defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="34" y="42" font-family="Aptos,Arial,sans-serif" font-size="27" font-weight="700" fill="#17324d" text-anchor="start">Backup 保存可选择的历史恢复点；复制支持把工作负载带到恢复区域</text>
+<text x="34" y="75" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#5d7183" text-anchor="start">两条路径解决不同问题，不能互相取代</text>
+<rect x="42" y="128" width="230" height="92" rx="16" fill="#f2edfb" stroke="#684bb1" stroke-width="2.5"/>
+<text x="157" y="162" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#684bb1" text-anchor="middle">Protected workload</text>
+<text x="157" y="194" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">VM / database / files</text>
+<rect x="336" y="96" width="310" height="146" rx="16" fill="#edf5f7" stroke="#087f8c" stroke-width="2.5"/>
+<text x="491" y="130" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#087f8c" text-anchor="middle">Azure Backup</text>
+<text x="491" y="162" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">policy: schedule + retention</text>
+<text x="491" y="187" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">snapshot / vault recovery points</text>
+<text x="491" y="212" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">LRS · ZRS · GRS / supported CRR</text>
+<rect x="336" y="320" width="310" height="146" rx="16" fill="#fff3e5" stroke="#c96a18" stroke-width="2.5"/>
+<text x="491" y="354" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#c96a18" text-anchor="middle">Site Recovery</text>
+<text x="491" y="386" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">replicate disk changes</text>
+<text x="491" y="411" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">recovery point history</text>
+<text x="491" y="436" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">recovery plan + failover</text>
+<rect x="734" y="96" width="420" height="146" rx="16" fill="#eaf6ef" stroke="#23764d" stroke-width="2.5"/>
+<text x="944" y="130" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#23764d" text-anchor="middle">Restore chosen data</text>
+<text x="944" y="162" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">new VM / disks / files</text>
+<text x="944" y="187" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">verify data + app</text>
+<text x="944" y="212" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">isolate target when testing</text>
+<rect x="734" y="320" width="420" height="146" rx="16" fill="#eaf1f8" stroke="#17324d" stroke-width="2.5"/>
+<text x="944" y="354" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#17324d" text-anchor="middle">Recover service in DR region</text>
+<text x="944" y="386" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">select point + network</text>
+<text x="944" y="411" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">sequence app dependencies</text>
+<text x="944" y="436" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">reprotect after production failover</text>
+<path d="M272,172 L326,172" fill="none" stroke="#087f8c" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M272,182 L326,392" fill="none" stroke="#c96a18" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M646,170 L724,170" fill="none" stroke="#087f8c" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M646,392 L724,392" fill="none" stroke="#c96a18" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="600" y="527" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#aa4052" text-anchor="middle">复制会同步错误写入；备份点不会自动编排多层应用启动。</text>
+<text x="600" y="560" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#5d7183" text-anchor="middle">图示为能力边界；实际支持依赖 datasource、region、vault 和策略。</text>
+</svg>
