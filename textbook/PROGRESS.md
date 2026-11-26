@@ -10,7 +10,7 @@
 - Overall stage: Stage 1 — Technical Textbook Engineering & Publication
 - Current phase: B2 — Lectures 03–06; B1 passed its two lecture acceptance gates.
 - B0 status: COMPLETE. Read-only AWS source, toolchain, two reference PDFs and package consistency reviewed; Azure publisher adaptation built an Azure chapter and passed the recorded checks.
-- Completed lectures: 2/23 — AZ00-01 and AZ01-01. AZ02-01 is next.
+- Completed lectures: 3/23 — AZ00-01, AZ01-01 and AZ02-01. AZ02-02 is next.
 - Implementation is being tracked on main from the approved baseline; see repository history for the current checkpoint.
 - Cloud resource operations: none performed for this project.
 - Azure authorization and subscription scope: NOT_CHECKED; Stage 3 read-only preflight is later.
@@ -35,8 +35,10 @@
 - Initial publisher checks: Python compilation, Node syntax, and `test_all.sh` shell syntax passed; no Terraform chapter exists yet, and the package gate awaits all 23 PDFs.
 - The adapted publisher prints a non-blocking Pillow `Image.getdata()` deprecation warning; build succeeds. Podman is unavailable on this host.
 - AZ01-01 passed its lecture gate with current Microsoft Learn research, three original figures, a deterministic reliability/failure-matrix lab and 12 unit tests. Its 7-page PDF was rendered and all pages visually inspected after correcting markup, pagination, diagram scope and reference wrapping. See `chapters/AZ01-01/ACCEPTANCE.md`.
-- The offline Python runner now discovers 2 lab directories and passes all 19 unit tests in `devops-lab` WSL.
+- The offline Python runner now discovers 3 lab directories and passes all 32 unit tests in `devops-lab` WSL.
+- AZ02-01 passed its lecture gate: current Microsoft routing/Network Watcher research, three editable diagrams, a narrow synthetic route-selection/asymmetric-path model, 13 Windows tests and a full WSL run of 32 tests across 3 directories. Its 8-page PDF was rendered and all pages visually reviewed; see `chapters/AZ02-01/ACCEPTANCE.md`. No Azure request or route operation was performed.
+- Azure publisher QA still emits the non-blocking Pillow `Image.getdata()` deprecation warning.
 
 ## First next action
 
-Research AZ02-01 with current Microsoft network routing documentation, author a route-selection and asymmetric-path experiment, then run the full lecture acceptance sequence before proceeding to AZ02-02.
+Research AZ02-02 with current Microsoft NSG, ASG and Network Watcher diagnostics documentation; author a stateful-filter and rule-priority experiment, then run the full lecture acceptance sequence before AZ02-03.

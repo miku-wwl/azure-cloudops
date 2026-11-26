@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 264" width="760" height="264" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif">
+<defs><marker id="marrow5d6d7a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#5d6d7a"/></marker></defs>
+<text x="380" y="22" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12" font-weight="700" fill="#1d3b53" text-anchor="middle">用分层证据定位路由问题；Next Hop 只回答一个源到一个目的的选路</text>
+<rect x="24" y="82" width="154" height="102" rx="8" ry="8" fill="#e9eff5" stroke="#1d3b53" stroke-width="1.4"/>
+<text x="101.0" y="124.47200000000001" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.6" font-weight="700" fill="#17384f" text-anchor="middle">1 · Association</text>
+<text x="101.0" y="139.192" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">VM NIC 属于哪个 subnet？</text>
+<text x="101.0" y="150.55200000000002" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">该 subnet 关联哪张 route table？</text>
+<rect x="210" y="82" width="154" height="102" rx="8" ry="8" fill="#e6f3f3" stroke="#1a8a8f" stroke-width="1.4"/>
+<text x="287.0" y="124.47200000000001" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.6" font-weight="700" fill="#12676b" text-anchor="middle">2 · Effective routes</text>
+<text x="287.0" y="139.192" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">NIC 上有哪些 system、BGP、UDR？</text>
+<text x="287.0" y="150.55200000000002" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">选中的 prefix / next hop 是什么？</text>
+<rect x="396" y="82" width="154" height="102" rx="8" ry="8" fill="#fdf1e3" stroke="#e0954a" stroke-width="1.4"/>
+<text x="473.0" y="124.47200000000001" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.6" font-weight="700" fill="#9a5a1c" text-anchor="middle">3 · Next Hop</text>
+<text x="473.0" y="139.192" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">指定 source IP + destination IP</text>
+<text x="473.0" y="150.55200000000002" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">返回 next-hop type / IP / route table</text>
+<rect x="582" y="82" width="154" height="102" rx="8" ry="8" fill="#eaf5ee" stroke="#2e7d55" stroke-width="1.4"/>
+<text x="659.0" y="124.47200000000001" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.6" font-weight="700" fill="#1f5c3d" text-anchor="middle">4 · End-to-end</text>
+<text x="659.0" y="139.192" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">分别检查去程与回程</text>
+<text x="659.0" y="150.55200000000002" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">再验证 TCP、应用和业务结果</text>
+<path d="M178 133 L210 133" fill="none" stroke="#5d6d7a" stroke-width="1.6" marker-end="url(#marrow5d6d7a)" stroke-linejoin="round"/>
+<path d="M364 133 L396 133" fill="none" stroke="#5d6d7a" stroke-width="1.6" marker-end="url(#marrow5d6d7a)" stroke-linejoin="round"/>
+<path d="M550 133 L582 133" fill="none" stroke="#5d6d7a" stroke-width="1.6" marker-end="url(#marrow5d6d7a)" stroke-linejoin="round"/>
+<text x="380" y="220" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.1" font-weight="400" fill="#c0504d" text-anchor="middle">某个方向的 Next Hop 正确，不证明回程、NSG、DNS、应用监听或数据授权正常。</text>
+<text x="380" y="247" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.6" font-weight="400" fill="#5d6d7a" text-anchor="middle">Effective routes 适用于 VM 网络接口；Network Watcher Next Hop 需要现有的 Network Watcher。</text>
+</svg>

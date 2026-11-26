@@ -1,0 +1,79 @@
+{
+  "scenario": "Fictional banking hub-spoke route selection",
+  "subnets": {
+    "payments": {
+      "route_table_id": "rt-payments",
+      "system_routes": [
+        {"name": "default-internet", "prefix": "0.0.0.0/0", "source": "system", "next_hop_type": "Internet"}
+      ],
+      "bgp_routes": [
+        {"name": "onprem-bgp", "prefix": "172.20.0.0/16", "source": "bgp", "next_hop_type": "VirtualNetworkGateway"}
+      ]
+    },
+    "settlement": {
+      "route_table_id": "rt-payments",
+      "system_routes": [
+        {"name": "default-internet", "prefix": "0.0.0.0/0", "source": "system", "next_hop_type": "Internet"}
+      ],
+      "bgp_routes": [
+        {"name": "onprem-bgp", "prefix": "172.20.0.0/16", "source": "bgp", "next_hop_type": "VirtualNetworkGateway"}
+      ]
+    },
+    "hub-return-a": {
+      "route_table_id": "rt-return-a",
+      "system_routes": [
+        {"name": "default-internet", "prefix": "0.0.0.0/0", "source": "system", "next_hop_type": "Internet"}
+      ],
+      "bgp_routes": []
+    },
+    "hub-return-b": {
+      "route_table_id": "rt-return-b",
+      "system_routes": [
+        {"name": "default-internet", "prefix": "0.0.0.0/0", "source": "system", "next_hop_type": "Internet"}
+      ],
+      "bgp_routes": []
+    }
+  },
+  "route_tables": {
+    "rt-payments": {
+      "associated_subnets": ["payments", "settlement"],
+      "routes": [
+        {"name": "onprem-inspection", "prefix": "172.20.0.0/16", "source": "udr", "next_hop_type": "VirtualAppliance", "next_hop_ip": "10.20.0.4"},
+        {"name": "partner-segment", "prefix": "172.20.40.0/24", "source": "udr", "next_hop_type": "VirtualAppliance", "next_hop_ip": "10.20.0.4"},
+        {"name": "forced-egress", "prefix": "0.0.0.0/0", "source": "udr", "next_hop_type": "VirtualAppliance", "next_hop_ip": "10.20.0.4"}
+      ]
+    },
+    "rt-return-a": {
+      "associated_subnets": ["hub-return-a"],
+      "routes": [
+        {"name": "payments-return", "prefix": "10.20.1.0/24", "source": "udr", "next_hop_type": "VirtualAppliance", "next_hop_ip": "10.20.0.8"}
+      ]
+    },
+    "rt-return-b": {
+      "associated_subnets": ["hub-return-b"],
+      "routes": [
+        {"name": "payments-return", "prefix": "10.20.1.0/24", "source": "udr", "next_hop_type": "VirtualAppliance", "next_hop_ip": "10.20.0.4"}
+      ]
+    }
+  },
+  "flows": [
+    {
+      "id": "return-via-other-nva",
+      "description": "forward route selects firewall .4, while the modeled return subnet selects firewall .8",
+      "forward_subnet": "payments",
+      "remote_ip": "172.20.40.15",
+      "return_subnet": "hub-return-a",
+      "client_ip": "10.20.1.10",
+      "stateful_inspector_ip": "10.20.0.4"
+    },
+    {
+      "id": "return-via-same-nva",
+      "description": "both modeled directions select the same firewall next-hop IP",
+      "forward_subnet": "payments",
+      "remote_ip": "172.20.40.15",
+      "return_subnet": "hub-return-b",
+      "client_ip": "10.20.1.10",
+      "stateful_inspector_ip": "10.20.0.4"
+    }
+  ]
+}

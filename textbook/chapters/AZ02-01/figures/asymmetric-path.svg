@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 330" width="760" height="330" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif">
+<defs><marker id="marrow1d3b53" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#1d3b53"/></marker><marker id="marrow2e7d55" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#2e7d55"/></marker><marker id="marrowe0954a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#e0954a"/></marker><marker id="marrowc0504d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#c0504d"/></marker></defs>
+<text x="380" y="22" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12" font-weight="700" fill="#1d3b53" text-anchor="middle">单看去程路由不够：有状态检查还要确认回程经过同一检查实例</text>
+<rect x="22" y="82" width="132" height="60" rx="8" ry="8" fill="#e9eff5" stroke="#1d3b53" stroke-width="1.4"/>
+<text x="88.0" y="108.85600000000001" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.8" font-weight="700" fill="#17384f" text-anchor="middle">Payment VM</text>
+<text x="88.0" y="124.35600000000001" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#22313d" text-anchor="middle">10.20.1.10</text>
+<rect x="198" y="82" width="158" height="60" rx="8" ry="8" fill="#e6f3f3" stroke="#1a8a8f" stroke-width="1.4"/>
+<text x="277.0" y="103.271" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.4" font-weight="700" fill="#12676b" text-anchor="middle">Forward UDR</text>
+<text x="277.0" y="118.063" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.1" font-weight="400" fill="#22313d" text-anchor="middle">172.20.40.0/24</text>
+<text x="277.0" y="129.565" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.1" font-weight="400" fill="#22313d" text-anchor="middle">VirtualAppliance</text>
+<rect x="404" y="82" width="145" height="60" rx="8" ry="8" fill="#eaf5ee" stroke="#2e7d55" stroke-width="1.4"/>
+<text x="476.5" y="103.07" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="700" fill="#1f5c3d" text-anchor="middle">NVA firewall A</text>
+<text x="476.5" y="117.934" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.2" font-weight="400" fill="#22313d" text-anchor="middle">10.20.0.4</text>
+<text x="476.5" y="129.578" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.2" font-weight="400" fill="#22313d" text-anchor="middle">stateful session</text>
+<rect x="597" y="82" width="141" height="60" rx="8" ry="8" fill="#e9eff5" stroke="#1d3b53" stroke-width="1.4"/>
+<text x="667.5" y="108.85600000000001" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.8" font-weight="700" fill="#17384f" text-anchor="middle">Partner</text>
+<text x="667.5" y="124.35600000000001" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#22313d" text-anchor="middle">172.20.40.15</text>
+<path d="M154 112 L198 112" fill="none" stroke="#1d3b53" stroke-width="1.6" marker-end="url(#marrow1d3b53)" stroke-linejoin="round"/>
+<rect x="155.88" y="97.4" width="40.24" height="10.4" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="176.0" y="105.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8" font-weight="500" fill="#1d3b53" text-anchor="middle">forward</text>
+<path d="M356 112 L404 112" fill="none" stroke="#2e7d55" stroke-width="1.6" marker-end="url(#marrow2e7d55)" stroke-linejoin="round"/>
+<path d="M549 112 L597 112" fill="none" stroke="#2e7d55" stroke-width="1.6" marker-end="url(#marrow2e7d55)" stroke-linejoin="round"/>
+<rect x="404" y="205" width="145" height="60" rx="8" ry="8" fill="#fbeceb" stroke="#c0504d" stroke-width="1.4"/>
+<text x="476.5" y="226.07" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="700" fill="#8e2f2c" text-anchor="middle">NVA firewall B</text>
+<text x="476.5" y="240.934" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.2" font-weight="400" fill="#22313d" text-anchor="middle">10.20.0.8</text>
+<text x="476.5" y="252.578" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.2" font-weight="400" fill="#22313d" text-anchor="middle">different instance</text>
+<path d="M597 142 L520 205" fill="none" stroke="#e0954a" stroke-width="1.6" marker-end="url(#marrowe0954a)" stroke-linejoin="round"/>
+<rect x="553.275" y="161.225" width="68.15" height="9.75" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="587.35" y="168.35" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.5" font-weight="500" fill="#e0954a" text-anchor="middle">return selection</text>
+<path d="M404 235 L154 142" fill="none" stroke="#c0504d" stroke-width="1.6" marker-end="url(#marrowc0504d)" stroke-linejoin="round"/>
+<rect x="242.965" y="188.04500000000002" width="78.07000000000001" height="10.01" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="282.0" y="195.36" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.7" font-weight="500" fill="#c0504d" text-anchor="middle">return bypasses A</text>
+<text x="380" y="294" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.0" font-weight="400" fill="#c0504d" text-anchor="middle">若 firewall A 不支持非对称转发或会话同步，回程到 B 可能被有状态检查丢弃。</text>
+<text x="380" y="317" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.7" font-weight="400" fill="#5d6d7a" text-anchor="middle">图中独立 route contexts 是逻辑示意；真实拓扑须逐跳核对。</text>
+</svg>

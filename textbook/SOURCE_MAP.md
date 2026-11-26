@@ -55,3 +55,27 @@ Research date: 2026-11-26. This chapter distinguishes official service guidance,
 - https://learn.microsoft.com/en-us/azure/reliability/concept-service-level-agreements
 - https://learn.microsoft.com/en-us/azure/well-architected/resiliency/reliability-test
 - https://learn.microsoft.com/en-us/azure/well-architected/reliability/tradeoffs
+
+## AZ02-01 — VNet, UDR and effective routes
+
+Research date: 2026-11-26. The chapter separates Microsoft-documented routing behavior from the intentionally narrow IPv4 fixture. The CLI commands are documented examples and were not run against Azure.
+
+| Chapter section / figure | Claim or teaching point | Source anchor | Classification and limit |
+|---|---|---|---|
+| AZ02-01 §01, Fig 3-1 | A subnet can be associated with at most one route table; a route table can be associated with multiple subnets; a VM NIC's effective routes combine its associated route table, system routes and BGP-propagated routes | Manage route tables; view effective routes | SOURCE-ANALYSED; effective-route view is for VM NICs and does not prove end-to-end reachability |
+| AZ02-01 §02, Fig 3-1 | Azure uses longest-prefix matching; routes with the same prefix use UDR > BGP > system | Virtual network traffic routing | SOURCE-ANALYSED; VNet, peering and service-endpoint routes have documented exceptions |
+| AZ02-01 §02 | Service-endpoint next-hop routes cannot be overridden by a route table; some special system routes are preferred even over more-specific BGP routes | Virtual network traffic routing | SOURCE-ANALYSED; the local model refuses these special route kinds rather than approximating them |
+| AZ02-01 §01–02 | A VirtualAppliance UDR needs a next-hop IP; the NVA NIC requires IP forwarding to forward third-party traffic | Virtual network traffic routing; route-table configuration | SOURCE-ANALYSED; does not prove appliance policy, forwarding or return route |
+| AZ02-01 §02 | `VirtualApplianceEcmp` is documented as public preview and does not guarantee flow symmetry or synchronize NVA state | Equal-cost multipath routing for user-defined routes | SOURCE-ANALYSED as of research date; not enabled or tested |
+| AZ02-01 §03, Fig 3-2 | Azure Virtual WAN dual-role active-active NVA ECMP can send directions to different instances; stateful inspection drops asymmetric routing unless the NVA supports it or shares state | Azure Virtual WAN routing policies | SOURCE-ANALYSED for the documented Virtual WAN topology; not generalized to all Azure routes |
+| AZ02-01 §06, Fig 3-3 | Network Watcher Next Hop returns next-hop type, IP and route-table ID for one VM/source/destination query; UDR results identify the containing route table, otherwise `System Route` | Next Hop overview; Azure CLI command reference | SOURCE-ANALYSED; a selected hop does not prove connectivity, the return route or application success |
+| AZ02-01 §07 | Prefix matching, source tie-break, subnet associations, selected NVA and modeled forward/return symmetry | `labs/route-model/route_model.py`, JSON fixture and 13 tests | LOCAL_VERIFIED 2026-11-26 on Windows Python 3.13.9 and WSL; synthetic narrow model, no Azure API or data plane |
+
+### Primary references
+
+- https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-udr-overview
+- https://learn.microsoft.com/en-us/azure/virtual-network/manage-route-table
+- https://learn.microsoft.com/en-us/azure/network-watcher/next-hop-overview
+- https://learn.microsoft.com/en-us/cli/azure/network/watcher?view=azure-cli-latest#az-network-watcher-show-next-hop
+- https://learn.microsoft.com/en-us/azure/virtual-wan/how-to-routing-policies
+- https://learn.microsoft.com/en-us/azure/architecture/networking/architecture/hub-spoke

@@ -1,6 +1,6 @@
 # Azure CloudOps & Enterprise Infrastructure
 
-**Status:** Stage 1, B2 — AZ00-01 and AZ01-01 accepted; AZ02-01 is next.
+**Status:** Stage 1, B2 — AZ00-01, AZ01-01 and AZ02-01 accepted; AZ02-02 is next.
 **Repository:** miku-wwl/azure-cloudops, main
 **Approved implementation baseline:** 853ba6cbaa4ee67e448550fbe192c6c89b24fd2f
 **Roadmap:** AZURE_SPECIALTY_ROADMAP.md
