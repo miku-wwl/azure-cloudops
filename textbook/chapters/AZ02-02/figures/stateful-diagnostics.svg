@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 350" width="760" height="350" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif">
+<defs><marker id="marrow1d3b53" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#1d3b53"/></marker><marker id="marrow2e7d55" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#2e7d55"/></marker><marker id="marrowe0954a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#e0954a"/></marker><marker id="marrow5d6d7a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#5d6d7a"/></marker></defs>
+<text x="380" y="22" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12" font-weight="700" fill="#1d3b53" text-anchor="middle">已建立连接有 flow state；过滤诊断与端到端探测回答不同问题</text>
+<rect x="22" y="74" width="155" height="62" rx="8" ry="8" fill="#e9eff5" stroke="#1d3b53" stroke-width="1.4"/>
+<text x="99.5" y="95.845" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.4" font-weight="700" fill="#17384f" text-anchor="middle">Outbound request</text>
+<text x="99.5" y="111.063" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.4" font-weight="400" fill="#22313d" text-anchor="middle">New 5-tuple</text>
+<text x="99.5" y="122.991" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.4" font-weight="400" fill="#22313d" text-anchor="middle">must match NSGs</text>
+<rect x="217" y="74" width="153" height="62" rx="8" ry="8" fill="#e6f3f3" stroke="#1a8a8f" stroke-width="1.4"/>
+<text x="293.5" y="95.845" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.4" font-weight="700" fill="#12676b" text-anchor="middle">Flow record</text>
+<text x="293.5" y="111.063" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.4" font-weight="400" fill="#22313d" text-anchor="middle">Connection state</text>
+<text x="293.5" y="122.991" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.4" font-weight="400" fill="#22313d" text-anchor="middle">remembered</text>
+<rect x="410" y="74" width="153" height="62" rx="8" ry="8" fill="#eaf5ee" stroke="#2e7d55" stroke-width="1.4"/>
+<text x="486.5" y="95.845" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.4" font-weight="700" fill="#1f5c3d" text-anchor="middle">Response packet</text>
+<text x="486.5" y="111.063" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.4" font-weight="400" fill="#22313d" text-anchor="middle">Established reverse</text>
+<text x="486.5" y="122.991" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.4" font-weight="400" fill="#22313d" text-anchor="middle">flow is allowed</text>
+<rect x="603" y="74" width="135" height="62" rx="8" ry="8" fill="#fdf1e3" stroke="#e0954a" stroke-width="1.4"/>
+<text x="670.5" y="96.07" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="700" fill="#9a5a1c" text-anchor="middle">New connection</text>
+<text x="670.5" y="110.934" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.2" font-weight="400" fill="#22313d" text-anchor="middle">Current rules</text>
+<text x="670.5" y="122.578" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.2" font-weight="400" fill="#22313d" text-anchor="middle">are evaluated</text>
+<path d="M177 105 L217 105" fill="none" stroke="#1d3b53" stroke-width="1.6" marker-end="url(#marrow1d3b53)" stroke-linejoin="round"/>
+<path d="M370 105 L410 105" fill="none" stroke="#2e7d55" stroke-width="1.6" marker-end="url(#marrow2e7d55)" stroke-linejoin="round"/>
+<path d="M563 105 L603 105" fill="none" stroke="#e0954a" stroke-width="1.6" marker-end="url(#marrowe0954a)" stroke-linejoin="round"/>
+<text x="380" y="168" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.9" font-weight="400" fill="#c0504d" text-anchor="middle">Removing an allow rule does not terminate an existing connection; test with a new flow when validating a rule change.</text>
+<rect x="25" y="208" width="215" height="88" rx="8" ry="8" fill="#e9eff5" stroke="#1d3b53" stroke-width="1.4"/>
+<text x="132.5" y="243.0755" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.7" font-weight="700" fill="#17384f" text-anchor="middle">Effective NSG</text>
+<text x="132.5" y="258.2565" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.3" font-weight="400" fill="#22313d" text-anchor="middle">What subnet + NIC rules apply?</text>
+<text x="132.5" y="270.0425" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.3" font-weight="400" fill="#22313d" text-anchor="middle">VM must be running for CLI view</text>
+<rect x="272" y="208" width="215" height="88" rx="8" ry="8" fill="#e6f3f3" stroke="#1a8a8f" stroke-width="1.4"/>
+<text x="379.5" y="243.0755" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.7" font-weight="700" fill="#12676b" text-anchor="middle">IP Flow Verify</text>
+<text x="379.5" y="258.2565" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.3" font-weight="400" fill="#22313d" text-anchor="middle">Would TCP / UDP packet be</text>
+<text x="379.5" y="270.0425" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.3" font-weight="400" fill="#22313d" text-anchor="middle">allowed? Which rule matched?</text>
+<rect x="519" y="208" width="219" height="88" rx="8" ry="8" fill="#fdf1e3" stroke="#e0954a" stroke-width="1.4"/>
+<text x="628.5" y="243.0995" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.3" font-weight="700" fill="#9a5a1c" text-anchor="middle">Connection Troubleshoot</text>
+<text x="628.5" y="257.9985" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.2" font-weight="400" fill="#22313d" text-anchor="middle">Can a probe connect? Check</text>
+<text x="628.5" y="269.6425" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.2" font-weight="400" fill="#22313d" text-anchor="middle">route, NSG, DNS, listener, hops</text>
+<path d="M240 252 L272 252" fill="none" stroke="#5d6d7a" stroke-width="1.6" marker-end="url(#marrow5d6d7a)" stroke-linejoin="round"/>
+<path d="M487 252 L519 252" fill="none" stroke="#5d6d7a" stroke-width="1.6" marker-end="url(#marrow5d6d7a)" stroke-linejoin="round"/>
+<text x="380" y="329" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.7" font-weight="400" fill="#5d6d7a" text-anchor="middle">IP Flow Verify is not TCP reachability; Connection Troubleshoot sends active probes and has a broader diagnostic scope.</text>
+</svg>

@@ -1,0 +1,62 @@
+{
+  "scenario": "Fictional payment API and ledger filtering",
+  "subnets": {
+    "snet-payments": {"nsg_id": "nsg-payments-subnet"},
+    "snet-edge": {"nsg_id": null},
+    "snet-ledger": {"nsg_id": null}
+  },
+  "nics": {
+    "pay-api-01": {"ip": "10.40.2.10", "subnet_id": "snet-payments", "nsg_id": "nsg-pay-api-nic", "asgs": ["asg-pay-api"]},
+    "edge-proxy-01": {"ip": "10.40.1.20", "subnet_id": "snet-edge", "nsg_id": null, "asgs": ["asg-edge"]},
+    "ledger-01": {"ip": "10.40.3.15", "subnet_id": "snet-ledger", "nsg_id": null, "asgs": ["asg-ledger"]},
+    "legacy-client-01": {"ip": "10.40.1.99", "subnet_id": "snet-edge", "nsg_id": null, "asgs": ["asg-legacy"]}
+  },
+  "nsgs": {
+    "nsg-payments-subnet": {
+      "rules": [
+        {"name": "Allow-Edge-To-Api", "priority": 110, "direction": "Inbound", "protocol": "TCP", "source": {"kind": "ASG", "value": "asg-edge"}, "source_port": "*", "destination": {"kind": "ASG", "value": "asg-pay-api"}, "destination_port": "8443", "action": "Allow"},
+        {"name": "Deny-Other-To-Api", "priority": 120, "direction": "Inbound", "protocol": "TCP", "source": {"kind": "Any"}, "source_port": "*", "destination": {"kind": "ASG", "value": "asg-pay-api"}, "destination_port": "8443", "action": "Deny"},
+        {"name": "Allow-Api-To-Ledger", "priority": 110, "direction": "Outbound", "protocol": "TCP", "source": {"kind": "ASG", "value": "asg-pay-api"}, "source_port": "*", "destination": {"kind": "ASG", "value": "asg-ledger"}, "destination_port": "1433", "action": "Allow"},
+        {"name": "Deny-Other-Api-Egress", "priority": 120, "direction": "Outbound", "protocol": "TCP", "source": {"kind": "ASG", "value": "asg-pay-api"}, "source_port": "*", "destination": {"kind": "Any"}, "destination_port": "1433", "action": "Deny"}
+      ]
+    },
+    "nsg-pay-api-nic": {
+      "rules": [
+        {"name": "Deny-Maintenance-Api-Port", "priority": 100, "direction": "Inbound", "protocol": "TCP", "source": {"kind": "Any"}, "source_port": "*", "destination": {"kind": "ASG", "value": "asg-pay-api"}, "destination_port": "8443", "action": "Deny"},
+        {"name": "Allow-Edge-To-Api", "priority": 110, "direction": "Inbound", "protocol": "TCP", "source": {"kind": "ASG", "value": "asg-edge"}, "source_port": "*", "destination": {"kind": "ASG", "value": "asg-pay-api"}, "destination_port": "8443", "action": "Allow"},
+        {"name": "Deny-Other-To-Api", "priority": 120, "direction": "Inbound", "protocol": "TCP", "source": {"kind": "Any"}, "source_port": "*", "destination": {"kind": "ASG", "value": "asg-pay-api"}, "destination_port": "8443", "action": "Deny"},
+        {"name": "Allow-Api-To-Ledger", "priority": 110, "direction": "Outbound", "protocol": "TCP", "source": {"kind": "ASG", "value": "asg-pay-api"}, "source_port": "*", "destination": {"kind": "ASG", "value": "asg-ledger"}, "destination_port": "1433", "action": "Allow"},
+        {"name": "Deny-Other-Api-Egress", "priority": 120, "direction": "Outbound", "protocol": "TCP", "source": {"kind": "ASG", "value": "asg-pay-api"}, "source_port": "*", "destination": {"kind": "Any"}, "destination_port": "1433", "action": "Deny"}
+      ]
+    }
+  },
+  "flows": [
+    {
+      "id": "edge-to-api-blocked-at-nic",
+      "description": "subnet rule allows; NIC priority 100 deny wins before its priority 110 allow",
+      "local_nic": "pay-api-01",
+      "direction": "Inbound",
+      "protocol": "TCP",
+      "local_port": 8443,
+      "remote": {"nic_id": "edge-proxy-01", "ip": "10.40.1.20", "port": 53144}
+    },
+    {
+      "id": "api-to-ledger-allowed",
+      "description": "both associated NSG layers allow the new outbound connection",
+      "local_nic": "pay-api-01",
+      "direction": "Outbound",
+      "protocol": "TCP",
+      "local_port": 51000,
+      "remote": {"nic_id": "ledger-01", "ip": "10.40.3.15", "port": 1433}
+    },
+    {
+      "id": "ledger-response-on-established-flow",
+      "description": "response packet matches the existing stateful flow record",
+      "local_nic": "pay-api-01",
+      "direction": "Inbound",
+      "protocol": "TCP",
+      "local_port": 51000,
+      "remote": {"nic_id": "ledger-01", "ip": "10.40.3.15", "port": 1433}
+    }
+  ]
+}

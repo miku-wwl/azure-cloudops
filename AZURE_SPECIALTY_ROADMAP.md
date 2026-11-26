@@ -1,7 +1,7 @@
 # Azure CloudOps & Enterprise Infrastructure — V3 工程实施与学习路线图
 
 > **版本：** V3.1 implementation contract / 2026-11-26；承接 V3.0，增加已批准的三阶段交付顺序与 USD 1.00 累计 Azure 费用边界。
-> **当前状态：** Stage 1 B2 进行中；B0 出版基础完成，已验收 AZ00-01、AZ01-01 与 AZ02-01，下一讲 AZ02-02。Stage 1 的教材实验为本地验证；实时 Azure 验证尚未进行。
+> **当前状态：** Stage 1 B2 进行中；B0 出版基础完成，已验收 AZ00-01、AZ01-01、AZ02-01 与 AZ02-02，下一讲 AZ02-03。Stage 1 的教材实验为本地验证；实时 Azure 验证尚未进行。
 > **原始 V3 基线：** miku-wwl/azure-cloudops main，提交 853ba6cbaa4ee67e448550fbe192c6c89b24fd2f；该提交已与 origin/main 同步。
 > **目标：** Azure Cloud / Senior Infrastructure / Platform / SRE / DevOps Engineer，尤其适合金融等重视安全、治理、变更与恢复的企业环境。  
 > **学习原则：** 不重复 AZ-104、AZ-305、Terraform 认证备考；以技术机制、工程实施、独立排障和可复验结果为主。
@@ -22,7 +22,7 @@ V2 的 M0–M9 全部保留其核心学习目标，但不再以十个孤立知�
 #### 0.1.1 当前执行记录
 
 - B0 已完成：AWS 参考章节、离线实验、Terraform mock、SVG 工具、截图脱敏、出版工具、CI 源码和代表性 PDF 已检查；AWS PDF/source ZIP 只读一致性检查通过；Azure 出版工具可用。
-- B1 完成 2/2 讲：AZ00-01 与 AZ01-01 已研究、编写、绘图、运行适用的本地实验并检查最终 PDF。B2 当前完成 1/4 讲：AZ02-01 已通过 source map、13 项测试及 8 页逐页 PDF 审阅；继续 AZ02-02。逐讲证据见对应 chapter/ACCEPTANCE.md。
+- B1 完成 2/2 讲：AZ00-01 与 AZ01-01 已研究、编写、绘图、运行适用的本地实验并检查最终 PDF。B2 当前完成 2/4 讲：AZ02-01 与 AZ02-02 均通过 source map、本地测试及逐页 PDF 审阅；下一讲 AZ02-03。逐讲证据见对应 chapter/ACCEPTANCE.md。
 - Azure Portal 截图、Azure RBAC/provider 实际验证和费用尚未查询或运行。
 - Stage 2 和 Stage 3 未开始。当前没有为项目创建或修改 Azure 资源；Azure billing 实际值尚未查询，不能写作 USD 0.00 actual.
 - 本机检查发现 Podman 未安装。其余运行时能力须按阶段实际探测，不以命令存在代替运行通过。

@@ -79,3 +79,28 @@ Research date: 2026-11-26. The chapter separates Microsoft-documented routing be
 - https://learn.microsoft.com/en-us/cli/azure/network/watcher?view=azure-cli-latest#az-network-watcher-show-next-hop
 - https://learn.microsoft.com/en-us/azure/virtual-wan/how-to-routing-policies
 - https://learn.microsoft.com/en-us/azure/architecture/networking/architecture/hub-spoke
+
+## AZ02-02 — NSG, ASG and network diagnostics
+
+Research date: 2026-11-26. Microsoft Learn page revisions observed during review: NSG overview 2025-07-15, ASG overview 2025-07-25, IP Flow Verify 2025-09-23, traffic-filter troubleshooting 2026-10-08, and Connection Troubleshoot 2026-11-17. CLI states are the current official reference states on the research date.
+
+| Chapter section / figure | Claim or teaching point | Source anchor | Classification and limit |
+|---|---|---|---|
+| AZ02-02 §01, Fig 4-1 | Custom NSG priority range is 100–4096; lower number evaluates first; first match stops; Azure default inbound/outbound rules have priorities 65000–65500 | Network security groups overview | SOURCE-ANALYSED; default service-tag scope and effective rules must be checked for the actual NIC |
+| AZ02-02 §02, Fig 4-2 | An NSG can be associated to subnet and/or NIC; inbound processing is subnet NSG then NIC NSG and both must allow; NIC effective rules aggregate rules from both scopes | Diagnose a virtual machine network traffic filter problem | SOURCE-ANALYSED; specific to documented inbound behavior; chapter does not invent outbound scope order |
+| AZ02-02 §02 | ASG membership is assigned to NICs; NSG rules reference source/destination ASGs; NICs within a group and groups used together in one rule are constrained to the same VNet | Application Security Groups overview | SOURCE-ANALYSED; ASG is a network selector, not identity authorization |
+| AZ02-02 §04, Fig 4-3 | NSGs are stateful; flow records allow response traffic; removing/changing a rule does not interrupt existing connections and rules affect new connections | Network security groups overview | SOURCE-ANALYSED; fixture's flow state is an intentionally simplified teaching representation |
+| AZ02-02 §05 | `az network nic list-effective-nsg` shows NIC/subnet rules, requires a running VM and an associated NSG, and should be run per NIC; IP Flow Verify checks TCP/UDP rules plus AVNM admin rules | Traffic-filter troubleshooting; IP Flow Verify overview; Azure CLI reference | SOURCE-ANALYSED; neither effective rules nor IP Flow Verify proves connection or application success |
+| AZ02-02 §05 | Connection Troubleshoot has an agentless test path and detects connectivity, NSG, route, DNS, guest firewall and listener issues; CLI `test-connectivity` remains Core Preview | Connection Troubleshoot overview; Azure CLI reference | SOURCE-ANALYSED; diagnostic tests actively probe endpoints; no live probe was executed |
+| AZ02-02 §06 | Priority and first-match evaluation, ASG membership, subnet/NIC custom-rule decisions, and simplified established-flow behavior | `labs/nsg-model/nsg_model.py`, JSON fixture and 13 tests | LOCAL_VERIFIED 2026-11-26 on Windows Python 3.13.9 and WSL; custom-rule IPv4 TCP/UDP fixture, no Azure API or platform defaults |
+
+### Primary references
+
+- https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview
+- https://learn.microsoft.com/en-us/azure/virtual-network/application-security-groups
+- https://learn.microsoft.com/en-us/azure/virtual-network/diagnose-network-traffic-filter-problem
+- https://learn.microsoft.com/en-us/azure/network-watcher/network-watcher-ip-flow-verify-overview
+- https://learn.microsoft.com/en-us/azure/network-watcher/network-watcher-connectivity-overview
+- https://learn.microsoft.com/en-us/cli/azure/network/nic?view=azure-cli-latest#az-network-nic-list-effective-nsg
+- https://learn.microsoft.com/en-us/cli/azure/network/watcher?view=azure-cli-latest#az-network-watcher-test-ip-flow
+- https://learn.microsoft.com/en-us/cli/azure/network/watcher?view=azure-cli-latest#az-network-watcher-test-connectivity

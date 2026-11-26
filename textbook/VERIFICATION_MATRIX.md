@@ -43,6 +43,7 @@ Every lecture and incident will receive its own evidence and limitations before 
 | AZ00-01 | ACCEPTED; 8-page PDF, 3 figures, 7 local tests | No Azure authentication, RBAC query or Provider registration |
 | AZ01-01 | ACCEPTED; 7-page PDF, 3 figures, 12 local tests | Synthetic topology only; no Azure availability, SLA or recovery drill |
 | AZ02-01 | ACCEPTED; 8-page PDF, 3 figures, 13 local tests; WSL suite 32 tests across 3 directories | Synthetic narrow IPv4 model; no Azure route, NVA or connectivity query |
-| AZ02-02 onward | PLANNED | Not yet authored or run |
+| AZ02-02 | ACCEPTED; 8-page PDF, 3 figures, 13 local tests; WSL suite 45 tests across 4 directories | Synthetic custom NSG model; no Azure effective-rule or probe query |
+| AZ02-03 onward | PLANNED | Not yet authored or run |
 
-All three accepted lecture PDFs are independent outputs in `textbook/dist/pdf/`. Package verification awaits all 23 chapters.
+All four accepted lecture PDFs are independent outputs in `textbook/dist/pdf/`. Package verification awaits all 23 chapters.
