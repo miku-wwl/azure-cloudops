@@ -1,0 +1,109 @@
+{
+  "model": "synthetic Storage Blob Private Endpoint decision model; no Azure calls",
+  "endpoint": {
+    "service_fqdn": "settlementarchive.blob.core.windows.net",
+    "private_fqdn": "settlementarchive.privatelink.blob.core.windows.net",
+    "private_ip": "10.60.4.7",
+    "public_ip": "198.51.100.26",
+    "connection_status": "Approved"
+  },
+  "cases": [
+    {
+      "name": "payments-spoke-private-success",
+      "dns": {
+        "vnet_linked": true,
+        "custom_dns": false,
+        "forwards_from_linked_vnet": false,
+        "private_a_record_present": true,
+        "fallback_to_internet": false
+      },
+      "public_network_enabled": false,
+      "data_authorized": true
+    },
+    {
+      "name": "custom-resolver-without-forwarding",
+      "dns": {
+        "vnet_linked": true,
+        "custom_dns": true,
+        "forwards_from_linked_vnet": false,
+        "private_a_record_present": true,
+        "fallback_to_internet": false
+      },
+      "public_network_enabled": false,
+      "data_authorized": true
+    },
+    {
+      "name": "on-prem-forwarded-through-linked-resolver",
+      "dns": {
+        "vnet_linked": true,
+        "custom_dns": true,
+        "forwards_from_linked_vnet": true,
+        "private_a_record_present": true,
+        "fallback_to_internet": false
+      },
+      "public_network_enabled": false,
+      "data_authorized": true
+    },
+    {
+      "name": "linked-zone-record-missing",
+      "dns": {
+        "vnet_linked": true,
+        "custom_dns": false,
+        "forwards_from_linked_vnet": false,
+        "private_a_record_present": false,
+        "fallback_to_internet": false
+      },
+      "public_network_enabled": true,
+      "data_authorized": true
+    },
+    {
+      "name": "linked-zone-record-missing-with-fallback",
+      "dns": {
+        "vnet_linked": true,
+        "custom_dns": false,
+        "forwards_from_linked_vnet": false,
+        "private_a_record_present": false,
+        "fallback_to_internet": true
+      },
+      "public_network_enabled": false,
+      "data_authorized": true
+    },
+    {
+      "name": "private-endpoint-awaiting-approval",
+      "dns": {
+        "vnet_linked": true,
+        "custom_dns": false,
+        "forwards_from_linked_vnet": false,
+        "private_a_record_present": true,
+        "fallback_to_internet": false
+      },
+      "public_network_enabled": false,
+      "data_authorized": true,
+      "connection_status": "Pending"
+    },
+    {
+      "name": "private-address-without-data-authorization",
+      "dns": {
+        "vnet_linked": true,
+        "custom_dns": false,
+        "forwards_from_linked_vnet": false,
+        "private_a_record_present": true,
+        "fallback_to_internet": false
+      },
+      "public_network_enabled": false,
+      "data_authorized": false
+    },
+    {
+      "name": "unlinked-client-public-path-open",
+      "dns": {
+        "vnet_linked": false,
+        "custom_dns": false,
+        "forwards_from_linked_vnet": false,
+        "private_a_record_present": true,
+        "fallback_to_internet": false
+      },
+      "public_network_enabled": true,
+      "data_authorized": true
+    }
+  ]
+}

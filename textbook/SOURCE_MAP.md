@@ -104,3 +104,33 @@ Research date: 2026-11-26. Microsoft Learn page revisions observed during review
 - https://learn.microsoft.com/en-us/cli/azure/network/nic?view=azure-cli-latest#az-network-nic-list-effective-nsg
 - https://learn.microsoft.com/en-us/cli/azure/network/watcher?view=azure-cli-latest#az-network-watcher-test-ip-flow
 - https://learn.microsoft.com/en-us/cli/azure/network/watcher?view=azure-cli-latest#az-network-watcher-test-connectivity
+
+## AZ02-03 — Private DNS, Private Link and Private Endpoint
+
+Research date: 2026-11-26. The chapter separates Microsoft-documented Storage/Private Link behavior, an explicitly labeled inference about TLS hostname validation, and a small local decision model. Azure CLI command syntax and the current `NxDomainRedirect` VNet-link policy were checked in official Microsoft Learn references. No Azure command or probe was executed.
+
+| Chapter section / figure | Claim or teaching point | Source anchor | Classification and limit |
+|---|---|---|---|
+| AZ02-03 §01, Fig 5-1 | A PE is a NIC with private IP, target subresource and approval lifecycle; only Approved connections send traffic | Private endpoint overview | SOURCE-ANALYSED; no Azure PE was queried or created |
+| AZ02-03 §02, Fig 5-1 | Storage Blob uses `privatelink.blob.core.windows.net`; original service FQDN remains the connection URL; DNS CNAME/A answers vary by resolver context | Storage private endpoints; PE DNS zone values | SOURCE-ANALYSED; TLS/SNI implication is explicitly marked as inference from the original-host requirement |
+| AZ02-03 §02 | Public CNAME visibility proves a global name exists, not PE attachment, private address or data access; a linked zone missing an A record can return NXDOMAIN; `NxDomainRedirect` falls back on NXDOMAIN | PE DNS zone values; CLI private DNS link vnet reference | SOURCE-ANALYSED; fixture models only the narrow missing-A decision, not DNS packets/caches |
+| AZ02-03 §03, Fig 5-2 | VNet links give resolution visibility; autoregistration is a separate VM-record function; custom/on-prem DNS needs forwarding or Private Resolver; a zone group manages PE records | Private DNS virtual network links; DNS integration scenarios | SOURCE-ANALYSED; resolver topology is design guidance, not a deployment |
+| AZ02-03 §03 | Hub-spoke clients can share a zone through links; same-name independent zones don't merge; Microsoft warns about same-zone/multiple-PE A-record conflict | DNS integration scenarios; PE DNS zone values | SOURCE-ANALYSED; exact multi-PE design must be checked against the target service |
+| AZ02-03 §04, Fig 5-3 | Storage PE does not automatically disable public access; PE network path, TLS hostname and Storage data authorization remain independent | Storage private endpoints; PE DNS zone values | SOURCE-ANALYSED; no TLS handshake or data request was run |
+| AZ02-03 §05 | PE NIC effective routes/security rules aren't shown in Portal; inbound NSG flow logs unsupported; PE subnet network policies default disabled | Private endpoint overview; manage network policies | SOURCE-ANALYSED; region and feature limits must be checked before deployment |
+| AZ02-03 §07 | Resolver visibility, private/public/NXDOMAIN answer, endpoint approval, public-network switch and separate data-authorization assertion | `labs/private-dns-model/dns_model.py`, scenario JSON and 18 tests | LOCAL_VERIFIED 2026-11-26 on Windows Python 3.13.9 and WSL; synthetic fixture, no DNS/API/network/TLS/Azure auth behavior modeled |
+| AZ02-03 §08 | Future read-only inspection and active-probe procedure; Private Endpoint, DNS zone/query, Private Resolver and data processing have pricing dimensions | Azure CLI references; Azure DNS and Private Link pricing | DOCUMENTED; region/account offer not selected; no live cost estimate or deployment |
+
+### Primary references
+
+- https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-overview
+- https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-dns
+- https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-dns-integration
+- https://learn.microsoft.com/en-us/azure/dns/private-dns-virtual-network-links
+- https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints
+- https://learn.microsoft.com/en-us/azure/private-link/disable-private-endpoint-network-policy
+- https://learn.microsoft.com/en-us/cli/azure/network/private-endpoint?view=azure-cli-latest
+- https://learn.microsoft.com/en-us/cli/azure/network/private-dns/link/vnet?view=azure-cli-latest
+- https://learn.microsoft.com/en-us/cli/azure/network/private-dns/record-set/a?view=azure-cli-latest
+- https://azure.microsoft.com/en-us/pricing/details/private-link/
+- https://azure.microsoft.com/en-us/pricing/details/dns/

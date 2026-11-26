@@ -8,9 +8,9 @@
 ## Current gate
 
 - Overall stage: Stage 1 — Technical Textbook Engineering & Publication
-- Current phase: B2 — Lectures 03–06; B1 passed its two lecture acceptance gates.
+- Current phase: B2 — Lectures 03–06; 3/4 lectures accepted, AZ02-04 remains; B1 passed its two lecture acceptance gates.
 - B0 status: COMPLETE. Read-only AWS source, toolchain, two reference PDFs and package consistency reviewed; Azure publisher adaptation built an Azure chapter and passed the recorded checks.
-- Completed lectures: 4/23 — AZ00-01, AZ01-01, AZ02-01 and AZ02-02. AZ02-03 is next.
+- Completed lectures: 5/23 — AZ00-01, AZ01-01, AZ02-01, AZ02-02 and AZ02-03. AZ02-04 is next.
 - Implementation is being tracked on main from the approved baseline; see repository history for the current checkpoint.
 - Cloud resource operations: none performed for this project.
 - Azure authorization and subscription scope: NOT_CHECKED; Stage 3 read-only preflight is later.
@@ -35,11 +35,12 @@
 - Initial publisher checks: Python compilation, Node syntax, and `test_all.sh` shell syntax passed; no Terraform chapter exists yet, and the package gate awaits all 23 PDFs.
 - The adapted publisher prints a non-blocking Pillow `Image.getdata()` deprecation warning; build succeeds. Podman is unavailable on this host.
 - AZ01-01 passed its lecture gate with current Microsoft Learn research, three original figures, a deterministic reliability/failure-matrix lab and 12 unit tests. Its 7-page PDF was rendered and all pages visually inspected after correcting markup, pagination, diagram scope and reference wrapping. See `chapters/AZ01-01/ACCEPTANCE.md`.
-- The offline Python runner now discovers 4 lab directories and passes all 45 unit tests in `devops-lab` WSL.
+- At the AZ02-02 checkpoint, the offline Python runner discovered 4 lab directories and passed 45 tests in `devops-lab` WSL.
 - AZ02-01 passed its lecture gate: current Microsoft routing/Network Watcher research, three editable diagrams, a narrow synthetic route-selection/asymmetric-path model, 13 Windows tests and a full WSL run of 32 tests across 3 directories. Its 8-page PDF was rendered and all pages visually reviewed; see `chapters/AZ02-01/ACCEPTANCE.md`. No Azure request or route operation was performed.
 - AZ02-02 passed its lecture gate: current NSG/ASG/Network Watcher research, three editable figures, a synthetic custom-rule/stateful-flow model, 13 Windows tests and a full WSL run of 45 tests across 4 directories. Its 8-page PDF was rendered and all pages visually reviewed; see `chapters/AZ02-02/ACCEPTANCE.md`. No Azure security rule or connectivity operation was performed.
 - Azure publisher QA still emits the non-blocking Pillow `Image.getdata()` deprecation warning.
 
+- AZ02-03 passed its lecture gate: Microsoft Private Link/Storage/Private DNS research, three editable figures, an 18-test synthetic DNS/access decision model, full Windows and WSL runs of 63 tests across 5 lab directories, and an 11-page PDF with all pages visually inspected. Its source map and evidence record distinguish documented behavior, TLS inference and model limits. No Azure authentication, DNS query, resource operation, network probe or billing query was performed.
 ## First next action
 
-Research AZ02-03 with current Microsoft Private DNS, Private Link and private endpoint documentation; author a DNS-chain and endpoint-name-resolution experiment, then run the full lecture acceptance sequence before AZ02-04.
+Research AZ02-04 with current Microsoft Load Balancer, Application Gateway and Front Door documentation; author a narrow traffic-distribution and health-probe experiment, then run its full lecture acceptance sequence.
