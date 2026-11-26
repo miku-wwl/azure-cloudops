@@ -45,6 +45,7 @@ Every lecture and incident will receive its own evidence and limitations before 
 | AZ02-01 | ACCEPTED; 8-page PDF, 3 figures, 13 local tests; WSL suite 32 tests across 3 directories | Synthetic narrow IPv4 model; no Azure route, NVA or connectivity query |
 | AZ02-02 | ACCEPTED; 8-page PDF, 3 figures, 13 local tests; WSL suite 45 tests across 4 directories | Synthetic custom NSG model; no Azure effective-rule or probe query |
 | AZ02-03 | ACCEPTED; 11-page PDF, 3 figures, 18 local tests; full Windows and WSL suites each passed 63 tests across 5 directories | Synthetic DNS/access model; no Azure DNS, PE, TLS, Storage or billing query |
-| AZ02-04 onward | PLANNED | Not yet authored or run |
+| AZ02-04 | ACCEPTED; 9-page PDF, 3 figures, 20 local tests; Windows + WSL suites each passed 83 tests across 6 directories | Synthetic probe contracts and priority candidates only; no Azure health, routing, WAF, TLS, network or billing observation |
+| AZ03-01 onward | PLANNED | Not yet authored or run |
 
 All four accepted lecture PDFs are independent outputs in `textbook/dist/pdf/`. Package verification awaits all 23 chapters.

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 374" width="760" height="374" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif">
+<defs><marker id="marrow1d3b53" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#1d3b53"/></marker><marker id="marrow2e7d55" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#2e7d55"/></marker><marker id="marrowe0954a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#e0954a"/></marker></defs>
+<text x="380" y="23" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12.5" font-weight="700" fill="#1d3b53" text-anchor="middle">Application Gateway：请求规则引用后端；probe 与用户请求分开</text>
+<rect x="20" y="69" width="125" height="68" rx="8" ry="8" fill="#e9eff5" stroke="#1d3b53" stroke-width="1.4"/>
+<text x="82.5" y="99.7905" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="10.3" font-weight="700" fill="#17384f" text-anchor="middle">Client</text>
+<text x="82.5" y="115.8915" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.8" font-weight="400" fill="#22313d" text-anchor="middle">HTTPS request</text>
+<rect x="182" y="69" width="136" height="68" rx="8" ry="8" fill="#e6f3f3" stroke="#1a8a8f" stroke-width="1.4"/>
+<text x="250.0" y="99.77300000000001" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="10" font-weight="700" fill="#12676b" text-anchor="middle">Listener</text>
+<text x="250.0" y="115.62700000000001" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.7" font-weight="400" fill="#22313d" text-anchor="middle">IP / port / host</text>
+<rect x="355" y="69" width="160" height="68" rx="8" ry="8" fill="#e6f3f3" stroke="#1a8a8f" stroke-width="1.4"/>
+<text x="435.0" y="99.84400000000001" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="10" font-weight="700" fill="#12676b" text-anchor="middle">Routing rule</text>
+<text x="435.0" y="115.55600000000001" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.6" font-weight="400" fill="#22313d" text-anchor="middle">basic / path based</text>
+<rect x="554" y="69" width="180" height="68" rx="8" ry="8" fill="#eaf5ee" stroke="#2e7d55" stroke-width="1.4"/>
+<text x="644.0" y="99.84400000000001" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="10" font-weight="700" fill="#1f5c3d" text-anchor="middle">Backend pool</text>
+<text x="644.0" y="115.55600000000001" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.6" font-weight="400" fill="#22313d" text-anchor="middle">only healthy targets</text>
+<path d="M145 103 L182 103" fill="none" stroke="#1d3b53" stroke-width="1.6" marker-end="url(#marrow1d3b53)" stroke-linejoin="round"/>
+<rect x="144.4745" y="86.305" width="38.051" height="10.53" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="163.5" y="94.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.1" font-weight="500" fill="#1d3b53" text-anchor="middle">request</text>
+<path d="M318 103 L355 103" fill="none" stroke="#1d3b53" stroke-width="1.6" marker-end="url(#marrow1d3b53)" stroke-linejoin="round"/>
+<rect x="320.4715" y="86.305" width="32.057" height="10.53" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="336.5" y="94.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.1" font-weight="500" fill="#1d3b53" text-anchor="middle">match</text>
+<path d="M515 103 L554 103" fill="none" stroke="#2e7d55" stroke-width="1.6" marker-end="url(#marrow2e7d55)" stroke-linejoin="round"/>
+<rect x="519.7675" y="86.305" width="29.465000000000003" height="10.53" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="534.5" y="94.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.1" font-weight="500" fill="#2e7d55" text-anchor="middle">route</text>
+<rect x="220" y="190" width="202" height="69" rx="8" ry="8" fill="#fdf1e3" stroke="#e0954a" stroke-width="1.4"/>
+<text x="321.0" y="221.285" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.8" font-weight="700" fill="#9a5a1c" text-anchor="middle">Backend setting</text>
+<text x="321.0" y="236.927" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.6" font-weight="400" fill="#22313d" text-anchor="middle">protocol · port · host / SNI</text>
+<rect x="477" y="190" width="247" height="69" rx="8" ry="8" fill="#fdf1e3" stroke="#e0954a" stroke-width="1.4"/>
+<text x="600.5" y="221.297" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.6" font-weight="700" fill="#9a5a1c" text-anchor="middle">Default or custom probe</text>
+<text x="600.5" y="236.727" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#22313d" text-anchor="middle">path · host · status range · interval</text>
+<path d="M435 137 L326 190" fill="none" stroke="#e0954a" stroke-width="1.6" marker-end="url(#marrowe0954a)" stroke-linejoin="round"/>
+<rect x="347.31" y="149.71" width="56.38" height="10.66" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="375.5" y="157.5" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.2" font-weight="500" fill="#e0954a" text-anchor="middle">bind setting</text>
+<path d="M422 225 L477 225" fill="none" stroke="#e0954a" stroke-width="1.6" marker-end="url(#marrowe0954a)" stroke-linejoin="round"/>
+<rect x="412.5" y="209.4" width="74.00000000000001" height="10.4" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="449.5" y="217.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8" font-weight="500" fill="#e0954a" text-anchor="middle">associated probe</text>
+<path d="M600 190 L640 137" fill="none" stroke="#e0954a" stroke-width="1.6" marker-end="url(#marrowe0954a)" stroke-linejoin="round"/>
+<rect x="588.96" y="147.9" width="80.08000000000001" height="10.4" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="629.0" y="155.5" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8" font-weight="500" fill="#e0954a" text-anchor="middle">probe each target</text>
+<rect x="31" y="287" width="698" height="59" rx="8" ry="8" fill="#f2f5f7" stroke="#9fb3c1" stroke-width="1.4"/>
+<text x="380.0" y="306.714" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="700" fill="#41525f" text-anchor="middle">Separate paths</text>
+<text x="380.0" y="322.43399999999997" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.7" font-weight="400" fill="#5d6d7a" text-anchor="middle">WAF policy inspects client requests; backend probes measure origin health.</text>
+<text x="380.0" y="334.93399999999997" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.7" font-weight="400" fill="#5d6d7a" text-anchor="middle">A client 403 and a probe 403 are different observations.</text>
+</svg>

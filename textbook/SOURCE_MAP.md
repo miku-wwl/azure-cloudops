@@ -134,3 +134,38 @@ Research date: 2026-11-26. The chapter separates Microsoft-documented Storage/Pr
 - https://learn.microsoft.com/en-us/cli/azure/network/private-dns/record-set/a?view=azure-cli-latest
 - https://azure.microsoft.com/en-us/pricing/details/private-link/
 - https://azure.microsoft.com/en-us/pricing/details/dns/
+
+## AZ02-04 — Load Balancer, Application Gateway and Front Door
+
+Research date: 2026-11-26. Current Microsoft Learn service, probe, routing, WAF, CLI and pricing sources were checked. The chapter scopes its experiment to documented decision rules and explicitly labels every local result as synthetic; no Azure traffic or cost was observed.
+
+| Chapter section / figure | Claim or teaching point | Source anchor | Classification and limit |
+|---|---|---|---|
+| AZ02-04 §01, Fig 6-1 | Load Balancer is L4 TCP/UDP flow distribution; Application Gateway is regional and supports HTTP(S) L7 plus TCP/TLS L4 proxy; Front Door is global HTTP(S) edge delivery | Load Balancer overview and algorithm; Application Gateway components; Front Door overview and FAQ | SOURCE-ANALYSED; service selection is contextual; local model covers HTTP(S) routing only |
+| AZ02-04 §02, Table 6-1, Fig 6-2 | LB TCP only checks a listener; LB HTTP(S) requires 200; Application Gateway default probe accepts 200–399 with host/path/backend-setting and HTTPS certificate behavior; Front Door requires 200 and evaluates an N-sample success threshold | LB health probes; Application Gateway health probes, backend health and troubleshooting; Front Door health probes | SOURCE-ANALYSED; no real probe request or backend-health report was observed |
+| AZ02-04 §03, Fig 6-3 | LB defaults to five-tuple flow hashing; App Gateway rules bind listener, pool and backend settings; Front Door filters health then priority, latency sensitivity and weight; all unhealthy origins lead to documented round-robin fallback | LB algorithm; App Gateway components and routing rules; Front Door routing methods and health probes | SOURCE-ANALYSED; no actual request destination, latency or weight distribution measured |
+| AZ02-04 §04 | Backend Health states, TLS diagnostics, WAF/request-path separation and read-only CLI command are distinct evidence sources | Application Gateway backend health and troubleshooting; WAF policy overview; Azure CLI reference | SOURCE-ANALYSED; CLI syntax checked only, not run in an Azure session |
+| AZ02-04 §05 | TCP/HTTP/HTTPS status contracts, Application Gateway status/path/TLS assertion and Front Door sample/priority candidate set | labs/probe-model/probe_model.py, JSON fixture and 20 tests | LOCAL_VERIFIED 2026-11-26 on Windows Python 3.13.9; whole suite passed 83 tests in 6 directories on Windows and WSL; synthetic fixture, no HTTP/TCP/TLS/WAF/Front Door network or Azure control plane |
+| AZ02-04 cost record | Application Gateway v2 fixed and capacity-unit dimensions, Front Door profile-hour/request/traffic dimensions and Load Balancer SKU/traffic pricing exist | Official Application Gateway, Front Door and Load Balancer pricing sources | DOCUMENTED; no region/SKU/account/runtime estimate; no live deployment or billing query |
+
+### Primary references
+
+- https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-overview
+- https://learn.microsoft.com/en-us/azure/load-balancer/concepts
+- https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-custom-probe-overview
+- https://learn.microsoft.com/en-us/azure/application-gateway/application-gateway-components
+- https://learn.microsoft.com/en-us/azure/application-gateway/configuration-request-routing-rules
+- https://learn.microsoft.com/en-us/azure/application-gateway/application-gateway-probe-overview
+- https://learn.microsoft.com/en-us/azure/application-gateway/application-gateway-backend-health
+- https://learn.microsoft.com/en-us/troubleshoot/azure/application-gateway/application-gateway-backend-health-troubleshooting
+- https://learn.microsoft.com/en-us/azure/application-gateway/ssl-overview
+- https://learn.microsoft.com/en-us/azure/frontdoor/front-door-overview
+- https://learn.microsoft.com/en-us/azure/frontdoor/front-door-faq
+- https://learn.microsoft.com/en-us/azure/frontdoor/health-probes
+- https://learn.microsoft.com/en-us/azure/frontdoor/routing-methods
+- https://learn.microsoft.com/en-us/azure/web-application-firewall/ag/policy-overview
+- https://learn.microsoft.com/en-us/azure/frontdoor/secure-front-door
+- https://learn.microsoft.com/en-us/azure/application-gateway/understanding-pricing
+- https://learn.microsoft.com/en-us/azure/frontdoor/billing
+- https://azure.microsoft.com/en-us/pricing/details/load-balancer/
+- https://learn.microsoft.com/en-us/cli/azure/network/application-gateway?view=azure-cli-latest

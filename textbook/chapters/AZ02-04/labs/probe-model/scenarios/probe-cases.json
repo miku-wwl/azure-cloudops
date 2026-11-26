@@ -1,0 +1,84 @@
+{
+  "front_door_window": {
+    "sample_size": 3,
+    "successful_required": 2
+  },
+  "scenarios": [
+    {
+      "name": "login redirect: / returns 302 while /ready returns 200",
+      "backends": [
+        {
+          "name": "pay-east",
+          "priority": 1,
+          "tcp_open": true,
+          "responses": {"/": 302, "/ready": 200},
+          "afd_samples": [302, 302, 302],
+          "backend_tls_valid": true
+        },
+        {
+          "name": "pay-west",
+          "priority": 2,
+          "tcp_open": true,
+          "responses": {"/": 200, "/ready": 200},
+          "afd_samples": [200, 200, 200],
+          "backend_tls_valid": true
+        }
+      ]
+    },
+    {
+      "name": "primary readiness fails; healthy backup remains",
+      "backends": [
+        {
+          "name": "pay-east",
+          "priority": 1,
+          "tcp_open": true,
+          "responses": {"/": 200, "/ready": 503},
+          "afd_samples": [503, 503, 503],
+          "backend_tls_valid": true
+        },
+        {
+          "name": "pay-west",
+          "priority": 2,
+          "tcp_open": true,
+          "responses": {"/": 200, "/ready": 200},
+          "afd_samples": [200, 200, 200],
+          "backend_tls_valid": true
+        }
+      ]
+    },
+    {
+      "name": "all Front Door origins fail probes",
+      "backends": [
+        {
+          "name": "pay-east",
+          "priority": 1,
+          "tcp_open": true,
+          "responses": {"/": 503, "/ready": 503},
+          "afd_samples": [503, 503, 503],
+          "backend_tls_valid": true
+        },
+        {
+          "name": "pay-west",
+          "priority": 2,
+          "tcp_open": true,
+          "responses": {"/": 404, "/ready": 503},
+          "afd_samples": [404, 503, 404],
+          "backend_tls_valid": true
+        }
+      ]
+    },
+    {
+      "name": "HTTPS backend certificate or SNI validation fails",
+      "backends": [
+        {
+          "name": "pay-east",
+          "priority": 1,
+          "tcp_open": true,
+          "responses": {"/": 200, "/ready": 200},
+          "afd_samples": [200, 200, 200],
+          "backend_tls_valid": false
+        }
+      ]
+    }
+  ]
+}

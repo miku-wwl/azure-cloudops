@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 337" width="760" height="337" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif">
+
+<text x="380" y="23" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="13" font-weight="700" fill="#1d3b53" text-anchor="middle">先确定流量边界，再选择入口服务</text>
+<rect x="18" y="55" width="230" height="218" rx="8" ry="8" fill="#e9eff5" stroke="#1d3b53" stroke-width="1.4"/>
+<text x="133.0" y="77.2" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12.2" font-weight="700" fill="#17384f" text-anchor="middle">Azure Front Door</text>
+<text x="133.0" y="103.47" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.7" font-weight="400" fill="#22313d" text-anchor="middle">全球 edge；面向 HTTP / HTTPS</text>
+<text x="133.0" y="125.47" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.7" font-weight="400" fill="#22313d" text-anchor="middle">跨 origin 做健康与路由</text>
+<text x="133.0" y="147.47" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.7" font-weight="400" fill="#22313d" text-anchor="middle">TLS offload、缓存、规则</text>
+<text x="133.0" y="169.47" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.7" font-weight="400" fill="#22313d" text-anchor="middle">WAF 能力按 Standard / Premium 核验</text>
+<text x="133.0" y="191.47" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.7" font-weight="400" fill="#22313d" text-anchor="middle">更适合公网全球 Web/API 入口</text>
+<rect x="265" y="55" width="230" height="218" rx="8" ry="8" fill="#e6f3f3" stroke="#1a8a8f" stroke-width="1.4"/>
+<text x="380.0" y="76.5" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="11.5" font-weight="700" fill="#12676b" text-anchor="middle">Application Gateway</text>
+<text x="380.0" y="102.525" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="400" fill="#22313d" text-anchor="middle">regional 网络入口</text>
+<text x="380.0" y="124.525" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="400" fill="#22313d" text-anchor="middle">HTTP(S)：listener → rule → backend</text>
+<text x="380.0" y="146.525" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="400" fill="#22313d" text-anchor="middle">host/path routing、TLS termination</text>
+<text x="380.0" y="168.525" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="400" fill="#22313d" text-anchor="middle">WAF_v2 policy 可附着于资源/站点/路径</text>
+<text x="380.0" y="190.525" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="400" fill="#22313d" text-anchor="middle">同一资源也支持 TCP/TLS L4 proxy</text>
+<rect x="512" y="55" width="230" height="218" rx="8" ry="8" fill="#fdf1e3" stroke="#e0954a" stroke-width="1.4"/>
+<text x="627.0" y="76.7" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="11.7" font-weight="700" fill="#9a5a1c" text-anchor="middle">Azure Load Balancer</text>
+<text x="627.0" y="102.795" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="400" fill="#22313d" text-anchor="middle">regional L4：TCP / UDP flows</text>
+<text x="627.0" y="124.795" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="400" fill="#22313d" text-anchor="middle">frontend + rule + backend pool</text>
+<text x="627.0" y="146.79500000000002" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="400" fill="#22313d" text-anchor="middle">默认按五元组 hash 分配 flow</text>
+<text x="627.0" y="168.79500000000002" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="400" fill="#22313d" text-anchor="middle">不检查 HTTP path/header，不卸载 TLS</text>
+<text x="627.0" y="190.79500000000002" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="400" fill="#22313d" text-anchor="middle">probe 决定新 flow 的 backend eligibility</text>
+<rect x="52" y="291" width="656" height="35" rx="8" ry="8" fill="#f2f5f7" stroke="#9fb3c1" stroke-width="1.4"/>
+<text x="380.0" y="311.214" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="700" fill="#41525f" text-anchor="middle">可能串联，但每一跳都有自己的健康判定、网络边界、失败证据与计费维度。</text>
+</svg>

@@ -8,9 +8,9 @@
 ## Current gate
 
 - Overall stage: Stage 1 — Technical Textbook Engineering & Publication
-- Current phase: B2 — Lectures 03–06; 3/4 lectures accepted, AZ02-04 remains; B1 passed its two lecture acceptance gates.
+- Current phase: B2 — Lectures 03–06, 4/4 lectures accepted. Next phase B3 — AZ03-01 through AZ03-03; 0/3 accepted.
 - B0 status: COMPLETE. Read-only AWS source, toolchain, two reference PDFs and package consistency reviewed; Azure publisher adaptation built an Azure chapter and passed the recorded checks.
-- Completed lectures: 5/23 — AZ00-01, AZ01-01, AZ02-01, AZ02-02 and AZ02-03. AZ02-04 is next.
+- Completed lectures: 6/23 — AZ00-01, AZ01-01 and AZ02-01 through AZ02-04. AZ03-01 is next.
 - Implementation is being tracked on main from the approved baseline; see repository history for the current checkpoint.
 - Cloud resource operations: none performed for this project.
 - Azure authorization and subscription scope: NOT_CHECKED; Stage 3 read-only preflight is later.
@@ -41,6 +41,8 @@
 - Azure publisher QA still emits the non-blocking Pillow `Image.getdata()` deprecation warning.
 
 - AZ02-03 passed its lecture gate: Microsoft Private Link/Storage/Private DNS research, three editable figures, an 18-test synthetic DNS/access decision model, full Windows and WSL runs of 63 tests across 5 lab directories, and an 11-page PDF with all pages visually inspected. Its source map and evidence record distinguish documented behavior, TLS inference and model limits. No Azure authentication, DNS query, resource operation, network probe or billing query was performed.
+- AZ02-04 passed its lecture gate: current Microsoft Load Balancer, Application Gateway and Front Door research, three editable mechanism figures, a 20-test synthetic probe/priority decision model, Windows and WSL full-suite runs of 83 tests across 6 lab directories, and a 9-page A4 PDF with all pages reviewed (pages 3–4 also at 140 DPI). The source map distinguishes service documentation from local results and model limits. No Azure authentication, query, probe, WAF request, resource operation or billing query was performed.
+
 ## First next action
 
-Research AZ02-04 with current Microsoft Load Balancer, Application Gateway and Front Door documentation; author a narrow traffic-distribution and health-probe experiment, then run its full lecture acceptance sequence.
+Research AZ03-01 with current Microsoft Entra ID token and Azure RBAC documentation; design a narrow offline model that separates identity, token audience, action/DataAction and scope inheritance, then run its full lecture acceptance sequence. Do not query Entra ID, Azure RBAC or a subscription before Stage 3 gates.
