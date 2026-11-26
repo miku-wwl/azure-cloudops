@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1300" height="490" viewBox="0 0 1300 490" role="img" aria-label="AKS node pool upgrade sequence and surge capacity and PDB gates">
+<title>AKS node pool upgrade sequence and surge capacity and PDB gates</title><rect width="100%" height="100%" rx="20" fill="white"/>
+<style>text{font-family:"Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif;fill:#233747}.h{font-size:24px;font-weight:700;fill:#17354c}.sub{font-size:17px;font-weight:700}.body{font-size:15px}.small{font-size:13px;fill:#607585}.tiny{font-size:12px;fill:#607585}</style>
+<defs><marker id="navy" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L0 6 L9 3 z" fill="#17354c"/></marker><marker id="teal" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L0 6 L9 3 z" fill="#008f95"/></marker><marker id="orange" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L0 6 L9 3 z" fill="#e9963e"/></marker><marker id="purple" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L0 6 L9 3 z" fill="#7356ba"/></marker><marker id="red" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L0 6 L9 3 z" fill="#d64a4a"/></marker><marker id="green" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L0 6 L9 3 z" fill="#287a54"/></marker></defs>
+<text x="650" y="40" class="h" text-anchor="middle">Node-pool upgrade 是容量、驱逐预算和版本状态的协调操作</text>
+<rect x="45" y="135" width="220" height="125" rx="14" fill="#edf2f7" stroke="#17354c" stroke-width="2"/>
+<text x="155" y="165" class="sub" text-anchor="middle" fill="#17354c">1 · Validate target</text>
+<text x="155" y="193" class="small" text-anchor="middle">当前 support plan / region</text>
+<text x="155" y="216" class="small" text-anchor="middle">control plane 与 pool skew</text>
+<text x="155" y="239" class="small" text-anchor="middle">release notes / APIs</text>
+<rect x="315" y="135" width="220" height="125" rx="14" fill="#fff5e9" stroke="#e9963e" stroke-width="2"/>
+<text x="425" y="165" class="sub" text-anchor="middle" fill="#e9963e">2 · Prepare capacity</text>
+<text x="425" y="193" class="small" text-anchor="middle">maxSurge / maxUnavailable</text>
+<text x="425" y="216" class="small" text-anchor="middle">VM quota · SKU · subnet IP</text>
+<text x="425" y="239" class="small" text-anchor="middle">临时容量可用</text>
+<rect x="585" y="135" width="220" height="125" rx="14" fill="#fbf1f1" stroke="#d64a4a" stroke-width="2"/>
+<text x="695" y="165" class="sub" text-anchor="middle" fill="#d64a4a">3 · Eviction gate</text>
+<text x="695" y="193" class="small" text-anchor="middle">cordon + drain</text>
+<text x="695" y="216" class="small" text-anchor="middle">PDB 允许副本数</text>
+<text x="695" y="239" class="small" text-anchor="middle">workload 可重调度</text>
+<rect x="855" y="135" width="190" height="125" rx="14" fill="#f0f8f7" stroke="#008f95" stroke-width="2"/>
+<text x="950" y="165" class="sub" text-anchor="middle" fill="#008f95">4 · Replace</text>
+<text x="950" y="193" class="small" text-anchor="middle">更新 node image / kubelet</text>
+<text x="950" y="216" class="small" text-anchor="middle">node 返回 Ready</text>
+<rect x="1090" y="135" width="175" height="125" rx="14" fill="#f1f7f2" stroke="#287a54" stroke-width="2"/>
+<text x="1177" y="165" class="sub" text-anchor="middle" fill="#287a54">5 · Verify</text>
+<text x="1177" y="193" class="small" text-anchor="middle">Pod Ready</text>
+<text x="1177" y="216" class="small" text-anchor="middle">EndpointSlice</text>
+<text x="1177" y="239" class="small" text-anchor="middle">request path / SLI</text>
+<path d="M265 198 L315 198" fill="none" stroke="#17354c" stroke-width="3" marker-end="url(#navy)"/>
+<path d="M535 198 L585 198" fill="none" stroke="#e9963e" stroke-width="3" marker-end="url(#orange)"/>
+<path d="M805 198 L855 198" fill="none" stroke="#d64a4a" stroke-width="3" marker-end="url(#red)"/>
+<path d="M1045 198 L1090 198" fill="none" stroke="#008f95" stroke-width="3" marker-end="url(#teal)"/>
+<rect x="105" y="330" width="470" height="85" rx="14" fill="#fff5e9" stroke="#e9963e" stroke-width="2"/>
+<text x="340" y="360" class="sub" text-anchor="middle" fill="#e9963e">Capacity gate fails</text>
+<text x="340" y="388" class="small" text-anchor="middle">quota / address / SKU shortage → add capacity or reschedule</text>
+<rect x="725" y="330" width="470" height="85" rx="14" fill="#fbf1f1" stroke="#d64a4a" stroke-width="2"/>
+<text x="960" y="360" class="sub" text-anchor="middle" fill="#d64a4a">Disruption gate fails</text>
+<text x="960" y="388" class="small" text-anchor="middle">PDB forbids eviction → restore Ready replicas or repair the budget</text>
+<path d="M420 260 L420 330" fill="none" stroke="#e9963e" stroke-width="3" marker-end="url(#orange)"/>
+<path d="M695 260 L695 310 L960 310 L960 330" fill="none" stroke="#d64a4a" stroke-width="3" marker-end="url(#red)"/>
+<text x="650" y="465" class="small" text-anchor="middle">A successful control-plane upgrade must still be followed by workload and traffic verification.</text></svg>

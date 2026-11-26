@@ -1,0 +1,126 @@
+{
+  "cases": [
+    {
+      "name": "pending-missing-toleration",
+      "type": "schedule",
+      "pod": {
+        "cpu_m": 800,
+        "memory_mib": 512,
+        "node_selector": {"pool": "gpu"},
+        "tolerations": []
+      },
+      "nodes": [
+        {
+          "name": "gpu-1",
+          "cpu_m": 4000,
+          "memory_mib": 8192,
+          "requested_cpu_m": 0,
+          "requested_memory_mib": 0,
+          "labels": {"pool": "gpu"},
+          "taints": [{"key": "sku", "value": "gpu", "effect": "NoSchedule"}]
+        }
+      ],
+      "autoscaler": {
+        "enabled": true,
+        "count": 1,
+        "max": 3,
+        "template": {
+          "name": "gpu-template",
+          "cpu_m": 4000,
+          "memory_mib": 8192,
+          "requested_cpu_m": 0,
+          "requested_memory_mib": 0,
+          "labels": {"pool": "gpu"},
+          "taints": [{"key": "sku", "value": "gpu", "effect": "NoSchedule"}]
+        }
+      },
+      "expected": "PENDING_CONSTRAINTS"
+    },
+    {
+      "name": "pending-compatible-pool-can-scale",
+      "type": "schedule",
+      "pod": {
+        "cpu_m": 800,
+        "memory_mib": 768,
+        "node_selector": {"pool": "app"},
+        "tolerations": []
+      },
+      "nodes": [
+        {
+          "name": "app-1",
+          "cpu_m": 3600,
+          "memory_mib": 8192,
+          "requested_cpu_m": 3200,
+          "requested_memory_mib": 4096,
+          "labels": {"pool": "app"},
+          "taints": []
+        }
+      ],
+      "autoscaler": {
+        "enabled": true,
+        "count": 1,
+        "max": 3,
+        "template": {
+          "name": "app-template",
+          "cpu_m": 3600,
+          "memory_mib": 8192,
+          "requested_cpu_m": 0,
+          "requested_memory_mib": 0,
+          "labels": {"pool": "app"},
+          "taints": []
+        }
+      },
+      "expected": "PENDING_SCALE_POSSIBLE"
+    },
+    {
+      "name": "image-pull-abac-legacy-role",
+      "type": "image_pull",
+      "registry_mode": "RBAC_ABAC",
+      "repository": "payments/api",
+      "kubelet_identity": "kubelet-01",
+      "assigned_identity": "kubelet-01",
+      "roles": [{"identity": "kubelet-01", "role": "AcrPull"}],
+      "reachable": true,
+      "tag_exists": true,
+      "architecture_matches": true,
+      "expected": "IMAGE_PULL_AUTH"
+    },
+    {
+      "name": "image-pull-private-dns-timeout",
+      "type": "image_pull",
+      "registry_mode": "RBAC_ONLY",
+      "repository": "payments/api",
+      "kubelet_identity": "kubelet-01",
+      "assigned_identity": "kubelet-01",
+      "roles": [{"identity": "kubelet-01", "role": "AcrPull"}],
+      "reachable": false,
+      "tag_exists": true,
+      "architecture_matches": true,
+      "expected": "IMAGE_PULL_NETWORK"
+    },
+    {
+      "name": "readiness-blocks-service-endpoint",
+      "type": "probe",
+      "startup_succeeded": true,
+      "readiness_succeeded": false,
+      "liveness_succeeded": true,
+      "expected": "RUNNING_NOT_READY"
+    },
+    {
+      "name": "external-dns-upstream-unavailable",
+      "type": "dns",
+      "query": "registry.example.net",
+      "service_exists": false,
+      "coredns_ready": true,
+      "upstream_ready": false,
+      "expected": "UPSTREAM_DNS_UNAVAILABLE"
+    },
+    {
+      "name": "node-drain-blocked-by-pdb",
+      "type": "eviction",
+      "healthy_replicas": 1,
+      "min_available": 1,
+      "expected": "EVICTION_BLOCKED_BY_PDB"
+    }
+  ]
+}

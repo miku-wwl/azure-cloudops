@@ -314,3 +314,35 @@ Research date: 2026-11-26. Microsoft Learn is the primary source for service beh
 - https://learn.microsoft.com/en-us/azure/container-apps/scale-app
 - https://learn.microsoft.com/en-us/azure/container-apps/managed-identity
 - https://learn.microsoft.com/en-us/azure/container-apps/troubleshoot-deployment-errors
+
+## AZ04-03 — AKS and ACR Readiness
+
+Research date: 2026-11-26. Microsoft Learn is the primary source. The lab is an offline deterministic model; it does not interact with AKS, ACR, Azure, Kubernetes, Docker, DNS, or network endpoints.
+
+| Chapter section / figure | Claim or teaching point | Source anchor | Classification and limit |
+|---|---|---|---|
+| AZ04-03 §01–02, Fig 12-1 | Azure manages the AKS control plane; node pools host kubelet and container runtime. Control-plane identity, kubelet image-pull identity, and pod workload identity have separate callers and permissions | AKS core concepts; AKS managed identities; AKS-ACR authentication; Workload ID | SOURCE-ANALYSED; identity paths are documented, no identity/token/role was queried |
+| AZ04-03 §03–04, Fig 12-2 | Azure CNI Overlay separates VNet node addresses from pod CIDR; outbound SNAT and CoreDNS forwarding do not remove the need to validate NSG, DNS, and registry routes | Azure CNI Overlay; AKS DNS concepts | SOURCE-ANALYSED; network diagram is explanatory, no packet or DNS request was made |
+| AZ04-03 §05, Fig 12-3 | Pod requests, selectors, affinity, taints and tolerations constrain scheduling; HPA changes pod count while Cluster Autoscaler can add feasible node capacity for unscheduled constrained pods | AKS scheduler best practices; Cluster Autoscaler overview | SOURCE-ANALYSED; interaction is a documented synthesis, not a measured control-loop timing guarantee |
+| AZ04-03 §06, Fig 12-4 | Startup, readiness, and liveness answer different health questions; a running pod can remain unready and absent from Service endpoints | AKS cluster reliability and probes; AKS DNS concepts | SOURCE-ANALYSED; probe behavior was not tested on a Kubernetes cluster |
+| AZ04-03 §07, Fig 12-5 | AKS-ACR image pulls use kubelet identity; RBAC-only and ABAC repository-permission modes use different roles, and catalog listing is a separate permission | AKS-ACR authentication; ACR ABAC repository permissions; ACR troubleshooting | SOURCE-ANALYSED; no role assignment or image pull occurred |
+| AZ04-03 §08 | Control-plane and node-pool upgrade options, version skew, PDB eviction constraints and surge capacity form separate upgrade gates | AKS node-pool upgrades; AKS upgrade options | SOURCE-ANALYSED; available target versions and quotas are subscription/region-specific and must be rechecked before live work |
+| AZ04-03 §09 | Future read-only commands are documented as templates; the local model maps fixture evidence to likely failure domains | AKS core concepts; `chapters/AZ04-03/labs/aks-readiness-model` | LOCAL_VERIFIED after Windows and WSL offline suites; the model does not establish live AKS behavior |
+| AZ04-03 cost / authorization | No Azure sign-in, subscription query, Azure CLI request, cluster operation, network/DNS probe, token request, resource mutation or billing query was performed. Docker availability was checked locally; `kind get clusters` could not connect to the Docker engine, and `kubectl config get-contexts` was a read-only local inventory with no context selected or changed | Session and command execution record | LIVE_NOT_RUN; actual cumulative spend remains NOT_VERIFIED |
+
+### AZ04-03 primary references
+
+- https://learn.microsoft.com/en-us/azure/aks/core-aks-concepts
+- https://learn.microsoft.com/en-us/azure/aks/best-practices-app-cluster-reliability
+- https://learn.microsoft.com/en-us/azure/aks/intro-aks-automatic
+- https://learn.microsoft.com/en-us/azure/aks/cluster-container-registry-integration
+- https://learn.microsoft.com/en-us/azure/aks/workload-identity-overview
+- https://learn.microsoft.com/en-us/azure/aks/managed-identity-overview
+- https://learn.microsoft.com/en-us/azure/aks/concepts-network-azure-cni-overlay
+- https://learn.microsoft.com/en-us/azure/aks/dns-concepts
+- https://learn.microsoft.com/en-us/troubleshoot/azure/azure-kubernetes/connectivity/cannot-pull-image-from-acr-to-aks-cluster
+- https://learn.microsoft.com/en-us/azure/aks/operator-best-practices-advanced-scheduler
+- https://learn.microsoft.com/en-us/azure/aks/cluster-autoscaler-overview
+- https://learn.microsoft.com/en-us/azure/container-registry/container-registry-rbac-abac-repository-permissions
+- https://learn.microsoft.com/en-us/azure/aks/upgrade-node-pools
+- https://learn.microsoft.com/en-us/azure/aks/upgrade-options

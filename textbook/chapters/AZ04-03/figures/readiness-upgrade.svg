@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1300" height="485" viewBox="0 0 1300 485" role="img" aria-label="AKS startup readiness liveness Service endpoints and node pool upgrade PDB">
+<title>AKS startup readiness liveness Service endpoints and node pool upgrade PDB</title><rect width="100%" height="100%" rx="20" fill="white"/>
+<style>text{font-family:"Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif;fill:#233747}.h{font-size:24px;font-weight:700;fill:#17354c}.sub{font-size:17px;font-weight:700}.body{font-size:15px}.small{font-size:13px;fill:#607585}.tiny{font-size:12px;fill:#607585}</style>
+<defs><marker id="navy" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L0 6 L9 3 z" fill="#17354c"/></marker><marker id="teal" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L0 6 L9 3 z" fill="#008f95"/></marker><marker id="orange" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L0 6 L9 3 z" fill="#e9963e"/></marker><marker id="purple" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L0 6 L9 3 z" fill="#7356ba"/></marker><marker id="red" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L0 6 L9 3 z" fill="#d64a4a"/></marker><marker id="green" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L0 6 L9 3 z" fill="#287a54"/></marker></defs>
+<text x="650" y="40" class="h" text-anchor="middle">Pod 何时接流量，与 node 何时可被安全 drain，是两组健康门</text>
+<text x="650" y="105" class="sub" text-anchor="middle" fill="#17354c">Pod lifecycle → Service eligibility</text>
+<rect x="60" y="145" width="205" height="100" rx="14" fill="#fff5e9" stroke="#e9963e" stroke-width="2"/>
+<text x="162" y="175" class="sub" text-anchor="middle" fill="#e9963e">Image pull</text>
+<text x="162" y="203" class="small" text-anchor="middle">kubelet identity</text>
+<text x="162" y="226" class="small" text-anchor="middle">registry + network</text>
+<rect x="325" y="145" width="205" height="100" rx="14" fill="#f5f1fb" stroke="#7356ba" stroke-width="2"/>
+<text x="427" y="175" class="sub" text-anchor="middle" fill="#7356ba">Startup probe</text>
+<text x="427" y="203" class="small" text-anchor="middle">启动保护</text>
+<text x="427" y="226" class="small" text-anchor="middle">通过后启动其他 probes</text>
+<rect x="590" y="145" width="205" height="100" rx="14" fill="#f0f8f7" stroke="#008f95" stroke-width="2"/>
+<text x="692" y="175" class="sub" text-anchor="middle" fill="#008f95">Readiness</text>
+<text x="692" y="203" class="small" text-anchor="middle">决定 Pod Ready</text>
+<text x="692" y="226" class="small" text-anchor="middle">影响 Service endpoints</text>
+<rect x="855" y="145" width="205" height="100" rx="14" fill="#f1f7f2" stroke="#287a54" stroke-width="2"/>
+<text x="957" y="175" class="sub" text-anchor="middle" fill="#287a54">Service</text>
+<text x="957" y="203" class="small" text-anchor="middle">selector + Ready Pod</text>
+<text x="957" y="226" class="small" text-anchor="middle">可用 endpoint</text>
+<rect x="1120" y="145" width="145" height="100" rx="14" fill="#edf2f7" stroke="#17354c" stroke-width="2"/>
+<text x="1192" y="175" class="sub" text-anchor="middle" fill="#17354c">Request</text>
+<text x="1192" y="203" class="small" text-anchor="middle">路径与 SLI</text>
+<text x="1192" y="226" class="small" text-anchor="middle">仍需验证</text>
+<path d="M265 195 L325 195" fill="none" stroke="#e9963e" stroke-width="3" marker-end="url(#orange)"/>
+<path d="M530 195 L590 195" fill="none" stroke="#7356ba" stroke-width="3" marker-end="url(#purple)"/>
+<path d="M795 195 L855 195" fill="none" stroke="#008f95" stroke-width="3" marker-end="url(#teal)"/>
+<path d="M1060 195 L1120 195" fill="none" stroke="#287a54" stroke-width="3" marker-end="url(#green)"/>
+<path d="M692 245 L692 290 L405 290" fill="none" stroke="#d64a4a" stroke-width="3" marker-end="url(#red)"/>
+<text x="550" y="280" class="small" text-anchor="middle" fill="#d64a4a">Liveness 失败 → 重启容器；不替代业务依赖验证</text>
+<text x="650" y="350" class="sub" text-anchor="middle" fill="#17354c">Node-pool upgrade → surge node → PDB 允许驱逐 → drain/升级 → workload Ready</text>
+<rect x="190" y="380" width="270" height="80" rx="14" fill="#fff5e9" stroke="#e9963e" stroke-width="2"/>
+<text x="325" y="410" class="sub" text-anchor="middle" fill="#e9963e">Surge capacity</text>
+<text x="325" y="438" class="small" text-anchor="middle">额外 VM / IP / quota / SKU</text>
+<rect x="515" y="380" width="270" height="80" rx="14" fill="#fbf1f1" stroke="#d64a4a" stroke-width="2"/>
+<text x="650" y="410" class="sub" text-anchor="middle" fill="#d64a4a">PDB</text>
+<text x="650" y="438" class="small" text-anchor="middle">约束自愿 eviction 的可用副本</text>
+<rect x="840" y="380" width="270" height="80" rx="14" fill="#f0f8f7" stroke="#008f95" stroke-width="2"/>
+<text x="975" y="410" class="sub" text-anchor="middle" fill="#008f95">Drain and upgrade</text>
+<text x="975" y="438" class="small" text-anchor="middle">版本策略 + workload 验证</text>
+<path d="M460 420 L515 420" fill="none" stroke="#e9963e" stroke-width="3" marker-end="url(#orange)"/>
+<path d="M785 420 L840 420" fill="none" stroke="#d64a4a" stroke-width="3" marker-end="url(#red)"/></svg>

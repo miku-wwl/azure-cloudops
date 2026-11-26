@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1300" height="490" viewBox="0 0 1300 490" role="img" aria-label="AKS control plane, kubelet image pull identity, and pod workload identity boundaries">
+<title>AKS control plane, kubelet image pull identity, and pod workload identity boundaries</title><rect width="100%" height="100%" rx="20" fill="white"/>
+<style>text{font-family:"Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif;fill:#233747}.h{font-size:24px;font-weight:700;fill:#17354c}.sub{font-size:17px;font-weight:700}.body{font-size:15px}.small{font-size:13px;fill:#607585}.tiny{font-size:12px;fill:#607585}</style>
+<defs><marker id="navy" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L0 6 L9 3 z" fill="#17354c"/></marker><marker id="teal" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L0 6 L9 3 z" fill="#008f95"/></marker><marker id="orange" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L0 6 L9 3 z" fill="#e9963e"/></marker><marker id="purple" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L0 6 L9 3 z" fill="#7356ba"/></marker><marker id="red" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L0 6 L9 3 z" fill="#d64a4a"/></marker><marker id="green" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L0 6 L9 3 z" fill="#287a54"/></marker></defs>
+<text x="650" y="40" class="h" text-anchor="middle">先辨认调用者：控制面、node 和 Pod 不共用一个身份</text>
+<rect x="35" y="75" width="1230" height="385" rx="20" fill="#f7fafb" stroke="#9eb5c3" stroke-width="2"/>
+<text x="650" y="102" class="sub" text-anchor="middle">AKS cluster resource</text>
+<rect x="70" y="140" width="325" height="135" rx="14" fill="#edf2f7" stroke="#17354c" stroke-width="2"/>
+<text x="232" y="170" class="sub" text-anchor="middle" fill="#17354c">Azure-managed control plane</text>
+<text x="232" y="198" class="small" text-anchor="middle">API server · etcd · scheduler · controllers</text>
+<text x="232" y="221" class="small" text-anchor="middle">control-plane identity 管理关联 Azure 资源</text>
+<rect x="500" y="140" width="320" height="135" rx="14" fill="#fff5e9" stroke="#e9963e" stroke-width="2"/>
+<text x="660" y="170" class="sub" text-anchor="middle" fill="#e9963e">Node pool / VM</text>
+<text x="660" y="198" class="small" text-anchor="middle">kubelet · container runtime</text>
+<text x="660" y="221" class="small" text-anchor="middle">kubelet identity 在 Pod 前拉取 image</text>
+<rect x="925" y="140" width="285" height="135" rx="14" fill="#f4f0fb" stroke="#7356ba" stroke-width="2"/>
+<text x="1067" y="170" class="sub" text-anchor="middle" fill="#7356ba">Azure Container Registry</text>
+<text x="1067" y="198" class="small" text-anchor="middle">repository · tag/digest</text>
+<text x="1067" y="221" class="small" text-anchor="middle">RBAC: AcrPull  |  ABAC: Repository Reader</text>
+<path d="M395 205 L500 205" fill="none" stroke="#17354c" stroke-width="3" marker-end="url(#navy)"/>
+<path d="M820 205 L925 205" fill="none" stroke="#e9963e" stroke-width="3" marker-end="url(#orange)"/>
+<text x="870" y="188" class="tiny" text-anchor="middle">image pull</text>
+<rect x="190" y="325" width="400" height="100" rx="14" fill="#eaf6f5" stroke="#078f91" stroke-width="2"/>
+<text x="390" y="354" class="sub" text-anchor="middle" fill="#008f95">Pod workload identity</text>
+<text x="390" y="381" class="small" text-anchor="middle">projected ServiceAccount token + OIDC issuer</text>
+<text x="390" y="402" class="small" text-anchor="middle">federated identity credential → Entra token</text>
+<rect x="760" y="325" width="380" height="100" rx="14" fill="#f1f7f3" stroke="#287a54" stroke-width="2"/>
+<text x="950" y="354" class="sub" text-anchor="middle" fill="#287a54">Azure data-plane resource</text>
+<text x="950" y="383" class="small" text-anchor="middle">Key Vault / Storage / other API</text>
+<text x="950" y="404" class="small" text-anchor="middle">target resource RBAC still applies</text>
+<path d="M590 374 L760 374" fill="none" stroke="#008f95" stroke-width="3" marker-end="url(#teal)"/>
+<text x="675" y="357" class="tiny" text-anchor="middle">after container starts</text>
+<text x="650" y="448" class="small" text-anchor="middle">No Azure identity is implied by Pod phase alone; ACR pull identity is not the application&#x27;s data identity.</text></svg>

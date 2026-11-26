@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1300" height="430" viewBox="0 0 1300 430" role="img" aria-label="Kubernetes scheduling resource requests, HPA and AKS cluster autoscaler">
+<title>Kubernetes scheduling resource requests, HPA and AKS cluster autoscaler</title><rect width="100%" height="100%" rx="20" fill="white"/>
+<style>text{font-family:"Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif;fill:#233747}.h{font-size:24px;font-weight:700;fill:#17354c}.sub{font-size:17px;font-weight:700}.body{font-size:15px}.small{font-size:13px;fill:#607585}.tiny{font-size:12px;fill:#607585}</style>
+<defs><marker id="navy" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L0 6 L9 3 z" fill="#17354c"/></marker><marker id="teal" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L0 6 L9 3 z" fill="#008f95"/></marker><marker id="orange" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L0 6 L9 3 z" fill="#e9963e"/></marker><marker id="purple" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L0 6 L9 3 z" fill="#7356ba"/></marker><marker id="red" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L0 6 L9 3 z" fill="#d64a4a"/></marker><marker id="green" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L0 6 L9 3 z" fill="#287a54"/></marker></defs>
+<text x="650" y="40" class="h" text-anchor="middle">先过滤硬约束，再比较 requests；扩 Pod 和扩 node 分属不同控制环</text>
+<rect x="55" y="120" width="255" height="150" rx="14" fill="#edf2f7" stroke="#17354c" stroke-width="2"/>
+<text x="182" y="150" class="sub" text-anchor="middle" fill="#17354c">Pod request</text>
+<text x="182" y="178" class="small" text-anchor="middle">CPU / memory requests</text>
+<text x="182" y="201" class="small" text-anchor="middle">nodeSelector / affinity</text>
+<text x="182" y="224" class="small" text-anchor="middle">tolerations / topology</text>
+<rect x="385" y="120" width="285" height="150" rx="14" fill="#edf8f7" stroke="#008f95" stroke-width="2"/>
+<text x="527" y="150" class="sub" text-anchor="middle" fill="#008f95">kube-scheduler</text>
+<text x="527" y="178" class="small" text-anchor="middle">匹配 labels 与 tolerations</text>
+<text x="527" y="201" class="small" text-anchor="middle">扣除现有 Pod requests</text>
+<text x="527" y="224" class="small" text-anchor="middle">选择满足条件的 node</text>
+<rect x="755" y="90" width="220" height="110" rx="14" fill="#f1f7f2" stroke="#287a54" stroke-width="2"/>
+<text x="865" y="120" class="sub" text-anchor="middle" fill="#287a54">可用 node</text>
+<text x="865" y="148" class="small" text-anchor="middle">requests 能放下</text>
+<text x="865" y="171" class="small" text-anchor="middle">Pod → Bound</text>
+<rect x="755" y="230" width="220" height="130" rx="14" fill="#fbf1f1" stroke="#d64a4a" stroke-width="2"/>
+<text x="865" y="260" class="sub" text-anchor="middle" fill="#d64a4a">无 node 可放</text>
+<text x="865" y="288" class="small" text-anchor="middle">Pod → Pending</text>
+<text x="865" y="311" class="small" text-anchor="middle">Events 说明失败约束</text>
+<rect x="1050" y="105" width="205" height="110" rx="14" fill="#f5f1fb" stroke="#7356ba" stroke-width="2"/>
+<text x="1152" y="135" class="sub" text-anchor="middle" fill="#7356ba">HPA</text>
+<text x="1152" y="163" class="small" text-anchor="middle">按指标调整 Pod 副本数</text>
+<text x="1152" y="186" class="small" text-anchor="middle">改变期望工作负载</text>
+<rect x="1050" y="250" width="205" height="110" rx="14" fill="#fff5e9" stroke="#e9963e" stroke-width="2"/>
+<text x="1152" y="280" class="sub" text-anchor="middle" fill="#e9963e">Cluster Autoscaler</text>
+<text x="1152" y="308" class="small" text-anchor="middle">看无法调度的 Pod</text>
+<text x="1152" y="331" class="small" text-anchor="middle">在 min/max 与可行池内扩 node</text>
+<path d="M310 190 L385 190" fill="none" stroke="#17354c" stroke-width="3" marker-end="url(#navy)"/>
+<path d="M670 160 L755 145" fill="none" stroke="#287a54" stroke-width="3" marker-end="url(#green)"/>
+<path d="M670 225 L755 285" fill="none" stroke="#d64a4a" stroke-width="3" marker-end="url(#red)"/>
+<path d="M975 285 L1050 305" fill="none" stroke="#e9963e" stroke-width="3" marker-end="url(#orange)"/>
+<path d="M1150 250 L1150 215" fill="none" stroke="#7356ba" stroke-width="3" marker-end="url(#purple)"/>
+<text x="1150" y="235" class="tiny" text-anchor="middle">副本需求</text>
+<text x="650" y="400" class="small" text-anchor="middle">如果 selector / taint / node规格本身不兼容，增加 max-count 不会使该 Pod 可调度。</text></svg>

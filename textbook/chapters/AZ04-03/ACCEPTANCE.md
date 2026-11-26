@@ -1,0 +1,17 @@
+# AZ04-03 acceptance — AKS and ACR workload readiness
+
+- **Gate:** ACCEPTED for Stage 1 lecture publication.
+- **Research date:** 2026-11-26; current Microsoft Learn primary sources are listed in `textbook/SOURCE_MAP.md` and chapter references [1]–[14].
+- **Final build and review:** 2026-11-27 (Pacific/Auckland).
+- **Coverage:** AKS control plane and node pools; control-plane, kubelet and workload identities; Azure CNI Overlay and CoreDNS; scheduling and autoscaling; ACR RBAC/ABAC image pulls; probes and Service readiness; node-pool upgrades, version skew, PDBs and surge capacity.
+- **Figures:** Five editable SVG mechanism diagrams generated from `figures/figs.py`.
+- **Offline lab:** `labs/aks-readiness-model` evaluates synthetic scheduling, scale eligibility, ACR authorization, identity trust matching, probe/Service eligibility, DNS, PDB and version-skew cases. Its 21 unit tests pass. Fixture output is deterministic and is not an AKS emulator.
+- **Full Windows suite:** 187 tests across 12 lab directories; 0 failed directories.
+- **Full WSL suite:** 187 tests across 12 lab directories in `devops-lab`; 0 failed directories.
+- **PDF:** `textbook/dist/pdf/AZ04-03_aks-acr-readiness.pdf`; 9 pages; 1,699,141 bytes; SHA-256 `C98514EE695114E637B8CAC9E57F390B4A9C2FB310BEB02CF4BD6334D1E1909A`.
+- **Publisher QA:** `python textbook/tools/build.py AZ04-03` completed with 15,535 extracted characters, no placeholder markers and no overflow warnings. Page fill was 53%, 78%, 78%, 83%, 96%, 88%, 97%, 98% and 48%.
+- **Visual review:** All nine pages had been rendered and reviewed at 88 and 140 DPI before the final identity citation addition. After the final rebuild, all nine pages were rendered at 88 DPI; updated pages 3 and 9 were reviewed at 140 DPI, and page 2 was also rechecked. No clipping, broken reference wrapping, missing glyphs or pagination defect was observed.
+- **Host limitation:** Docker Desktop's Linux engine was unavailable, so `kind` could not inventory or create a disposable cluster. `kubectl config get-contexts` only read the local kubeconfig; no context was selected or changed, and no Kubernetes API request was made.
+- **Cloud boundary:** No Azure authentication, subscription query, Azure CLI request, AKS/ACR operation, network/DNS probe, identity-token request, resource mutation or billing query was performed. No Azure resource was created. Actual cumulative Azure spend remains **NOT_VERIFIED**.
+
+The lecture passes the source, reproducible offline lab, full local-suite, PDF build and visual publication gates. Live Azure behavior, identity assignment, DNS/network connectivity, upgrade target availability, quotas, cost and billable outcomes remain unverified and require the later project gates.
