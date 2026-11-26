@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560">
+<defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L0,10 L11,5 z" fill="#17324d"/></marker></defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="34" y="42" font-family="Aptos,Arial,sans-serif" font-size="27" font-weight="700" fill="#17324d" text-anchor="start">KQL 是按表流动的查询管道，先缩小数据再做聚合</text>
+<text x="34" y="74" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#5d7183" text-anchor="start">每个 union / join 子查询都应有自己的时间约束；字段名区分大小写</text>
+<rect x="34" y="180" width="180" height="118" rx="17" fill="#edf5f7" stroke="#087f8c" stroke-width="2.5"/>
+<text x="124" y="214" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#087f8c" text-anchor="middle">Table</text>
+<text x="124" y="247" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">AppRequests</text>
+<text x="124" y="273" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">schema is the contract</text>
+<rect x="252" y="180" width="190" height="118" rx="17" fill="#fff0f1" stroke="#aa4052" stroke-width="2.5"/>
+<text x="347" y="214" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#aa4052" text-anchor="middle">where time</text>
+<text x="347" y="247" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">TimeGenerated</text>
+<text x="347" y="273" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">&gt;= ago(30m)</text>
+<rect x="480" y="180" width="190" height="118" rx="17" fill="#fff3e5" stroke="#c96a18" stroke-width="2.5"/>
+<text x="575" y="214" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#c96a18" text-anchor="middle">where scope</text>
+<text x="575" y="247" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">role / result / name</text>
+<text x="575" y="273" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">filter early</text>
+<rect x="708" y="180" width="190" height="118" rx="17" fill="#f2edfb" stroke="#684bb1" stroke-width="2.5"/>
+<text x="803" y="214" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#684bb1" text-anchor="middle">project / extend</text>
+<text x="803" y="247" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">keep useful columns</text>
+<text x="803" y="273" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">derive a metric</text>
+<rect x="936" y="180" width="230" height="118" rx="17" fill="#eaf6ef" stroke="#23764d" stroke-width="2.5"/>
+<text x="1051" y="214" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#23764d" text-anchor="middle">summarize / bin</text>
+<text x="1051" y="247" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">count + failure rate</text>
+<text x="1051" y="273" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">by time and role</text>
+<path d="M214,239 L242,239" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M442,239 L470,239" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M670,239 L698,239" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M898,239 L926,239" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="220" y="366" width="300" height="92" rx="17" fill="#eaf1f8" stroke="#17324d" stroke-width="2.5"/>
+<text x="370" y="400" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#17324d" text-anchor="middle">join / union</text>
+<text x="370" y="433" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">use only when needed</text>
+<text x="370" y="459" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">align keys + time range</text>
+<rect x="680" y="366" width="300" height="92" rx="17" fill="#edf5f7" stroke="#087f8c" stroke-width="2.5"/>
+<text x="830" y="400" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#087f8c" text-anchor="middle">Check query details</text>
+<text x="830" y="433" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">time span · CPU · regions</text>
+<text x="830" y="459" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">queue / service time</text>
+<path d="M370,306 L370,356" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M520,412 L670,412" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="600" y="515" font-family="Aptos,Arial,sans-serif" font-size="18" font-weight="700" fill="#17324d" text-anchor="middle">Log Analytics time picker 与 KQL 时间过滤可能共同限制结果；验证最终生效范围。</text>
+</svg>

@@ -1,0 +1,13 @@
+// Example for a workspace-based Application Insights schema.
+// Adjust table/column names after checking the selected workspace schema.
+let lookback = 30m;
+AppRequests
+| where TimeGenerated >= ago(lookback)
+| where Name contains "/checkout"
+| summarize
+    RequestCount = sum(ItemCount),
+    FailedCount = sumif(ItemCount, Success == false),
+    MeanDurationMs = avg(DurationMs)
+  by bin(TimeGenerated, 5m), AppRoleName, AppRoleInstance
+| extend FailureRatePct = round(100.0 * todouble(FailedCount) / RequestCount, 2)
+| order by TimeGenerated desc

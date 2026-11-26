@@ -54,6 +54,7 @@ Every lecture and incident will receive its own evidence and limitations before 
 | AZ04-03 | ACCEPTED; 9-page PDF, 5 figures, 21 local tests; Windows + WSL suites each passed 187 tests across 12 lab directories | Synthetic scheduling, scale eligibility, identity matching, ACR authorization, readiness, DNS, PDB and version skew; Docker engine unavailable; no Azure or Kubernetes API operation |
 | AZ04-04 | ACCEPTED; 8-page PDF, 5 figures, 28 fixture cases, 30 local tests; Windows + WSL suites each passed 217 tests across 13 lab directories | Synthetic DNS/network/auth/data and recovery selection; no Azure query, Storage/SQL request, restore or billing check |
 | AZ05-01 | ACCEPTED; 6-page PDF, 5 figures, 11 fixture cases, 23 local tests; Windows + WSL suites each passed 240 tests across 14 lab directories | Synthetic metrics, aggregation, series, alert events and history gate; no Azure metric/alert/action request or billing check |
-| AZ05-02 onward | PLANNED | Not yet authored or run |
+| AZ05-02 | ACCEPTED; 7-page PDF, 5 figures, 5 fixture cases, 11 local tests; Windows + WSL suites each passed 251 tests across 15 lab directories | Synthetic workspace-based telemetry, item-count weighting and operation/parent correlation; no KQL/workspace query, telemetry export or billing check |
+| AZ05-03 onward | PLANNED | Not yet authored or run |
 
-All fourteen accepted lecture PDFs are independent outputs in textbook/dist/pdf/. Package verification awaits all 23 chapters.
+All fifteen accepted lecture PDFs are independent outputs in textbook/dist/pdf/. Package verification awaits all 23 chapters.

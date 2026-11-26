@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="590" viewBox="0 0 1200 590">
+<defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L0,10 L11,5 z" fill="#17324d"/></marker></defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="34" y="42" font-family="Aptos,Arial,sans-serif" font-size="27" font-weight="700" fill="#17324d" text-anchor="start">从总体失败率下钻到一笔请求的依赖和异常</text>
+<text x="34" y="74" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#5d7183" text-anchor="start">事件使用合成数据；按 OperationId 取样本，再检查 ParentId 与各 span 的具体字段</text>
+<text x="154" y="132" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="700" fill="#5d7183" text-anchor="middle">时间</text>
+<path d="M170,180 L1080,180" stroke="#91a7b6" stroke-width="2"/>
+<path d="M230,168 L230,192" stroke="#91a7b6" stroke-width="2"/><text x="230" y="155" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#5d7183" text-anchor="middle">0</text>
+<path d="M520,168 L520,192" stroke="#91a7b6" stroke-width="2"/><text x="520" y="155" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#5d7183" text-anchor="middle">1</text>
+<path d="M810,168 L810,192" stroke="#91a7b6" stroke-width="2"/><text x="810" y="155" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#5d7183" text-anchor="middle">2</text>
+<path d="M1060,168 L1060,192" stroke="#91a7b6" stroke-width="2"/><text x="1060" y="155" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#5d7183" text-anchor="middle">3</text>
+<rect x="66" y="228" width="320" height="120" rx="17" fill="#fff0f1" stroke="#aa4052" stroke-width="2.5"/>
+<text x="226" y="262" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#aa4052" text-anchor="middle">Request · checkout-api</text>
+<text x="226" y="295" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">op-7 / req-17</text>
+<text x="226" y="321" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">POST /checkout → 500 · 560 ms</text>
+<rect x="442" y="228" width="320" height="120" rx="17" fill="#fff3e5" stroke="#c96a18" stroke-width="2.5"/>
+<text x="602" y="262" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#c96a18" text-anchor="middle">Dependency · SQL</text>
+<text x="602" y="295" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">op-7 / dep-31 / parent req-17</text>
+<text x="602" y="321" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">target payments-db → timeout</text>
+<rect x="818" y="228" width="320" height="120" rx="17" fill="#f2edfb" stroke="#684bb1" stroke-width="2.5"/>
+<text x="978" y="262" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#684bb1" text-anchor="middle">Exception · API</text>
+<text x="978" y="295" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">op-7 / parent req-17</text>
+<text x="978" y="321" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">SqlTimeoutException</text>
+<path d="M386,286 L432,286" fill="none" stroke="#c96a18" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M762,286 L808,286" fill="none" stroke="#684bb1" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="600" y="420" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#17324d" text-anchor="middle">视图给出一条可调查的证据链，不替代数据库端、网络端或应用日志中的根因证据。</text>
+<text x="600" y="472" font-family="Aptos,Arial,sans-serif" font-size="18" font-weight="700" fill="#087f8c" text-anchor="middle">请求成功率异常 → 锁定 OperationId → 检查依赖成功/耗时 → 查看异常类型与栈信息。</text>
+<text x="600" y="528" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#5d7183" text-anchor="middle">Application Map 看组件拓扑与热点；Transaction diagnostics 查看单次 end-to-end 细节。</text>
+</svg>

@@ -1,0 +1,22 @@
+// Replace the value with one observed OperationId and constrain each table's time range.
+let operationId = "<operation-id-from-a-sample-request>";
+AppRequests
+| where TimeGenerated >= ago(1h)
+| where OperationId == operationId
+| project TimeGenerated, ItemKind = "Request", OperationId, ParentId,
+          ItemId = Id, Name, Success, DurationMs
+| union kind=outer (
+    AppDependencies
+    | where TimeGenerated >= ago(1h)
+    | where OperationId == operationId
+    | project TimeGenerated, ItemKind = "Dependency", OperationId, ParentId,
+              ItemId = Id, Name, Success, DurationMs, Target
+)
+| union kind=outer (
+    AppExceptions
+    | where TimeGenerated >= ago(1h)
+    | where OperationId == operationId
+    | project TimeGenerated, ItemKind = "Exception", OperationId, ParentId,
+              Name = InnermostType, Message
+)
+| order by TimeGenerated asc

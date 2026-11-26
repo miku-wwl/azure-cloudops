@@ -403,3 +403,35 @@ Research date: 2026-11-27. Microsoft Learn is the primary source. The lab is an 
 - https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-overview
 - https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-types
 - https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-processing-rules
+
+## AZ05-02 — Log Analytics, KQL and Application Insights
+
+Research date: 2026-11-27. Microsoft Learn is the primary source. The lab evaluates synthetic, workspace-based telemetry rows and teaches selected KQL query shapes; it neither executes KQL nor sends telemetry to Azure.
+
+| Chapter section / figure | Claim or teaching point | Source anchor | Classification and limit |
+|---|---|---|---|
+| AZ05-02 §01, Fig 15-1 | Workspaces store log rows in tables with schema; Azure resource diagnostics and Application Insights application instrumentation are distinct collection paths; table plan and retention affect access and query considerations | Log tables; Log Analytics queries; AppRequests/AppDependencies/AppExceptions table references | SOURCE-ANALYSED; no workspace, diagnostic setting, table plan or ingestion was queried |
+| AZ05-02 §02, Fig 15-2 | KQL begins with a table, is case-sensitive in Azure Monitor, and uses piped operators; constrain time and table scope, filter early, and apply time bounds to each union/join branch | Get started with log queries; query optimization; KQL `summarize` operator | SOURCE-ANALYSED; KQL examples are documented templates and were not sent to a workspace |
+| AZ05-02 §03, Fig 15-3 | Workspace-based Application Insights separates requests, dependencies and exceptions; `OperationId` associates telemetry with a logical operation and `ParentId`/available item IDs help inspect direct parentage; AppExceptions does not expose the same row `Id` column in its current table reference | AppRequests, AppDependencies, AppExceptions table references | SOURCE-ANALYSED; table/column availability is workspace/schema-specific; no trace was queried |
+| AZ05-02 §04 | Application Map shows component topology and hotspots; transaction diagnostics supports end-to-end request/dependency investigation; correlation does not alone establish root cause | Dependency tracking; Application Map; failures/performance/transactions | SOURCE-ANALYSED; diagram and scenario are illustrative, no application was instrumented |
+| AZ05-02 §05, Fig 15-5 | Sampled telemetry rows can represent multiple events; `ItemCount` should be included in request-count aggregation; sampling is not proof that all dependencies/spans were collected | Application Insights metrics and sampling; AppRequests sample queries | SOURCE-ANALYSED; synthetic weighting only, no SDK sampling or data loss was observed |
+| AZ05-02 §05 | Current language recommendations differ between Microsoft OpenTelemetry Distro for .NET/Node.js/Python and Azure Monitor OpenTelemetry Distro for Java; do not initialize both in one application | Enable OpenTelemetry; OpenTelemetry sampling | SOURCE-ANALYSED 2026-11-27; recheck language and SDK guidance before live implementation |
+| AZ05-02 §06–07 | Five synthetic cases and 11 tests cover weighted request counts, time filtering, operation grouping, direct parent links, and missing visible parent records | `chapters/AZ05-02/labs/telemetry-triage` | LOCAL_VERIFIED 2026-11-27; Windows and WSL suites each passed 251 tests across 15 directories; no KQL/service emulation |
+| AZ05-02 cost / authorization | No Azure authentication, workspace/resource query, telemetry export, resource mutation or billing request was performed | Session and command execution record | LIVE_NOT_RUN; actual cumulative spend remains NOT_VERIFIED |
+
+### AZ05-02 primary references
+
+- https://learn.microsoft.com/en-us/azure/azure-monitor/logs/logs-table-overview
+- https://learn.microsoft.com/en-us/azure/azure-monitor/logs/get-started-queries
+- https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/apprequests
+- https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/appdependencies
+- https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/appexceptions
+- https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization
+- https://learn.microsoft.com/en-us/kusto/query/summarize-operator?view=azure-data-explorer
+- https://learn.microsoft.com/en-us/azure/azure-monitor/app/metrics-overview
+- https://learn.microsoft.com/en-us/azure/azure-monitor/reference/queries/apprequests
+- https://learn.microsoft.com/en-us/azure/azure-monitor/app/dependencies
+- https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-map
+- https://learn.microsoft.com/en-us/azure/azure-monitor/app/failures-performance-transactions
+- https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentelemetry-sampling
+- https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentelemetry-enable

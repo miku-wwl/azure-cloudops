@@ -1,0 +1,20 @@
+{
+  "events": [
+    {"table":"AppRequests","time_minute":100,"id":"req-17","parent_id":"upstream-4","operation_id":"op-7","role":"checkout-api","role_instance":"checkout-2","name":"POST /checkout","success":false,"duration_ms":560,"item_count":4,"target":""},
+    {"table":"AppDependencies","time_minute":101,"id":"dep-31","parent_id":"req-17","operation_id":"op-7","role":"checkout-api","role_instance":"checkout-2","name":"SQL payments-db","success":false,"duration_ms":450,"item_count":4,"target":"payments-db"},
+    {"table":"AppExceptions","time_minute":102,"id":"exc-9","parent_id":"req-17","operation_id":"op-7","role":"checkout-api","role_instance":"checkout-2","name":"SqlTimeoutException","success":null,"duration_ms":null,"item_count":1,"target":""},
+    {"table":"AppRequests","time_minute":101,"id":"req-18","parent_id":"upstream-5","operation_id":"op-8","role":"checkout-api","role_instance":"checkout-1","name":"POST /checkout","success":true,"duration_ms":80,"item_count":1,"target":""},
+    {"table":"AppDependencies","time_minute":102,"id":"dep-32","parent_id":"req-18","operation_id":"op-8","role":"checkout-api","role_instance":"checkout-1","name":"SQL payments-db","success":true,"duration_ms":20,"item_count":1,"target":"payments-db"},
+    {"table":"AppRequests","time_minute":102,"id":"req-19","parent_id":"gateway-2","operation_id":"op-9","role":"catalog-api","role_instance":"catalog-3","name":"GET /items","success":false,"duration_ms":900,"item_count":1,"target":""},
+    {"table":"AppExceptions","time_minute":103,"id":"exc-10","parent_id":"req-19","operation_id":"op-9","role":"catalog-api","role_instance":"catalog-3","name":"NullReferenceException","success":null,"duration_ms":null,"item_count":1,"target":""},
+    {"table":"AppDependencies","time_minute":104,"id":"dep-orphan","parent_id":"req-not-collected","operation_id":"op-10","role":"search-api","role_instance":"search-1","name":"HTTP inventory","success":false,"duration_ms":250,"item_count":1,"target":"inventory.internal"},
+    {"table":"AppRequests","time_minute":80,"id":"req-old","parent_id":"gateway-old","operation_id":"op-old","role":"checkout-api","role_instance":"checkout-2","name":"POST /checkout","success":false,"duration_ms":800,"item_count":5,"target":""}
+  ],
+  "cases": [
+    {"id":"weighted-request-failure-summary","mode":"request_summary","start_minute":100,"end_minute":104,"bin_minutes":5,"expected":[{"bin_start":100,"role":"catalog-api","row_count":1,"request_count":1,"failed_count":1},{"bin_start":100,"role":"checkout-api","row_count":2,"request_count":5,"failed_count":4}]},
+    {"id":"checkout-operation-has-direct-links","mode":"transaction","operation_id":"op-7","expected":{"status":"OBSERVED_LINKS","records":["req-17","dep-31","exc-9"],"links":[["req-17","dep-31"],["req-17","exc-9"]],"unmatched_parent_ids":[]}},
+    {"id":"operation-with-no-matching-rows","mode":"transaction","operation_id":"op-absent","expected":{"status":"NO_MATCHING_ROWS","records":[],"links":[],"unmatched_parent_ids":[]}},
+    {"id":"dependency-without-visible-parent","mode":"transaction","operation_id":"op-10","expected":{"status":"PARTIAL_PARENT_LINKS","records":["dep-orphan"],"links":[],"unmatched_parent_ids":["req-not-collected"]}},
+    {"id":"time-window-excludes-old-request","mode":"request_summary","start_minute":100,"end_minute":104,"bin_minutes":5,"expected":[{"bin_start":100,"role":"catalog-api","row_count":1,"request_count":1,"failed_count":1},{"bin_start":100,"role":"checkout-api","row_count":2,"request_count":5,"failed_count":4}]}
+  ]
+}
