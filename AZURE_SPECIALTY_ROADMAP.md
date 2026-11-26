@@ -1,202 +1,409 @@
-# Azure CloudOps & Enterprise Infrastructure — 学习与实战路线图（2026 V2）
+# Azure CloudOps & Enterprise Infrastructure — V3 工程实施与学习路线图
 
-> **仓库：** [`miku-wwl/azure-cloudops`](https://github.com/miku-wwl/azure-cloudops)  
-> **方向：** Azure Cloud Engineer / Senior Cloud & Infrastructure Engineer / Platform Engineer / SRE  
-> **原则：** 基于现有 AZ-104、AZ-305、Terraform、Kubernetes 知识，重在企业级设计与真实运维证据，而非重复备考。  
-> **状态：** 当前是学习规划；**没有完成、执行或验证的实验，不得标记为 PASS**。  
-> **更新：** 2026-11-05
+> **版本：** V3.0 / 2026-11-26；在 2026-11-05 V2 基础上重写。  
+> **当前状态：** `PLANNED`。本次变更仅更新规划，不代表任何代码、CI、云资源、实验、教材已经完成。  
+> **基线：** `miku-wwl/azure-cloudops` main，提交 `8356d02c4c5d8e5b694877d655c5cac725b08aa4`。  
+> **目标：** Azure Cloud / Senior Infrastructure / Platform / SRE / DevOps Engineer，尤其适合金融等重视安全、治理、变更与恢复的企业环境。  
+> **学习原则：** 不重复 AZ-104、AZ-305、Terraform 认证备考；以技术机制、工程实施、独立排障和可复验结果为主。
 
-## 1. 升级目标与边界
+## 0. V3 的设计决策
 
-原路线图的 Azure Networking、Identity、PowerShell、Monitor/KQL、Incident Response、Backup/Restore 全部保留。对照高级 Cloud / Infrastructure Engineer 岗位，新增两个重要能力：
+V2 的 M0–M9 全部保留其核心学习目标，但不再以十个孤立知识主题组织工程。V3 改用统一的企业云基础设施场景、阶段化交付和分层证据标准。
 
-1. **Enterprise Landing Zone & Cloud Governance**：管理组、订阅分区、网络拓扑、身份、Policy、监控与成本治理，以及架构决策记录（ADR）。
-2. **Terraform / Infrastructure Delivery Engineering**：模块设计、State 隔离、计划审查、CI/CD、最小权限部署与变更回滚。
-
-**本项目仍是专项实战学习仓，不扩张为第三个大型平台项目。** 不做自研控制台、Terraform 控制平面、复杂多租户系统；KPCP 已覆盖对应的平台产品工程能力。
-
-成功标准不是“看完课程”或“积累文件数量”，而是能够解释架构权衡、亲自部署、独立定位故障、执行恢复，并拿出可复验的脱敏证据。
-
-## 2. 核心技能优先级
-
-| 优先级 | 技能 | 应掌握的高级问题 | 最低可交付结果 |
-|---|---|---|---|
-| **P0** | Azure Landing Zone / 架构 | 如何拆分管理组和订阅？共享平台和应用团队的边界在哪？Policy 如何落地？ | 设计图 + 2 条 ADR + 权限/订阅矩阵 |
-| **P0** | Azure Networking | Private Endpoint 为什么解析错误？NSG、UDR、路由、DNS 如何逐层排查？ | 一次真实网络故障诊断 + 恢复证据 |
-| **P0** | Terraform Engineering | 模块如何复用？State 如何隔离、保护与恢复？Plan 谁来审核？ | 最小 IaC 实验 + 静态验证 + Plan 证据 |
-| **P1** | Identity / Security / Governance | RBAC 与 Azure Policy 的限制有什么不同？如何证明最小权限？ | allow/deny 测试与权限设计 |
-| **P1** | Azure Monitor / KQL | 哪些日志和指标能够识别用户影响？如何降低告警噪声？ | 5 条有数据来源说明的 KQL + 告警验证 |
-| **P1** | Incident Response / Recovery | 如何建立正常基线、找到根因、回滚和验证恢复？ | 2 份 RCA + 一次真实恢复验证 |
-| **P2** | PowerShell / Azure CLI | 如何安全盘点资源、处理 API 失败、确保默认只读？ | 小型只读审计脚本与测试 |
-| **P2** | Hybrid / DR Design | VPN/ExpressRoute、DNS 转发、跨区域恢复的技术与成本取舍？ | 设计 ADR；不要求付费部署 |
-
-先做 P0/P1 的真实闭环，P2 以设计和小规模练习补充。
-
-## 3. 学习模块（保持 Azure 专项，不重复 KPCP）
-
-### M0 — Enterprise Landing Zone & Architecture（新增，P0）
-
-**核心：** Cloud Adoption Framework / Azure Landing Zones；Management Groups、Subscriptions、Resource Groups、Azure Policy、RBAC、命名与标签规范、Hub-Spoke 或 Virtual WAN 的选择、平台/工作负载责任边界。
-
-- 设计“一个组织、两个工作负载环境（dev/prod）”的**参考方案**：管理组/订阅层级、连接、权限、日志与审计、成本归属。
-- 写出至少两条 ADR：例如 Hub-Spoke vs Virtual WAN；分订阅 vs 单订阅；集中式 vs 分布式日志。
-- 对每项设计区分“个人订阅可验证”和“仅企业级设计讨论”。管理组、管理订阅与跨订阅部署可能受权限限制。
-- **不要**为了作品集强行部署完整企业 Landing Zone、大型 Azure Firewall 或 Virtual WAN。
-
-**验收：** 可讲清楚架构图、信任边界、治理控制点与技术选型，至少 2 条明确的决策权衡。
-
-### M1 — Azure Networking & Private Connectivity（P0）
-
-**核心：** VNet/Subnet、Peering、NSG、UDR、Private Endpoint、Private DNS Zone/Link、DNS 查询链路。
-
-- 先写设计：访问路径、名称解析预期、路由和防火墙/NSG 生效位置。
-- 在**个人授权非生产**范围内搭建一个最小实验；记录正常连通性。
-- 注入可逆错误（如断开 Private DNS Zone Link、错误 NSG 规则），观察故障并恢复。
-- **验收：** 修复前后 `nslookup` 或等效查询、连接测试、配置差异与 RCA；具体资源按预算选择。
-
-### M2 — Network Troubleshooting（P0）
-
-**核心：** Network Watcher、IP Flow Verify、Next Hop、Connection Troubleshoot、Effective Routes / Security Rules。
-
-- 按 **DNS → 路由 → NSG/防火墙 → 身份/服务访问 → 应用响应** 排查，明确每一步的证据。
-- 不直接看预设故障答案，先作假设、用工具验证，再归因。
-- **验收：** 能指出具体失败环节；恢复后对同一探针复测，并记录不是根因的备选假设。
-
-### M3 — Entra ID, RBAC, Managed Identity & Governance（P1）
-
-**核心：** Entra ID、Azure RBAC、Managed Identity、Key Vault、Azure Policy、作用域和继承；PIM 仅作可选设计。
-
-- 比较 Azure RBAC 和 Azure Policy：前者管理谁能执行什么管理操作，后者约束资源配置与合规状态；不要混淆数据平面权限。
-- 设计并验证一个 Key Vault 或 Storage 的 allow/deny 权限场景：用最小权限修复，不直接授予 Owner。
-- 审视 Policy 的 `audit`、`deny`、`modify` 等效果及落地限制；不要对现有共享资源施加阻断策略。
-- **验收：** 允许与拒绝路径都经过实际测试，附作用域、角色、身份和策略配置的脱敏证据。
-
-### M4 — Terraform Engineering & Controlled Delivery（新增，P0）
-
-**核心：** AzureRM / AzAPI 适用场景、Terraform Modules、Provider/Module 版本固定、Remote State、State Locking、CI 验证、Plan 审批、OIDC Federation。
-
-- 只构建一个**最小、可销毁**的 Azure 基础设施练习（例如 VNet + Subnet + NSG）；不建设自己的 IaC 平台。
-- 用变量、输出、模块接口和环境目录解释复用边界；不要为了“模块化”制造过度抽象。
-- 明确 State 的存储、加密、权限、锁定与环境隔离。不要提交 `*.tfstate`、敏感 `tfvars`、计划文件或身份凭证。
-- PR 运行 `terraform fmt -check`、`terraform validate`、必要的静态扫描；**计划输出应在明确的身份与凭证边界下生成和审查**，不可把 `validate` 当成真实 Plan/Apply。
-- 设计（并在具备权限时验证）Plan → 审核 → Apply 的权限分离，以及漂移检测、回滚与销毁。
-- **验收：** 小型配置能静态验证；若实际部署，则保存真实 Plan/Apply/Destroy 与清理证据，注明工具版本和目标 Azure Scope。
-
-### M5 — Azure Monitor, Log Analytics & KQL（P1）
-
-**核心：** Log Analytics、Azure Monitor、Activity Logs、Resource Logs、Metrics、Data Collection Rules、KQL、Action Groups、Alert Processing Rules。
-
-- 无订阅时先练官方 Log Analytics Demo；注明样本数据不是个人 Azure 环境。
-- 编写至少 5 条查询，包括筛选、分组/时间窗、资源关联、异常定位等；**在查询旁写清数据表和诊断用途**。
-- 选一个自己的小规模事件验证告警链路：信号来源 → 条件 → 触发 → 处理 → 恢复。
-- **验收：** 查询可重跑、来源明确；如果告警尚未真实触发，就标记为 `NOT RUN`。
-
-### M6 — Incident Response & RCA（P1）
-
-**核心：** Baseline、故障注入、假设检验、检测时间、诊断、回滚/修复、影响评估和事后复盘。
-
-- 至少两个不同类别的实验：**网络/DNS** + **身份/RBAC 或监控**。
-- 每个案例写下发现方式、影响范围、排障时间线、根因证据、修复与预防措施。
-- 明确实验与真实生产 On-call 是不同经历，不对外声称具有未发生的企业生产事故经验。
-- **验收：** 两个可复现、完整的故障处理闭环；有修复前后证据。
-
-### M7 — PowerShell / Azure CLI Operations Automation（P2）
-
-**核心：** Az PowerShell / Azure CLI、资源盘点、标签与配置审计、错误处理、Pester。
-
-- 先学习 Microsoft Azure Resource Inventory (ARI) 的设计，再写一个限定范围的**只读**资源盘点脚本。
-- 输出 JSON/CSV，记录依赖与版本；权限不足时失败应清晰且安全。
-- **验收：** 至少一组离线测试及一次授权环境实际运行记录；默认不修改资源。
-
-### M8 — Backup, Restore & Disaster Recovery（P1）
-
-**核心：** Backup Policy、恢复点、恢复测试、数据完整性、RPO/RTO、保留成本。
-
-- 选择最小成本对象做一次**真实恢复**，记录备份时点与恢复目标。
-- 在恢复后检查文件校验和或等效数据完整性，而不是仅凭“备份任务成功”。
-- 区分设计 RTO/RPO 目标与实验实际恢复时长、数据损失窗口。
-- **验收：** 恢复步骤、测试结果、实际耗时、残留资源与费用检查。
-
-### M9 — Optional Validation / Hybrid Design（P2）
-
-- Microsoft Applied Skills 的 Azure Networking / Azure Monitor 评估可作为额外验证，**不作为毕业门槛**。
-- Hybrid Networking（VPN/ExpressRoute、DNS 转发）、跨区域 DR、Virtual WAN、Azure Firewall：优先做 ADR 和故障分析，不要求为简历耗费高额云费用。
-- 根据应聘 JD 调整权重，避免为了扩展覆盖面降低完成质量。
-
-## 4. 四个 Sprint（建议节奏，可按实际权限与成本调整）
-
-| Sprint | 主线 | 实际学习任务 | Gate |
-|---|---|---|---|
-| **S1 — Architecture** | M0 + M1 设计 + M3 | Landing Zone 架构图、2 条 ADR、网络/DNS 路径、RBAC/Policy 模型 | 能解释边界与技术取舍；文档不冒充部署 |
-| **S2 — IaC & Networking** | M4 + M1 + M2 | 最小 Terraform Lab、CI 静态验证、网络故障注入与排障 | 网络故障真实恢复；IaC 状态按实际证据标记 |
-| **S3 — Operations** | M3 + M5 + M6 + M7 | allow/deny 权限实验、KQL、告警链路、只读巡检、第二份 RCA | 有可重现探针、查询和恢复证据 |
-| **S4 — Recovery & Portfolio** | M8 + 总结 | 真实 Backup/Restore、成本复核、脱敏、求职岗位映射 | 全部必选验收项通过后才标记 Portfolio Ready |
-
-**最小可执行版本：** 如果时间或 Azure 预算有限，优先完成 **M0 设计 + M1/M2 网络事故 + M4 小型 IaC + M5 KQL + M6 RCA**，其余模块逐项补齐。没有授权云环境就先做设计和离线验证；不要伪造 live evidence。
-
-## 5. 每次实验的证据与质量门槛
-
-记录以下信息即可，不强制新建模板文件夹：
-
-1. **Scope：** 目标、实验 Subscription/RG（公开时脱敏）、Region、所有者、预计费用与停止条件。
-2. **Architecture：** 正常路径、权限边界、预期结果、失败假设和设计决策。
-3. **Commands & versions：** CLI/PowerShell/Terraform 版本、关键操作与配置；敏感参数脱敏。
-4. **Baseline：** 故障注入前的工作状态以及可以复测的诊断探针。
-5. **Experiment：** 实际变更、错误现象、检测方式、排查假设与时间线。
-6. **Recovery：** 修复、相同探针复测、数据/服务有效性检查与 RCA。
-7. **Cleanup：** Destroy/删除后的资源清点、备份/日志保留、费用和遗留项。
-8. **Evidence status：** 只用 `PLANNED`、`DESIGNED`、`STATIC_CHECK_PASS`、`DEPLOYED`、`LIVE_VERIFIED`、`RECOVERED`、`CLEANED_UP`、`BLOCKED`、`NOT_RUN` 中**确实满足**的状态；一个状态不能代表其他状态。
-
-### 示例：Private Endpoint 解析故障
-
-正常 DNS/连接通过 → 在隔离测试范围内断开 Private DNS Zone Link → 记录失败的解析与连接结果 → 使用 Network Watcher / DNS/路由/NSG 证据逐层诊断 → 恢复 Zone Link → 复测相同探针 → 写 RCA、成本与清理记录。
-
-**禁止**对生产、雇主、共享或未知所有权资源注入故障。
-
-## 6. 成本、权限和安全红线
-
-- **默认 free-first：** 文档、ADR、离线设计与公开 Demo KQL 优先；只有明确收益时才启用 Azure 付费资源。
-- 每次部署前确认地区定价、资源依赖、预计运行时间和自动/人工清理方案；预算告警不等于硬限额。
-- Private Endpoint、VM、Managed Disk、Public IP、Log Analytics 摄取与保留、Backup、Firewall 等均可能收费，部分保留资源在删除 RG 后仍需额外处理。
-- 明确 CI 身份和权限：避免在 PR 上暴露可直接 Apply 的凭据；优先短期令牌和受控审批。
-- State / Plan / 日志中可能包含敏感数据；不要上传密钥、`tfstate`、凭证或未脱敏截图。
-- PIM、管理组、某些 Enterprise 服务或跨订阅权限需要额外授权和许可；没有权限就做设计，不声称已部署。
-
-## 7. 求职叙述方式（按岗位，不夸大）
-
-| 岗位 | 最值得展示 | 不能混淆的点 |
+| V2 模块 | V3 承接阶段 | 变化 |
 |---|---|---|
-| Senior Cloud & Infrastructure Engineer | Landing Zone 设计、Terraform 交付、Governance、Network 与运维事件 | 设计案例不等于真实企业大规模落地 |
-| Azure Cloud / Platform Engineer | IaC 模块、Policy/RBAC、连接性、安全边界、CI 变更控制 | `terraform validate` 不等于 Apply |
-| SRE / CloudOps | Monitor/KQL、Network Watcher、事件 RCA、备份恢复 | 模拟 incident 不等于生产 On-call |
-| Cloud Architect | ADR、拓扑、权限与成本/可靠性取舍 | 参考架构不等于生产实施 |
+| M0 Landing Zone | P0、P3 | 增加职责、信任、治理与实验映射 |
+| M1/M2 Networking & Troubleshooting | P2、P7、L1 | 从单一事故升级为可复验网络故障组 |
+| M3 Identity & Governance | P3、L2 | 区分控制面、数据面、身份、网络和策略拒绝 |
+| M4 Terraform Delivery | P1、P5、L1/L3 | 加入状态、审批、漂移与 Azure Pipelines |
+| M5 Monitor/KQL | P6、L2 | 合成数据、官方 Demo、自有云日志三类分开 |
+| M6 Incident/RCA | P7、L1–L3 | 12 个场景规格、8 个必选本地闭环、授权 live 子集 |
+| M7 PowerShell/CLI | P6 | 默认只读，含分页/错误/权限处理 |
+| M8 Backup/Restore | P7、L3 | 恢复数据校验、实测时间、残留审计 |
+| M9 Hybrid Design | P0、P8 | 混合网络、跨区域 DR、PIM 等以设计为主 |
 
-可以在简历中写经过验证的具体结果，例如“在隔离 Azure Lab 中复现并定位 Private DNS 配置故障，恢复后验证网络路径”；**不要**写“负责大型企业 Azure Landing Zone 生产建设”之类未经发生的经历。
+新增 Compute/Storage/App Service/ACR/AKS/Azure SQL 的企业运维知识、Azure DevOps 交付、本地低成本实训及技术教材体系。保留原有低成本、真实证据、无授权不部署等红线。项目不是 Azure 平台产品，不重新实现 KPCP，不开发复杂银行业务系统。
 
-## 8. 完成定义（Definition of Done）
+### 0.1 两条交付主线
 
-- [ ] **Architecture：** 一份 Landing Zone 设计图，2 条 ADR，明确权限、网络、治理与成本权衡。
-- [ ] **Networking：** 一次完整 DNS/NSG/路由故障的真实诊断和恢复。
-- [ ] **Terraform：** 可重现的最小基础设施配置；真实执行了哪些 `fmt` / `validate` / `plan` / `apply` / `destroy`，逐项注明并保留证据。
-- [ ] **Identity：** 最小权限 allow/deny 路径有验证结果。
-- [ ] **Monitoring：** 5 条有出处的 KQL；至少一次真实告警链路验证。
-- [ ] **Incident：** 至少 2 份可复验 RCA，覆盖两个不同故障类别。
-- [ ] **Automation：** 一份默认只读、含错误处理与测试的资源审计脚本。
-- [ ] **Recovery：** 实际恢复数据成功，记录恢复时长和验证方式。
-- [ ] **Security & Cost：** 证据脱敏、部署授权、费用复核、销毁与残留清点完成。
+1. **本地工程主线 P0–P8（必做）**：可在一台开发机反复运行；不依赖 Azure 订阅、付费 SaaS 或云端 CI 容量；构建完整机制学习、实验、测试与教材闭环。
+2. **真实 Azure 验证 L1–L3（有条件）**：只选择收益最高、短期可销毁的实验；每次另行获得授权及费用上限。本地版可独立封版。未授权或缺少服务资格不阻塞本地版，不降低 live 资格标准。
 
-**Gate 规则：** 全部必选项目有证据后才能标记 `PORTFOLIO_READY`。不足时继续保持 `PLANNED` 或 `PARTIAL`，明确阻塞原因。这个仓库当前仍为 **PLANNED / NOT LIVE VERIFIED**。
+不预设已经拥有 Azure credits、管理组权限、Azure DevOps 组织、Microsoft-hosted parallel jobs、固定区域或特定订阅类型。默认云端新增费用为零；任何付费实验不得由执行代理自行决定。P0 必须记录实际可用条件。
 
-## 9. 查资料时优先使用的官方入口
+## 1. 统一企业场景与范围
 
-只保留官方入口，不在本仓库复制教程或额外创建学习材料：
+### 1.1 Fictional Banking Cloud Infrastructure Lab
 
-- [Azure Landing Zones / Cloud Adoption Framework](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/)
-- [Azure Landing Zones Terraform deployment guidance](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/deploy-landing-zones-with-terraform)
-- [Microsoft Learn — AZ-700 labs](https://microsoftlearning.github.io/AZ-700-Designing-and-Implementing-Microsoft-Azure-Networking-Solutions/)
-- [Microsoft Learn — AZ-104 labs](https://microsoftlearning.github.io/AZ-104-MicrosoftAzureAdministrator/)
-- [Microsoft Learn — AZ-305 case studies](https://microsoftlearning.github.io/AZ-305-DesigningMicrosoftAzureInfrastructureSolutions/)
-- [Azure Monitor / Log Analytics](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-tutorial)
-- [Azure Resource Inventory (ARI)](https://github.com/microsoft/ARI)
+假设一家金融机构运营内部交易查询/账单文档服务，要求开发与生产隔离、应用通过私网访问数据、身份权限最小化、变更可审核、故障可恢复。业务仅采用合成数据与最小探针或已有轻量镜像，不处理真实交易、PII、客户数据，不做行业合规认证声明。
 
-**下一步：** 完成 S1 的设计决策与网络路径，再启动最小、可回收的 S2 实验。先把一条故障闭环做扎实，再扩展覆盖面。
+企业参考架构需覆盖：
+
+- Management Group、Platform / Landing Zone subscriptions、dev/prod 边界、资源组及资源所有权；个人订阅仅映射最小 lab，不假装拥有完整管理组权限。
+- Hub-spoke、IP 地址规划、路由、Private DNS、Internet ingress/egress、私有 PaaS 访问；比较 Virtual WAN、Azure Firewall、Private Resolver、VPN/ExpressRoute，但不默认部署。
+- Entra ID、工作负载身份、RBAC、Azure Policy、Key Vault、监控归属、成本中心和职责分离。
+- 交付路径：版本控制 → 审查 → 静态检查 → 计划 → 批准 → 部署 → 健康检查 → 回退或恢复 → 审计。
+- 工作负载路径：客户端 → 应用 → 数据/秘密服务；遥测覆盖网络、应用、控制面、数据面；失败时用同一探针复验。
+
+### 1.2 三种环境拓扑
+
+| 环境 | 拓扑 | 边界 |
+|---|---|---|
+| Reference | 双工作负载环境、共享 hub、管理/连接/安全服务 | 仅设计，无真实 prod；架构选择用 ADR |
+| Local | 单机隔离容器网络、DNS 服务、最小 HTTP 应用/探针、Azurite、合成日志；按需本地 K8s | 机制类比与真实本地 API；不能声称复制 Azure 控制面 |
+| Live | 授权专用 RG、VNet/subnet、最小探针、Storage/Private Endpoint/DNS 等按实验启用 | 一次一个小场景；非生产、短生命周期；昂贵服务按需设计而非默认部署 |
+
+本地命名、实验 ID、数据模型和诊断契约尽量一致。Azure 资源与本地模拟组件采用显式不同 provider/adapter、目录和标签，禁止通过改名把本地测试包装成真实 Azure。
+
+## 2. 技术选型与服务优先级
+
+| 领域 | 核心（必学/必交付相应设计或本地机制） | 扩展（条件触发） |
+|---|---|---|
+| Azure architecture | CAF/ALZ、Hub-Spoke、Management Groups、RBAC、Policy、成本与命名 | Virtual WAN、跨租户、多订阅真实部署 |
+| Network | VNet、Subnet、NSG、UDR、Peering、Private Link、Private DNS、Network Watcher | Application Gateway/WAF、Load Balancer、Firewall、Private Resolver、VPN/ExpressRoute |
+| Identity | Entra ID、Managed Identity、RBAC 管理面/数据面、Key Vault、Policy audit/deny | PIM、Defender for Cloud、企业策略分发 |
+| Compute | VM/VMSS、App Service 的部署和健康/扩缩容机制；本地 HTTP workload | 真实 VM/VMSS、App Service slot、区域可用性实测 |
+| Container | OCI registry、K8s image pull、ACR/AKS identity 与网络设计 | 真实 ACR/AKS、节点升级、Autoscaler |
+| Data | Storage Account/Blob、Azurite、本地数据恢复；Azure SQL 访问与恢复设计 | Azure SQL 实际部署/PITR、生产级跨区域复制 |
+| IaC | Terraform AzureRM；模块/状态/锁/漂移；AzAPI/Bicep 选型对比 | 特定 AzureRM 未覆盖场景才引入 AzAPI；不重复维护完整 Bicep 栈 |
+| Delivery | GitHub Actions、Azure Pipelines YAML、WIF、Service Connections、Environments、Approvals & Checks | 真实 Azure DevOps 运行与云端受控部署（L3） |
+| Observability | Azure Monitor、Activity Log、Log Analytics、KQL、Application Insights、告警链路 | DCR、复杂跨工作区查询、真实采集配置 |
+| Ops | Azure CLI / Az PowerShell、Resource Graph、Pester、JSON/CSV | 企业级报表、复杂自动化平台 |
+
+具体工具版本、镜像 digest、provider 版本及平台能力以 P0 实测和 P1 锁定为准，不在规划里臆造版本。优先 WSL2/Linux + Podman；如果 compose provider、本地 K8s 或网络机制不兼容，先记录最小复现和替代方案，不能未经同意切换为必须付费工具。Kubernetes 只在容器运维练习中按需启动，不与 KPCP 重复建设控制面。
+
+### 2.1 Fidelity matrix（必须在 P0 建立，P8 审核）
+
+| Azure 机制 | 本地可验证能力 | 不能由本地结果证明 |
+|---|---|---|
+| Storage Account | Azurite 支持范围内的 Blob/Queue/Table API、应用错误与恢复 | Azure RBAC、网络 ACL、Private Endpoint、geo-redundancy、实际备份服务 |
+| Private DNS / Private Link | DNS 查询、错误记录、缓存/回退、私网目标连通性 | Azure VNet link、平台 DNS 和 Private Endpoint 控制面 |
+| NSG / UDR / Peering | 容器/命名空间流量、路由、隔离和拒绝机制 | Azure NSG 优先级/状态、有效路由、peering transit 等具体实现 |
+| Entra ID / MI / Key Vault | 测试 token/授权 fixture、明确 allow/deny 与应用错误处理 | Entra 签发、Managed Identity token endpoint、角色传播及 Key Vault 实际授权 |
+| Azure Policy | 本地配置规则或策略 fixture 的正反例 | ARM 实际 deny/audit/modify、remediation、scope/inheritance |
+| AzureRM / Terraform | fmt/validate、mock provider 单测（若版本支持）、本地 provider 状态/锁/漂移 | 实际 Azure plan/apply、ARM API 接受、Azure Storage backend 锁行为 |
+| AKS/ACR | 本地 Kubernetes 与本地 registry、ImagePullBackOff 排障 | AKS managed identity、ACR role mode、网络权限和托管升级 |
+| Monitor/KQL | 合成信号、日志关联、可执行本地告警链路；官方 Demo KQL 如可访问 | 自有 Azure Monitor 采集、Azure 告警实际触发、真实 KQL 执行结果（除非对应引擎执行） |
+| Backup/DR | 恢复副本、checksum、计时和数据一致性 | Azure Backup/PITR/跨区域故障转移实际行为 |
+| Azure Pipelines | YAML 静态检查、阶段脚本执行、审批协议测试 | Azure DevOps 服务端 YAML 编译、Environment checks/WIF 和实际任务执行 |
+
+禁止构建一个庞大、未经证实的通用 Azure 仿真器；本地替代实现只服务于明确的实验目标。若引入第三方模拟器，先单独记录版本、API 覆盖、缺口、许可证、维护状态及契约测试，不作为未经验证的核心依赖。
+
+## 3. 阶段化实施合同（P0–P8）
+
+所有阶段按依赖推进；允许对明确独立的任务并行开发，但每次交付必须有一个可核验阶段结论。后续实施代理先读当前 main、实际文件与上次证据，再选择最小任务，不得凭文档推断已完成。以下目录/入口均为目标，当前尚未实现。
+
+### P0 — Architecture, Scope & Engineering Contracts
+
+**目标：** 确立统一实验场景、企业参考架构、实现边界与可验收合同。
+
+- 绘制 reference/local/live 三种拓扑，标记信任边界、正常流量、身份与遥测路径；建立 CIDR、资源命名、标签及环境所有权约定。
+- 至少 5 条 ADR：订阅/管理组边界；Hub-Spoke vs Virtual WAN；私有 DNS/访问；身份/策略职责；Terraform state/交付边界。Hybrid connectivity 与跨区域 DR 可另加 ADR。
+- 建立服务覆盖/Fidelity matrix、风险与威胁模型、实验数据声明、成本清单模板、阶段/incident/evidence ID 和验证状态规范。
+- 探测实际宿主机、WSL、Podman、可选 K8s、Terraform、Azure CLI、PowerShell、可用网络能力；区分安装存在、版本可用、实际运行成功。不得自动登录或部署 Azure。
+- 记录授权/订阅/region 条件为 unknown 或已核实值；建立待办清单和版本锁定策略。
+
+**产物：** `architecture/`、实验/证据合同、状态追踪记录。  
+**Gate P0：** 三种架构均有明确边界；ADR 说明备选方案、代价与验证；必选场景有验收标准；云端无授权默认禁用。仅设计部分标 `DESIGNED`，没有运行不写 `PASS`。
+
+### P1 — Local Substrate, IaC Baseline & CI
+
+**目标：** 构建一个可重复启动/停止的最小本地环境和可信的离线交付入口。
+
+- 用固定版本的容器实现 HTTP probe、测试应用、DNS、Azurite 和合成数据生成；按需启用遥测或本地 K8s profile，避免全部常驻。默认 bind loopback；内部网络仅允许所需访问。
+- 构建 Terraform 最小 Azure root/module（VNet/subnet/NSG 及明确 provider 版本），以 `fmt -check`、`init -backend=false`、`validate` 和适用的静态扫描/fixture tests 验证；网络安装 provider 需区分首次获取依赖与后续离线重跑。不能把 mock plan 当 live plan。
+- 提供本地启动、健康检查、测试、重置、清理入口，例如 `scripts/lab` 子命令（具体实现由 P1 决定），全部有帮助、非零失败码、超时和目标限制。重复启动不得破坏状态，重复清理应安全。
+- GitHub Actions 默认仅静态/本地测试，无真实云凭证、最小 `permissions`、不信任 fork 输入，依赖和 action 版本固定；日志保留不含秘密。
+
+**Gate P1：** 在目标平台执行 clean setup → baseline → tests → teardown，记录版本/命令/退出码；第二次 clean replay 成功；CI 实际运行结果与当前提交关联，若 hosted CI 无额度可保留本地结果但 CI 验收明确 `BLOCKED`，不能伪造绿灯。
+
+### P2 — Networking & Private Connectivity
+
+- 按 DNS → route → security filtering → TCP/TLS → service authorization → application response 形成可解释的诊断树；不是所有故障都强制沿固定顺序，按症状调整假设。
+- 设计 Azure VNet peering、NSG、UDR、Private Endpoint/DNS Zone/Link、有效路由/规则、Network Watcher IP Flow Verify/Next Hop/Connection Troubleshoot 的使用边界。
+- 实施 IR-01、IR-02；IR-03/04 提供合同和可选本地增强。用可复现 DNS、流量、路由证据区分错误类别。
+- 对 live DNS 场景预定义 FQDN、预期 private IP、探针所在 VNet、public network access 配置及 DNS 缓存刷新，避免断开 zone link 后公共访问仍然成功而误报故障。
+
+**Gate P2：** IR-01、02 完成本地 baseline/fault/diagnose/recover/cleanup；验证相同探针；能够排除至少一个有意义的替代假设；Azure-specific 检查若未执行仍 `NOT_RUN`。
+
+### P3 — Identity, Security & Governance
+
+- 建立身份/角色/scope 矩阵与控制面/数据面访问图；分别设计 Azure RBAC、Entra ID、Managed Identity、Key Vault、Policy audit/deny/modify 的职责。
+- IR-05 身份/权限 fixture 实现 allow/deny 和恢复；IR-06/09 提供具体 Azure 诊断合同及可选本地机制。配置测试覆盖秘密不入库、最小权限、禁止非批准范围和公共访问策略。
+- 对 PIM、Defender for Cloud、Azure Policy remediation 和管理组部署记录权限、许可、费用前提，不默认启用收费功能或跨订阅阻断策略。
+
+**Gate P3：** 至少一个可执行本地身份正反例，拒绝原因可区分，修复不使用全局特权；策略 fixture 具备允许/拒绝样例；明确本地证据不能证明 Azure Enforcement。
+
+### P4 — Compute, Data & Container Operations
+
+- 解释 VM/VMSS、App Service、AKS 的生命周期、健康检查、扩缩容、更新与故障边界；对 Application Gateway/LB 的入口与探针作设计对照，不同时部署所有选项。
+- 最小 HTTP 应用采用健康检查与两个可识别版本，配合 Azurite 支持范围内的数据读写和合成 fixture。记录 Azure Storage/SQL/Key Vault 的网络、权限与数据恢复区别。
+- 按需启动本地 Kubernetes 和 registry，实施 IR-07 镜像拉取故障；观察真实 kubelet/pod events，而不是只手写日志。记录 Azure ACR/AKS 的身份/role mode/私网差异，禁止把本地 registry 结果称为 ACR 验证。
+- 准备 IR-11 版本回退机制。不要建设完整业务微服务系统或第二套 K8s 控制面。
+
+**Gate P4：** HTTP probe、实际本地数据写读、版本标识和健康检查通过；IR-07 有真实本地 K8s 故障/恢复。如果目标机器不支持本地 K8s，该必选场景 `BLOCKED`，须经所有者决定替代方案，不擅自删掉门槛。
+
+### P5 — Terraform State & Controlled Delivery / Azure DevOps
+
+- Terraform 模块边界、版本固定、环境目录、输入/输出、状态隔离。设计 Azure Storage backend、权限、锁、版本恢复与 bootstrap 单独生命周期；本地 provider 的可执行锁/漂移/状态场景与 AzureRM 云操作分离。
+- 实施 IR-08：观察真实本地状态锁竞争或等价的真实后端互斥机制，以及配置漂移检测和纠正；不能用 sleep 或自造日志冒充 Terraform 锁验证。`force-unlock` 仅在确认无活跃持有者的专用状态环境使用；不在共享状态练习。
+- 交付 GitHub Actions 和 Azure Pipelines 两条职责清晰的路径：GitHub Actions 是仓库 CI；Azure Pipelines 是企业交付专项。覆盖 Azure Repos/GitHub 接入、YAML stages/jobs/templates、Service Connections、Variable Groups、Environments、Approvals & Checks、Workload Identity Federation、agent 能力与权限。
+- 对 live 交付采用精确 plan 审批：绑定 Git SHA、目标 scope、provider lock file、plan hash、审批人/时间和有效期；apply 仅消费已批准且未改变的 plan，过期、漂移、目标不一致或重新生成 plan 必须重新审批。原始 plan/state 只保留在授权受限位置，不提交 Git；审批外部检查配置与 YAML 分开取证。
+- PR 不提供 live 写权限；禁止自动 apply/destroy；Terraform plan 与 apply 角色按真实 provider 操作需求设计，不声称任意纯 Reader 都能完成计划。定义并测试 fail-closed 的审批条件和环境串线防护。回滚依赖具体资源语义：配置还原/重新计划、应用版本切换或数据恢复，不能声称 Terraform 有通用 undo。
+
+**Gate P5：** 静态 Terraform 通过、实际本地 state/lock/drift 证据、Azure Pipelines YAML 与离线阶段脚本验证、错误目标/篡改 plan/未批准/过期/并发等负面测试。真实 Azure DevOps 服务端执行、WIF 和审批未运行则 `NOT_RUN`；其 live gate 在 L3。
+
+### P6 — Observability, KQL & Operations Automation
+
+- 建立本地结构化日志/指标与 request/correlation ID，定义成功率、错误率、延迟、可用性、告警窗口/阈值及去重。至少一条实际本地信号 → 告警 → 恢复闭环（IR-10），包含错配/无数据处理。
+- Azure Monitor/Log Analytics/Activity Log/Resource Logs/Application Insights/DCR/Action Groups/Alert Processing Rules 建立数据流与权限成本图。
+- 至少 5 条 KQL：控制面变更、错误趋势、失败请求关联、延迟分位数、身份/网络故障定位。逐条列明真实表或 schema 前提、字段、时间窗、预期结果、误报/空结果解释。官方 Demo 如可访问则记录实际执行及数据来源；否则保留查询和 fixture/语义审查，KQL 执行标 `NOT_RUN`，绝不拿本地 SQL/Python 输出冒充 KQL。
+- 默认只读 PowerShell/Azure CLI inventory：限定 scope、分页、JSON/CSV、错误/重试/超时、权限不足、空集合、退出码与脱敏。参考 Resource Graph / Azure Resource Inventory；Pester 或等效测试使用 fixture，真实云查询放 L2。
+
+**Gate P6：** 本地告警触发、诊断与恢复均有机器可验证证据；5 条 KQL 具有来源与独立执行状态；只读 inventory 测试通过，云端查询未执行不影响本地 release，但不得声称实际云盘点完成。
+
+### P7 — Incident Response, Recovery & Independent Replay
+
+- 整理全部 12 个 incident 合同和诊断/runbook；8 个 mandatory local 场景全部闭环。其余场景保留设计/条件实验状态。
+- IR-11：已知健康版本 → 故障版本 → health/signal 失败 → 回退至已知版本 → 同一探针恢复。验证响应内容/版本与数据，不能只看进程 running。
+- IR-12：确定数据集及 checksum → 生成备份/副本 → 对隔离对象进行可逆损坏或删除 → 恢复到新路径 → 验证 checksum、对象数、读取行为和耗时。该结果只证明本地恢复，不证明 Azure Backup/SQL PITR。
+- 做一次独立 clean replay：由另一执行者或隔离的新会话按文档执行，不依赖原作者未记录步骤；验证故障诊断与复验，记录差异、失败及修复。至少一个网络场景、一个身份/交付场景及恢复场景必须被独立重放。
+
+**Gate P7：** 8/8 本地必选场景通过；关键数据完整性断言通过；独立重放有真实记录；所有实验后环境回到基线/清理完成。若只是同一代理重新跑，不称为独立人工复核。
+
+### P8 — Technical Handbook, Final Acceptance & Local Release
+
+- 形成机制导向、图文并茂的技术教材（第 8 节），与最终源码版本、实测结果和能力映射一致。
+- 完整 clean replay、CI 状态核验、证据追踪、依赖/秘密扫描、残留审计；明确所有设计/本地/demo/live-only 的范围和实际结果。
+- 生成单一 release acceptance summary 和阶段/场景结果矩阵；检查 README 不再使用过时的计划状态，且所有完成声明有证据来源。
+
+**Gate P8：** P0–P7 的强制 gate 均满足，手册审核通过，必选场景实际执行，没有未披露的 fail/blocked。若任何必选项缺失，保持 `PARTIAL`，不得封为 `LOCAL_RELEASE_READY`。live 状态单列，不要求为了本地版花钱。
+
+## 4. Incident Catalogue — 可复验故障场景
+
+下面是 V3 的目标场景清单，并非已发生的事故。Mandatory local = 必须执行真实本地机制的 8 项；Design/optional = 至少完成可执行的设计合同，增加实际测试需记录对应结果。每项均有独立 ID、前置条件、受控注入、断言、复验及清理。注入工具只对本实验对象开放，不对任意目标执行。
+
+| ID | 场景 | 本地要求 | 注入及预期诊断证据 | 恢复与验收 | Live Azure 映射 |
+|---|---|---|---|---|---|
+| IR-01 | Private DNS resolution | Mandatory | 改变隔离 DNS 记录/解析路径；从 probe 观测错误 IP/NXDOMAIN，区分 DNS 和 TCP | 恢复记录，处理缓存；同一 FQDN/IP/应用探针通过 | L1：Private DNS zone/link 与 Private Endpoint |
+| IR-02 | Network filtering / NSG | Mandatory | 在隔离网络拒绝特定流量；DNS 正常但 TCP 失败，有规则/连接证据 | 恢复最小规则；允许路径通过，不相关拒绝路径仍拒绝 | L1：NSG/Network Watcher |
+| IR-03 | UDR / route failure | Design/optional | 隔离 namespace 或路由 fixture 观察错误下一跳；明确与 NSG 的差异 | 恢复路径、验证有效路由/连通性 | 可选：Azure UDR/Next Hop |
+| IR-04 | Peering connectivity | Design/optional | 双网络拓扑与断链/转发限制；不得把本地桥接叫作 peering | 恢复受控连通性和隔离断言 | 可选：VNet peering/effective routes |
+| IR-05 | Identity permission denied | Mandatory | 移除测试身份所需数据权限；记录拒绝原因，区分认证失败和权限拒绝 | 只补必要权限；授权操作成功且越权仍拒绝 | L2：Managed Identity + Storage 或 Key Vault data-plane RBAC |
+| IR-06 | Key Vault access failure | Design/optional | 通过 fixture 区分网络不可达、token audience、数据权限或 secret 状态 | 恢复具体错误条件；不授予 Owner，不泄露秘密 | 可选：真实 Key Vault |
+| IR-07 | Image pull failure | Mandatory | 本地 K8s 使用不存在的镜像/tag 或受控 registry auth 错误；实际 Pod events | 修复引用/授权，Pod Ready 并通过应用探针 | 可选：AKS/ACR 角色、网络、镜像拉取 |
+| IR-08 | Terraform state lock / drift | Mandatory | 实际锁竞争与带外改动；保留锁拒绝、plan diff 和目标范围证据 | 等待锁释放，重新审查计划、纠正漂移；最终一致 | L3：Azure Storage state 与真实计划/交付 |
+| IR-09 | Azure Policy denial | Design/optional | 本地策略 fixture 验证合规/违规配置；对 scope 和 effect 建立预期 | 修改违规配置；合规通过、违规仍拒绝 | 可选：授权 RG 的 Azure Policy deny/audit |
+| IR-10 | Monitoring / alert failure | Mandatory | 注入可观测的错误或规则错配；保留信号、规则评价、触发和通知证据 | 修复后同一故障触发告警；恢复时信号和状态正确 | L2：Azure Monitor alert/action group |
+| IR-11 | Deployment regression | Mandatory | 两个可识别版本，坏版本实际健康/功能检查失败 | 回退已知版本；响应、版本、健康和必要数据断言通过 | L3 可选应用部署/回退；不替代 IaC 审批 |
+| IR-12 | Data loss / restore | Mandatory | 合成数据备份后，对专用对象删除或破坏；证明数据确实失效 | 恢复到隔离目标，校验 checksum/数量/读取，记录时间 | L3：真实 Azure Storage 数据恢复；Azure Backup/PITR 单独标注 |
+
+本地 mandatory 共 8 项：IR-01、02、05、07、08、10、11、12。其余 4 项不得以无执行的文档领取本地 `PASS`。Live 场景仅在真实 Azure 服务上执行后才能获得 `LIVE_VERIFIED`。
+
+### 4.1 每个故障的验收协议
+
+```text
+preflight → known-good baseline → controlled injection
+          → observed failure → hypothesis and discrimination
+          → bounded repair/rollback → same-probe verification
+          → RCA → teardown/residual audit
+```
+
+- baseline 必须先通过；否则不得继续注入。故障检测必须断言预期错误类别（而不是仅接受任意非零退出码）。注入后的应用探针与 baseline 相同或明确等价。
+- 记录预期影响、实际影响、时间线、关键证据、至少一个合理替代假设及排除方法、根因、最小修复、预防措施。不得将预设故障答案或静态文档当作独立诊断。
+- 为检测时间、诊断时间、恢复时间定义起止事件、计时源及单位。仅报告实际测量值；单次实验不等于生产 MTTR、SLA 或可用性。
+- 使用 run ID 关联实验对象、日志和输出。即使测试失败也要执行限定范围的 cleanup，并保留失败原因。注入/恢复脚本不得接受未经校验的生产域名、订阅或外部目标。
+- 独立重放优先只提供症状与正常目标，不暴露注入细节；保留实际诊断步骤。自动化回归与独立排障是不同证据。
+
+## 5. 条件性真实 Azure 验证 — L1–L3
+
+Live 阶段只允许在 P0 完成范围合同、相关本地阶段具备可验证探针后启动；可按模块完成后逐次执行，但本地发布不要求它们。以下是最小 live qualification 套件，不是授权书，也不是对 Azure 当前价格或订阅可用性的保证。
+
+### L0 — 每次 live 实验都必须通过的前置检查
+
+- 由所有者确认准确订阅、tenant、RG、region、允许 SKU/资源清单、时间窗口、费用上限及实际权限。检查 region/quota、价格、资源 provider、必要 RBAC、Azure DevOps entitlement，失败则 `BLOCKED`。不得使用记忆中的旧预算替代本次授权。
+- 使用专用 lab scope、合成数据、唯一 run ID 和 owner/expiry 标签，锁定实际 target。先清点共享或既有资源，禁止修改不属于本实验的对象。只在批准范围内创建必要的角色/资源；不对管理组或 tenant 实施默认变更。
+- 估算全部依赖和生命周期成本：VM、disk、IP、private endpoint、Storage 交易、DNS、log ingestion、backup retention、pipeline capacity、数据传输等；设置人工时间限制、监控和停止条件。无额度或无法可靠估算则不执行。Azure Budget 不提供硬支出保证。
+- 优先短期凭证；本地交互登录由所有者操作。执行代理不索要或输出密码/token，不自行创建超范围凭据。保存原始 plan/state/log 至授权存储并脱敏后发布摘要。
+- 删除路径、资源清单和 owner 已确认。清理后检查原始 scope、bootstrap backend、保留备份、磁盘、日志和相关外部资源；Azure 成本数据可能滞后，明确后续复查。禁止为了清理而删除共享 backend、保留策略之外的数据或未知资源。
+
+### L1 — Terraform Deploy & Network Troubleshooting
+
+- 在批准的最小 lab 中用 AzureRM 实际 plan/apply，部署 VNet/subnet/NSG、Storage、必要 Private Endpoint/DNS Zone/Link 及最小探针资源；按预算分批启用，不强行部署高价组件。
+- 验证正确 FQDN 解析到实际 private IP、应用连通、预设公共路径限制；执行 IR-01、02 至少其中一个完整真实云闭环（另一个记录实际状态）。用 Azure CLI/Network Watcher 的可用工具、effective rules/routes、DNS/连接探针确定失败环节。
+- 记录 approved plan、apply、验证、restore、destroy、残留清单及成本复查。若 backend 为后续实验复用，必须是预先批准的显式保留项，不可宣称全部零残留。
+
+**Gate L1：** Azure API 实际部署、至少一个真实 network incident recovered、同一探针复测通过、受控销毁与残留处理证据均存在。
+
+### L2 — Identity, Monitoring & Read-only Operations
+
+- 在受控 scope 使用 Managed Identity 或授权工作负载身份访问 Storage/Key Vault。执行 IR-05：通过最小数据面角色实现真实 allow/deny/recover，排除网络、token audience 与权限传播延迟；不以提权到 Owner 规避故障。
+- 创建最小实际监控信号、适用的 alert rule 和受控 action group 或可观测通知路径；执行 IR-10，记录实际触发、通知/处理及恢复。不以手工发消息代替 Azure 告警。
+- 在自有 Azure 数据上执行至少 3 条适用 KQL（P6 总查询包至少 5 条，其余可用官方 Demo 或标注 NOT_RUN）；记录表、时间范围、查询结果和解释。若服务/schema 不可用则如实阻塞，不生成虚假日志。
+- 在授权 scope 执行 P6 只读 inventory，输出脱敏结果，与资源清单核对。真实 Azure Policy audit/deny 是额外目标，仅在独立授权 RG 与必要权限下执行。
+
+**Gate L2：** 一个真实身份事件完整恢复、一次实际 Azure 告警触发及恢复、至少 3 条自有云 KQL 实际执行、真实只读盘点和清理证据均存在。
+
+### L3 — Azure Pipelines, State & Data Restoration
+
+- 在所有者授权 Azure DevOps organization/project、repository、agent、WIF service connection 和 Environment 的前提下，实际运行 pipeline；以 Azure Pipelines 的服务端运行记录及外部 approvals/checks 取证，而非只提供 YAML。
+- 验证 Terraform plan → authorized approval → exact plan apply；使用专用 Azure Storage state，观察真实锁/状态隔离或受控漂移；验证未经批准的 apply 被阻止。无需为了验证而建立昂贵环境，复用已批准的最小资源。禁止 agent 自行绕过审批。
+- 对合成 Blob 等数据执行真实 Azure 数据恢复（例如已启用并适用的 versioning/soft delete 或受控副本恢复）。必须预先验证选定保护机制、保留期限和恢复目标，记录删除/损坏前后、恢复校验及实测耗时。除非实际使用 Azure Backup，不称为 Azure Backup 恢复。Azure SQL PITR、跨区域恢复只在单独授权时实测。
+- 完成 pipeline、身份、storage backend、恢复副本等所有资源与保留项核对，确认无未批准残留或持续支出。
+
+**Gate L3：** 真实 Azure DevOps pipeline、精确计划审批/未批准拒绝、真实 Azure state 验证、真实数据恢复、完整性检查、计时及清理记录均存在。若 Azure DevOps hosted capacity 或身份权限不可得，保留本地 YAML 验收并标 live gate `BLOCKED`。
+
+## 6. 工程规范与证据模型
+
+### 6.1 版本、目录与复现
+
+实现以 README 的目标目录为准。`architecture/` 存设计；`infrastructure/` 存真实 Azure IaC 与明确区分的本地实现；`labs/` 组织可重用环境和探针；`incidents/` 存实验合同与 RCA；`pipelines/azure-devops/` 存 Azure Pipelines；`scripts/`、`tests/` 存可执行验证；`evidence/` 存脱敏摘要；`manual/` 存教材。
+
+- 固定 Terraform/provider、镜像、关键 CLI/工具与 action 版本，记录实际环境差异。不要提交 provider cache、镜像、`node_modules`、运行时临时文件或原始敏感日志。保留适用 root module 的 `.terraform.lock.hcl`。
+- 公共 CI 可以下载明确依赖，但不能依赖未授权 Azure credentials。云端 workflow 必须显式受控触发、限制 branch/environment/scope。实施后用实际运行 URL、commit SHA 和 job conclusion 验证。
+- 不堆一次性 evidence 脚本。复用小而清晰的实验入口与断言；机器可读结果辅助审核，教材解释机制。所有失败、跳过、无权限状态均保留。
+
+### 6.2 状态规范
+
+| 状态 | 含义 |
+|---|---|
+| `PLANNED` | 已列计划但尚未完成设计/实施 |
+| `DESIGNED` | 设计和评审已完成，无运行证明 |
+| `STATIC_CHECK_PASS` | 明确列出的静态检查实际成功 |
+| `LOCAL_VERIFIED` | 对应本地机制实际运行且断言通过 |
+| `DEMO_VERIFIED` | 在标注的外部 demo 数据/服务上实际执行成功 |
+| `DEPLOYED` | 实际目标资源已创建；不自动证明功能或安全 |
+| `LIVE_VERIFIED` | 对应 Azure 服务行为实际验证且断言通过 |
+| `RECOVERED` | 已观测故障并用同一探针证明恢复；必须标注模式 |
+| `CLEANED_UP` | 目标资源/进程与批准保留项经过核对 |
+| `NOT_RUN` | 未执行，包括无授权或可选未安排 |
+| `BLOCKED` | 已知前置条件/环境/权限/成本阻塞 |
+| `FAIL` | 已执行且未满足预期 |
+| `PARTIAL` | 聚合阶段有部分结果但强制 gate 尚未满足 |
+
+同一个实验可能拥有多个独立检查状态，例如 STATIC 已通过、LOCAL 已恢复、LIVE NOT_RUN。不能用最高单一状态覆盖未执行检查。阶段 `PASS` 只代表该阶段明确要求的全部检查满足；不等价于 Azure 全部服务 live pass。
+
+### 6.3 最小证据记录
+
+每个 run 必须记录以下字段（P0 定义实际 schema，P1 实现验证；此处不是已实现文件）：
+
+```yaml
+run_id: <unique-id>
+scenario_id: <P-stage-or-IR-id>
+mode: <DESIGN|STATIC|LOCAL|DEMO|LIVE>
+source_commit: <tested-commit-sha>
+started_at_utc: <timestamp>
+ended_at_utc: <timestamp>
+environment: <redacted-scope-and-tool-versions>
+preconditions: <authorization-and-baseline-result>
+checks:
+  - id: <check-id>
+    expectation: <testable-condition>
+    observed: <actual-result-or-not-run>
+    status: <status>
+    evidence_ref: <redacted-relative-path-or-authorized-run-reference>
+cleanup: <inventory-result-and-approved-retained-resources>
+limitations: <fidelity-gaps-and-blockers>
+```
+
+记录实际执行命令、退出码、探针输出、变更摘要、工具版本、RCA 与必要图示。对于可公开文件可记录 SHA-256 和 artifact manifest，不能将 hash 当作内容真实性或独立复核证明。禁止提交敏感原始 plan/state/token/secret/tenant ID；机器生成的敏感计划仅授权受限存放。记录 source commit 时使用被测试的源码 SHA，后续证据 commit 单列，避免循环自引用。
+
+### 6.4 安全、成本和测试有效性
+
+| 风险 | 强制控制 |
+|---|---|
+| 非授权部署/费用 | 默认禁用 live；明确授权、预算、scope、停止条件、销毁和复查 |
+| 环境串线 | 独立环境/state/凭据；显式 target allowlist；拒绝未知目标 |
+| 计划被替换 | 精确 plan hash + commit/scope/lockfile + 审批绑定；变化则重新审批 |
+| 凭据泄露 | WIF/短期凭证、最小权限、脱敏扫描、受控 artifact、PR 无 live 写权限 |
+| 测试假阳性 | baseline 成功、指定错误断言、同探针复测、真实退出码、负面对照 |
+| 数据损失 | 合成数据、专用对象、恢复目标、校验和、清理保护 |
+| 成本残留 | 专用资源清单、实际 destroy/删除、已批准保留项、延迟账单复查 |
+
+## 7. 最终验收与封版定义
+
+### 7.1 Local release — 必须满足全部条件
+
+- [ ] P0 三层架构、至少 5 ADR、职责矩阵、威胁与成本模型、Fidelity matrix 完成。
+- [ ] P1 本地环境可 clean setup/replay/teardown；真实 CLI/容器/依赖版本已记录。
+- [ ] Terraform 最小 Azure 配置静态验证及适当测试通过；本地 state/lock/drift 真实运行。
+- [ ] IR-01、02、05、07、08、10、11、12 共 8/8 mandatory local 完整闭环，其他四项有设计合同及真实状态。
+- [ ] 身份允许/拒绝、策略 fixture、审批篡改/过期/错误 scope/并发等负例通过。
+- [ ] Azure Pipelines YAML 与本地阶段脚本已验证；实际 Azure DevOps 未运行明确标注。
+- [ ] 5 条 KQL 具有明确表/schema 和独立验证状态；本地 telemetry/alert 闭环与只读 inventory 测试通过。
+- [ ] 数据恢复实际成功，checksum/对象数/读取断言与耗时完整。
+- [ ] 至少三个规定类别独立 replay，保留观察结果；当前源码 CI 必选检查实际通过。
+- [ ] 教材发布、图/源码/实测状态一致；证据脱敏、最终残留审计、README 更新。
+
+全部满足才标 `LOCAL_RELEASE_READY`；否则 `PARTIAL`。官方 Demo 不可访问或 live 未授权不是本地 gate 的失败，只要相应状态如实披露。若 CI 或本地 Kubernetes 必选项被环境阻塞则仍 PARTIAL；所有者可以显式审议变更合同，不能执行者私自豁免。
+
+### 7.2 Live portfolio qualification
+
+- [ ] `LOCAL_RELEASE_READY` 已成立。
+- [ ] L1、L2、L3 三个 gate 全部真实通过，且各次 L0 授权、成本与清理记录完整。
+- [ ] 自有 Azure 与 Azure DevOps 实测记录可追溯；未验证服务仍逐项标记，不以 qualification 泛化到全部 Azure 能力。
+
+全部满足才标 `PORTFOLIO_READY_LIVE`。只完成部分 live 实验可报告 `LIVE_VALIDATED_SUBSET` 并列出实际通过 ID；既不否定本地封版，也不声称完整 live qualification。项目没有 `PRODUCTION_READY` 状态。
+
+### 7.3 里程碑与资源控制
+
+P0–P1 优先建立最小可运行骨架；P2–P6 按阶段增加真实练习；P7 做集成、重放与纠错；P8 生成最终教材与验收。阶段粒度以可验证增量为单位，不规定虚假的工时或页数。若需要缩减范围，优先保留网络、Terraform、身份、告警、恢复闭环；改变必选 gate 必须先由所有者明确批准并形成变更记录。
+
+## 8. 技术教材（Technical Handbook）
+
+目标是形成可以独立学习和复习的工程教材，而非代码之外的大量证据文件。以模块化 PDF 为主，保留对应可编辑源文件；可以后期合订，不能只保留 PDF 无源。参考此前专项教材的机制导向，但不强行复制其页数、数量或排版。
+
+| 教材模块 | 核心内容 | 来源阶段 |
+|---|---|---|
+| H01 Enterprise Azure Architecture | Landing Zone、责任边界、信任/成本、Hybrid/DR ADR | P0 |
+| H02 Engineering Lab & Terraform Foundations | 本地环境、AzureRM、模块与验证层级 | P1 |
+| H03 Azure Networking & Diagnostics | DNS、route、NSG、peering、Private Link、Network Watcher | P2 |
+| H04 Identity, Security & Governance | Entra ID、RBAC、MI、Key Vault、Policy、安全机制 | P3 |
+| H05 Compute, Containers & Data | VM/VMSS、App Service、AKS/ACR、Storage/SQL | P4 |
+| H06 Terraform Delivery & Azure DevOps | state、drift、精确计划审批、WIF、Pipelines | P5 |
+| H07 Monitoring, KQL & Operations | 日志、指标、告警、查询与 PowerShell/CLI | P6 |
+| H08 Incident Response & Disaster Recovery | RCA、rollback、restore、checksum、RPO/RTO、复验 | P7 |
+| H09 Integrated Case & Interview Guide | 综合拓扑、故障诊断树、边界、岗位映射 | P8 |
+
+每册建议按以下结构组织：学习目标与前置条件 → 技术原理/内部机制 → 架构图和数据/控制面时序 → 配置/关键代码摘录（实际路径和版本）→ 可复验实验步骤 → 故障分析和修复 → 实际结果与限制 → 技术权衡和面试问题 → 官方参考。Live 增补材料单列，不修改历史本地证据的性质。
+
+教材质量门槛：图优先解释机制而非装饰；架构示意图明确标注 proposed/reference/local/live；真实截图必须来自对应真实环境并脱敏；示例代码标明是否已经实现；所有源码摘录与最终版本一致；没有真实 Azure 截图就不伪造；PDF 应实际渲染检查分页、可读性、代码截断、链接、字体和图例。不得大段复制官方教程或把证据日志当教材正文。
+
+## 9. 岗位能力映射与叙述
+
+| 目标岗位 | 应能解释及演示 | 不得夸大 |
+|---|---|---|
+| Senior Cloud / Infrastructure | Landing Zone、私网访问、Terraform、identity、治理、恢复 | 参考设计不是企业级实际部署 |
+| Platform Engineer | 模块边界、环境隔离、交付权限与准入、K8s/registry 运维 | 本地 K8s 不是 AKS 生产运维 |
+| SRE / CloudOps | 信号、KQL、独立诊断、错误预算概念、回滚与恢复 | 实验 MTTR 不是线上 SLA；不等于真实 On-call |
+| DevOps Engineer | Azure Pipelines、WIF、state、审批、CI、drift | YAML 静态验证不是 Azure DevOps 执行 |
+| Azure Architect | ADR、network/identity/data 的成本可靠性取舍 | 不声称拥有未经授权的企业架构落地经历 |
+
+最终简历只选已通过场景、真实工具和实际测量结果。例：完成后可陈述“Built a reproducible local lab to diagnose DNS and network-filtering failures; verified recovery using identical probes.” 只有 L1 实测后才可改写为真实 Azure Private DNS / NSG 故障恢复经历；所有表述仍是独立 lab 而非生产银行经验。
+
+## 10. 官方资料与事实核验入口
+
+实施时优先核查官方文档和 provider schema，记录访问日期及与锁定版本的对应关系；以下是参考入口，不代表全部服务已可用，也不构成课程复刻。
+
+- [Azure Landing Zones / CAF](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/)
+- [ALZ Terraform guidance](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/deploy-landing-zones-with-terraform)
+- [AZ-700 networking labs](https://microsoftlearning.github.io/AZ-700-Designing-and-Implementing-Microsoft-Azure-Networking-Solutions/)
+- [AZ-104 labs](https://microsoftlearning.github.io/AZ-104-MicrosoftAzureAdministrator/)
+- [AZ-305 case studies](https://microsoftlearning.github.io/AZ-305-DesigningMicrosoftAzureInfrastructureSolutions/)
+- [Private Endpoint DNS configuration](https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-dns)
+- [Private Endpoint connectivity troubleshooting](https://learn.microsoft.com/en-us/troubleshoot/azure/private-link/troubleshoot-private-endpoint-connectivity-problems)
+- [Network Watcher connection troubleshoot](https://learn.microsoft.com/en-us/azure/network-watcher/connection-troubleshoot-overview)
+- [Azurite and its limitations](https://learn.microsoft.com/en-us/azure/storage/common/storage-use-azurite)
+- [Azure RBAC overview](https://learn.microsoft.com/en-us/azure/role-based-access-control/overview)
+- [Azure Policy overview](https://learn.microsoft.com/en-us/azure/governance/policy/overview)
+- [Terraform AzureRM backend](https://developer.hashicorp.com/terraform/language/backend/azurerm)
+- [AzureRM provider](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs)
+- [Azure Pipelines workload identity federation](https://learn.microsoft.com/en-us/azure/devops/pipelines/release/configure-workload-identity?view=azure-devops)
+- [Azure Pipelines approvals and checks](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops)
+- [Azure Monitor / Log Analytics tutorial](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-tutorial)
+- [Azure Resource Inventory](https://github.com/microsoft/ARI)
+- [Azure pricing calculator](https://azure.microsoft.com/en-us/pricing/calculator/)
+
+## 11. 当前交接指令
+
+本次 V3 文档更新不启动工程，不登录 Azure，不创建资源，不新增任何目录/工作流/实验结果。保持 `PLANNED`，所有 live 场景 `NOT_RUN`。下一次独立实施任务从 P0 开始：先确认实际仓库与工作环境，再形成架构和实验合同、服务覆盖矩阵、风险/成本边界以及可复验的阶段验收清单；提交前审查实际 diff。没有获得所有者指令，不自动推进后续阶段或启用付费资源。
