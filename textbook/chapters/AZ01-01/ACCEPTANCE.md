@@ -1,0 +1,34 @@
+# AZ01-01 lecture acceptance record
+
+**Lecture:** Azure Well-Architected Framework and Reliability
+
+**Acceptance date:** 2026-11-26 (Pacific/Auckland)
+**Status:** ACCEPTED for Stage 1 lecture gate. No Azure service behavior or recovery was exercised.
+
+## Research and source
+
+- Microsoft Learn primary-source research was performed on 2026-11-26. Claim mapping, direct URLs, classifications and limits are recorded in `textbook/SOURCE_MAP.md`.
+- The lecture distinguishes Availability Set fault/update domains, zonal versus zone-redundant resources, regional recovery, user-flow SLI/SLO/error budget, provider SLA, and RTO/RPO.
+- Three editable mechanism figures are authored in `figures/figs.py`; SVGs cover fault-domain scale, a critical payment flow and reliability targets.
+- Availability, SLO, RTO and RPO numbers used in the fictional clearing case are teaching assumptions, not Azure service commitments.
+
+## Experiment and evidence boundary
+
+- `labs/reliability-model` evaluates synthetic AND/OR critical paths and explicit fault sets. Tests show that application replicas do not repair a singleton ledger, a shared identity dependency can break a multi-zone flow, and a single-region design remains unavailable during a region-wide modeled outage.
+- Twelve unit tests passed on Python 3.13.9 (Windows) on 2026-11-26. The full offline Python runner also passed in `devops-lab` WSL: 19 tests across 2 lecture directories, 0 failures.
+- The SLO arithmetic test derives 21.6 minutes for a time-based 99.95% SLO in a 30-day window. Request-based SLI uses a different denominator.
+- The model is deterministic and local; independence formulas are illustrative. It is not an Azure simulator, does not model real SKU placement/capacity/replication, and does not inject faults or verify Azure failover.
+- No Azure CLI authentication, subscription query, resource deployment, chaos test or DR drill was performed.
+
+## Publication inspection
+
+- Reproduction from the repository root: `python textbook/tools/build.py AZ01-01`.
+- Output: `textbook/dist/pdf/AZ01-01_azure-well-architected-reliability.pdf`; 7 pages, 1,691,511 bytes.
+- Final automated report: 10,372 extracted characters; no placeholder markers; no overflow warnings; page fill 49%, 98%, 97%, 91%, 95%, 99%, 74%.
+- All seven final pages were rendered at readable scale and visually inspected on 2026-11-26. The three figures, comparison table, formula layout, experiment card/output, fault cards, exercises, references, headers, page numbering and margins were checked.
+- The first build exposed an empty final page and unparsed attributed divs. The div syntax was corrected; the dependency diagram and reference labels were tightened. The PDF was rebuilt, the final page inspected, and the complete final page set checked with the contact sheet and full-size renders.
+- Build succeeds with a non-blocking Pillow `Image.getdata()` deprecation warning in the QA ink calculation.
+
+## Gate result
+
+**PASS — official-source mapping, source, figures, applicable offline experiment, actual tests, live-lab instructions, PDF build, complete page review, corrections, rebuild and evidence record are complete.** This does not claim Azure availability, SLA or failover was verified.

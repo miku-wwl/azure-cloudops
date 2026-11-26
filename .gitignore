@@ -1,0 +1,17 @@
+# Reproducible intermediate and local-only artifacts
+work/
+**/build/
+**/.terraform/
+**/__pycache__/
+**/.pytest_cache/
+*.py[cod]
+*.tfstate
+*.tfstate.*
+*.tfplan
+tfplan
+plan.json
+crash.log
+*.local.*
+sensitive.local.txt
+.env
+.env.*

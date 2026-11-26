@@ -1,14 +1,35 @@
 # Azure CloudOps & Enterprise Infrastructure — V3 工程实施与学习路线图
 
-> **版本：** V3.0 / 2026-11-26；在 2026-11-05 V2 基础上重写。  
-> **当前状态：** `PLANNED`。本次变更仅更新规划，不代表任何代码、CI、云资源、实验、教材已经完成。  
-> **基线：** `miku-wwl/azure-cloudops` main，提交 `8356d02c4c5d8e5b694877d655c5cac725b08aa4`。  
+> **版本：** V3.1 implementation contract / 2026-11-26；承接 V3.0，增加已批准的三阶段交付顺序与 USD 1.00 累计 Azure 费用边界。
+> **当前状态：** Stage 1 B2 进行中；B0 出版基础完成，B1 的 AZ00-01 与 AZ01-01 均已验收，正在准备 AZ02-01。实验与实时 Azure 验证尚未通过。
+> **原始 V3 基线：** miku-wwl/azure-cloudops main，提交 853ba6cbaa4ee67e448550fbe192c6c89b24fd2f；该提交已与 origin/main 同步。
 > **目标：** Azure Cloud / Senior Infrastructure / Platform / SRE / DevOps Engineer，尤其适合金融等重视安全、治理、变更与恢复的企业环境。  
 > **学习原则：** 不重复 AZ-104、AZ-305、Terraform 认证备考；以技术机制、工程实施、独立排障和可复验结果为主。
 
 ## 0. V3 的设计决策
 
 V2 的 M0–M9 全部保留其核心学习目标，但不再以十个孤立知识主题组织工程。V3 改用统一的企业云基础设施场景、阶段化交付和分层证据标准。
+### 0.1 本次批准的三阶段执行合同
+
+本执行合同来自 2026-11-26 批准的 Azure CloudOps master prompt；它更新交付顺序和实时 Azure 费用上限，保留本路线图后续定义的架构、实验、incident、Terraform、交付和安全验收条件。
+
+1. **Stage 1 — Technical Textbook Engineering & Publication：** 按 B0–B9 顺序完成 23 讲、离线实验、机制图、逐页 PDF 检查、出版包和离线 CI。每讲先达到本讲验收，再进入下一讲。每讲目录与学习问题以 textbook/CURRICULUM.md 为准。
+2. **Stage 2 — Enterprise Engineering & Lab Readiness：** 按 E0–E10 审核并加强本地底座、Terraform、受控交付、Azure Pipelines、运营自动化、12 个 incident 合同、8 个必选本地闭环、清理及独立重放。此阶段禁止 Azure 资源创建或修改；保留实际 V3 的 P0–P8 要求并映射到这些工程包。
+3. **Stage 3 — USD 1 Budget-Constrained Live Azure Validation：** 先做 L0 授权只读预检，再评估小型 live 机制。整个项目的累计新增 Azure 支出上限为 USD 1.00，保守计划线为 USD 0.70，USD 0.30 留作意外和清理余量。必须把 gross charges 与 credits、discounts、实际账单分开；不能可靠估价、缺少精确 scope/许可或未获此次部署批次授权即停止部署。
+
+本次切换时目标仓库 main 和 origin/main 均为批准基线 853ba6c。工作仅在 main 持续前进，不创建分支或 PR。AWS 参考仓库在 b44160ea0f864ce7edf40cc0edb402cb53687a63 上只读分析，不修改。
+
+#### 0.1.1 当前执行记录
+
+- B0 已完成：AWS 参考章节、离线实验、Terraform mock、SVG 工具、截图脱敏、出版工具、CI 源码和代表性 PDF 已检查；AWS PDF/source ZIP 只读一致性检查通过；Azure 出版工具可用。
+- B1 完成 2/2 讲：AZ00-01 与 AZ01-01 已研究、编写、绘图、运行适用的本地实验并检查最终 PDF。逐讲证据见两个 chapter/ACCEPTANCE.md。当前继续 AZ02-01。
+- Azure Portal 截图、Azure RBAC/provider 实际验证和费用尚未查询或运行。
+- Stage 2 和 Stage 3 未开始。当前没有为项目创建或修改 Azure 资源；Azure billing 实际值尚未查询，不能写作 USD 0.00 actual.
+- 本机检查发现 Podman 未安装。其余运行时能力须按阶段实际探测，不以命令存在代替运行通过。
+
+#### 0.1.2 旧 P0–P8 与 E0–E10 的关系
+
+原 P0–P8 合同作为 Stage 2 的需求来源保留；原 L0–L3 是 Stage 3 的 live gate。B0–B9 是增加的出版和教材 gate，不替代架构、安全或实验验收。课程改为 23 个独立 lecture PDFs，索引见 textbook/CURRICULUM.md。阶段状态必须由实际证据更新，不得因为推进路线图而自动标 PASS.
 
 | V2 模块 | V3 承接阶段 | 变化 |
 |---|---|---|
@@ -24,13 +45,14 @@ V2 的 M0–M9 全部保留其核心学习目标，但不再以十个孤立知�
 
 新增 Compute/Storage/App Service/ACR/AKS/Azure SQL 的企业运维知识、Azure DevOps 交付、本地低成本实训及技术教材体系。保留原有低成本、真实证据、无授权不部署等红线。项目不是 Azure 平台产品，不重新实现 KPCP，不开发复杂银行业务系统。
 
-### 0.1 两条交付主线
+### 0.2 本地工程与条件性 Azure 验证
 
-1. **本地工程主线 P0–P8（必做）**：可在一台开发机反复运行；不依赖 Azure 订阅、付费 SaaS 或云端 CI 容量；构建完整机制学习、实验、测试与教材闭环。
-2. **真实 Azure 验证 L1–L3（有条件）**：只选择收益最高、短期可销毁的实验；每次另行获得授权及费用上限。本地版可独立封版。未授权或缺少服务资格不阻塞本地版，不降低 live 资格标准。
+1. **本地工程主线（必做）**：本地版不依赖 Azure 订阅、付费 SaaS 或云端 CI 容量。原 P0–P8 要求在 Stage 2 中按本路线图和 E0–E10 映射执行；Stage 1 先完成技术教材及离线出版验收。
+2. **真实 Azure 验证（有条件）**：Stage 3 只选择学习价值高、短期可清理且经过费用与授权审核的实验。未授权或缺少服务资格时，完成所有安全离线工作并将 live 场景标为 BLOCKED、PERMISSION_DEFERRED、BUDGET_DEFERRED 或 LIVE_NOT_RUN；不降低验收标准。
+3. **费用和权限**：项目累计新增 Azure 支出不得超过 USD 1.00；计划估算不超过 USD 0.70，并保留 USD 0.30。Azure Budget 不是硬支出上限。任何实际部署均需验证当前价格、资源清单、时间窗口、累计费用、清理路径和该批次授权。不能可靠估价则不部署。
+4. 不预设已有 Azure credits、管理组权限、Azure DevOps 组织、Microsoft-hosted parallel jobs、固定区域或特定订阅类型。Stage 2 不创建或修改 Azure 资源。Stage 3 的 L0 只读预检不得自动登录、自动注册 provider 或静默切换订阅。
 
-不预设已经拥有 Azure credits、管理组权限、Azure DevOps 组织、Microsoft-hosted parallel jobs、固定区域或特定订阅类型。默认云端新增费用为零；任何付费实验不得由执行代理自行决定。P0 必须记录实际可用条件。
-
+本 master prompt 改变阶段次序、出版范围和费用上限；本路线图原有拓扑、fidelity、P0–P8、incident、stage 3 资格及安全要求继续有效。
 ## 1. 统一企业场景与范围
 
 ### 1.1 Fictional Banking Cloud Infrastructure Lab

@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 370" width="760" height="370" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif">
+<defs><marker id="marrow1d3b53" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#1d3b53"/></marker><marker id="marrowe0954a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#e0954a"/></marker><marker id="marrow2e7d55" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#2e7d55"/></marker></defs>
+<text x="380" y="22" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12" font-weight="700" fill="#1d3b53" text-anchor="middle">创建资源与使用资源数据：两个 endpoint、两条授权路径</text>
+<rect x="20" y="42" width="720" height="174" rx="6" ry="6" fill="#fbfcfd" stroke="#232f3e" stroke-width="1.4"/>
+<path d="M20 48 a6 6 0 0 1 6 -6 h211.705 v19.5 h-217.705 z" fill="#232f3e"/>
+<text x="28" y="56.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="10.5" font-weight="700" fill="#ffffff" text-anchor="start">Control plane · management.azure.com</text>
+<rect x="40" y="92" width="130" height="60" rx="8" ry="8" fill="#ffffff" stroke="#b8c7d2" stroke-width="1.4"/>
+<text x="105.0" y="112.454" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="10" font-weight="700" fill="#17384f" text-anchor="middle">Operator / pipeline</text>
+<text x="105.0" y="128.45" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.8" font-weight="400" fill="#22313d" text-anchor="middle">CLI / SDK / Terraform</text>
+<text x="105.0" y="140.946" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.8" font-weight="400" fill="#22313d" text-anchor="middle">提出 ARM 操作</text>
+<rect x="205" y="92" width="132" height="60" rx="8" ry="8" fill="#f1edf8" stroke="#6f55a8" stroke-width="1.4"/>
+<text x="271.0" y="112.537" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.8" font-weight="700" fill="#4f3a86" text-anchor="middle">Microsoft Entra ID</text>
+<text x="271.0" y="128.321" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.7" font-weight="400" fill="#22313d" text-anchor="middle">签发 ARM audience token</text>
+<text x="271.0" y="140.675" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.7" font-weight="400" fill="#22313d" text-anchor="middle">token 不等于授权</text>
+<rect x="375" y="78" width="174" height="86" rx="8" ry="8" fill="#e6f3f3" stroke="#1a8a8f" stroke-width="1.4"/>
+<text x="462.0" y="112.022" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="10" font-weight="700" fill="#12676b" text-anchor="middle">Azure Resource Manager</text>
+<text x="462.0" y="127.45" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.4" font-weight="400" fill="#22313d" text-anchor="middle">Authentication + authorization</text>
+<text x="462.0" y="139.37800000000001" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.4" font-weight="400" fill="#22313d" text-anchor="middle">RBAC · Policy · Locks · Activity Log</text>
+<rect x="592" y="92" width="128" height="60" rx="8" ry="8" fill="#fdf1e3" stroke="#e0954a" stroke-width="1.4"/>
+<text x="656.0" y="112.395" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.8" font-weight="700" fill="#9a5a1c" text-anchor="middle">Resource Provider</text>
+<text x="656.0" y="128.321" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.8" font-weight="400" fill="#22313d" text-anchor="middle">Microsoft.*</text>
+<text x="656.0" y="140.817" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.8" font-weight="400" fill="#22313d" text-anchor="middle">实现 resource type</text>
+<path d="M170 122 L205 122" fill="none" stroke="#1d3b53" stroke-width="1.6" marker-end="url(#marrow1d3b53)" stroke-linejoin="round"/>
+<rect x="161.744" y="107.02" width="51.512000000000015" height="10.920000000000002" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="187.5" y="115.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.4" font-weight="500" fill="#1d3b53" text-anchor="middle">获取 token</text>
+<path d="M337 122 L375 122" fill="none" stroke="#1d3b53" stroke-width="1.6" marker-end="url(#marrow1d3b53)" stroke-linejoin="round"/>
+<rect x="321.928" y="107.02" width="68.14400000000002" height="10.920000000000002" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="356.0" y="115.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.4" font-weight="500" fill="#1d3b53" text-anchor="middle">PUT /resource</text>
+<path d="M549 122 L592 122" fill="none" stroke="#1d3b53" stroke-width="1.6" marker-end="url(#marrow1d3b53)" stroke-linejoin="round"/>
+<rect x="545.5" y="107.02" width="50.0" height="10.920000000000002" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="570.5" y="115.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.4" font-weight="500" fill="#1d3b53" text-anchor="middle">授权后委派</text>
+<rect x="384" y="174" width="182" height="30" rx="8" ry="8" fill="#f2f5f7" stroke="#9fb3c1" stroke-width="1.4"/>
+<text x="475.0" y="190.743" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.3" font-weight="400" fill="#5d6d7a" text-anchor="middle">202? 读取 operation URL 与 Retry-After</text>
+<path d="M657 152 L566 189" fill="none" stroke="#e0954a" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#marrowe0954a)" stroke-linejoin="round"/>
+<rect x="577.27" y="153.35" width="95.75999999999999" height="10.4" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="625.15" y="160.95" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8" font-weight="500" fill="#e0954a" text-anchor="middle">long-running operation</text>
+<rect x="20" y="238" width="720" height="110" rx="6" ry="6" fill="#fbfcfd" stroke="#9fb3c1" stroke-width="1.4"/>
+<path d="M20 244 a6 6 0 0 1 6 -6 h257.2750000000001 v19.5 h-263.2750000000001 z" fill="#9fb3c1"/>
+<text x="28" y="252.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="10.5" font-weight="700" fill="#ffffff" text-anchor="start">Data plane · endpoint specific to the resource</text>
+<rect x="52" y="275" width="178" height="48" rx="8" ry="8" fill="#ffffff" stroke="#b8c7d2" stroke-width="1.4"/>
+<text x="141.0" y="295.584" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.6" font-weight="700" fill="#17384f" text-anchor="middle">Workload identity</text>
+<text x="141.0" y="311.44" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.8" font-weight="400" fill="#22313d" text-anchor="middle">取得面向 Storage 的 token</text>
+<rect x="290" y="275" width="178" height="48" rx="8" ry="8" fill="#e6f3f3" stroke="#1a8a8f" stroke-width="1.4"/>
+<text x="379.0" y="295.868" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.6" font-weight="700" fill="#12676b" text-anchor="middle">Storage endpoint</text>
+<text x="379.0" y="311.156" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.4" font-weight="400" fill="#22313d" text-anchor="middle">account.blob.core.windows.net</text>
+<rect x="526" y="275" width="178" height="48" rx="8" ry="8" fill="#fdf1e3" stroke="#e0954a" stroke-width="1.4"/>
+<text x="615.0" y="295.584" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.6" font-weight="700" fill="#9a5a1c" text-anchor="middle">Blob operation</text>
+<text x="615.0" y="311.44" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.8" font-weight="400" fill="#22313d" text-anchor="middle">read / write + data role</text>
+<path d="M230 299 L290 299" fill="none" stroke="#2e7d55" stroke-width="1.6" marker-end="url(#marrow2e7d55)" stroke-linejoin="round"/>
+<rect x="214.546" y="284.02" width="90.908" height="10.920000000000002" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="260.0" y="292.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.4" font-weight="500" fill="#2e7d55" text-anchor="middle">数据 token / HTTPS</text>
+<path d="M468 299 L526 299" fill="none" stroke="#2e7d55" stroke-width="1.6" marker-end="url(#marrow2e7d55)" stroke-linejoin="round"/>
+<rect x="451.24" y="284.4" width="91.52" height="10.4" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="497.0" y="292.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8" font-weight="500" fill="#2e7d55" text-anchor="middle">service authorization</text>
+<text x="380" y="360" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.5" font-weight="600" fill="#c0504d" text-anchor="middle">资源存在不证明数据面可达；ARM 管理权限不自动授予 Blob DataActions。</text>
+</svg>

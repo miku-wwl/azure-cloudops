@@ -1,0 +1,14 @@
+# Azure cost ledger
+
+- Project cumulative incremental Azure ceiling: USD 1.00.
+- Conservative planning threshold: USD 0.70.
+- Contingency retained for delayed charges and cleanup: USD 0.30.
+
+| Ledger item | Estimate / status | Evidence |
+|---|---:|---|
+| Azure resource mutations by this project so far | None performed | Session execution record; no deployment command was run |
+| Current cumulative actual Azure spend | NOT_VERIFIED | Billing data has not been queried; do not report USD 0.00 actual |
+| Current cumulative gross estimate | Not applicable yet | No live experiment has passed L0 scope, pricing and authorization preflight |
+| Remaining ceiling | USD 1.00 nominal; actual headroom unverified | Reconcile gross charges separately from credits and billing |
+
+Before any deployment, add an experiment-specific ledger entry with resource allowlist, official price source and access date, region/SKU, maximum runtime, dependencies, teardown cost, reserved contingency, approving scope, and post-run billing status. Stop if a reliable estimate cannot keep cumulative estimated gross charges at or below USD 0.70. Azure budget alerts are not a hard spending cap.

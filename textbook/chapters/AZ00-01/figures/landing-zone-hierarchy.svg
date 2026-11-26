@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 340" width="760" height="340" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif">
+<defs><marker id="marrow1d3b53" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#1d3b53"/></marker><marker id="marrow1a8a8f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#1a8a8f"/></marker></defs>
+<text x="380" y="22" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12" font-weight="700" fill="#1d3b53" text-anchor="middle">企业参考设计：治理从上层继承，资源由 workload 团队运营</text>
+<rect x="272" y="42" width="216" height="44" rx="8" ry="8" fill="#e9eff5" stroke="#1d3b53" stroke-width="1.4"/>
+<text x="380.0" y="60.429" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="11" font-weight="700" fill="#17384f" text-anchor="middle">Microsoft Entra tenant</text>
+<text x="380.0" y="77.911" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.6" font-weight="400" fill="#22313d" text-anchor="middle">身份与目录边界</text>
+<rect x="270" y="102" width="220" height="44" rx="8" ry="8" fill="#f1edf8" stroke="#6f55a8" stroke-width="1.4"/>
+<text x="380.0" y="120.5655" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="10.5" font-weight="700" fill="#4f3a86" text-anchor="middle">Tenant root / org root MG</text>
+<text x="380.0" y="137.3045" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="400" fill="#22313d" text-anchor="middle">顶层治理由组织平台团队负责</text>
+<path d="M380 86 L380 102" fill="none" stroke="#1d3b53" stroke-width="1.6" marker-end="url(#marrow1d3b53)" stroke-linejoin="round"/>
+<rect x="322.408" y="81.64" width="115.18399999999997" height="11.440000000000001" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="380.0" y="90.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.8" font-weight="500" fill="#1d3b53" text-anchor="middle">包含 management groups</text>
+<rect x="35" y="176" width="210" height="54" rx="8" ry="8" fill="#e6f3f3" stroke="#1a8a8f" stroke-width="1.4"/>
+<text x="140.0" y="199.536" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="10.4" font-weight="700" fill="#12676b" text-anchor="middle">Platform management group</text>
+<text x="140.0" y="216.24" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="400" fill="#22313d" text-anchor="middle">共享能力与平台职责</text>
+<rect x="275" y="176" width="210" height="54" rx="8" ry="8" fill="#fdf1e3" stroke="#e0954a" stroke-width="1.4"/>
+<text x="380.0" y="199.536" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="10.4" font-weight="700" fill="#9a5a1c" text-anchor="middle">Workload landing zones</text>
+<text x="380.0" y="216.24" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="400" fill="#22313d" text-anchor="middle">工作负载治理类别</text>
+<rect x="515" y="176" width="210" height="54" rx="8" ry="8" fill="#f2f5f7" stroke="#9fb3c1" stroke-width="1.4"/>
+<text x="620.0" y="199.536" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="10.4" font-weight="700" fill="#41525f" text-anchor="middle">Sandbox / decommissioned</text>
+<text x="620.0" y="216.24" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="400" fill="#5d6d7a" text-anchor="middle">隔离实验或退役流程</text>
+<path d="M380 146 L140 176" fill="none" stroke="#1a8a8f" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#marrow1a8a8f)" stroke-linejoin="round"/>
+<path d="M380 146 L380 176" fill="none" stroke="#1a8a8f" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#marrow1a8a8f)" stroke-linejoin="round"/>
+<rect x="337.676" y="146.14" width="84.64800000000001" height="11.440000000000001" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="380.0" y="154.5" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.8" font-weight="500" fill="#1a8a8f" text-anchor="middle">Policy inheritance</text>
+<path d="M380 146 L620 176" fill="none" stroke="#1a8a8f" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#marrow1a8a8f)" stroke-linejoin="round"/>
+<rect x="35" y="252" width="210" height="48" rx="8" ry="8" fill="#ffffff" stroke="#b8c7d2" stroke-width="1.4"/>
+<text x="140.0" y="272.64300000000003" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.8" font-weight="700" fill="#17384f" text-anchor="middle">Connectivity / Management</text>
+<text x="140.0" y="288.569" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.8" font-weight="400" fill="#22313d" text-anchor="middle">独立 subscription 按责任拆分</text>
+<rect x="275" y="252" width="100" height="48" rx="8" ry="8" fill="#ffffff" stroke="#b8c7d2" stroke-width="1.4"/>
+<text x="325.0" y="272.596" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.4" font-weight="700" fill="#17384f" text-anchor="middle">Dev subscription</text>
+<text x="325.0" y="288.24" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.7" font-weight="400" fill="#22313d" text-anchor="middle">预算 / 配额</text>
+<rect x="385" y="252" width="100" height="48" rx="8" ry="8" fill="#ffffff" stroke="#b8c7d2" stroke-width="1.4"/>
+<text x="435.0" y="272.596" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.4" font-weight="700" fill="#17384f" text-anchor="middle">Prod subscription</text>
+<text x="435.0" y="288.24" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.7" font-weight="400" fill="#22313d" text-anchor="middle">预算 / 配额</text>
+<rect x="535" y="252" width="170" height="48" rx="8" ry="8" fill="#ffffff" stroke="#b8c7d2" stroke-width="1.4"/>
+<text x="620.0" y="272.596" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.4" font-weight="700" fill="#17384f" text-anchor="middle">资源组 / Resources</text>
+<text x="620.0" y="288.24" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.7" font-weight="400" fill="#22313d" text-anchor="middle">工作负载生命周期范围</text>
+<path d="M140 230 L140 252" fill="none" stroke="#1d3b53" stroke-width="1.6" marker-end="url(#marrow1d3b53)" stroke-linejoin="round"/>
+<rect x="119.2" y="229.02" width="41.6" height="10.920000000000002" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="140.0" y="237.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.4" font-weight="500" fill="#1d3b53" text-anchor="middle">平台资源</text>
+<path d="M328 230 L325 252" fill="none" stroke="#1d3b53" stroke-width="1.6" marker-end="url(#marrow1d3b53)" stroke-linejoin="round"/>
+<path d="M432 230 L435 252" fill="none" stroke="#1d3b53" stroke-width="1.6" marker-end="url(#marrow1d3b53)" stroke-linejoin="round"/>
+<path d="M620 230 L620 252" fill="none" stroke="#1d3b53" stroke-width="1.6" marker-end="url(#marrow1d3b53)" stroke-linejoin="round"/>
+<rect x="571.102" y="229.02" width="97.796" height="10.920000000000002" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="620.0" y="237.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.4" font-weight="500" fill="#1d3b53" text-anchor="middle">sandbox / retirement</text>
+<text x="380" y="324" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.4" font-weight="400" fill="#5d6d7a" text-anchor="middle">真实层级可依组织、账单与治理责任调整；此图不是已部署 topology。</text>
+</svg>

@@ -1,0 +1,85 @@
+{
+  "evidence_class": "SYNTHETIC_LOCAL_FIXTURE_ONLY",
+  "time_based_slo": 0.9995,
+  "window_minutes": 43200,
+  "topologies": {
+    "availability_set": {
+      "description": "Two VM alternatives in distinct illustrative fault domains, one regional entry and ledger dependency.",
+      "required_groups": {
+        "entry": ["gateway-regional"],
+        "application": ["api-fd1", "api-fd2"],
+        "ledger": ["ledger-regional"],
+        "identity": ["identity-shared"]
+      },
+      "supported_faults": ["vm-fd1-failure", "shared-datacenter", "identity-provider-outage", "region-outage"]
+    },
+    "multi_zone_api_single_zone_ledger": {
+      "description": "API instances across zones, with a single-zone ledger write dependency.",
+      "required_groups": {
+        "entry": ["gateway-z1", "gateway-z2", "gateway-z3"],
+        "application": ["api-z1", "api-z2", "api-z3"],
+        "ledger": ["ledger-z1"],
+        "identity": ["identity-shared"]
+      },
+      "supported_faults": ["zone-1-outage", "identity-provider-outage", "region-outage"]
+    },
+    "zone_redundant_path": {
+      "description": "Conceptual zone-redundant entry, application and ledger; shared identity remains a separate dependency.",
+      "required_groups": {
+        "entry": ["gateway-z1", "gateway-z2", "gateway-z3"],
+        "application": ["api-z1", "api-z2", "api-z3"],
+        "ledger": ["ledger-z1", "ledger-z2", "ledger-z3"],
+        "identity": ["identity-shared"]
+      },
+      "supported_faults": ["zone-1-outage", "identity-provider-outage", "region-outage"]
+    }
+  },
+  "faults": [
+    {
+      "id": "vm-fd1-failure",
+      "description": "One illustrative Availability Set VM fault domain is unavailable.",
+      "down": ["api-fd1"],
+      "expected": {"availability_set": true}
+    },
+    {
+      "id": "shared-datacenter",
+      "description": "A datacenter-scoped event affects the Availability Set entry, both VMs and ledger dependency.",
+      "down": ["gateway-regional", "api-fd1", "api-fd2", "ledger-regional"],
+      "expected": {"availability_set": false}
+    },
+    {
+      "id": "zone-1-outage",
+      "description": "All explicitly zonal components in illustrative Zone 1 are unavailable.",
+      "down": ["gateway-z1", "api-z1", "ledger-z1"],
+      "expected": {
+        "multi_zone_api_single_zone_ledger": false,
+        "zone_redundant_path": true
+      }
+    },
+    {
+      "id": "identity-provider-outage",
+      "description": "A shared identity/token dependency required by the critical flow is unavailable.",
+      "down": ["identity-shared"],
+      "expected": {
+        "availability_set": false,
+        "multi_zone_api_single_zone_ledger": false,
+        "zone_redundant_path": false
+      }
+    },
+    {
+      "id": "region-outage",
+      "description": "All modeled in-region entry, application and ledger endpoints are unavailable.",
+      "down": [
+        "gateway-regional", "api-fd1", "api-fd2", "ledger-regional",
+        "gateway-z1", "gateway-z2", "gateway-z3",
+        "api-z1", "api-z2", "api-z3",
+        "ledger-z1", "ledger-z2", "ledger-z3"
+      ],
+      "expected": {
+        "availability_set": false,
+        "multi_zone_api_single_zone_ledger": false,
+        "zone_redundant_path": false
+      }
+    }
+  ]
+}
