@@ -259,3 +259,29 @@ Research date: 2026-11-26. Claims are grounded in current Microsoft Learn primar
 - https://learn.microsoft.com/en-us/azure/defender-for-cloud/policy-reference
 - https://learn.microsoft.com/en-us/azure/defender-for-cloud/connect-azure-subscription
 - https://learn.microsoft.com/en-us/cli/azure/policy/state?view=azure-cli-latest
+
+## AZ04-01 — VM, VMSS, Managed Disk and Operations
+
+Research date: 2026-11-26. Microsoft Learn primary documentation grounds Azure behavior. State, probe, monitoring, and performance examples in the lab are synthetic and intentionally narrow.
+
+| Chapter section / figure | Claim or teaching point | Source anchor | Classification and limit |
+|---|---|---|---|
+| AZ04-01 §01, Fig 10-1 | Power state and provisioning state answer different questions and can coexist; Stopped (Allocated) bills for VM instance usage, while deallocated VM instance usage is not billed and attached resources may still cost | VM states and billing status | SOURCE-ANALYSED; billing table is not a live account check or SKU quote |
+| AZ04-01 §01, Fig 10-1 | Host metrics are available by default; guest OS metrics/logs generally require Azure Monitor Agent and an associated DCR; a host signal is not an app health assertion | Monitor Azure virtual machines; VM data collection | SOURCE-ANALYSED; collection is configuration- and workload-dependent |
+| AZ04-01 §01, Fig 10-1 | Boot diagnostics exposes boot serial log and screenshot evidence; it is not an application availability check | Azure boot diagnostics | SOURCE-ANALYSED; access prerequisites and evidence availability depend on the current service path |
+| AZ04-01 §02–03, Fig 10-2 | Uniform and Flexible orchestration differ in how instances are represented and managed; the mode is selected at creation; manual, automatic, and rolling policies describe different update timing and health-gate behavior | VMSS orchestration modes; VMSS upgrade policy; Application Health Extension | SOURCE-ANALYSED; the current upgrade-policy article describes Flexible rolling with the extension, while the orchestration article's unsupported-parameters section says the VMSS upgrade-policy parameter must be null/empty for Flexible. The chapter flags this current primary-source conflict and requires mode/API-specific confirmation. |
+| AZ04-01 §03, Fig 10-3 | Managed disks and VM sizes each have IOPS/throughput limits; the uncached remote path uses disk-level and VM-level budgets | VM and managed disk performance | SOURCE-ANALYSED; the min-of-three formula applies only to the explicitly simplified one-disk, uncached, no-burst teaching model, not a general Azure performance guarantee |
+| AZ04-01 §04 | `az vm get-instance-view` is a documented read-only command template | Azure CLI az vm reference | DOCUMENTED; not run; future use requires Stage 3 L0 and authorized scope |
+| AZ04-01 §05 | Synthetic state separation, guest-collection gate, VMSS policy branches, single-disk I/O ceilings, and boot/app evidence boundary | `chapters/AZ04-01/labs/vm-operations-model` and 18 unit tests | LOCAL_VERIFIED 2026-11-26; deterministic fixture only; full Windows and WSL suites each passed 150 tests across 10 lab directories |
+| AZ04-01 cost / authorization | No Azure authentication, subscription/monitoring query, CLI operation, resource mutation, deployment, network probe, or billing query was performed | Session and command execution record | LIVE_NOT_RUN; actual cumulative spend remains NOT_VERIFIED |
+
+### AZ04-01 primary references
+
+- https://learn.microsoft.com/en-us/azure/virtual-machines/states-billing
+- https://learn.microsoft.com/en-us/azure/virtual-machines/monitor-vm
+- https://learn.microsoft.com/en-us/azure/virtual-machines/boot-diagnostics
+- https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-orchestration-modes
+- https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-upgrade-policy
+- https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-health-extension
+- https://learn.microsoft.com/en-us/azure/virtual-machines/disks-performance
+- https://learn.microsoft.com/en-us/cli/azure/vm?view=azure-cli-latest

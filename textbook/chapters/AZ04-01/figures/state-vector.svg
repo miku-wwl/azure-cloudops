@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 430" width="760" height="430" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif">
+<defs><marker id="marrow5d6d7a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#5d6d7a"/></marker></defs>
+<text x="380" y="22" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12" font-weight="700" fill="#1d3b53" text-anchor="middle">一台 VM 是多个独立观察面，不是一个总健康状态</text>
+<rect x="22" y="56" width="166" height="91" rx="8" ry="8" fill="#e9eff5" stroke="#1d3b53" stroke-width="1.4"/>
+<text x="105.0" y="83.332" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.6" font-weight="700" fill="#17384f" text-anchor="middle">Power state</text>
+<text x="105.0" y="100.692" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">Instance View</text>
+<text x="105.0" y="114.692" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">Running / Stopped</text>
+<text x="105.0" y="128.692" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">Allocated / Deallocated</text>
+<rect x="208" y="56" width="166" height="91" rx="8" ry="8" fill="#fdf1e3" stroke="#e0954a" stroke-width="1.4"/>
+<text x="291.0" y="83.332" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.6" font-weight="700" fill="#9a5a1c" text-anchor="middle">Provisioning state</text>
+<text x="291.0" y="100.692" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">最近控制面操作</text>
+<text x="291.0" y="114.692" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">Succeeded / Failed</text>
+<text x="291.0" y="128.692" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">可与 Running 并存</text>
+<rect x="394" y="56" width="166" height="91" rx="8" ry="8" fill="#e6f3f3" stroke="#1a8a8f" stroke-width="1.4"/>
+<text x="477.0" y="83.332" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.6" font-weight="700" fill="#12676b" text-anchor="middle">Guest / application</text>
+<text x="477.0" y="100.692" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">OS、agent、进程</text>
+<text x="477.0" y="114.692" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">应用 endpoint probe</text>
+<text x="477.0" y="128.692" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">需各自配置观察</text>
+<rect x="580" y="56" width="158" height="91" rx="8" ry="8" fill="#fbeceb" stroke="#c0504d" stroke-width="1.4"/>
+<text x="659.0" y="83.273" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.4" font-weight="700" fill="#8e2f2c" text-anchor="middle">Compute billing</text>
+<text x="659.0" y="100.56299999999999" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="400" fill="#22313d" text-anchor="middle">按 power state</text>
+<text x="659.0" y="114.56299999999999" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="400" fill="#22313d" text-anchor="middle">Stopped (Allocated)</text>
+<text x="659.0" y="128.563" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="400" fill="#22313d" text-anchor="middle">仍计 VM usage</text>
+<text x="380" y="177" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.1" font-weight="700" fill="#c0504d" text-anchor="middle">相互独立：一个观察面不会自动证明另一个观察面的健康</text>
+<line x1="32" y1="198" x2="728" y2="198" stroke="#d5dde3" stroke-width="1"/>
+<rect x="30" y="222" width="211" height="116" rx="8" ry="8" fill="#f2f5f7" stroke="#9fb3c1" stroke-width="1.4"/>
+<text x="135.5" y="260.3025" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.5" font-weight="700" fill="#41525f" text-anchor="middle">Host observation</text>
+<text x="135.5" y="278.6275" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#5d6d7a" text-anchor="middle">平台 host metrics 默认收集</text>
+<text x="135.5" y="293.6275" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#5d6d7a" text-anchor="middle">boot diagnostics：启动屏幕</text>
+<text x="135.5" y="308.6275" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#5d6d7a" text-anchor="middle">与串口日志</text>
+<rect x="274" y="222" width="211" height="116" rx="8" ry="8" fill="#f1edf8" stroke="#6f55a8" stroke-width="1.4"/>
+<text x="379.5" y="260.3025" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.5" font-weight="700" fill="#4f3a86" text-anchor="middle">Guest observation</text>
+<text x="379.5" y="278.6275" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">AMA + DCR 获取已配置的</text>
+<text x="379.5" y="293.6275" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">guest metrics / logs</text>
+<text x="379.5" y="308.6275" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">不配置时不能从空白推断</text>
+<rect x="518" y="222" width="211" height="116" rx="8" ry="8" fill="#eaf5ee" stroke="#2e7d55" stroke-width="1.4"/>
+<text x="623.5" y="260.3025" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.5" font-weight="700" fill="#1f5c3d" text-anchor="middle">Application observation</text>
+<text x="623.5" y="278.6275" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">Health Extension / probe</text>
+<text x="623.5" y="293.6275" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">只判断被配置的 endpoint</text>
+<text x="623.5" y="308.6275" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">不等于完整业务 SLI</text>
+<path d="M135 338 L135 373" fill="none" stroke="#5d6d7a" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#marrow5d6d7a)" stroke-linejoin="round"/>
+<path d="M380 338 L380 373" fill="none" stroke="#5d6d7a" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#marrow5d6d7a)" stroke-linejoin="round"/>
+<path d="M623 338 L623 373" fill="none" stroke="#5d6d7a" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#marrow5d6d7a)" stroke-linejoin="round"/>
+<text x="380" y="399" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.6" font-weight="400" fill="#5d6d7a" text-anchor="middle">每条证据都有来源与边界；先匹配症状，再选择下一条观察</text>
+</svg>

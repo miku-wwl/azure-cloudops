@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420" width="760" height="420" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif">
+<defs><marker id="marrow1d3b53" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#1d3b53"/></marker><marker id="marrowe0954a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#e0954a"/></marker><marker id="marrowc0504d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#c0504d"/></marker><marker id="marrow2e7d55" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#2e7d55"/></marker><marker id="marrow6f55a8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#6f55a8"/></marker></defs>
+<text x="380" y="22" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12" font-weight="700" fill="#1d3b53" text-anchor="middle">VMSS model 改动不会自动等于每个实例已更新</text>
+<rect x="20" y="64" width="152" height="82" rx="8" ry="8" fill="#e9eff5" stroke="#1d3b53" stroke-width="1.4"/>
+<text x="96.0" y="93.773" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.4" font-weight="700" fill="#17384f" text-anchor="middle">创建时选模式</text>
+<text x="96.0" y="111.06299999999999" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.9" font-weight="400" fill="#22313d" text-anchor="middle">Uniform：成组 / 同质</text>
+<text x="96.0" y="125.06299999999999" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.9" font-weight="400" fill="#22313d" text-anchor="middle">Flexible：标准 VM 管理</text>
+<rect x="202" y="64" width="154" height="82" rx="8" ry="8" fill="#e6f3f3" stroke="#1a8a8f" stroke-width="1.4"/>
+<text x="279.0" y="93.773" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.4" font-weight="700" fill="#12676b" text-anchor="middle">Scale-set model</text>
+<text x="279.0" y="111.06299999999999" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.2" font-weight="400" fill="#22313d" text-anchor="middle">v4 → v5</text>
+<text x="279.0" y="125.06299999999999" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.2" font-weight="400" fill="#22313d" text-anchor="middle">声明的期望配置</text>
+<path d="M172 105 L202 105" fill="none" stroke="#1d3b53" stroke-width="1.6" marker-end="url(#marrow1d3b53)" stroke-linejoin="round"/>
+<text x="372" y="45" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="400" fill="#5d6d7a" text-anchor="middle">upgrade policy 选择推进路径</text>
+<rect x="400" y="42" width="150" height="70" rx="8" ry="8" fill="#fdf1e3" stroke="#e0954a" stroke-width="1.4"/>
+<text x="475.0" y="66.7435" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.3" font-weight="700" fill="#9a5a1c" text-anchor="middle">Manual</text>
+<text x="475.0" y="82.99849999999999" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.7" font-weight="400" fill="#22313d" text-anchor="middle">现有实例等显式更新</text>
+<text x="475.0" y="95.99849999999999" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.7" font-weight="400" fill="#22313d" text-anchor="middle">新实例使用 v5</text>
+<rect x="400" y="126" width="150" height="70" rx="8" ry="8" fill="#fbeceb" stroke="#c0504d" stroke-width="1.4"/>
+<text x="475.0" y="150.7435" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.3" font-weight="700" fill="#8e2f2c" text-anchor="middle">Automatic</text>
+<text x="475.0" y="166.9985" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.7" font-weight="400" fill="#22313d" text-anchor="middle">不保证实例顺序</text>
+<text x="475.0" y="179.9985" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.7" font-weight="400" fill="#22313d" text-anchor="middle">可能同时影响多台</text>
+<rect x="400" y="210" width="150" height="86" rx="8" ry="8" fill="#eaf5ee" stroke="#2e7d55" stroke-width="1.4"/>
+<text x="475.0" y="236.2435" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.3" font-weight="700" fill="#1f5c3d" text-anchor="middle">Rolling</text>
+<text x="475.0" y="252.4985" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.5" font-weight="400" fill="#22313d" text-anchor="middle">按批次推进实例</text>
+<text x="475.0" y="265.49850000000004" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.5" font-weight="400" fill="#22313d" text-anchor="middle">由 health signal 控制门槛</text>
+<text x="475.0" y="278.49850000000004" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.5" font-weight="400" fill="#22313d" text-anchor="middle">具体组合需核对支持矩阵</text>
+<path d="M356 80 L400 77" fill="none" stroke="#e0954a" stroke-width="1.4" marker-end="url(#marrowe0954a)" stroke-linejoin="round"/>
+<path d="M356 105 L400 161" fill="none" stroke="#c0504d" stroke-width="1.4" marker-end="url(#marrowc0504d)" stroke-linejoin="round"/>
+<path d="M356 129 L400 253" fill="none" stroke="#2e7d55" stroke-width="1.4" marker-end="url(#marrow2e7d55)" stroke-linejoin="round"/>
+<rect x="580" y="210" width="158" height="86" rx="8" ry="8" fill="#f1edf8" stroke="#6f55a8" stroke-width="1.4"/>
+<text x="659.0" y="236.155" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.0" font-weight="700" fill="#4f3a86" text-anchor="middle">Application health</text>
+<text x="659.0" y="252.305" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.2" font-weight="400" fill="#22313d" text-anchor="middle">Flexible：Extension</text>
+<text x="659.0" y="265.305" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.2" font-weight="400" fill="#22313d" text-anchor="middle">Uniform：Extension / LB probe</text>
+<text x="659.0" y="278.305" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.2" font-weight="400" fill="#22313d" text-anchor="middle">与 PowerState 分开</text>
+<path d="M550 253 L580 253" fill="none" stroke="#6f55a8" stroke-width="1.6" marker-end="url(#marrow6f55a8)" stroke-linejoin="round"/>
+<rect x="551.195" y="237.97" width="27.610000000000003" height="9.620000000000001" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="565.0" y="245.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.4" font-weight="500" fill="#6f55a8" text-anchor="middle">probe</text>
+<rect x="30" y="321" width="700" height="74" rx="5" ry="5" fill="#fdf1e3" stroke="#e0954a" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="38" y="335.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="700" fill="#9a5a1c" text-anchor="start">Source boundary</text>
+<text x="38" y="346.6" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="start">图示解释模型和实例版本，不保证任意 mode/API 组合均支持相同策略。</text>
+<text x="38" y="358.20000000000005" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="start">部署前核对 orchestration、API、upgrade policy 与 health configuration。</text>
+</svg>

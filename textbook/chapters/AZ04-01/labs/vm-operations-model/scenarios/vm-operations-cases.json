@@ -1,0 +1,76 @@
+{
+  "states": [
+    {
+      "name": "stopped-allocated",
+      "power_state": "stopped_allocated",
+      "provisioning_state": "succeeded"
+    },
+    {
+      "name": "stopped-deallocated",
+      "power_state": "stopped_deallocated",
+      "provisioning_state": "succeeded"
+    },
+    {
+      "name": "running-last-operation-failed",
+      "power_state": "running",
+      "provisioning_state": "failed"
+    }
+  ],
+  "guest": [
+    {
+      "name": "guest-telemetry-missing",
+      "ama_installed": false,
+      "dcr_associated": false,
+      "app_health": "unknown"
+    }
+  ],
+  "rollouts": [
+    {
+      "name": "manual-instance-drift",
+      "orchestration": "uniform",
+      "policy": "manual",
+      "model_version": 5,
+      "instance_version": 4,
+      "health_signal": "none"
+    },
+    {
+      "name": "uniform-rolling-health-missing",
+      "orchestration": "uniform",
+      "policy": "rolling",
+      "model_version": 5,
+      "instance_version": 4,
+      "health_signal": "none"
+    }
+  ],
+  "disk": [
+    {
+      "name": "disk-cap-bottleneck",
+      "limits": {
+        "requested_iops": 9000,
+        "disk_iops_cap": 5000,
+        "vm_iops_cap": 8000,
+        "requested_mbps": 400,
+        "disk_mbps_cap": 600,
+        "vm_mbps_cap": 700
+      }
+    },
+    {
+      "name": "vm-cap-bottleneck",
+      "limits": {
+        "requested_iops": 9000,
+        "disk_iops_cap": 12000,
+        "vm_iops_cap": 8000,
+        "requested_mbps": 900,
+        "disk_mbps_cap": 900,
+        "vm_mbps_cap": 500
+      }
+    }
+  ],
+  "boot": [
+    {
+      "name": "boot-diagnostics-only",
+      "configured": true,
+      "app_health": "unknown"
+    }
+  ]
+}

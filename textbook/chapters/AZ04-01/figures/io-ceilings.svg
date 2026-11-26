@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 382" width="760" height="382" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif">
+<defs><marker id="marrowc0504d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#c0504d"/></marker><marker id="marrowe0954a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#e0954a"/></marker></defs>
+<text x="380" y="22" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12" font-weight="700" fill="#1d3b53" text-anchor="middle">单盘 uncached 路径：请求同时受 disk cap 与 VM cap 约束</text>
+<rect x="20" y="91" width="145" height="91" rx="8" ry="8" fill="#f2f5f7" stroke="#9fb3c1" stroke-width="1.4"/>
+<text x="92.5" y="124.2435" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.3" font-weight="700" fill="#41525f" text-anchor="middle">Application demand</text>
+<text x="92.5" y="142.4985" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.4" font-weight="400" fill="#5d6d7a" text-anchor="middle">9,000 IOPS</text>
+<text x="92.5" y="157.4985" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.4" font-weight="400" fill="#5d6d7a" text-anchor="middle">示例输入</text>
+<rect x="218" y="64" width="205" height="108" rx="8" ry="8" fill="#fbeceb" stroke="#c0504d" stroke-width="1.4"/>
+<text x="320.5" y="105.832" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.6" font-weight="700" fill="#8e2f2c" text-anchor="middle">Managed Disk limit</text>
+<text x="320.5" y="124.192" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#22313d" text-anchor="middle">5,000 IOPS</text>
+<text x="320.5" y="139.192" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#22313d" text-anchor="middle">请求 &gt; disk cap</text>
+<rect x="218" y="211" width="205" height="108" rx="8" ry="8" fill="#fdf1e3" stroke="#e0954a" stroke-width="1.4"/>
+<text x="320.5" y="252.832" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.6" font-weight="700" fill="#9a5a1c" text-anchor="middle">VM uncached limit</text>
+<text x="320.5" y="271.192" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#22313d" text-anchor="middle">8,000 IOPS</text>
+<text x="320.5" y="286.192" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" font-weight="400" fill="#22313d" text-anchor="middle">请求 &gt; VM cap</text>
+<rect x="504" y="122" width="219" height="114" rx="8" ry="8" fill="#e6f3f3" stroke="#1a8a8f" stroke-width="1.4"/>
+<text x="613.5" y="159.3615" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.7" font-weight="700" fill="#12676b" text-anchor="middle">Delivered ceiling</text>
+<text x="613.5" y="177.75650000000002" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.4" font-weight="400" fill="#22313d" text-anchor="middle">min(request, disk, VM)</text>
+<text x="613.5" y="192.75650000000002" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.4" font-weight="400" fill="#22313d" text-anchor="middle">5,000 IOPS in this fixture</text>
+<text x="613.5" y="207.75650000000002" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.4" font-weight="400" fill="#22313d" text-anchor="middle">不是 SKU 性能保证</text>
+<path d="M165 130 L218 118" fill="none" stroke="#c0504d" stroke-width="1.6" marker-end="url(#marrowc0504d)" stroke-linejoin="round"/>
+<rect x="170.945" y="108.685" width="41.11000000000001" height="10.01" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="191.5" y="116.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.7" font-weight="500" fill="#c0504d" text-anchor="middle">远端 I/O</text>
+<path d="M165 149 L218 260" fill="none" stroke="#e0954a" stroke-width="1.6" marker-end="url(#marrowe0954a)" stroke-linejoin="round"/>
+<rect x="159.239" y="200.47" width="78.522" height="9.620000000000001" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="198.5" y="207.5" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.4" font-weight="500" fill="#e0954a" text-anchor="middle">同一请求受 VM 预算</text>
+<path d="M423 118 L504 156" fill="none" stroke="#c0504d" stroke-width="1.6" marker-end="url(#marrowc0504d)" stroke-linejoin="round"/>
+<rect x="422.241" y="122.97" width="82.51800000000001" height="9.620000000000001" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="463.5" y="130.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.4" font-weight="500" fill="#c0504d" text-anchor="middle">较小 disk cap 成瓶颈</text>
+<path d="M423 265 L504 201" fill="none" stroke="#e0954a" stroke-width="1.6" marker-end="url(#marrowe0954a)" stroke-linejoin="round"/>
+<rect x="421.15999999999997" y="237.16" width="84.68000000000002" height="9.360000000000001" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="463.5" y="244.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.2" font-weight="500" fill="#e0954a" text-anchor="middle">较大 VM cap 未先触顶</text>
+<text x="380" y="355" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.1" font-weight="400" fill="#5d6d7a" text-anchor="middle">Host cache 会改变 I/O path；多盘总额、burst、队列不在此单盘教学模型内。</text>
+</svg>
