@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650">
+<defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L0,10 L11,5 z" fill="#17324d"/></marker></defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="34" y="40" font-family="Aptos,Arial,sans-serif" font-size="27" font-weight="700" fill="#17324d" text-anchor="start">每个假设都必须预测一条能区分它的观测</text>
+<text x="34" y="72" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#5d7183" text-anchor="start">“支持 / 削弱 / 未知”比强行打分更诚实</text>
+<rect x="48" y="110" width="200" height="42" fill="#eaf1f8" stroke="#b7c5d0"/>
+<text x="148" y="138" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="700" fill="#17324d" text-anchor="middle">假设</text>
+<rect x="250" y="110" width="355" height="42" fill="#eaf1f8" stroke="#b7c5d0"/>
+<text x="427" y="138" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="700" fill="#17324d" text-anchor="middle">预测</text>
+<rect x="610" y="110" width="410" height="42" fill="#eaf1f8" stroke="#b7c5d0"/>
+<text x="815" y="138" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="700" fill="#17324d" text-anchor="middle">合成请求证据</text>
+<rect x="1025" y="110" width="130" height="42" fill="#eaf1f8" stroke="#b7c5d0"/>
+<text x="1090" y="138" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="700" fill="#17324d" text-anchor="middle">状态</text>
+<rect x="48" y="152" width="200" height="91" fill="#edf5f7" stroke="#c8d3dc"/>
+<text x="148" y="199" font-family="Aptos,Arial,sans-serif" font-size="18" font-weight="700" fill="#087f8c" text-anchor="middle">身份授权</text>
+<rect x="250" y="152" width="355" height="91" fill="#ffffff" stroke="#c8d3dc"/>
+<text x="267" y="186" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="start">token 正确；数据权限缺失</text>
+<rect x="610" y="152" width="410" height="91" fill="#ffffff" stroke="#c8d3dc"/>
+<text x="627" y="186" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="start">Storage 403；principal=v2</text>
+<text x="627" y="209" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="start">rates 无 reader 角色</text>
+<rect x="1025" y="152" width="130" height="91" fill="#edf5f7" stroke="#c8d3dc"/>
+<text x="1090" y="201" font-family="Aptos,Arial,sans-serif" font-size="18" font-weight="700" fill="#087f8c" text-anchor="middle">支持</text>
+<rect x="48" y="243" width="200" height="91" fill="#fff3e5" stroke="#c8d3dc"/>
+<text x="148" y="290" font-family="Aptos,Arial,sans-serif" font-size="18" font-weight="700" fill="#c96a18" text-anchor="middle">Private DNS</text>
+<rect x="250" y="243" width="355" height="91" fill="#ffffff" stroke="#c8d3dc"/>
+<text x="267" y="277" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="start">FQDN 返回错误目标</text>
+<rect x="610" y="243" width="410" height="91" fill="#ffffff" stroke="#c8d3dc"/>
+<text x="627" y="277" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="start">期望私有 IP；TCP 已建立</text>
+<rect x="1025" y="243" width="130" height="91" fill="#fff3e5" stroke="#c8d3dc"/>
+<text x="1090" y="292" font-family="Aptos,Arial,sans-serif" font-size="18" font-weight="700" fill="#c96a18" text-anchor="middle">削弱</text>
+<rect x="48" y="334" width="200" height="91" fill="#fff3e5" stroke="#c8d3dc"/>
+<text x="148" y="381" font-family="Aptos,Arial,sans-serif" font-size="18" font-weight="700" fill="#c96a18" text-anchor="middle">NSG / 路由</text>
+<rect x="250" y="334" width="355" height="91" fill="#ffffff" stroke="#c8d3dc"/>
+<text x="267" y="368" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="start">路径连接被拒绝/超时</text>
+<rect x="610" y="334" width="410" height="91" fill="#ffffff" stroke="#c8d3dc"/>
+<text x="627" y="368" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="start">服务返回授权 403</text>
+<rect x="1025" y="334" width="130" height="91" fill="#fff3e5" stroke="#c8d3dc"/>
+<text x="1090" y="383" font-family="Aptos,Arial,sans-serif" font-size="18" font-weight="700" fill="#c96a18" text-anchor="middle">削弱</text>
+<rect x="48" y="425" width="200" height="91" fill="#eaf6ef" stroke="#c8d3dc"/>
+<text x="148" y="472" font-family="Aptos,Arial,sans-serif" font-size="18" font-weight="700" fill="#23764d" text-anchor="middle">数据库</text>
+<rect x="250" y="425" width="355" height="91" fill="#ffffff" stroke="#c8d3dc"/>
+<text x="267" y="459" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="start">SQL 依赖或账本约束失败</text>
+<rect x="610" y="425" width="410" height="91" fill="#ffffff" stroke="#c8d3dc"/>
+<text x="627" y="459" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="start">SQL 成功；账本 hash/行数稳定</text>
+<rect x="1025" y="425" width="130" height="91" fill="#eaf6ef" stroke="#c8d3dc"/>
+<text x="1090" y="474" font-family="Aptos,Arial,sans-serif" font-size="18" font-weight="700" fill="#23764d" text-anchor="middle">削弱</text>
+<rect x="48" y="516" width="200" height="91" fill="#f2edfb" stroke="#c8d3dc"/>
+<text x="148" y="563" font-family="Aptos,Arial,sans-serif" font-size="18" font-weight="700" fill="#684bb1" text-anchor="middle">平台事件</text>
+<rect x="250" y="516" width="355" height="91" fill="#ffffff" stroke="#c8d3dc"/>
+<text x="267" y="550" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="start">匹配 service/region/time</text>
+<rect x="610" y="516" width="410" height="91" fill="#ffffff" stroke="#c8d3dc"/>
+<text x="627" y="550" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="start">快照无匹配事件</text>
+<rect x="1025" y="516" width="130" height="91" fill="#f2edfb" stroke="#c8d3dc"/>
+<text x="1090" y="565" font-family="Aptos,Arial,sans-serif" font-size="18" font-weight="700" fill="#684bb1" text-anchor="middle">未知</text>
+<text x="600" y="630" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="700" fill="#aa4052" text-anchor="middle">没有诊断设置 / trace 断链 / 数据未到达 → 未知，不是反证。</text>
+</svg>

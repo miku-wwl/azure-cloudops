@@ -1,0 +1,49 @@
+{
+  "case_id": "BANK-SYNTH-IR-20261127-01",
+  "clock": "UTC",
+  "description": "A payment API release selects a new managed identity that lacks read access to its synthetic rates container.",
+  "baseline_probe_id": "transfer-post-v1",
+  "evidence": [
+    {"id": "E01", "fact": "known_good_same_probe", "source": "synthetic business probe", "event_time": "2026-11-27T09:57:00Z", "observed_at": "2026-11-27T09:57:00Z", "detail": "payments-mi-v1 reads rates; transfer probe passes."},
+    {"id": "E02", "fact": "release_changed_principal", "source": "synthetic deployment/change record", "event_time": "2026-11-27T10:00:00Z", "observed_at": "2026-11-27T10:02:00Z", "detail": "revision v2 changed the selected identity from payments-mi-v1 to payments-mi-v2."},
+    {"id": "E03", "fact": "rates_dependency_403", "source": "synthetic correlated dependency trace", "event_time": "2026-11-27T10:03:00Z", "observed_at": "2026-11-27T10:04:10Z", "detail": "operation op-774: rates read returned 403 AuthorizationPermissionMismatch."},
+    {"id": "E04", "fact": "token_audience_storage", "source": "synthetic token claim inspection", "event_time": "2026-11-27T10:03:00Z", "observed_at": "2026-11-27T10:05:00Z", "detail": "the request token audience is Storage."},
+    {"id": "E05", "fact": "trace_principal_is_v2", "source": "synthetic dependency trace", "event_time": "2026-11-27T10:03:00Z", "observed_at": "2026-11-27T10:05:00Z", "detail": "the failed dependency request is attributed to payments-mi-v2."},
+    {"id": "E06", "fact": "v2_missing_rates_reader", "source": "synthetic role assignment snapshot", "event_time": "2026-11-27T10:03:00Z", "observed_at": "2026-11-27T10:09:00Z", "detail": "payments-mi-v2 has no effective reader role at the rates container scope."},
+    {"id": "E07", "fact": "dns_answer_expected", "source": "synthetic DNS probe", "event_time": "2026-11-27T10:05:00Z", "observed_at": "2026-11-27T10:05:00Z", "detail": "the rates FQDN resolves to the expected private address."},
+    {"id": "E08", "fact": "tcp_connection_succeeded", "source": "synthetic network probe", "event_time": "2026-11-27T10:05:00Z", "observed_at": "2026-11-27T10:05:00Z", "detail": "TCP connects to the resolved endpoint; the service returns an authorization response."},
+    {"id": "E09", "fact": "sql_dependency_succeeded", "source": "synthetic correlated dependency trace", "event_time": "2026-11-27T10:05:00Z", "observed_at": "2026-11-27T10:05:30Z", "detail": "the SQL ledger dependency succeeds within the case threshold."},
+    {"id": "E10", "fact": "ledger_invariants_before_repair", "source": "synthetic ledger integrity check", "event_time": "2026-11-27T10:06:00Z", "observed_at": "2026-11-27T10:06:00Z", "detail": "record count and digest match the pre-incident ledger; no duplicate payment is observed."},
+    {"id": "E11", "fact": "no_matching_service_health_event_observed", "source": "synthetic point-in-time health snapshot", "event_time": "2026-11-27T10:11:00Z", "observed_at": "2026-11-27T10:11:00Z", "detail": "no matching event appears in this snapshot; the result does not exclude an Azure platform issue."},
+    {"id": "E12", "fact": "same_probe_recovered", "source": "synthetic recovery probe", "event_time": "2026-11-27T10:16:00Z", "observed_at": "2026-11-27T10:16:00Z", "detail": "the same transfer operation succeeds after the scoped role repair."},
+    {"id": "E13", "fact": "unrelated_scope_still_denied", "source": "synthetic negative authorization probe", "event_time": "2026-11-27T10:16:30Z", "observed_at": "2026-11-27T10:16:30Z", "detail": "payments-mi-v2 remains denied access to settlement-archive."}
+  ],
+  "episode": {
+    "first_failed_at": "2026-11-27T10:03:00Z",
+    "alerted_at": "2026-11-27T10:04:00Z",
+    "incident_declared_at": "2026-11-27T10:05:00Z",
+    "verified_at": "2026-11-27T10:21:00Z",
+    "rto_target_minutes": 30
+  },
+  "repair": {
+    "approved": true,
+    "approval_id": "SYNTH-CHG-1042",
+    "principal": "payments-mi-v2",
+    "role": "Storage Blob Data Reader",
+    "scope": "synthetic://bank/payments/blobServices/default/containers/rates",
+    "required_scope": "synthetic://bank/payments/blobServices/default/containers/rates",
+    "other_changes": []
+  },
+  "recovery": {
+    "probe_id": "transfer-post-v1",
+    "same_probe": true,
+    "api_status": 200,
+    "storage_dependency_status": 200,
+    "ledger_digest_matches": true,
+    "ledger_record_delta": 1,
+    "idempotency_check_passed": true,
+    "unrelated_scope_access_denied": true,
+    "stable_window_minutes": 5,
+    "queue_drained": true
+  }
+}

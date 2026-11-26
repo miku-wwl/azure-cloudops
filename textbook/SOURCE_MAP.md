@@ -493,3 +493,33 @@ Research date: 2026-11-27. Microsoft Learn is the primary source. The offline la
 - https://learn.microsoft.com/en-us/azure/backup/manage-recovery-points
 - https://learn.microsoft.com/en-us/azure/site-recovery/site-recovery-test-failover-to-azure
 - https://learn.microsoft.com/en-us/azure/site-recovery/recovery-plan-overview
+
+## AZ06-02 — Incident Response, RCA and integrated banking case
+
+Research date: 2026-11-27. Microsoft Learn is the primary source for Azure service behavior. The banking incident and every observation, role change, timeline and recovery result in the lab are synthetic.
+
+| Chapter section / figure | Claim or teaching point | Source anchor | Classification and limit |
+|---|---|---|---|
+| AZ06-02 §01, Fig 18-1 | Incident response needs explicit ownership, escalation, impact-based triage, containment, recovery checks, communication and controlled closure; RCA/postmortem turn evidence into improvements | Azure Well-Architected incident management practice | SOURCE-ANALYSED; the lifecycle diagram is a teaching synthesis, not the live process of an organization |
+| AZ06-02 §02, Fig 18-2 | Metrics, logs and distributed traces offer different views; Activity Log, resource logs and application telemetry have different scopes and availability; event time and ingest/arrival time should be recorded separately | Azure Monitor data platform; Activity Log; Resource Logs; diagnostic settings; ingestion time | SOURCE-ANALYSED; no live workspace, diagnostic setting, schema, event or ingestion delay was inspected |
+| AZ06-02 §02–03 | Resource Logs are not collected by default and require diagnostic settings; missing data can reflect collection, schema, time-window or trace-correlation gaps and must remain unknown | Resource Logs; diagnostic settings; Application Insights telemetry model | SOURCE-ANALYSED; the fixture includes complete synthetic observations and does not model sampling or Azure ingestion |
+| AZ06-02 §03, Fig 18-3 | Request/dependency operation and parent identifiers can correlate one distributed operation; Service Health and Resource Health have different scopes, and a healthy resource snapshot does not prove the application works | Application Insights telemetry data model; Azure Service Health FAQ; Azure Resource Health FAQ | SOURCE-ANALYSED; the chapter records the synthetic snapshot as “not observed, not excluded” |
+| AZ06-02 §04, Fig 18-4 | The bank case separates release trigger, identity/authorization failure mechanism, payment impact and missing release-readiness control; only a controlled same-request repair/retest supports this synthetic causal explanation | Incident management investigation guidance; Azure role assignments; Blob data access role scope | DESIGN + LOCAL_VERIFIED; root cause applies to the fixture only, not an Azure workload |
+| AZ06-02 §05, Fig 18-5 | Blob data roles can be scoped to a container; bounded access, approval, an original business probe, ledger/idempotency checks, negative access tests and stability form the local repair contract | Assign Azure role for Blob data access; Azure RBAC role assignments; incident management validation guidance | SOURCE-ANALYSED + LOCALLY SPECIFIED; no role assignment or storage request was made; real role propagation was not tested |
+| AZ06-02 §06–07 | One deterministic synthetic banking incident and 30 tests exercise evidence time, competing hypotheses, authorization scope, same-probe recovery, ledger integrity, idempotency, stability and RTO; the chapter maps IR-01…IR-12 but does not pass the eight mandatory incident contracts | `chapters/AZ06-02/labs/incident-model`; `AZURE_SPECIALTY_ROADMAP.md`; `textbook/LIVE_LAB_INDEX.md` | LOCAL_VERIFIED 2026-11-27; Windows and WSL suites each passed 310 tests across 18 lab directories; no Azure/KQL/service emulation |
+| AZ06-02 cost / authorization | No Azure sign-in, telemetry query, identity/role action, deployment, network probe, resource operation or billing request was performed | Session and command execution record | LIVE_NOT_RUN; actual cumulative spend remains NOT_VERIFIED |
+
+### AZ06-02 primary references
+
+- https://learn.microsoft.com/en-us/azure/well-architected/design-guides/incident-management
+- https://learn.microsoft.com/en-us/azure/azure-monitor/fundamentals/data-platform
+- https://learn.microsoft.com/en-us/azure/azure-monitor/logs/data-ingestion-time
+- https://learn.microsoft.com/en-us/azure/azure-monitor/fundamentals/activity-log
+- https://learn.microsoft.com/en-us/azure/azure-monitor/logs/resource-logs
+- https://learn.microsoft.com/en-us/azure/azure-monitor/platform/diagnostic-settings
+- https://learn.microsoft.com/en-us/azure/azure-monitor/app/data-model-request-telemetry
+- https://learn.microsoft.com/en-us/azure/service-health/service-health-faq
+- https://learn.microsoft.com/en-us/azure/service-health/resource-health-faq
+- https://learn.microsoft.com/en-us/azure/storage/blobs/assign-azure-role-data-access
+- https://learn.microsoft.com/en-us/azure/azure-monitor/change/change-analysis-enable
+- https://learn.microsoft.com/en-us/azure/role-based-access-control/role-assignments

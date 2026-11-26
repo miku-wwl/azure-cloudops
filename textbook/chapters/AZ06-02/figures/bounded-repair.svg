@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600">
+<defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L0,10 L11,5 z" fill="#17324d"/></marker></defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="34" y="40" font-family="Aptos,Arial,sans-serif" font-size="27" font-weight="700" fill="#17324d" text-anchor="start">修复范围越小，越容易验证副作用和回滚边界</text>
+<text x="34" y="72" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#5d7183" text-anchor="start">精确主体 · 精确数据范围 · 精确角色 · 原业务探针</text>
+<rect x="46" y="126" width="245" height="124" rx="16" fill="#edf5f7" stroke="#087f8c" stroke-width="2.5"/>
+<text x="168" y="157" font-family="Aptos,Arial,sans-serif" font-size="20" font-weight="700" fill="#087f8c" text-anchor="middle">1 · 保留基线</text>
+<text x="168" y="185" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">冻结后续发布</text>
+<text x="168" y="208" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">保存版本 / 主体 / 证据</text>
+<rect x="330" y="126" width="245" height="124" rx="16" fill="#eaf6ef" stroke="#23764d" stroke-width="2.5"/>
+<text x="452" y="157" font-family="Aptos,Arial,sans-serif" font-size="20" font-weight="700" fill="#23764d" text-anchor="middle">2 · 单项修复</text>
+<text x="452" y="185" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">payments-mi-v2</text>
+<text x="452" y="208" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">Blob Data Reader</text>
+<rect x="614" y="126" width="245" height="124" rx="16" fill="#f2edfb" stroke="#684bb1" stroke-width="2.5"/>
+<text x="736" y="157" font-family="Aptos,Arial,sans-serif" font-size="20" font-weight="700" fill="#684bb1" text-anchor="middle">3 · 锁定 scope</text>
+<text x="736" y="185" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">rates container</text>
+<text x="736" y="208" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">不扩大到账户/订阅</text>
+<rect x="898" y="126" width="245" height="124" rx="16" fill="#eaf1f8" stroke="#17324d" stroke-width="2.5"/>
+<text x="1020" y="157" font-family="Aptos,Arial,sans-serif" font-size="20" font-weight="700" fill="#17324d" text-anchor="middle">4 · 原路径验证</text>
+<text x="1020" y="185" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">同 transfer + 幂等键</text>
+<text x="1020" y="208" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">API 与 storage 成功</text>
+<path d="M291,187 L320,187" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M575,187 L604,187" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M859,187 L888,187" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="47" y="310" width="515" height="161" rx="16" fill="#eaf6ef" stroke="#23764d" stroke-width="2.5"/>
+<text x="304" y="346" font-family="Aptos,Arial,sans-serif" font-size="20" font-weight="700" fill="#23764d" text-anchor="middle">必须通过</text>
+<text x="304" y="378" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">账本约束 + checksum 稳定</text>
+<text x="304" y="402" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">重复键只记一笔</text>
+<text x="304" y="426" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">settlement-archive 仍拒绝</text>
+<text x="304" y="450" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">5 分钟稳定 + 队列回落</text>
+<rect x="638" y="310" width="515" height="161" rx="16" fill="#fff0f1" stroke="#aa4052" stroke-width="2.5"/>
+<text x="895" y="346" font-family="Aptos,Arial,sans-serif" font-size="20" font-weight="700" fill="#aa4052" text-anchor="middle">必须拒绝</text>
+<text x="895" y="378" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">Owner / Contributor 兜底提权</text>
+<text x="895" y="402" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">关闭 NSG / 防火墙排障</text>
+<text x="895" y="426" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">只看 /health/live 就关单</text>
+<text x="895" y="450" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">改了多项还无法定位效果</text>
+<text x="600" y="535" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="700" fill="#aa4052" text-anchor="middle">任一数据、安全或同探针断言失败 → 保持未恢复，按预案回滚/继续遏制。</text>
+</svg>

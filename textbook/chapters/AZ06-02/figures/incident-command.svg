@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560">
+<defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L0,10 L11,5 z" fill="#17324d"/></marker></defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="34" y="40" font-family="Aptos,Arial,sans-serif" font-size="27" font-weight="700" fill="#17324d" text-anchor="start">清晰的角色让事故从检测走到可控恢复</text>
+<text x="34" y="72" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#5d7183" text-anchor="start">先降低用户影响；RCA 与复盘接收被保留的证据</text>
+<rect x="34" y="122" width="200" height="112" rx="16" fill="#edf5f7" stroke="#087f8c" stroke-width="2.5"/>
+<text x="134" y="153" font-family="Aptos,Arial,sans-serif" font-size="20" font-weight="700" fill="#087f8c" text-anchor="middle">01  检测与分级</text>
+<text x="134" y="181" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="middle">业务影响</text>
+<text x="134" y="204" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="middle">严重度 / run ID</text>
+<rect x="267" y="122" width="200" height="112" rx="16" fill="#fff3e5" stroke="#c96a18" stroke-width="2.5"/>
+<text x="367" y="153" font-family="Aptos,Arial,sans-serif" font-size="20" font-weight="700" fill="#c96a18" text-anchor="middle">02  遏制</text>
+<text x="367" y="181" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="middle">限制范围</text>
+<text x="367" y="204" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="middle">冻结高风险变更</text>
+<rect x="500" y="122" width="200" height="112" rx="16" fill="#f2edfb" stroke="#684bb1" stroke-width="2.5"/>
+<text x="600" y="153" font-family="Aptos,Arial,sans-serif" font-size="20" font-weight="700" fill="#684bb1" text-anchor="middle">03  调查</text>
+<text x="600" y="181" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="middle">记录假设</text>
+<text x="600" y="204" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="middle">保留时间线证据</text>
+<rect x="733" y="122" width="200" height="112" rx="16" fill="#eaf6ef" stroke="#23764d" stroke-width="2.5"/>
+<text x="833" y="153" font-family="Aptos,Arial,sans-serif" font-size="20" font-weight="700" fill="#23764d" text-anchor="middle">04  恢复</text>
+<text x="833" y="181" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="middle">最小修复</text>
+<text x="833" y="204" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="middle">同一业务探针</text>
+<rect x="966" y="122" width="200" height="112" rx="16" fill="#eaf1f8" stroke="#17324d" stroke-width="2.5"/>
+<text x="1066" y="153" font-family="Aptos,Arial,sans-serif" font-size="20" font-weight="700" fill="#17324d" text-anchor="middle">05  关闭 / RCA</text>
+<text x="1066" y="181" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="middle">稳定 + 数据校验</text>
+<text x="1066" y="204" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="middle">行动项有负责人</text>
+<path d="M234,177 L261,177" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M467,177 L494,177" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M700,177 L727,177" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M933,177 L960,177" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="70" y="307" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#17324d" text-anchor="start">Incident Response Manager</text>
+<text x="360" y="307" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#087f8c" text-anchor="start">技术负责人</text>
+<text x="590" y="307" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#c96a18" text-anchor="start">服务 / 数据所有者</text>
+<text x="870" y="307" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#684bb1" text-anchor="start">沟通负责人</text>
+<text x="70" y="340" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="start">定严重度、节奏、升级</text>
+<text x="70" y="366" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="start">控制关闭闸门</text>
+<text x="360" y="340" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="start">维护证据和竞争假设</text>
+<text x="360" y="366" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="start">声明未知与置信边界</text>
+<text x="590" y="340" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="start">批准身份、路由、数据变更</text>
+<text x="590" y="366" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="start">确认回滚和完整性</text>
+<text x="870" y="340" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="start">固定更新频率</text>
+<text x="870" y="366" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="start">告知用户影响和恢复状态</text>
+<rect x="44" y="420" width="1110" height="83" rx="16" fill="#f5f7fa" stroke="#b7c5d0" stroke-width="2"/>
+<text x="599" y="452" font-family="Aptos,Arial,sans-serif" font-size="20" font-weight="700" fill="#17324d" text-anchor="middle">关闭前的三个闸门</text>
+<text x="599" y="482" font-family="Aptos,Arial,sans-serif" font-size="18" font-weight="700" fill="#23764d" text-anchor="middle">业务探针恢复  +  数据/安全断言通过  +  影响范围稳定</text>
+</svg>

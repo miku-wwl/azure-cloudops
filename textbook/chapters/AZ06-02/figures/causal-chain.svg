@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="610" viewBox="0 0 1200 610">
+<defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L0,10 L11,5 z" fill="#17324d"/></marker></defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="34" y="40" font-family="Aptos,Arial,sans-serif" font-size="27" font-weight="700" fill="#17324d" text-anchor="start">根因链拆分触发、失效机制、业务影响和控制缺口</text>
+<text x="34" y="72" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#5d7183" text-anchor="start">相关时间相邻；具体依赖拒绝与受控修复才检验因果机制</text>
+<rect x="34" y="142" width="204" height="120" rx="16" fill="#fff3e5" stroke="#c96a18" stroke-width="2.5"/>
+<text x="136" y="173" font-family="Aptos,Arial,sans-serif" font-size="20" font-weight="700" fill="#c96a18" text-anchor="middle">发布 v2</text>
+<text x="136" y="201" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">10:00 UTC</text>
+<text x="136" y="224" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">身份绑定改变</text>
+<rect x="266" y="142" width="204" height="120" rx="16" fill="#f2edfb" stroke="#684bb1" stroke-width="2.5"/>
+<text x="368" y="173" font-family="Aptos,Arial,sans-serif" font-size="20" font-weight="700" fill="#684bb1" text-anchor="middle">新主体</text>
+<text x="368" y="201" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">payments-mi-v2</text>
+<text x="368" y="224" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">无 rates reader</text>
+<rect x="498" y="142" width="204" height="120" rx="16" fill="#fff0f1" stroke="#aa4052" stroke-width="2.5"/>
+<text x="600" y="173" font-family="Aptos,Arial,sans-serif" font-size="20" font-weight="700" fill="#aa4052" text-anchor="middle">依赖失败</text>
+<text x="600" y="201" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">读取 rates 得 403</text>
+<text x="600" y="224" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">主体 ID 已关联</text>
+<rect x="730" y="142" width="204" height="120" rx="16" fill="#fff3e5" stroke="#c96a18" stroke-width="2.5"/>
+<text x="832" y="173" font-family="Aptos,Arial,sans-serif" font-size="20" font-weight="700" fill="#c96a18" text-anchor="middle">API 失败</text>
+<text x="832" y="201" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">支付请求 503</text>
+<text x="832" y="224" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">队列开始增长</text>
+<rect x="962" y="142" width="204" height="120" rx="16" fill="#eaf1f8" stroke="#17324d" stroke-width="2.5"/>
+<text x="1064" y="173" font-family="Aptos,Arial,sans-serif" font-size="20" font-weight="700" fill="#17324d" text-anchor="middle">业务影响</text>
+<text x="1064" y="201" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">部分转账被拒</text>
+<text x="1064" y="224" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">账本未损坏</text>
+<path d="M238,202 L262,202" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M470,202 L494,202" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M702,202 L726,202" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M934,202 L958,202" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="130" y="337" width="940" height="91" rx="16" fill="#eaf6ef" stroke="#23764d" stroke-width="2.5"/>
+<text x="600" y="372" font-family="Aptos,Arial,sans-serif" font-size="20" font-weight="700" fill="#23764d" text-anchor="middle">受控反事实：只给 payments-mi-v2 在 rates 容器读权限</text>
+<text x="600" y="406" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">相同请求变成功；settlement-archive 仍拒绝 → 支持角色缺口为机制</text>
+<rect x="130" y="462" width="940" height="84" rx="16" fill="#f5f7fa" stroke="#9aabba" stroke-width="2"/>
+<text x="600" y="494" font-family="Aptos,Arial,sans-serif" font-size="18" font-weight="700" fill="#17324d" text-anchor="middle">系统促成条件：发布门只测进程存活，没有用目标身份读取业务配置</text>
+<text x="600" y="524" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">预防控制：candidate-identity dependency probe + 权限差异审查 + 可验证回滚</text>
+</svg>
