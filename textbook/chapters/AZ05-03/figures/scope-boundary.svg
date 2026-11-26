@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560">
+<defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L0,10 L11,5 z" fill="#17324d"/></marker></defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="34" y="42" font-family="Aptos,Arial,sans-serif" font-size="27" font-weight="700" fill="#17324d" text-anchor="start">资源可见范围是一组边界的交集</text>
+<text x="34" y="75" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#5d7183" text-anchor="start">身份上下文、显式 scope 和资源级读取权限共同决定返回的数据</text>
+<rect x="38" y="154" width="210" height="132" rx="16" fill="#f2edfb" stroke="#684bb1" stroke-width="2.5"/>
+<text x="143" y="187" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#684bb1" text-anchor="middle">Identity</text>
+<text x="143" y="219" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">principal + tenant</text>
+<text x="143" y="244" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">CLI / Az context</text>
+<rect x="285" y="154" width="210" height="132" rx="16" fill="#edf5f7" stroke="#087f8c" stroke-width="2.5"/>
+<text x="390" y="187" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#087f8c" text-anchor="middle">Subscription scope</text>
+<text x="390" y="219" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">approved ID list</text>
+<text x="390" y="244" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">or management group</text>
+<rect x="532" y="154" width="210" height="132" rx="16" fill="#fff3e5" stroke="#c96a18" stroke-width="2.5"/>
+<text x="637" y="187" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#c96a18" text-anchor="middle">RBAC read</text>
+<text x="637" y="219" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">permitted objects</text>
+<text x="637" y="244" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">others not returned</text>
+<rect x="779" y="154" width="180" height="132" rx="16" fill="#eaf1f8" stroke="#17324d" stroke-width="2.5"/>
+<text x="869" y="187" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#17324d" text-anchor="middle">ARG index</text>
+<text x="869" y="219" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">current indexed</text>
+<text x="869" y="244" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">resource state</text>
+<rect x="996" y="154" width="168" height="132" rx="16" fill="#fff0f1" stroke="#aa4052" stroke-width="2.5"/>
+<text x="1080" y="187" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#aa4052" text-anchor="middle">Result</text>
+<text x="1080" y="219" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">visible subset</text>
+<text x="1080" y="244" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">not tenant truth</text>
+<path d="M248,220 L275,220" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M495,220 L522,220" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M742,220 L769,220" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M959,220 L986,220" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="214" y="358" width="320" height="86" rx="16" fill="#fff0f1" stroke="#aa4052" stroke-width="2.5"/>
+<text x="374" y="391" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#aa4052" text-anchor="middle">Missing subscription</text>
+<text x="374" y="423" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">context or scope may omit it</text>
+<rect x="666" y="358" width="320" height="86" rx="16" fill="#fff3e5" stroke="#c96a18" stroke-width="2.5"/>
+<text x="826" y="391" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#c96a18" text-anchor="middle">Missing object</text>
+<text x="826" y="423" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">read permission may hide it</text>
+<path d="M390,286 L374,348" fill="none" stroke="#aa4052" stroke-width="3" stroke-dasharray="9 7" marker-end="url(#arrow)"/>
+<path d="M636,286 L820,348" fill="none" stroke="#c96a18" stroke-width="3" stroke-dasharray="9 7" marker-end="url(#arrow)"/>
+<text x="600" y="510" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#17324d" text-anchor="middle">“查询成功”说明请求完成；范围完整仍需身份、授权和 scope 证据。</text>
+</svg>

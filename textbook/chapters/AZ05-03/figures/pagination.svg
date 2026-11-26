@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600">
+<defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L0,10 L11,5 z" fill="#17324d"/></marker></defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="34" y="42" font-family="Aptos,Arial,sans-serif" font-size="27" font-weight="700" fill="#17324d" text-anchor="start">稳定排序帮助重放分页，但不能冻结资源集合</text>
+<text x="34" y="75" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#5d7183" text-anchor="start">续页请求需要检查 token、结果数和 ID；资源在请求间变化时 offset 仍可能移动</text>
+<text x="168" y="137" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#17324d" text-anchor="middle">静态资源集合</text>
+<rect x="48" y="166" width="150" height="78" rx="16" fill="#edf5f7" stroke="#087f8c" stroke-width="2.5"/>
+<text x="123" y="199" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#087f8c" text-anchor="middle">id-01</text>
+<text x="123" y="231" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="middle">unique key</text>
+<rect x="228" y="166" width="150" height="78" rx="16" fill="#edf5f7" stroke="#087f8c" stroke-width="2.5"/>
+<text x="303" y="199" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#087f8c" text-anchor="middle">id-02</text>
+<text x="303" y="231" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="middle">unique key</text>
+<rect x="408" y="166" width="150" height="78" rx="16" fill="#edf5f7" stroke="#087f8c" stroke-width="2.5"/>
+<text x="483" y="199" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#087f8c" text-anchor="middle">id-03</text>
+<text x="483" y="231" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="middle">unique key</text>
+<rect x="588" y="166" width="150" height="78" rx="16" fill="#eaf6ef" stroke="#23764d" stroke-width="2.5"/>
+<text x="663" y="199" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#23764d" text-anchor="middle">id-04</text>
+<text x="663" y="231" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="middle">unique key</text>
+<rect x="768" y="166" width="150" height="78" rx="16" fill="#eaf6ef" stroke="#23764d" stroke-width="2.5"/>
+<text x="843" y="199" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#23764d" text-anchor="middle">id-05</text>
+<text x="843" y="231" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="middle">unique key</text>
+<rect x="948" y="166" width="150" height="78" rx="16" fill="#eaf6ef" stroke="#23764d" stroke-width="2.5"/>
+<text x="1023" y="199" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#23764d" text-anchor="middle">id-06</text>
+<text x="1023" y="231" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="middle">unique key</text>
+<text x="600" y="287" font-family="Aptos,Arial,sans-serif" font-size="18" font-weight="700" fill="#23764d" text-anchor="middle">order by id asc → page 1 → continuation token → page 2</text>
+<path d="M205,260 L205,316" fill="none" stroke="#23764d" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M385,260 L385,316" fill="none" stroke="#23764d" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M565,260 L565,316" fill="none" stroke="#23764d" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="72" y="360" width="360" height="98" rx="16" fill="#fff3e5" stroke="#c96a18" stroke-width="2.5"/>
+<text x="252" y="393" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#c96a18" text-anchor="middle">Between requests: delete id-02</text>
+<text x="252" y="425" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">offset positions shift</text>
+<rect x="510" y="360" width="300" height="98" rx="16" fill="#edf5f7" stroke="#087f8c" stroke-width="2.5"/>
+<text x="660" y="393" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#087f8c" text-anchor="middle">Page 1</text>
+<text x="660" y="425" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">id-01 · id-02</text>
+<rect x="870" y="360" width="280" height="98" rx="16" fill="#fff0f1" stroke="#aa4052" stroke-width="2.5"/>
+<text x="1010" y="393" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#aa4052" text-anchor="middle">Next offset page</text>
+<text x="1010" y="425" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">id-04 · id-05</text>
+<path d="M432,408 L500,408" fill="none" stroke="#c96a18" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M810,408 L860,408" fill="none" stroke="#aa4052" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="600" y="520" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#aa4052" text-anchor="middle">id-03 可能被跳过。稳定 ID 排序提高可重复性，但不是跨页事务快照。</text>
+<text x="600" y="559" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#5d7183" text-anchor="middle">若仍有续页 token，继续读取；收尾时核对去重 ID、页数和查询时间。</text>
+</svg>

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560">
+<defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L0,10 L11,5 z" fill="#17324d"/></marker></defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="34" y="42" font-family="Aptos,Arial,sans-serif" font-size="27" font-weight="700" fill="#17324d" text-anchor="start">命令行工具的相似外观，背后是不同查询路径</text>
+<text x="34" y="75" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#5d7183" text-anchor="start">ARM 资源列表直接调用 Resource Manager；Resource Graph 以索引和 KQL 扩展探索</text>
+<rect x="44" y="138" width="280" height="112" rx="16" fill="#f2edfb" stroke="#684bb1" stroke-width="2.5"/>
+<text x="184" y="171" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#684bb1" text-anchor="middle">Azure CLI / Az PowerShell</text>
+<text x="184" y="203" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">identity + selected context</text>
+<text x="184" y="228" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">explicit subscription ID</text>
+<rect x="468" y="112" width="270" height="110" rx="16" fill="#edf5f7" stroke="#087f8c" stroke-width="2.5"/>
+<text x="603" y="145" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#087f8c" text-anchor="middle">Direct ARM list</text>
+<text x="603" y="177" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">az resource list</text>
+<text x="603" y="202" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">Get-AzResource</text>
+<rect x="468" y="290" width="270" height="110" rx="16" fill="#fff3e5" stroke="#c96a18" stroke-width="2.5"/>
+<text x="603" y="323" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#c96a18" text-anchor="middle">Resource Graph</text>
+<text x="603" y="355" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">az graph query</text>
+<text x="603" y="380" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">Search-AzGraph · KQL</text>
+<rect x="860" y="112" width="278" height="110" rx="16" fill="#eaf6ef" stroke="#23764d" stroke-width="2.5"/>
+<text x="999" y="145" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#23764d" text-anchor="middle">Per-subscription result</text>
+<text x="999" y="177" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">ARM response</text>
+<text x="999" y="202" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">JMESPath / PowerShell</text>
+<rect x="860" y="290" width="278" height="110" rx="16" fill="#eaf1f8" stroke="#17324d" stroke-width="2.5"/>
+<text x="999" y="323" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#17324d" text-anchor="middle">Cross-scope exploration</text>
+<text x="999" y="355" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">indexed properties</text>
+<text x="999" y="380" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">KQL filter / project / join</text>
+<path d="M324,184 L458,166" fill="none" stroke="#087f8c" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M324,206 L458,344" fill="none" stroke="#c96a18" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M738,166 L850,166" fill="none" stroke="#23764d" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M738,344 L850,344" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="600" y="466" font-family="Aptos,Arial,sans-serif" font-size="18" font-weight="700" fill="#aa4052" text-anchor="middle">CLI `--query` = JMESPath　 ·　 Resource Graph `-q` / `-Query` = KQL</text>
+<text x="600" y="506" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#5d7183" text-anchor="middle">Resource Graph 索引有短暂延迟；它不是每次都同步读取每个 resource provider。</text>
+</svg>

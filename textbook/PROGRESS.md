@@ -8,9 +8,9 @@
 ## Current gate
 
 - Overall stage: Stage 1 — Technical Textbook Engineering & Publication
-- Current phase: B5 — Lectures 14–16, 2/3 accepted. B4 and AZ04-01 through AZ04-04 are complete; AZ05-01 and AZ05-02 are accepted.
+- Current phase: B5 — Lectures 14–16, 3/3 accepted. B4 and B5 are complete; AZ05-01 through AZ05-03 are accepted.
 - B0 status: COMPLETE. Read-only AWS source, toolchain, two reference PDFs and package consistency reviewed; Azure publisher adaptation built an Azure chapter and passed the recorded checks.
-- Completed lectures: 15/23 — AZ00-01, AZ01-01, AZ02-01 through AZ02-04, AZ03-01 through AZ03-03, AZ04-01 through AZ04-04, AZ05-01, and AZ05-02.
+- Completed lectures: 16/23 — AZ00-01, AZ01-01, AZ02-01 through AZ02-04, AZ03-01 through AZ03-03, AZ04-01 through AZ04-04, and AZ05-01 through AZ05-03.
 - Implementation is being tracked on main from the approved baseline; see repository history for the current checkpoint.
 - Cloud resource operations: none performed for this project.
 - Azure authorization and subscription scope: NOT_CHECKED; Stage 3 read-only preflight is later.
@@ -52,7 +52,8 @@
 - AZ04-04 passed its lecture gate: current Microsoft Storage/SQL networking, identity, authorization, data-protection and restore research; five editable figures; 28 synthetic cases and 30 unit tests; full Windows and WSL suites each passed 217 tests across 13 lab directories; and an 8-page PDF with all pages visually reviewed at 88/140 DPI after the references were moved to a clean page break. No Azure authentication, control/data-plane query, DNS/network probe, Storage or SQL request, restore, resource mutation or billing query was performed. Actual cumulative spend remains NOT_VERIFIED. See chapters/AZ04-04/ACCEPTANCE.md.
 - AZ05-01 passed its lecture gate: current Microsoft metrics/alert research; five editable figures; 11 synthetic cases and 23 unit tests; full Windows and WSL suites each passed 240 tests across 14 lab directories; and a 6-page PDF with all pages visually reviewed at 88/140 DPI. No Azure authentication, metric query, alert/action configuration, notification, resource mutation or billing query was performed. Actual cumulative spend remains NOT_VERIFIED. See chapters/AZ05-01/ACCEPTANCE.md.
 - AZ05-02 passed its lecture gate: current Microsoft Learn research for Log Analytics, KQL, Application Insights table schema, correlation, sampling and OpenTelemetry; five editable figures; five synthetic cases and 11 local tests; full Windows and WSL suites each passed 251 tests across 15 lab directories; and a 7-page PDF with all pages visually reviewed at 88/140 DPI. No Azure authentication, workspace query, telemetry export, resource mutation or billing query was performed. Actual cumulative spend remains NOT_VERIFIED. See chapters/AZ05-02/ACCEPTANCE.md.
+- AZ05-03 passed its lecture gate: current Microsoft Learn research for CLI/PowerShell contexts, ARM lists, Resource Graph scope/freshness and pagination; five editable figures; a synthetic inventory with per-object visibility and offset drift plus 13 local tests; full Windows and WSL suites each passed 264 tests across 16 lab directories; and a 7-page PDF with every page reviewed at 88/140 DPI. No Azure sign-in, account/context enumeration, ARM/Resource Graph query, resource mutation or billing query was performed. Actual cumulative spend remains NOT_VERIFIED. See chapters/AZ05-03/ACCEPTANCE.md.
 
 ## First next action
 
-Research AZ05-03 with current Microsoft documentation and continue its full offline lecture acceptance sequence. Do not authenticate to Azure, query a subscription or mutate cloud resources before Stage 3 gates.
+Research AZ06-01 with current Microsoft documentation and continue its full offline lecture acceptance sequence. Do not authenticate to Azure, query a subscription or mutate cloud resources before Stage 3 gates.

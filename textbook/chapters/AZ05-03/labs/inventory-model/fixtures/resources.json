@@ -1,0 +1,13 @@
+{
+  "requested_subscriptions": ["sub-a", "sub-b", "sub-c"],
+  "page_size": 2,
+  "resources": [
+    {"id": "/subscriptions/sub-a/resourceGroups/rg-app/providers/Microsoft.Compute/virtualMachines/api-01", "name": "api-01", "type": "microsoft.compute/virtualmachines", "subscription_id": "sub-a", "readable": true},
+    {"id": "/subscriptions/sub-a/resourceGroups/rg-data/providers/Microsoft.Storage/storageAccounts/logs01", "name": "logs01", "type": "microsoft.storage/storageaccounts", "subscription_id": "sub-a", "readable": true},
+    {"id": "/subscriptions/sub-a/resourceGroups/rg-data/providers/Microsoft.Sql/servers/sql01", "name": "sql01", "type": "microsoft.sql/servers", "subscription_id": "sub-a", "readable": false},
+    {"id": "/subscriptions/sub-b/resourceGroups/rg-net/providers/Microsoft.Network/virtualNetworks/hub01", "name": "hub01", "type": "microsoft.network/virtualnetworks", "subscription_id": "sub-b", "readable": true},
+    {"id": "/subscriptions/sub-b/resourceGroups/rg-app/providers/Microsoft.Web/sites/portal", "name": "portal", "type": "microsoft.web/sites", "subscription_id": "sub-b", "readable": true},
+    {"id": "/subscriptions/sub-b/resourceGroups/rg-data/providers/Microsoft.KeyVault/vaults/keys01", "name": "keys01", "type": "microsoft.keyvault/vaults", "subscription_id": "sub-b", "readable": false},
+    {"id": "/subscriptions/sub-c/resourceGroups/rg-ops/providers/Microsoft.Insights/components/monitor01", "name": "monitor01", "type": "microsoft.insights/components", "subscription_id": "sub-c", "readable": true}
+  ]
+}

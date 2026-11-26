@@ -1,0 +1,4 @@
+// Static reference only. Do not run against Azure before the separate scope gates.
+Resources
+| project id, name, type, subscriptionId, resourceGroup, location
+| order by id asc

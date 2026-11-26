@@ -435,3 +435,30 @@ Research date: 2026-11-27. Microsoft Learn is the primary source. The lab evalua
 - https://learn.microsoft.com/en-us/azure/azure-monitor/app/failures-performance-transactions
 - https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentelemetry-sampling
 - https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentelemetry-enable
+
+## AZ05-03 — Azure CLI, PowerShell and Resource Graph
+
+Research date: 2026-11-27. Microsoft Learn is the primary source. The local lab evaluates only a synthetic asset fixture; it neither authenticates nor queries Azure.
+
+| Chapter section / figure | Claim or teaching point | Source anchor | Classification and limit |
+|---|---|---|---|
+| AZ05-03 §01, Fig 16-1 | CLI account selection, Az PowerShell context, explicit Resource Graph scope and per-resource RBAC `read` permissions jointly bound visibility; no returned row does not prove absence | Azure CLI account reference; Azure PowerShell contexts; Resource Graph scope and overview | SOURCE-ANALYSED; no account, subscription, context or authorization was queried |
+| AZ05-03 §02, Fig 16-2 | `az resource list`/`Get-AzResource` are ARM resource-list paths; `az graph query -q`/`Search-AzGraph -Query` use Resource Graph KQL; CLI global `--query` is JMESPath | Azure CLI `az resource`; Azure CLI `az graph`; Search-AzGraph | SOURCE-ANALYSED; command templates were not executed |
+| AZ05-03 §03, Fig 16-3 | Resource Graph is an indexed exploration service, supports explicit subscription/management-group scope, and may lag ARM changes; query projection and order determine the inventory's meaning | Resource Graph overview; query language; Azure CLI and PowerShell command references | SOURCE-ANALYSED; no live index, provider response or scope was observed |
+| AZ05-03 §04, Fig 16-4 | Resource Graph pages cap at 1,000; continuation token can be unavailable for `take`/`limit`/`sample` or all-dynamic/null projections; stable unique-ID sorting improves repeatability but changing data can shift offset pages | Guidance for pagination; Azure CLI `az graph`; Search-AzGraph | SOURCE-ANALYSED; local offset deletion scenario is a simplified synthetic model, not service-token behavior |
+| AZ05-03 §05, Fig 16-5 | A defensible completeness claim records identity, tenant, exact scope, read permissions, index freshness, paging status, timestamps, query and duplicate/missing-ID checks; large scope can be throttled or subscription-limited | Resource Graph overview; query-language scope; pagination; throttling guidance | SOURCE-ANALYSED; no live tenant, throttling header, billing or completeness claim was checked |
+| AZ05-03 §06–07 | Seven synthetic resources, explicit subscription allowlist, unreadable fixture objects, stable sort and page audit; 13 local tests include duplicate/missing/unexpected IDs and offset drift after deletion | `chapters/AZ05-03/labs/inventory-model` | LOCAL_VERIFIED 2026-11-27; Windows and WSL suites each passed 264 tests across 16 directories; no Azure/KQL/ARM emulation |
+| AZ05-03 cost / authorization | No Azure authentication, subscription/context enumeration, Resource Graph query, ARM list, resource mutation or billing request was performed | Session and command execution record | LIVE_NOT_RUN; actual cumulative spend remains NOT_VERIFIED |
+
+### AZ05-03 primary references
+
+- https://learn.microsoft.com/en-us/cli/azure/account
+- https://learn.microsoft.com/en-us/powershell/azure/context-persistence?view=azps-17.0.0
+- https://learn.microsoft.com/en-us/azure/governance/resource-graph/concepts/query-language
+- https://learn.microsoft.com/en-us/azure/governance/resource-graph/overview
+- https://learn.microsoft.com/en-us/azure/governance/resource-graph/concepts/paging-results
+- https://learn.microsoft.com/en-us/azure/governance/resource-graph/concepts/guidance-for-throttled-requests
+- https://learn.microsoft.com/en-us/cli/azure/graph?view=azure-cli-latest
+- https://learn.microsoft.com/en-us/powershell/module/az.resourcegraph/search-azgraph?view=azps-17.0.0
+- https://learn.microsoft.com/en-us/cli/azure/resource?view=azure-cli-latest
+- https://learn.microsoft.com/en-us/azure/governance/resource-graph/troubleshoot/general

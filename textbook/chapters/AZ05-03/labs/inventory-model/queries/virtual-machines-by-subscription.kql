@@ -1,0 +1,5 @@
+// Static reference only. The explicit subscription scope must also be set by the caller.
+Resources
+| where type =~ 'microsoft.compute/virtualmachines'
+| project id, name, subscriptionId, resourceGroup, location
+| order by id asc

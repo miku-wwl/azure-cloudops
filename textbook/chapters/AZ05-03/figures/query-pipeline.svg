@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560">
+<defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L0,10 L11,5 z" fill="#17324d"/></marker></defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="34" y="42" font-family="Aptos,Arial,sans-serif" font-size="27" font-weight="700" fill="#17324d" text-anchor="start">让查询文本表达 scope 和清单结构</text>
+<text x="34" y="75" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#5d7183" text-anchor="start">显式 subscription 集合 → 必要列 → 唯一键排序 → 受控分页</text>
+<rect x="42" y="165" width="210" height="126" rx="16" fill="#f2edfb" stroke="#684bb1" stroke-width="2.5"/>
+<text x="147" y="198" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#684bb1" text-anchor="middle">1 · Scope</text>
+<text x="147" y="230" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">approved IDs</text>
+<text x="147" y="255" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">tenant + identity</text>
+<rect x="286" y="165" width="210" height="126" rx="16" fill="#edf5f7" stroke="#087f8c" stroke-width="2.5"/>
+<text x="391" y="198" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#087f8c" text-anchor="middle">2 · Filter</text>
+<text x="391" y="230" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">type / location</text>
+<text x="391" y="255" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">only if required</text>
+<rect x="530" y="165" width="210" height="126" rx="16" fill="#fff3e5" stroke="#c96a18" stroke-width="2.5"/>
+<text x="635" y="198" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#c96a18" text-anchor="middle">3 · Project</text>
+<text x="635" y="230" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">id + subscriptionId</text>
+<text x="635" y="255" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">name + type</text>
+<rect x="774" y="165" width="180" height="126" rx="16" fill="#eaf6ef" stroke="#23764d" stroke-width="2.5"/>
+<text x="864" y="198" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#23764d" text-anchor="middle">4 · Order</text>
+<text x="864" y="230" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">id asc</text>
+<text x="864" y="255" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">unique stable key</text>
+<rect x="988" y="165" width="174" height="126" rx="16" fill="#eaf1f8" stroke="#17324d" stroke-width="2.5"/>
+<text x="1075" y="198" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#17324d" text-anchor="middle">5 · Page</text>
+<text x="1075" y="230" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">first ≤ 1,000</text>
+<text x="1075" y="255" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">check next token</text>
+<path d="M252,228 L276,228" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M496,228 L520,228" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M740,228 L764,228" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M954,228 L978,228" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="205" y="356" width="320" height="84" rx="16" fill="#fff0f1" stroke="#aa4052" stroke-width="2.5"/>
+<text x="365" y="389" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#aa4052" text-anchor="middle">Truncate before paging</text>
+<text x="365" y="421" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">take / limit / sample</text>
+<rect x="674" y="356" width="320" height="84" rx="16" fill="#fff0f1" stroke="#aa4052" stroke-width="2.5"/>
+<text x="834" y="389" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#aa4052" text-anchor="middle">Sort on repeated values</text>
+<text x="834" y="421" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">location / name only</text>
+<path d="M355,291 L365,346" fill="none" stroke="#aa4052" stroke-width="3" stroke-dasharray="9 7" marker-end="url(#arrow)"/>
+<path d="M864,291 L834,346" fill="none" stroke="#aa4052" stroke-width="3" stroke-dasharray="9 7" marker-end="url(#arrow)"/>
+<text x="600" y="504" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#17324d" text-anchor="middle">保留 id 标量列；按唯一 id 排序；不要把单页行数当成总数。</text>
+</svg>
