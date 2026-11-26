@@ -1,0 +1,17 @@
+# Offline teaching pipeline. Azure DevOps server-side execution is NOT_RUN.
+# Azure Repos PR validation belongs in the target branch's Build validation policy.
+trigger: none
+
+pool:
+  name: CloudOps-Offline
+
+stages:
+  - stage: Validate
+    displayName: Offline pipeline and plan-contract checks
+    jobs:
+      - job: OfflineContracts
+        steps:
+          - checkout: self
+            clean: true
+            persistCredentials: false
+          - template: templates/offline-checks.yml

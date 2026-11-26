@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="560" viewBox="0 0 1100 560">
+<defs>
+<marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#688091"/></marker>
+<marker id="teal" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#167e83"/></marker>
+<marker id="red" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#b76464"/></marker>
+</defs><style>
+text{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;fill:#18334a}
+.title{font-size:25px;font-weight:700}.label{font-size:19px;font-weight:700}.body{font-size:16px}.small{font-size:14px;fill:#52697a}.tiny{font-size:12px;fill:#52697a}
+.box{stroke:#91a6b1;stroke-width:2;rx:15}.safe{fill:#e1f1ef;stroke:#167e83}.cloud{fill:#dcebf2;stroke:#477c9b}.warn{fill:#f6e7cc;stroke:#c18a3a}.bad{fill:#f6dddd;stroke:#b76464}.neutral{fill:#fff;stroke:#91a6b1}.line{stroke:#688091;stroke-width:3;fill:none}.dash{stroke-dasharray:8 7}
+</style><rect width="1100" height="560" rx="20" fill="white"/>
+<text x="38" y="42" class="title">审批对象必须是不可变的那份 Plan</text>
+<rect x="40" y="114" width="227" height="144" class="box safe"/><text x="61" y="151" class="label">Plan run</text><text x="61" y="184" class="body">Git SHA + target</text><text x="61" y="213" class="small">lock digest + state read</text><text x="61" y="239" class="small">生成 saved plan bytes</text>
+<rect x="321" y="114" width="227" height="144" class="box cloud"/><text x="342" y="151" class="label">Protected artifact</text><text x="342" y="184" class="body">plan digest + run ID</text><text x="342" y="213" class="small">creation / expiry time</text><text x="342" y="239" class="small">限权访问与保留期</text>
+<rect x="602" y="114" width="227" height="144" class="box warn"/><text x="623" y="151" class="label">Resource owner</text><text x="623" y="184" class="body">看摘要与目标范围</text><text x="623" y="213" class="small">指定人审批 / 拒绝</text><text x="623" y="239" class="small">审批附于当前 run</text>
+<rect x="883" y="114" width="177" height="144" class="box safe"/><text x="904" y="151" class="label">Apply</text><text x="904" y="184" class="body">重验 digest</text><text x="904" y="213" class="small">消费保存计划</text><text x="904" y="239" class="small">失败则 stop</text>
+<path d="M270 185H312" class="line" marker-end="url(#arrow)"/><path d="M551 185H593" class="line" marker-end="url(#arrow)"/><path d="M832 185H874" class="line" marker-end="url(#teal)"/>
+<rect x="141" y="341" width="809" height="88" class="box neutral"/><text x="173" y="376" class="label">manifest 与 approval 必须一致</text><text x="173" y="408" class="body">source SHA · target · provider lock hash · plan hash · run · approver · approved time · expiry</text>
+<path d="M435 259V332" class="line dash" marker-end="url(#arrow)"/><path d="M715 259V332" class="line dash" marker-end="url(#arrow)"/><path d="M895 258V294H943V332" class="line dash" marker-end="url(#arrow)"/>
+<rect x="224" y="477" width="652" height="56" class="box bad"/><text x="257" y="512" class="body">Plan stale、篡改、错目标或过期 → 拒绝并重新 Plan + 审批</text>
+</svg>

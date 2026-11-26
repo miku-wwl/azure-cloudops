@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="560" viewBox="0 0 1100 560">
+<defs>
+<marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#688091"/></marker>
+<marker id="teal" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#167e83"/></marker>
+<marker id="red" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#b76464"/></marker>
+</defs><style>
+text{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;fill:#18334a}
+.title{font-size:25px;font-weight:700}.label{font-size:19px;font-weight:700}.body{font-size:16px}.small{font-size:14px;fill:#52697a}.tiny{font-size:12px;fill:#52697a}
+.box{stroke:#91a6b1;stroke-width:2;rx:15}.safe{fill:#e1f1ef;stroke:#167e83}.cloud{fill:#dcebf2;stroke:#477c9b}.warn{fill:#f6e7cc;stroke:#c18a3a}.bad{fill:#f6dddd;stroke:#b76464}.neutral{fill:#fff;stroke:#91a6b1}.line{stroke:#688091;stroke-width:3;fill:none}.dash{stroke-dasharray:8 7}
+</style><rect width="1100" height="560" rx="20" fill="white"/>
+<text x="38" y="42" class="title">WIF：信任 token 来源，再单独检查资源权限</text>
+<rect x="36" y="111" width="218" height="160" class="box neutral"/><text x="57" y="151" class="label">Azure Pipeline</text><text x="57" y="185" class="body">agent job + task</text><text x="57" y="217" class="small">短时请求 OIDC token</text><text x="57" y="243" class="tiny">AccessToken / OidcRequestUri</text>
+<rect x="303" y="111" width="218" height="160" class="box warn"/><text x="324" y="151" class="label">Service Connection</text><text x="324" y="185" class="body">固定 endpoint identity</text><text x="324" y="217" class="small">pipeline permission</text><text x="324" y="243" class="tiny">issuer / subject / audience</text>
+<rect x="570" y="111" width="218" height="160" class="box cloud"/><text x="591" y="151" class="label">Microsoft Entra</text><text x="591" y="185" class="body">匹配 federated credential</text><text x="591" y="217" class="small">交换 Azure access token</text><text x="591" y="243" class="tiny">不发长期 client secret</text>
+<rect x="837" y="111" width="218" height="160" class="box safe"/><text x="858" y="151" class="label">Azure target</text><text x="858" y="185" class="body">RBAC / data-plane role</text><text x="858" y="217" class="small">检查 action 与 scope</text><text x="858" y="243" class="tiny">认证 ≠ 授权</text>
+<path d="M257 190H294" class="line" marker-end="url(#arrow)"/><path d="M524 190H561" class="line" marker-end="url(#arrow)"/><path d="M791 190H828" class="line" marker-end="url(#teal)"/>
+<rect x="104" y="355" width="391" height="115" class="box safe"/><text x="132" y="393" class="label">Terraform backend identity</text><text x="132" y="428" class="body">State Blob 读 / 写 / lease 数据面角色</text>
+<rect x="605" y="355" width="391" height="115" class="box warn"/><text x="633" y="393" class="label">Terraform provider identity</text><text x="633" y="428" class="body">目标资源 Plan / Apply 所需角色</text>
+<path d="M678 274V318H300V346" class="line dash" marker-end="url(#arrow)"/><path d="M678 318H800V346" class="line dash" marker-end="url(#arrow)"/>
+<text x="176" y="519" class="small">可用分离身份缩小影响范围；共享身份时需审查 backend 与 provider 权限并集。</text>
+</svg>

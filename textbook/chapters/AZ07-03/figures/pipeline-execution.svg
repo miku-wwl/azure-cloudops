@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="560" viewBox="0 0 1100 560">
+<defs>
+<marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#688091"/></marker>
+<marker id="teal" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#167e83"/></marker>
+<marker id="red" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#b76464"/></marker>
+</defs><style>
+text{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;fill:#18334a}
+.title{font-size:25px;font-weight:700}.label{font-size:19px;font-weight:700}.body{font-size:16px}.small{font-size:14px;fill:#52697a}.tiny{font-size:12px;fill:#52697a}
+.box{stroke:#91a6b1;stroke-width:2;rx:15}.safe{fill:#e1f1ef;stroke:#167e83}.cloud{fill:#dcebf2;stroke:#477c9b}.warn{fill:#f6e7cc;stroke:#c18a3a}.bad{fill:#f6dddd;stroke:#b76464}.neutral{fill:#fff;stroke:#91a6b1}.line{stroke:#688091;stroke-width:3;fill:none}.dash{stroke-dasharray:8 7}
+</style><rect width="1100" height="560" rx="20" fill="white"/>
+<text x="38" y="42" class="title">流水线是执行图：工作目录不会自动跨 job 保留</text>
+<rect x="36" y="82" width="245" height="132" class="box safe"/><text x="61" y="119" class="label">Repository event</text><text x="61" y="151" class="body">commit / manual queue</text><text x="61" y="183" class="small">PR policy 是另一入口</text>
+<rect x="321" y="82" width="300" height="132" class="box cloud"/><text x="346" y="119" class="label">Compile / expand</text><text x="346" y="151" class="body">YAML + templates + parameters</text><text x="346" y="183" class="small">先构造计划执行结构</text>
+<rect x="665" y="82" width="399" height="132" class="box neutral"/><text x="690" y="119" class="label">Evaluate conditions</text><text x="690" y="151" class="body">branch / reason / dependencies</text><text x="690" y="183" class="small">条件控制流程，不代替资源授权</text>
+<path d="M283 148H313" class="line" marker-end="url(#arrow)"/><path d="M623 148H657" class="line" marker-end="url(#arrow)"/>
+<rect x="88" y="292" width="258" height="137" class="box safe"/><text x="112" y="332" class="label">Stage · Validate</text><text x="112" y="365" class="body">Job → Agent → Steps</text><text x="112" y="398" class="small">本 job 的 checkout / tests</text>
+<rect x="420" y="292" width="258" height="137" class="box warn"/><text x="444" y="332" class="label">Stage · Plan</text><text x="444" y="365" class="body">另一个 job / runner</text><text x="444" y="398" class="small">显式下载已发布的 artifact</text>
+<rect x="752" y="292" width="258" height="137" class="box cloud"/><text x="776" y="332" class="label">Stage · Apply</text><text x="776" y="365" class="body">deployment job / Environment</text><text x="776" y="398" class="small">资源 checks 成功后才进入</text>
+<path d="M347 360H411" class="line" marker-end="url(#arrow)"/><path d="M679 360H743" class="line" marker-end="url(#arrow)"/>
+<rect x="421" y="464" width="257" height="54" class="box neutral"/><text x="457" y="497" class="body">Pipeline Artifact：显式跨 job 边界</text><path d="M549 430V456" class="line dash" marker-end="url(#teal)"/>
+<text x="40" y="545" class="small">Microsoft-hosted job VM 会回收；self-hosted 工作区须由管理员定义和清理。</text>
+</svg>

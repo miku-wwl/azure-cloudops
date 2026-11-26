@@ -607,3 +607,43 @@ Research date: 2026-11-27. HashiCorp Developer documents Terraform backend, lock
 - https://learn.microsoft.com/en-us/azure/storage/blobs/versioning-overview
 - https://learn.microsoft.com/en-us/azure/storage/blobs/soft-delete-blob-overview
 - https://developer.hashicorp.com/terraform/language/state
+
+## AZ07-03 — Azure DevOps Pipelines and Workload Identity Federation
+
+Research date: 2026-11-27. Azure DevOps and Microsoft Entra service behavior is source-analysed from Microsoft Learn; Terraform WIF variable names and backend/provider differences are cross-checked against current HashiCorp Registry/Developer documentation. The local pipeline YAML intentionally performs only offline unit tests.
+
+| Chapter section / figure | Claim or teaching point | Source anchor | Classification and limit |
+|---|---|---|---|
+| AZ07-03 §01, Fig 21-1 | Stages contain jobs; jobs run on agents; files across jobs require explicit artifact transfer; Microsoft-hosted jobs use fresh VMs, while self-hosted cleanup depends on configuration | Azure Pipelines stages, artifacts and hosted-agent docs | SOURCE-ANALYSED; no Azure Pipeline job was run |
+| AZ07-03 §02, Fig 21-2 | Azure Repos Git PR validation is configured as a target branch Build validation policy; YAML trigger governs push CI; branch policies and resource checks are separate gates | Azure Repos Git build docs; branch-policy docs; approvals/checks docs | SOURCE-ANALYSED; no Azure DevOps repository/policy was accessed |
+| AZ07-03 §02 | Include templates reuse steps; extends templates can constrain schema; trust depends on protecting the template source and version | Azure Pipelines YAML templates docs | SOURCE-ANALYSED; no server-side template compilation or Required template check was performed |
+| AZ07-03 §03, Fig 21-3 | Workload identity federation binds pipeline issuer/subject/audience to an Entra federated credential; successful exchange does not assign Azure resource permissions | Microsoft workload-identity service-connection docs; Azure RBAC concepts | SOURCE-ANALYSED; no Entra token, FIC, Service Connection or role was created or queried |
+| AZ07-03 §03 | AzureRM provider and AzureRM backend have distinct Azure DevOps Service Connection ID environment variable names for OIDC; their State data access and resource-management permissions are separate decisions | HashiCorp AzureRM OIDC guide and AzureRM backend docs | SOURCE-ANALYSED; no AzureRM provider/backend was initialized |
+| AZ07-03 §03, dated note | New WIF Service Connections default to Microsoft Entra issuer; a subset of legacy Azure DevOps issuer connections is scheduled to retire 2027-07-01 | Microsoft workload-identity service-connection docs, accessed 2026-11-27 | SOURCE-ANALYSED as of research date; announcement applies only to specified eligible public-cloud single-tenant connections; recheck before migration |
+| AZ07-03 §03–05 | Service Connections cannot be substituted by YAML variables; secret Variable Groups need explicit Pipeline authorization; approvals/checks are configured by protected-resource owners outside YAML | Azure Pipelines service-connection, variable-group and approvals/checks docs | SOURCE-ANALYSED; no service resource or permission was configured |
+| AZ07-03 §04, Fig 21-4 | A controlled saved Plan should bind source commit, target scope, provider lock, plan bytes, run, approver and expiry; stale or changed plans need a new review | Terraform plan/apply docs; Azure Pipelines artifact and approval mechanisms | DESIGN_GUIDANCE; no real cloud Plan or approval occurred |
+| AZ07-03 §06, labs/azure-pipelines | Generic YAML parsing and local structural contracts verify the actual YAML/template text; PyYAML is not an Azure Pipelines schema compiler | `azure-pipelines.yml`, `templates/offline-checks.yml`, `tests/test_pipeline_yaml.py` | LOCAL_VERIFIED 2026-11-27; no server upload, queue, compile or service config |
+| AZ07-03 §06, labs/azure-pipelines | Plan digest, source/target, lock-file digest, run and validity checks; 1 synthetic valid case and 11 fail-closed negative cases | `scripts/plan_gate.py`, `tests/test_plan_gate.py`; synthetic bytes and temporary JSON only | LOCAL_VERIFIED 2026-11-27; verifier does not authenticate an approver, parse a Terraform plan, or call Azure |
+| AZ07-03 suite | Full Python suite passed 353 tests across 20 lab directories on Windows and WSL | `textbook/tools/test_all.sh --python` and local test output | LOCAL_VERIFIED 2026-11-27; not Azure DevOps execution |
+| AZ07-03 cost / authorization | No Entra token, Azure credential, Azure DevOps organization, Azure query, resource operation or billing request occurred | Session and command execution record | LIVE_NOT_RUN; no project Azure request or charge from local execution; cumulative actual spend remains NOT_VERIFIED |
+
+### AZ07-03 primary references
+
+- https://learn.microsoft.com/en-us/azure/devops/pipelines/process/stages?tabs=yaml&view=azure-devops
+- https://learn.microsoft.com/en-us/azure/devops/pipelines/process/templates?view=azure-devops
+- https://learn.microsoft.com/en-us/azure/devops/pipelines/repos/azure-repos-git?view=azure-devops
+- https://learn.microsoft.com/en-us/azure/devops/repos/git/branch-policies?view=azure-devops
+- https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/hosted
+- https://learn.microsoft.com/en-us/azure/devops/pipelines/artifacts/pipeline-artifacts?tabs=yaml-task&view=azure-devops
+- https://learn.microsoft.com/en-us/azure/devops/pipelines/release/configure-workload-identity?view=azure-devops
+- https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-cli
+- https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops
+- https://learn.microsoft.com/en-us/azure/devops/pipelines/library/variable-groups?view=azure-devops
+- https://learn.microsoft.com/en-us/azure/devops/pipelines/process/environments?view=azure-devops
+- https://learn.microsoft.com/en-us/azure/devops/pipelines/policies/retention?view=azure-devops
+- https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=vsts
+- https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_oidc
+- https://developer.hashicorp.com/terraform/language/backend/azurerm
+- https://developer.hashicorp.com/terraform/cli/commands/plan
+- https://developer.hashicorp.com/terraform/language/state/locking
+- https://learn.microsoft.com/en-us/azure/role-based-access-control/scope-overview

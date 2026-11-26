@@ -1,0 +1,5 @@
+steps:
+  - script: python -m pip install -r textbook/chapters/AZ07-03/labs/azure-pipelines/requirements.txt
+    displayName: Install the pinned YAML parser
+  - script: python -m unittest discover -s textbook/chapters/AZ07-03/labs/azure-pipelines/tests -p "test_*.py" -v
+    displayName: Run offline YAML and plan-contract tests

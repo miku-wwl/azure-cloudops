@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="560" viewBox="0 0 1100 560">
+<defs>
+<marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#688091"/></marker>
+<marker id="teal" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#167e83"/></marker>
+<marker id="red" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#b76464"/></marker>
+</defs><style>
+text{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;fill:#18334a}
+.title{font-size:25px;font-weight:700}.label{font-size:19px;font-weight:700}.body{font-size:16px}.small{font-size:14px;fill:#52697a}.tiny{font-size:12px;fill:#52697a}
+.box{stroke:#91a6b1;stroke-width:2;rx:15}.safe{fill:#e1f1ef;stroke:#167e83}.cloud{fill:#dcebf2;stroke:#477c9b}.warn{fill:#f6e7cc;stroke:#c18a3a}.bad{fill:#f6dddd;stroke:#b76464}.neutral{fill:#fff;stroke:#91a6b1}.line{stroke:#688091;stroke-width:3;fill:none}.dash{stroke-dasharray:8 7}
+</style><rect width="1100" height="560" rx="20" fill="white"/>
+<text x="38" y="42" class="title">失败先定位到拥有该边界的那一层</text>
+<rect x="58" y="100" width="275" height="104" class="box neutral"/><text x="84" y="138" class="label">Repository boundary</text><text x="84" y="174" class="body">PR policy / protected branch</text>
+<rect x="412" y="100" width="275" height="104" class="box warn"/><text x="438" y="138" class="label">Identity boundary</text><text x="438" y="174" class="body">issuer / subject / audience</text>
+<rect x="766" y="100" width="275" height="104" class="box cloud"/><text x="792" y="138" class="label">Resource boundary</text><text x="792" y="174" class="body">Service Connection / Environment</text>
+<path d="M334 152H402" class="line" marker-end="url(#arrow)"/><path d="M688 152H756" class="line" marker-end="url(#arrow)"/>
+<rect x="184" y="286" width="730" height="100" class="box bad"/><text x="220" y="326" class="label">失败、拒绝或 timeout → 保留证据，不自动绕过</text><text x="220" y="359" class="body">run ID / stage / scope / status code / artifact digest / 当前 State</text>
+<path d="M195 205V245H548V278" class="line dash" marker-end="url(#arrow)"/><path d="M549 205V278" class="line dash" marker-end="url(#arrow)"/><path d="M903 205V245H549V278" class="line dash" marker-end="url(#arrow)"/>
+<rect x="237" y="444" width="624" height="71" class="box safe"/><text x="270" y="474" class="body">分类修复 → 重新验证同一提交 / 目标 / Plan 合同</text><text x="270" y="501" class="small">stale plan: stop and re-plan；不得以新建空计划绕过审批</text>
+<path d="M549 387V436" class="line" marker-end="url(#teal)"/>
+</svg>
