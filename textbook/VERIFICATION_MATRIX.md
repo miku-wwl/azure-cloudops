@@ -50,6 +50,7 @@ Every lecture and incident will receive its own evidence and limitations before 
 | AZ03-02 | ACCEPTED; 9-page PDF, 3 figures, 16 local tests; Windows + WSL suites each passed 116 tests across 8 lab directories | Synthetic managed-identity selection, FIC match, token claims, network boolean and Key Vault authorization only; no real token, Azure/network request, vault read, role change or billing observation |
 | AZ03-03 | ACCEPTED; 8-page PDF, 3 figures, 16 local tests; Windows + WSL suites each passed 132 tests across 9 lab directories | Synthetic Policy effects, log-visibility classes and Defender effect mapping only; no Azure query, plan enablement, resource operation or billing observation |
 | AZ04-01 | ACCEPTED; 6-page PDF, 3 figures, 18 local tests; Windows + WSL suites each passed 150 tests across 10 lab directories | Synthetic VM lifecycle, VMSS rollout, disk cap and boot/app evidence only; Flexible upgrade-policy docs conflict; no Azure query or resource operation |
-| AZ04-02 onward | PLANNED | Not yet authored or run |
+| AZ04-02 | ACCEPTED; 7-page PDF, 4 figures, 16 local tests; Windows + WSL suites each passed 166 tests across 11 lab directories | Synthetic slot swap, warm-up filter, revision/app-scope separation, readiness policy and traffic rollback; no Azure query or resource operation |
+| AZ04-03 onward | PLANNED | Not yet authored or run |
 
-All nine accepted lecture PDFs are independent outputs in textbook/dist/pdf/. Package verification awaits all 23 chapters.
+All eleven accepted lecture PDFs are independent outputs in textbook/dist/pdf/. Package verification awaits all 23 chapters.

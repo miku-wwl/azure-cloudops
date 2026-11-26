@@ -1,0 +1,44 @@
+{
+  "slot-default-warmup-503": {
+    "kind": "warmup",
+    "status": 503
+  },
+  "slot-status-filter-503": {
+    "kind": "warmup",
+    "status": 503,
+    "accepted_statuses": [200, 202]
+  },
+  "appservice-swap": {
+    "kind": "swap",
+    "production": {"release": "release-a", "identity": "PROD_SLOT"},
+    "staging": {"release": "release-b", "identity": "STAGING_SLOT"},
+    "status": 200
+  },
+  "aca-single-unready": {
+    "kind": "single_cutover",
+    "current": "release-a",
+    "candidate": "release-b",
+    "ready": false
+  },
+  "aca-multiple-ready": {
+    "kind": "multiple_cutover",
+    "current": "release-a",
+    "candidate": "release-b",
+    "ready": true,
+    "weights": {"release-a": 90, "release-b": 10}
+  },
+  "aca-rollback-route": {
+    "kind": "rollback",
+    "previous": "release-a",
+    "candidate": "release-b",
+    "previous_is_active": true
+  },
+  "aca-secret-update": {
+    "kind": "change_scope",
+    "changes": ["secret"]
+  },
+  "aca-identity-update": {
+    "kind": "change_scope",
+    "changes": ["identity"]
+  }
+}

@@ -1,6 +1,6 @@
 # Azure CloudOps & Enterprise Infrastructure
 
-**Status:** Stage 1, B4 in progress — AZ00-01, AZ01-01, AZ02-01 through AZ02-04, AZ03-01 through AZ03-03, and AZ04-01 accepted (10/23); AZ04-02 is next.
+**Status:** Stage 1, B4 in progress — AZ00-01, AZ01-01, AZ02-01 through AZ02-04, AZ03-01 through AZ03-03, AZ04-01, and AZ04-02 accepted (11/23); AZ04-03 is next.
 **Repository:** miku-wwl/azure-cloudops, main
 **Approved implementation baseline:** 853ba6cbaa4ee67e448550fbe192c6c89b24fd2f
 **Roadmap:** AZURE_SPECIALTY_ROADMAP.md
@@ -12,7 +12,7 @@ This is an enterprise Azure engineering practice repository and a 23-lecture ill
 
 | Stage | Objective | Current status |
 |---|---|---|
-| 1 — Technical textbook | Research, author, illustrate, experiment and publish 23 independent PDFs with editable sources | B0/B1/B2 accepted; B3 complete; B4 1/4 accepted; 10 of 23 accepted |
+| 1 — Technical textbook | Research, author, illustrate, experiment and publish 23 independent PDFs with editable sources | B0/B1/B2 accepted; B3 complete; B4 2/4 accepted; 11 of 23 accepted |
 | 2 — Engineering readiness | Harden local labs, Terraform, controlled delivery, automation and incident replay | Not started |
 | 3 — Live Azure validation | Read-only preflight first; perform only specifically authorized, reliably costed experiments | Not started; no Azure resources created |
 

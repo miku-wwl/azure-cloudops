@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 400" width="760" height="400" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif">
+<defs><marker id="marrow6f55a8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#6f55a8"/></marker><marker id="marrowe0954a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#e0954a"/></marker></defs>
+<text x="380" y="22" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12" font-weight="700" fill="#1d3b53" text-anchor="middle">Container Apps 的 revision template 与 app configuration 有不同所有者</text>
+<rect x="24" y="62" width="246" height="262" rx="8" ry="8" fill="#f1edf8" stroke="#6f55a8" stroke-width="1.4"/>
+<text x="147.0" y="195.7435" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.3" font-weight="700" fill="#4f3a86" text-anchor="middle">App-wide · properties.configuration</text>
+<rect x="490" y="62" width="246" height="262" rx="8" ry="8" fill="#e6f3f3" stroke="#1a8a8f" stroke-width="1.4"/>
+<text x="613.0" y="195.7435" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.3" font-weight="700" fill="#12676b" text-anchor="middle">Revision · properties.template</text>
+<rect x="42" y="108" width="210" height="72" rx="8" ry="8" fill="#f1edf8" stroke="#6f55a8" stroke-width="1.4"/>
+<text x="147.0" y="128.478" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.4" font-weight="700" fill="#4f3a86" text-anchor="middle">共享设置</text>
+<text x="147.0" y="143.418" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.3" font-weight="400" fill="#22313d" text-anchor="middle">secret values · ingress</text>
+<text x="147.0" y="155.418" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.3" font-weight="400" fill="#22313d" text-anchor="middle">revision mode · traffic / labels</text>
+<text x="147.0" y="167.418" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.3" font-weight="400" fill="#22313d" text-anchor="middle">managed identity（app resource）</text>
+<rect x="45" y="215" width="204" height="56" rx="8" ry="8" fill="#fdf1e3" stroke="#e0954a" stroke-width="1.4"/>
+<text x="147.0" y="233.478" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.4" font-weight="700" fill="#9a5a1c" text-anchor="middle">变更作用范围</text>
+<text x="147.0" y="248.418" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.2" font-weight="400" fill="#22313d" text-anchor="middle">现有 revisions 也看见配置改变</text>
+<text x="147.0" y="260.418" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.2" font-weight="400" fill="#22313d" text-anchor="middle">不会自动生成新 revision</text>
+<rect x="510" y="108" width="206" height="72" rx="8" ry="8" fill="#e6f3f3" stroke="#1a8a8f" stroke-width="1.4"/>
+<text x="613.0" y="133.478" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.4" font-weight="700" fill="#12676b" text-anchor="middle">不可变 template 快照</text>
+<text x="613.0" y="149.418" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.5" font-weight="400" fill="#22313d" text-anchor="middle">container image / probes</text>
+<text x="613.0" y="162.418" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.5" font-weight="400" fill="#22313d" text-anchor="middle">scale rules · min / max</text>
+<rect x="512" y="215" width="202" height="56" rx="8" ry="8" fill="#eaf5ee" stroke="#2e7d55" stroke-width="1.4"/>
+<text x="613.0" y="233.478" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.4" font-weight="700" fill="#1f5c3d" text-anchor="middle">revision update</text>
+<text x="613.0" y="248.418" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.2" font-weight="400" fill="#22313d" text-anchor="middle">产生新 R2；旧 R1 仍可 active</text>
+<text x="613.0" y="260.418" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.2" font-weight="400" fill="#22313d" text-anchor="middle">按 mode / weights 决定流量</text>
+<path d="M270 145 L490 145" fill="none" stroke="#6f55a8" stroke-width="1.6" marker-end="url(#marrow6f55a8)" stroke-linejoin="round"/>
+<rect x="347.5" y="129.875" width="65.00000000000001" height="9.75" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="380.0" y="137.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.5" font-weight="500" fill="#6f55a8" text-anchor="middle">共享 app config</text>
+<path d="M270 243 L490 243" fill="none" stroke="#e0954a" stroke-width="1.6" marker-end="url(#marrowe0954a)" stroke-linejoin="round"/>
+<rect x="336.112" y="228.16" width="87.776" height="9.360000000000001" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="380.0" y="235.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.2" font-weight="500" fill="#e0954a" text-anchor="middle">不是 revision snapshot</text>
+<text x="380" y="356" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#c0504d" text-anchor="middle">切回旧 revision 只回退 template 与路由；app-wide secret / ingress / identity 需另行恢复。</text>
+<text x="380" y="379" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="400" fill="#5d6d7a" text-anchor="middle">密钥更新后还要确认容器是否 restart 或重新部署以读取新值。</text>
+</svg>

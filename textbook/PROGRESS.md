@@ -8,9 +8,9 @@
 ## Current gate
 
 - Overall stage: Stage 1 — Technical Textbook Engineering & Publication
-- Current phase: B4 — Lectures 10–13, 1/4 accepted. AZ04-01 accepted; next is AZ04-02.
+- Current phase: B4 — Lectures 10–13, 2/4 accepted. AZ04-01 and AZ04-02 accepted; next is AZ04-03.
 - B0 status: COMPLETE. Read-only AWS source, toolchain, two reference PDFs and package consistency reviewed; Azure publisher adaptation built an Azure chapter and passed the recorded checks.
-- Completed lectures: 10/23 — AZ00-01, AZ01-01, AZ02-01 through AZ02-04, AZ03-01 through AZ03-03, and AZ04-01. AZ04-02 is next.
+- Completed lectures: 11/23 — AZ00-01, AZ01-01, AZ02-01 through AZ02-04, AZ03-01 through AZ03-03, AZ04-01, and AZ04-02. AZ04-03 is next.
 - Implementation is being tracked on main from the approved baseline; see repository history for the current checkpoint.
 - Cloud resource operations: none performed for this project.
 - Azure authorization and subscription scope: NOT_CHECKED; Stage 3 read-only preflight is later.
@@ -47,7 +47,8 @@
 
 - AZ03-03 passed its lecture gate: current Microsoft Policy, Activity Log and Defender documentation; three editable governance/evidence figures; a 16-test synthetic model; full Windows and WSL suites each passed 132 tests across 9 lab directories; and an 8-page PDF with every page reviewed at 88 and 140 DPI. No Azure sign-in, subscription or telemetry query, Defender plan enablement, resource operation or billing query was performed. See chapters/AZ03-03/ACCEPTANCE.md.
 - AZ04-01 passed its lecture gate: current Microsoft VM/VMSS/disk/monitoring research; three editable figures; an 18-test synthetic model; full Windows and WSL suites each passed 150 tests across 10 lab directories; and a 6-page PDF with all pages reviewed at 88 and 140 DPI. Microsoft documentation has a recorded Flexible VMSS upgrade-policy conflict. No Azure authentication, CLI query, telemetry request, network probe, resource operation or billing query was performed. See chapters/AZ04-01/ACCEPTANCE.md.
+- AZ04-02 passed its lecture gate: current Microsoft App Service slot, health and identity research plus Container Apps revision, probe, ingress, scale and identity research; four editable mechanism figures; a 16-test synthetic release model; full Windows and WSL suites each passed 166 tests across 11 lab directories; and a 7-page PDF with all pages inspected at 88 and 140 DPI. No Azure authentication, CLI query, app deployment, probe, token request, resource operation or billing query was performed. See chapters/AZ04-02/ACCEPTANCE.md.
 
 ## First next action
 
-Research AZ04-02 with current Microsoft documentation and continue its full offline lecture acceptance sequence. Do not authenticate to Azure, query a subscription or mutate cloud resources before Stage 3 gates.
+Research AZ04-03 with current Microsoft documentation and continue its full offline lecture acceptance sequence. Do not authenticate to Azure, query a subscription or mutate cloud resources before Stage 3 gates.

@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 440" width="760" height="440" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif">
+<defs><marker id="marrowe0954a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#e0954a"/></marker><marker id="marrow6f55a8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#6f55a8"/></marker><marker id="marrow2e7d55" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#2e7d55"/></marker><marker id="marrow1a8a8f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#1a8a8f"/></marker><marker id="marrowc0504d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#c0504d"/></marker></defs>
+<text x="380" y="22" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12" font-weight="700" fill="#1d3b53" text-anchor="middle">平台就绪门、业务验证门和运行期健康门不能合并</text>
+<text x="28" y="60" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.8" font-weight="700" fill="#1d3b53" text-anchor="start">App Service</text>
+<rect x="28" y="76" width="156" height="86" rx="8" ry="8" fill="#fdf1e3" stroke="#e0954a" stroke-width="1.4"/>
+<text x="106.0" y="110.6875" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12.5" font-weight="700" fill="#9a5a1c" text-anchor="middle">Restart + warm-up</text>
+<text x="106.0" y="127.0625" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.5" font-weight="400" fill="#22313d" text-anchor="middle">每个 source instance</text>
+<text x="106.0" y="139.0625" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.5" font-weight="400" fill="#22313d" text-anchor="middle">status filter 可设</text>
+<rect x="220" y="76" width="156" height="86" rx="8" ry="8" fill="#f1edf8" stroke="#6f55a8" stroke-width="1.4"/>
+<text x="298.0" y="110.6875" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12.5" font-weight="700" fill="#4f3a86" text-anchor="middle">Swap preview</text>
+<text x="298.0" y="127.0625" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.3" font-weight="400" fill="#22313d" text-anchor="middle">production 配置下验证</text>
+<text x="298.0" y="139.0625" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.3" font-weight="400" fill="#22313d" text-anchor="middle">site authentication 有限制</text>
+<rect x="412" y="76" width="145" height="86" rx="8" ry="8" fill="#e6f3f3" stroke="#1a8a8f" stroke-width="1.4"/>
+<text x="484.5" y="110.6875" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12.5" font-weight="700" fill="#12676b" text-anchor="middle">Swap route</text>
+<text x="484.5" y="127.0625" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.5" font-weight="400" fill="#22313d" text-anchor="middle">Production hostname</text>
+<text x="484.5" y="139.0625" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.5" font-weight="400" fill="#22313d" text-anchor="middle">切到候选 app</text>
+<rect x="594" y="76" width="138" height="86" rx="8" ry="8" fill="#eaf5ee" stroke="#2e7d55" stroke-width="1.4"/>
+<text x="663.0" y="110.6875" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12.5" font-weight="700" fill="#1f5c3d" text-anchor="middle">Health Check</text>
+<text x="663.0" y="127.0625" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.3" font-weight="400" fill="#22313d" text-anchor="middle">持续按 instance 探测</text>
+<text x="663.0" y="139.0625" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.3" font-weight="400" fill="#22313d" text-anchor="middle">不是 swap warm-up</text>
+<path d="M184 118 L220 118" fill="none" stroke="#e0954a" stroke-width="1.6" marker-end="url(#marrowe0954a)" stroke-linejoin="round"/>
+<path d="M376 118 L412 118" fill="none" stroke="#6f55a8" stroke-width="1.6" marker-end="url(#marrow6f55a8)" stroke-linejoin="round"/>
+<path d="M557 118 L594 118" fill="none" stroke="#2e7d55" stroke-width="1.6" marker-end="url(#marrow2e7d55)" stroke-linejoin="round"/>
+<rect x="561.0" y="103.35" width="29.0" height="9.1" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="575.5" y="110.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.0" font-weight="500" fill="#2e7d55" text-anchor="middle">运行期</text>
+<line x1="28" y1="181" x2="732" y2="181" stroke="#d5dde3" stroke-width="1"/>
+<text x="28" y="205" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.8" font-weight="700" fill="#1d3b53" text-anchor="start">Container Apps</text>
+<rect x="28" y="222" width="156" height="92" rx="8" ry="8" fill="#f2f5f7" stroke="#9fb3c1" stroke-width="1.4"/>
+<text x="106.0" y="259.6875" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12.5" font-weight="700" fill="#41525f" text-anchor="middle">Provision + scale</text>
+<text x="106.0" y="276.0625" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.5" font-weight="400" fill="#5d6d7a" text-anchor="middle">目标 replicas 满足</text>
+<text x="106.0" y="288.0625" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.5" font-weight="400" fill="#5d6d7a" text-anchor="middle">min / max 与 workload</text>
+<rect x="220" y="222" width="156" height="92" rx="8" ry="8" fill="#fdf1e3" stroke="#e0954a" stroke-width="1.4"/>
+<text x="298.0" y="259.6875" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12.5" font-weight="700" fill="#9a5a1c" text-anchor="middle">Startup + readiness</text>
+<text x="298.0" y="276.0625" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.5" font-weight="400" fill="#22313d" text-anchor="middle">所有 replicas 通过</text>
+<text x="298.0" y="288.0625" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.5" font-weight="400" fill="#22313d" text-anchor="middle">revision 才算 ready</text>
+<rect x="412" y="222" width="145" height="92" rx="8" ry="8" fill="#e6f3f3" stroke="#1a8a8f" stroke-width="1.4"/>
+<text x="484.5" y="253.6875" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12.5" font-weight="700" fill="#12676b" text-anchor="middle">Revision mode</text>
+<text x="484.5" y="270.0625" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.0" font-weight="400" fill="#22313d" text-anchor="middle">single：ready 后自动切流</text>
+<text x="484.5" y="282.0625" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.0" font-weight="400" fill="#22313d" text-anchor="middle">multiple：label 定向测试</text>
+<text x="484.5" y="294.0625" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.0" font-weight="400" fill="#22313d" text-anchor="middle">再由人设置 weights</text>
+<rect x="594" y="222" width="138" height="92" rx="8" ry="8" fill="#f1edf8" stroke="#6f55a8" stroke-width="1.4"/>
+<text x="663.0" y="253.6875" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12.5" font-weight="700" fill="#4f3a86" text-anchor="middle">Smoke / SLI</text>
+<text x="663.0" y="270.0625" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.0" font-weight="400" fill="#22313d" text-anchor="middle">关键请求与依赖</text>
+<text x="663.0" y="282.0625" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.0" font-weight="400" fill="#22313d" text-anchor="middle">single 切流后验证</text>
+<text x="663.0" y="294.0625" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.0" font-weight="400" fill="#22313d" text-anchor="middle">multiple 可先走 label</text>
+<path d="M184 268 L220 268" fill="none" stroke="#e0954a" stroke-width="1.6" marker-end="url(#marrowe0954a)" stroke-linejoin="round"/>
+<path d="M376 268 L412 268" fill="none" stroke="#1a8a8f" stroke-width="1.6" marker-end="url(#marrow1a8a8f)" stroke-linejoin="round"/>
+<path d="M557 268 L594 268" fill="none" stroke="#6f55a8" stroke-width="1.6" marker-end="url(#marrow6f55a8)" stroke-linejoin="round"/>
+<rect x="28" y="330" width="704" height="38" rx="5" ry="5" fill="#fdf1e3" stroke="#e0954a" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="36" y="343.4" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.4" font-weight="700" fill="#9a5a1c" text-anchor="start">Release boundary</text>
+<text x="36" y="354.13" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.4" font-weight="400" fill="#22313d" text-anchor="start">single mode 没有独立人工 gate 插入 readiness 与自动切流之间；multiple mode 可用 label 直连候选 revision。</text>
+<rect x="144" y="382" width="472" height="40" rx="8" ry="8" fill="#fbeceb" stroke="#c0504d" stroke-width="1.4"/>
+<text x="380.0" y="398.9485" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.3" font-weight="700" fill="#8e2f2c" text-anchor="middle">Runtime liveness</text>
+<text x="380.0" y="412.85350000000005" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.2" font-weight="400" fill="#22313d" text-anchor="middle">持续运行期观察；endpoint 仍不能替代完整业务交易与 SLI。</text>
+<path d="M663 314 L616 393" fill="none" stroke="#c0504d" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#marrowc0504d)" stroke-linejoin="round"/>
+<rect x="629.0" y="342.85" width="29.0" height="9.1" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="643.5" y="349.5" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.0" font-weight="500" fill="#c0504d" text-anchor="middle">运行期</text>
+</svg>

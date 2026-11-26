@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 440" width="760" height="440" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif">
+<defs><marker id="marrowe0954a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#e0954a"/></marker><marker id="marrow6f55a8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#6f55a8"/></marker><marker id="marrow1a8a8f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#1a8a8f"/></marker><marker id="marrow2e7d55" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#2e7d55"/></marker></defs>
+<text x="380" y="22" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12" font-weight="700" fill="#1d3b53" text-anchor="middle">App Service 先在 source slot 上准备候选 app，再交换路由</text>
+<text x="32" y="63" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="700" fill="#5d6d7a" text-anchor="start">阶段</text>
+<text x="178" y="63" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.6" font-weight="700" fill="#e0954a" text-anchor="middle">Staging · source</text>
+<text x="518" y="63" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.6" font-weight="700" fill="#1d3b53" text-anchor="middle">Production · target</text>
+<line x1="30" y1="78" x2="730" y2="78" stroke="#d5dde3" stroke-width="1"/>
+<rect x="26" y="94" width="104" height="73" rx="8" ry="8" fill="#f2f5f7" stroke="#9fb3c1" stroke-width="1.4"/>
+<text x="78.0" y="121.1875" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12.5" font-weight="700" fill="#41525f" text-anchor="middle">0 · 发布前</text>
+<text x="78.0" y="138.5625" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.7" font-weight="400" fill="#5d6d7a" text-anchor="middle">hostname = stage</text>
+<text x="78.0" y="151.5625" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.7" font-weight="400" fill="#5d6d7a" text-anchor="middle">candidate B</text>
+<rect x="161" y="94" width="274" height="73" rx="8" ry="8" fill="#fdf1e3" stroke="#e0954a" stroke-width="1.4"/>
+<text x="298.0" y="120.1255" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.9" font-weight="700" fill="#9a5a1c" text-anchor="middle">1 · source 预处理</text>
+<text x="298.0" y="136.2405" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.7" font-weight="400" fill="#22313d" text-anchor="middle">套用 production sticky settings / auth</text>
+<text x="298.0" y="149.2405" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.7" font-weight="400" fill="#22313d" text-anchor="middle">重启 source 实例；失败则停止并回退</text>
+<rect x="468" y="94" width="262" height="73" rx="8" ry="8" fill="#e9eff5" stroke="#1d3b53" stroke-width="1.4"/>
+<text x="599.0" y="120.1255" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.9" font-weight="700" fill="#17384f" text-anchor="middle">target 保持在线</text>
+<text x="599.0" y="136.2405" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.7" font-weight="400" fill="#22313d" text-anchor="middle">production hostname 仍服务 A</text>
+<text x="599.0" y="149.2405" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.7" font-weight="400" fill="#22313d" text-anchor="middle">生产路由尚未切换</text>
+<path d="M130 130 L161 130" fill="none" stroke="#e0954a" stroke-width="1.6" marker-end="url(#marrowe0954a)" stroke-linejoin="round"/>
+<rect x="161" y="192" width="274" height="77" rx="8" ry="8" fill="#f1edf8" stroke="#6f55a8" stroke-width="1.4"/>
+<text x="298.0" y="220.1255" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.9" font-weight="700" fill="#4f3a86" text-anchor="middle">2 · warm-up / preview</text>
+<text x="298.0" y="236.2405" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.7" font-weight="400" fill="#22313d" text-anchor="middle">等待 source restart 与 warm-up</text>
+<text x="298.0" y="249.2405" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.7" font-weight="400" fill="#22313d" text-anchor="middle">preview 可停下验证或取消</text>
+<rect x="468" y="192" width="262" height="77" rx="8" ry="8" fill="#fbeceb" stroke="#c0504d" stroke-width="1.4"/>
+<text x="599.0" y="220.1255" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.9" font-weight="700" fill="#8e2f2c" text-anchor="middle">warm-up 成功才继续</text>
+<text x="599.0" y="236.2405" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.7" font-weight="400" fill="#22313d" text-anchor="middle">默认任意 HTTP 响应均有效</text>
+<text x="599.0" y="249.2405" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.7" font-weight="400" fill="#22313d" text-anchor="middle">设置 status filter 才可限定代码</text>
+<path d="M435 230 L468 230" fill="none" stroke="#6f55a8" stroke-width="1.6" marker-end="url(#marrow6f55a8)" stroke-linejoin="round"/>
+<rect x="443.9" y="215.16" width="15.2" height="9.360000000000001" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="451.5" y="222.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.2" font-weight="500" fill="#6f55a8" text-anchor="middle">门</text>
+<rect x="161" y="294" width="274" height="75" rx="8" ry="8" fill="#e6f3f3" stroke="#1a8a8f" stroke-width="1.4"/>
+<text x="298.0" y="321.1255" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.9" font-weight="700" fill="#12676b" text-anchor="middle">3 · 交换 routing rules</text>
+<text x="298.0" y="337.2405" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.7" font-weight="400" fill="#22313d" text-anchor="middle">Production hostname → candidate B</text>
+<text x="298.0" y="350.2405" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.7" font-weight="400" fill="#22313d" text-anchor="middle">Staging hostname → prior release A</text>
+<rect x="468" y="294" width="262" height="75" rx="8" ry="8" fill="#eaf5ee" stroke="#2e7d55" stroke-width="1.4"/>
+<text x="599.0" y="321.1255" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.9" font-weight="700" fill="#1f5c3d" text-anchor="middle">4 · 完成 source 回收</text>
+<text x="599.0" y="337.2405" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.7" font-weight="400" fill="#22313d" text-anchor="middle">旧 production app 在 source 重启</text>
+<text x="599.0" y="350.2405" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.7" font-weight="400" fill="#22313d" text-anchor="middle">identity 仍按 slot 各自配置</text>
+<path d="M298 269 L298 294" fill="none" stroke="#1a8a8f" stroke-width="1.6" marker-end="url(#marrow1a8a8f)" stroke-linejoin="round"/>
+<path d="M435 330 L468 330" fill="none" stroke="#2e7d55" stroke-width="1.6" marker-end="url(#marrow2e7d55)" stroke-linejoin="round"/>
+<rect x="28" y="386" width="702" height="38" rx="5" ry="5" fill="#fdf1e3" stroke="#e0954a" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="36" y="399.5" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.5" font-weight="700" fill="#9a5a1c" text-anchor="start">Boundary</text>
+<text x="36" y="410.375" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.5" font-weight="400" fill="#22313d" text-anchor="start">warm-up 成功不等于业务验证；source / target 参数弄反会把错误版本送往生产。</text>
+</svg>

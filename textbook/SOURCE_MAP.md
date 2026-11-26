@@ -285,3 +285,32 @@ Research date: 2026-11-26. Microsoft Learn primary documentation grounds Azure b
 - https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-health-extension
 - https://learn.microsoft.com/en-us/azure/virtual-machines/disks-performance
 - https://learn.microsoft.com/en-us/cli/azure/vm?view=azure-cli-latest
+
+## AZ04-02 — App Service, Container Apps and Deployment
+
+Research date: 2026-11-26. Microsoft Learn is the primary source for service behavior. All release paths drawn in the figures are explanatory, and all lab outputs are generated from local synthetic fixtures.
+
+| Chapter section / figure | Claim or teaching point | Source anchor | Classification and limit |
+|---|---|---|---|
+| AZ04-02 §01, Fig 11-1 | App Service slots are live apps with hostnames and plan-tier prerequisites; Container Apps revisions are template updates governed by revision mode and ingress weights | App Service deployment slots; Container Apps revisions | SOURCE-ANALYSED; not a live deployment or cost estimate |
+| AZ04-02 §02, Fig 11-2 | Slot swap prepares source with target slot-specific settings, restarts and warms source, then swaps routing; default warm-up accepts any HTTP response unless valid statuses are configured; slot identity is not swapped | App Service deployment slots; App Service managed identity | SOURCE-ANALYSED; no swap, identity, or endpoint was queried |
+| AZ04-02 §02, Fig 11-2 | App Service Health Check is a per-instance load-balancer signal and is not the swap warm-up gate; its configuration is not slot-specific and follows the swap | App Service Health Check; deployment slots | SOURCE-ANALYSED; configuration and runtime behavior depend on app, plan, and instance count |
+| AZ04-02 §03, Fig 11-3 | Container Apps template changes create a revision; secrets, ingress, traffic, mode and registry configuration are app-wide; identity updates do not create a new revision or automatically restart the app | Container Apps revisions; ingress; managed identity; deployment troubleshooting | SOURCE-ANALYSED; rollback of routes does not restore global configuration or data |
+| AZ04-02 §04, Fig 11-4 | Single mode routes after provisioning, scale and startup/readiness conditions; multiple mode exposes operator-managed weights; probes and app-level smoke tests answer different questions | Container Apps revisions; health probes; traffic splitting | SOURCE-ANALYSED; probe success is not a business SLI assertion |
+| AZ04-02 §04 | Ingress visibility, transport and target port are separate from revision scaling and readiness | Container Apps ingress; scaling | SOURCE-ANALYSED; no port, ingress, or scale behavior was live-tested |
+| AZ04-02 §05 | `az webapp deployment slot list` and `az containerapp revision list` are documented future read-only templates | App Service deployment slot CLI; Container Apps revision CLI documentation | DOCUMENTED; not run; Stage 3 L0 and specific query authorization remain required |
+| AZ04-02 §06 | Local model covers slot warm-up and route movement, config scope, revision cutover weights and route-only rollback | `chapters/AZ04-02/labs/app-release-model` and 16 unit tests | LOCAL_VERIFIED 2026-11-26; fixture only; Windows and WSL full suites each passed 166 tests across 11 lab directories |
+| AZ04-02 cost / authorization | No Azure sign-in, subscription query, CLI execution, resource operation, probe, token request or billing query was performed | Session and command execution record | LIVE_NOT_RUN; actual cumulative spend remains NOT_VERIFIED |
+
+### AZ04-02 primary references
+
+- https://learn.microsoft.com/en-us/azure/app-service/deploy-staging-slots
+- https://learn.microsoft.com/en-us/azure/app-service/monitor-instances-health-check
+- https://learn.microsoft.com/en-us/azure/app-service/overview-managed-identity
+- https://learn.microsoft.com/en-us/azure/container-apps/revisions
+- https://learn.microsoft.com/en-us/azure/container-apps/health-probes
+- https://learn.microsoft.com/en-us/azure/container-apps/traffic-splitting
+- https://learn.microsoft.com/en-us/azure/container-apps/ingress-how-to
+- https://learn.microsoft.com/en-us/azure/container-apps/scale-app
+- https://learn.microsoft.com/en-us/azure/container-apps/managed-identity
+- https://learn.microsoft.com/en-us/azure/container-apps/troubleshoot-deployment-errors
