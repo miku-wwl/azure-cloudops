@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="570" viewBox="0 0 1200 570">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L0,10 L11,5 z" fill="#17324d"/></marker></defs>
+<text x="34" y="42" font-family="Aptos,Arial,sans-serif" font-size="27" font-weight="700" fill="#17324d" text-anchor="start">Import 接管 State 绑定，不创建远端资源</text>
+<text x="34" y="75" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#5d7183" text-anchor="start">先写目标配置，再审阅 import plan 与后续配置差异</text>
+<rect x="44" y="172" width="216" height="126" rx="15" fill="#fff3e5" stroke="#c96a18" stroke-width="2.5"/>
+<text x="152" y="206" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#c96a18" text-anchor="middle">Existing ARM object</text>
+<text x="152" y="239" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">resource already exists</text>
+<text x="152" y="264" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">verify exact provider ID</text>
+<rect x="334" y="105" width="270" height="126" rx="15" fill="#f2edfb" stroke="#684bb1" stroke-width="2.5"/>
+<text x="469" y="139" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#684bb1" text-anchor="middle">Resource configuration</text>
+<text x="469" y="172" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">destination address</text>
+<text x="469" y="197" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">attributes match intent</text>
+<rect x="334" y="320" width="270" height="126" rx="15" fill="#edf5f7" stroke="#087f8c" stroke-width="2.5"/>
+<text x="469" y="354" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#087f8c" text-anchor="middle">Import declaration</text>
+<text x="469" y="387" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">to = destination address</text>
+<text x="469" y="412" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">id = provider-defined ID</text>
+<rect x="698" y="172" width="205" height="126" rx="15" fill="#eaf1f8" stroke="#17324d" stroke-width="2.5"/>
+<text x="800" y="206" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#17324d" text-anchor="middle">Review plan</text>
+<text x="800" y="239" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">import action</text>
+<text x="800" y="264" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">no surprise changes</text>
+<rect x="988" y="172" width="175" height="126" rx="15" fill="#eaf6ef" stroke="#23764d" stroke-width="2.5"/>
+<text x="1075" y="206" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#23764d" text-anchor="middle">State binding</text>
+<text x="1075" y="239" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">one address</text>
+<text x="1075" y="264" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">one remote ID</text>
+<path d="M260,220 L324,167" fill="none" stroke="#c96a18" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M260,254 L324,376" fill="none" stroke="#c96a18" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M604,168 L688,208" fill="none" stroke="#684bb1" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M604,382 L688,253" fill="none" stroke="#087f8c" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M903,235 L978,235" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="600" y="516" font-family="Aptos,Arial,sans-serif" font-size="18" font-weight="700" fill="#aa4052" text-anchor="middle">导入后仍要 reconcile 配置；资源类型迁移需要单独的 State 计划。</text>
+</svg>

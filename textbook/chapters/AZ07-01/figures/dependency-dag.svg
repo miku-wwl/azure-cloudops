@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L0,10 L11,5 z" fill="#17324d"/></marker></defs>
+<text x="34" y="42" font-family="Aptos,Arial,sans-serif" font-size="27" font-weight="700" fill="#17324d" text-anchor="start">引用表达排序；无关节点可以并行</text>
+<text x="34" y="75" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#5d7183" text-anchor="start">以资源属性引用形成隐式边；depends_on 只补隐藏依赖</text>
+<rect x="56" y="185" width="220" height="110" rx="15" fill="#f2edfb" stroke="#684bb1" stroke-width="2.5"/>
+<text x="166" y="219" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#684bb1" text-anchor="middle">Virtual network</text>
+<text x="166" y="252" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">output: id</text>
+<rect x="354" y="119" width="230" height="110" rx="15" fill="#edf5f7" stroke="#087f8c" stroke-width="2.5"/>
+<text x="469" y="153" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#087f8c" text-anchor="middle">Subnet A</text>
+<text x="469" y="186" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">reads VNet id</text>
+<rect x="354" y="342" width="230" height="110" rx="15" fill="#edf5f7" stroke="#087f8c" stroke-width="2.5"/>
+<text x="469" y="376" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#087f8c" text-anchor="middle">Subnet B</text>
+<text x="469" y="409" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">reads VNet id</text>
+<rect x="676" y="185" width="230" height="110" rx="15" fill="#fff3e5" stroke="#c96a18" stroke-width="2.5"/>
+<text x="791" y="219" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#c96a18" text-anchor="middle">Private endpoint</text>
+<text x="791" y="252" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">reads subnet id</text>
+<rect x="954" y="185" width="205" height="110" rx="15" fill="#eaf6ef" stroke="#23764d" stroke-width="2.5"/>
+<text x="1056" y="219" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#23764d" text-anchor="middle">DNS zone group</text>
+<text x="1056" y="252" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">reads endpoint id</text>
+<path d="M276,220 L344,176" fill="none" stroke="#684bb1" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M276,261 L344,392" fill="none" stroke="#684bb1" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M584,176 L666,220" fill="none" stroke="#087f8c" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M906,240 L944,240" fill="none" stroke="#c96a18" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="470" y="509" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#17324d" text-anchor="middle">Subnet A 与 Subnet B 可并行；私有终结点等待 Subnet A。</text>
+</svg>

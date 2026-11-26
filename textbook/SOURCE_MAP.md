@@ -523,3 +523,51 @@ Research date: 2026-11-27. Microsoft Learn is the primary source for Azure servi
 - https://learn.microsoft.com/en-us/azure/storage/blobs/assign-azure-role-data-access
 - https://learn.microsoft.com/en-us/azure/azure-monitor/change/change-analysis-enable
 - https://learn.microsoft.com/en-us/azure/role-based-access-control/role-assignments
+
+
+
+## AZ07-01 — Terraform Core, Provider, graph, State, Plan and Import
+
+Research date: 2026-11-27. HashiCorp Developer and the official Terraform Registry document Terraform behavior; Microsoft Learn documents AzureRM/AzAPI roles and migration guidance. The local Terraform CLI lab uses only the built-in terraform_data resource. The companion Python model is synthetic and deterministic.
+
+| Chapter section / figure | Claim or teaching point | Source anchor | Classification and limit |
+|---|---|---|---|
+| AZ07-01 §01, Fig 19-1 | Terraform Core manages configuration, modules, dependency graph, State and Plan; a Terraform Provider plugin supplies resource schemas and service operations; Azure Resource Provider is an ARM namespace service | Terraform resource blocks; AzureRM/AzAPI choice; AzAPI Registry overview | SOURCE-ANALYSED; no plugin or Azure service was initialized |
+| AZ07-01 §01 | AzureRM provides curated typed Azure resource schemas; AzAPI provides a thin ARM REST layer with explicit API version/body; one ARM object must not be managed from two Terraform addresses | AzureRM/AzAPI choice; official Azure/azapi Registry docs; Terraform state/address semantics | SOURCE-ANALYSED; no remote object or state was inspected |
+| AZ07-01 §01, Fig 19-4 | Provider registration behavior is version-dependent. Current AzureRM 5.x documentation describes registration settings with a none default; earlier provider versions differed. Review the locked provider version and registration configuration before plan/apply | AzureRM 5.x Provider Registry docs and versioned upgrade guidance | SOURCE-ANALYSED; no AzureRM plugin was downloaded or configured; no registration request occurred |
+| AZ07-01 §02 | Root and child modules declare provider requirements; the provider lock file fixes selected provider versions/checksums while remote module versions need their own constraints; child-module aliases must be passed explicitly | Provider requirements; dependency lock file; module block; providers within modules | SOURCE-ANALYSED; no external provider or module was initialized |
+| AZ07-01 §02–03, Fig 19-2 | Resource/module references produce implicit graph dependencies; depends_on is for hidden dependencies; graph topology controls ordering/parallelism but does not prove Azure application readiness | Terraform dependency graph and references | SOURCE-ANALYSED; Python DAG tests cover a small synthetic graph only |
+| AZ07-01 §04, Fig 19-3 | Terraform State binds a resource address to its provider-managed remote object, may include sensitive values, and requires safe collaboration/locking; a remote object should be managed at one address | Terraform State; state resource addressing; state locking | SOURCE-ANALYSED; no real State/backend was read or modified |
+| AZ07-01 §05, Fig 19-4 | Plan compares configuration and prior state, normally refreshing remote observations; validate checks syntax/internal consistency only. Lifecycle rules affect replacement/destroy/drift visibility and are not approval controls | terraform plan; terraform validate; lifecycle meta-arguments | SOURCE-ANALYSED; no Azure plan, provider registration, apply or destroy was run |
+| AZ07-01 §06 | Import requires a configured destination resource and provider-specific ID; review import and subsequent configuration drift before apply. Provider-type migration must use documented state guidance and inspect for recreation | Import blocks; AzureRM/AzAPI migration path; module refactoring; state mv | SOURCE-ANALYSED; import examples were not executed |
+| AZ07-01 §07, labs/terraform-core | Terraform 1.15.5 Windows CLI initialized the local child module with built-in terraform.io/builtin/terraform; validate passed; three terraform test plan runs passed, including expected failures for invalid environment/scope | terraform_data; Terraform test framework; local lab files | LOCAL_VERIFIED 2026-11-27; no AzureRM/AzAPI provider, backend, credential, ARM ID, apply or cloud call |
+| AZ07-01 §07, labs/core-model | 26 standard-library unit tests cover deterministic DAG ordering/cycles, synthetic AzureRM/AzAPI provider choice, unique address/object bindings, simplified lifecycle classification and import contracts | chapters/AZ07-01/labs/core-model | LOCAL_VERIFIED 2026-11-27 on Windows and WSL; model is not Terraform Core, provider, Azure API, real state, or cloud-plan emulation |
+| AZ07-01 suite | Full Python suites passed 336 tests across 19 lab directories on Windows and in WSL; terraform fmt -check -recursive -diff textbook/chapters passed; the new local Terraform root passed init/validate/test on Windows | Project test runner; Terraform CLI output | LOCAL_VERIFIED 2026-11-27; WSL does not have Terraform CLI, so Terraform CLI checks were not run there |
+| AZ07-01 cost / authorization | No Azure authentication, Azure/ARM/Entra query, Azure provider initialization/registration, resource mutation, live plan/import, network probe or billing request was performed | Session and command execution record | LIVE_NOT_RUN; this chapter's local execution made no Azure request or project Azure resource charge; cumulative actual spend remains NOT_VERIFIED |
+
+### AZ07-01 primary references
+
+- https://learn.microsoft.com/en-us/azure/developer/terraform/azurerm/overview-azapi-provider
+- https://registry.terraform.io/providers/Azure/azapi/latest/docs
+- https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/index
+- https://learn.microsoft.com/en-us/azure/developer/terraform/how-to-migrate-between-azurerm-and-azapi
+- https://developer.hashicorp.com/terraform/language/providers/requirements
+- https://developer.hashicorp.com/terraform/language/files/dependency-lock
+- https://developer.hashicorp.com/terraform/language/block/module
+- https://developer.hashicorp.com/terraform/language/modules/develop/providers
+- https://developer.hashicorp.com/terraform/language/modules/configuration
+- https://developer.hashicorp.com/terraform/cli/state/resource-addressing
+- https://developer.hashicorp.com/terraform/internals/graph
+- https://developer.hashicorp.com/terraform/language/expressions/references
+- https://developer.hashicorp.com/terraform/language/state
+- https://developer.hashicorp.com/terraform/language/state/locking
+- https://developer.hashicorp.com/terraform/cli/commands/plan
+- https://developer.hashicorp.com/terraform/cli/commands/validate
+- https://developer.hashicorp.com/terraform/cli/commands/init
+- https://developer.hashicorp.com/terraform/language/meta-arguments/lifecycle
+- https://developer.hashicorp.com/terraform/language/block/import
+- https://developer.hashicorp.com/terraform/language/import/single-resource
+- https://developer.hashicorp.com/terraform/language/modules/develop/refactoring
+- https://developer.hashicorp.com/terraform/cli/state/mv
+- https://developer.hashicorp.com/terraform/language/resources/terraform-data
+- https://developer.hashicorp.com/terraform/language/tests

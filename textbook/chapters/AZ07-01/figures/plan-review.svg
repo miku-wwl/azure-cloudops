@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="565" viewBox="0 0 1200 565">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L0,10 L11,5 z" fill="#17324d"/></marker></defs>
+<text x="34" y="42" font-family="Aptos,Arial,sans-serif" font-size="27" font-weight="700" fill="#17324d" text-anchor="start">Plan 产出动作提案；审阅范围与破坏性</text>
+<text x="34" y="75" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#5d7183" text-anchor="start">云端 Plan 会通过 Provider 观察远端状态；validate 不做这件事</text>
+<rect x="46" y="166" width="224" height="124" rx="15" fill="#f2edfb" stroke="#684bb1" stroke-width="2.5"/>
+<text x="158" y="200" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#684bb1" text-anchor="middle">Config + State</text>
+<text x="158" y="233" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">addresses · inputs</text>
+<text x="158" y="258" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">provider lock · backend</text>
+<rect x="342" y="166" width="230" height="124" rx="15" fill="#edf5f7" stroke="#087f8c" stroke-width="2.5"/>
+<text x="457" y="200" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#087f8c" text-anchor="middle">Provider read</text>
+<text x="457" y="233" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">remote refresh</text>
+<text x="457" y="258" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">version-specific behavior</text>
+<rect x="644" y="166" width="230" height="124" rx="15" fill="#fff3e5" stroke="#c96a18" stroke-width="2.5"/>
+<text x="759" y="200" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#c96a18" text-anchor="middle">Plan actions</text>
+<text x="759" y="233" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">create · update</text>
+<text x="759" y="258" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">replace · destroy</text>
+<rect x="946" y="166" width="210" height="124" rx="15" fill="#eaf6ef" stroke="#23764d" stroke-width="2.5"/>
+<text x="1051" y="200" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#23764d" text-anchor="middle">Review gates</text>
+<text x="1051" y="233" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">scope · ID · drift</text>
+<text x="1051" y="258" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="400" fill="#273b4d" text-anchor="middle">data · rollback</text>
+<path d="M270,228 L332,228" fill="none" stroke="#684bb1" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M572,228 L634,228" fill="none" stroke="#087f8c" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M874,228 L936,228" fill="none" stroke="#c96a18" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="232" y="365" width="300" height="91" rx="15" fill="#eaf1f8" stroke="#17324d" stroke-width="2.5"/>
+<text x="382" y="399" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#17324d" text-anchor="middle">validate</text>
+<text x="382" y="432" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">syntax + internal consistency</text>
+<rect x="668" y="365" width="300" height="91" rx="15" fill="#eaf6ef" stroke="#23764d" stroke-width="2.5"/>
+<text x="818" y="399" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#23764d" text-anchor="middle">business probe</text>
+<text x="818" y="432" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">service + data invariants</text>
+<text x="600" y="513" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="700" fill="#aa4052" text-anchor="middle">Provider registration and other initialization behavior depend on the locked provider version and configuration.</text>
+</svg>
