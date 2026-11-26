@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 390" width="760" height="390" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif">
+<defs><marker id="marrowe0954a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#e0954a"/></marker></defs>
+<text x="380" y="23" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12" font-weight="700" fill="#1d3b53" text-anchor="middle">先按 control plane / data plane 选择证据来源</text>
+<rect x="28" y="75" width="313" height="120" rx="8" ry="8" fill="#e9eff5" stroke="#1d3b53" stroke-width="1.4"/>
+<text x="184.5" y="113.8025" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.5" font-weight="700" fill="#17384f" text-anchor="middle">Azure Resource Manager · control plane</text>
+<text x="184.5" y="133.1275" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">create / update / delete / started action</text>
+<text x="184.5" y="149.1275" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">Azure Monitor Activity Log（默认收集）</text>
+<text x="184.5" y="165.1275" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">scope · caller · operation · status · correlation ID</text>
+<rect x="418" y="75" width="314" height="120" rx="8" ry="8" fill="#e6f3f3" stroke="#1a8a8f" stroke-width="1.4"/>
+<text x="575.0" y="113.8025" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.5" font-weight="700" fill="#12676b" text-anchor="middle">Resource service · data plane</text>
+<text x="575.0" y="133.1275" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">Key Vault secret read / Storage data operation</text>
+<text x="575.0" y="149.1275" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">service resource logs or application evidence</text>
+<text x="575.0" y="165.1275" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">diagnostic setting must select supported categories</text>
+<rect x="28" y="239" width="313" height="83" rx="8" ry="8" fill="#fdf1e3" stroke="#e0954a" stroke-width="1.4"/>
+<text x="184.5" y="268.155" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.0" font-weight="700" fill="#9a5a1c" text-anchor="middle">Activity Log blind spots</text>
+<text x="184.5" y="286.30499999999995" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="400" fill="#22313d" text-anchor="middle">Reads are not typically captured.</text>
+<text x="184.5" y="301.30499999999995" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="400" fill="#22313d" text-anchor="middle">Pre-operation ARM authn/authz rejection creates no entry.</text>
+<rect x="418" y="239" width="314" height="83" rx="8" ry="8" fill="#fdf1e3" stroke="#e0954a" stroke-width="1.4"/>
+<text x="575.0" y="268.155" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.0" font-weight="700" fill="#9a5a1c" text-anchor="middle">Resource log boundary</text>
+<text x="575.0" y="286.30499999999995" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="400" fill="#22313d" text-anchor="middle">Resource logs are not collected by default.</text>
+<text x="575.0" y="301.30499999999995" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="400" fill="#22313d" text-anchor="middle">A missing entry does not prove no data request.</text>
+<path d="M184 195 L184 239" fill="none" stroke="#e0954a" stroke-width="1.6" marker-end="url(#marrowe0954a)" stroke-linejoin="round"/>
+<path d="M575 195 L575 239" fill="none" stroke="#e0954a" stroke-width="1.6" marker-end="url(#marrowe0954a)" stroke-linejoin="round"/>
+<text x="380" y="357" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.2" font-weight="400" fill="#c0504d" text-anchor="middle">Activity Log retention: 90 days; longer retention needs an export destination and its own access / cost review.</text>
+</svg>

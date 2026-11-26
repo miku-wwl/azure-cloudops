@@ -230,3 +230,32 @@ Research date: 2026-11-26. Claims use Microsoft Learn and the Microsoft REST API
 - https://learn.microsoft.com/en-us/azure/key-vault/general/rbac-migration
 - https://learn.microsoft.com/en-us/azure/key-vault/general/network-security
 - https://learn.microsoft.com/en-us/cli/azure/role/assignment?view=azure-cli-latest
+
+## AZ03-03 — Azure Policy, Activity Log and Defender for Cloud
+
+Research date: 2026-11-26. Claims are grounded in current Microsoft Learn primary documentation. Three original source-generated diagrams and a synthetic fixture distinguish governance effect, telemetry evidence, and security posture. No Azure query or feature enablement was performed.
+
+| Chapter section / figure | Claim or teaching point | Source anchor | Classification and limit |
+|---|---|---|---|
+| AZ03-03 §02, Fig 9-1 | Audit reports matching non-compliance without itself denying; Deny is evaluated before the Resource Provider in applicable Resource Manager requests; deployIfNotExists follows provider success after a configurable delay and requires assignment identity for remediation | Azure Policy effect basics; compliance states; deployIfNotExists and remediation guidance | SOURCE-ANALYSED; fixture models three effects and create/update/existing phases, not real policy JSON, mode, alias, assignment scope or provider outcomes |
+| AZ03-03 §03, Fig 9-2 | Activity Log covers control-plane events, reads are not typically captured, and ARM authentication/authorization rejection before operation start creates no entry or Activity Log alert; resource logs cover data-plane behavior and require diagnostic settings; default Activity Log retention is 90 days | Activity Log overview; Azure Activity Log event schema; Activity Log retrieval guide | SOURCE-ANALYSED; no query or diagnostic setting was run; local classifier describes only broad event classes |
+| AZ03-03 §04, Fig 9-3 | Defender for Cloud assesses posture and yields MCSB recommendations; only a subset supports Deny/Enforce through Azure Policy; Enforce uses deployIfNotExists; foundational CSPM is distinct from optional paid plans; Secure Score models can differ by portal | Defender for Cloud overview; MCSB recommendations; policy reference; Secure Score; connect subscription and plan pricing docs | SOURCE-ANALYSED; no Defender plan, recommendation effect, or service was enabled; no cost estimate |
+| AZ03-03 §06 | Synthetic Policy-effect timing, event visibility, diagnostic-setting state, recommendation/effect separation, and plan-price review indicator | chapters/AZ03-03/labs/governance-evidence-model and 16 tests | LOCAL_VERIFIED 2026-11-26; Windows targeted and full suite passed; WSL full suite passed 132 tests in 9 directories; fixture only |
+| AZ03-03 §07 | Azure CLI templates for Policy state and Activity Log retrieval, limited to approved read scopes | Azure CLI policy state list; Activity Log query guide | DOCUMENTED; commands were not run; Stage 3 L0 and explicit live-query authorization remain required |
+| AZ03-03 cost / authorization | No Azure sign-in, subscription query, policy-state query, Activity Log query, Defender enablement, resource operation or billing query was performed | Session and command execution record | LIVE_NOT_RUN; actual cumulative spend remains NOT_VERIFIED |
+
+### AZ03-03 primary references
+
+- https://learn.microsoft.com/en-us/azure/governance/policy/concepts/effect-basics
+- https://learn.microsoft.com/en-us/azure/governance/policy/concepts/compliance-states
+- https://learn.microsoft.com/en-us/azure/governance/policy/concepts/effect-deploy-if-not-exists
+- https://learn.microsoft.com/en-us/azure/governance/policy/how-to/remediate-resources
+- https://learn.microsoft.com/en-us/azure/azure-monitor/fundamentals/activity-log
+- https://learn.microsoft.com/en-us/azure/azure-monitor/platform/activity-log-schema
+- https://learn.microsoft.com/en-us/azure/azure-monitor/platform/activity-log-view
+- https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-cloud-introduction
+- https://learn.microsoft.com/en-us/azure/defender-for-cloud/secure-score-security-controls
+- https://learn.microsoft.com/en-us/azure/defender-for-cloud/manage-mcsb
+- https://learn.microsoft.com/en-us/azure/defender-for-cloud/policy-reference
+- https://learn.microsoft.com/en-us/azure/defender-for-cloud/connect-azure-subscription
+- https://learn.microsoft.com/en-us/cli/azure/policy/state?view=azure-cli-latest

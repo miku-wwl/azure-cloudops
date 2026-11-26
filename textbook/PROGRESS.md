@@ -8,9 +8,9 @@
 ## Current gate
 
 - Overall stage: Stage 1 — Technical Textbook Engineering & Publication
-- Current phase: B3 — Lectures 07–09, 2/3 lectures accepted. AZ03-01 and AZ03-02 accepted; AZ03-03 is next.
+- Current phase: B3 — Lectures 07–09, 3/3 lectures accepted. AZ03-01 through AZ03-03 accepted; next is B4 (AZ04-01).
 - B0 status: COMPLETE. Read-only AWS source, toolchain, two reference PDFs and package consistency reviewed; Azure publisher adaptation built an Azure chapter and passed the recorded checks.
-- Completed lectures: 8/23 — AZ00-01, AZ01-01, AZ02-01 through AZ02-04, and AZ03-01 through AZ03-02. AZ03-03 is next.
+- Completed lectures: 9/23 — AZ00-01, AZ01-01, AZ02-01 through AZ02-04, and AZ03-01 through AZ03-03. AZ04-01 is next.
 - Implementation is being tracked on main from the approved baseline; see repository history for the current checkpoint.
 - Cloud resource operations: none performed for this project.
 - Azure authorization and subscription scope: NOT_CHECKED; Stage 3 read-only preflight is later.
@@ -45,6 +45,8 @@
 - AZ03-01 passed its lecture gate: Microsoft identity platform, Azure RBAC, Storage and CLI research; three editable mechanism figures; a 17-test synthetic token-boundary/RBAC model; full Windows and WSL suites each passed 100 tests across 7 lab directories; and a 9-page PDF with all pages reviewed at 88 DPI and mechanism/experiment pages additionally reviewed at 140 DPI. No token was acquired, no Azure/Entra/Graph query or role operation was performed, and billing remains unverified. See chapters/AZ03-01/ACCEPTANCE.md.
 - AZ03-02 passed its lecture gate: current Microsoft Learn research for managed identities, Key Vault, workload federation and Azure Identity SDK; three editable mechanism figures; a 16-test synthetic credential-flow model; full Windows and WSL suites each passed 116 tests across 8 lab directories; and a 9-page PDF with all pages reviewed at 88 DPI and key identity, token, role and experiment pages additionally reviewed at 140 DPI. No real token, Azure/Entra/Graph/IMDS/OIDC request, Key Vault access, network query, resource mutation or billing check was performed. See chapters/AZ03-02/ACCEPTANCE.md.
 
+- AZ03-03 passed its lecture gate: current Microsoft Policy, Activity Log and Defender documentation; three editable governance/evidence figures; a 16-test synthetic model; full Windows and WSL suites each passed 132 tests across 9 lab directories; and an 8-page PDF with every page reviewed at 88 and 140 DPI. No Azure sign-in, subscription or telemetry query, Defender plan enablement, resource operation or billing query was performed. See chapters/AZ03-03/ACCEPTANCE.md.
+
 ## First next action
 
-Research AZ03-03 with current Microsoft documentation; design a narrow offline model, then run its full lecture acceptance sequence. Do not authenticate to Azure, query a subscription or mutate cloud resources before Stage 3 gates.
+Research AZ04-01 with current Microsoft documentation; design a narrow offline model, then run its full lecture acceptance sequence. Do not authenticate to Azure, query a subscription or mutate cloud resources before Stage 3 gates.

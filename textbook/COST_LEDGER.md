@@ -11,6 +11,7 @@
 | AZ02-04 local model | No Azure API, DNS query, probe, WAF request, resource call or live traffic; no project Azure charge from this local run | Windows + WSL offline tests only |
 | AZ03-01 local model | No Entra token, Azure/Graph API, role query, network call or resource operation; no project Azure charge from this local run | Windows + WSL offline tests only |
 | AZ03-02 local model | No Entra/IMDS/OIDC token, Azure/Graph API, Key Vault request, network call, role query/change or resource operation; no project Azure charge from this local run | Windows + WSL offline tests only |
+| AZ03-03 local model | No Azure sign-in, subscription/policy/activity query, Defender plan enablement, resource operation or billing request; no project Azure charge from this local run | Windows + WSL offline tests only |
 | Current cumulative actual Azure spend | NOT_VERIFIED | Billing data has not been queried; do not report USD 0.00 actual |
 | Current cumulative gross estimate | Not applicable yet | No live experiment has passed L0 scope, pricing and authorization preflight |
 | Remaining ceiling | USD 1.00 nominal; actual headroom unverified | Reconcile gross charges separately from credits and billing |

@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 400" width="760" height="400" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif">
+<defs><marker id="marrow1d3b53" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#1d3b53"/></marker><marker id="marrowc0504d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#c0504d"/></marker><marker id="marrowe0954a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#e0954a"/></marker><marker id="marrow2e7d55" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#2e7d55"/></marker><marker id="marrow1a8a8f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#1a8a8f"/></marker></defs>
+<text x="380" y="23" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12" font-weight="700" fill="#1d3b53" text-anchor="middle">Azure Policy effect 对请求与后续修复的时机不同</text>
+<rect x="20" y="107" width="121" height="82" rx="8" ry="8" fill="#f2f5f7" stroke="#9fb3c1" stroke-width="1.4"/>
+<text x="80.5" y="134.714" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="700" fill="#41525f" text-anchor="middle">ARM request</text>
+<text x="80.5" y="153.934" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#5d6d7a" text-anchor="middle">create / update</text>
+<text x="80.5" y="169.934" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#5d6d7a" text-anchor="middle">resource properties</text>
+<rect x="177" y="92" width="154" height="112" rx="8" ry="8" fill="#e9eff5" stroke="#1d3b53" stroke-width="1.4"/>
+<text x="254.0" y="126.714" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="700" fill="#17384f" text-anchor="middle">Policy request checks</text>
+<text x="254.0" y="145.934" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">assignment + scope</text>
+<text x="254.0" y="161.934" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">definition condition</text>
+<text x="254.0" y="177.934" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">effect</text>
+<path d="M141 148 L177 148" fill="none" stroke="#1d3b53" stroke-width="1.6" marker-end="url(#marrow1d3b53)" stroke-linejoin="round"/>
+<rect x="379" y="49" width="153" height="89" rx="8" ry="8" fill="#fbeceb" stroke="#c0504d" stroke-width="1.4"/>
+<text x="455.5" y="80.273" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.4" font-weight="700" fill="#8e2f2c" text-anchor="middle">Deny</text>
+<text x="455.5" y="99.56299999999999" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">matching request</text>
+<text x="455.5" y="115.56299999999999" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">blocked before RP</text>
+<rect x="379" y="158" width="153" height="89" rx="8" ry="8" fill="#fdf1e3" stroke="#e0954a" stroke-width="1.4"/>
+<text x="455.5" y="189.273" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.4" font-weight="700" fill="#9a5a1c" text-anchor="middle">Audit</text>
+<text x="455.5" y="208.563" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">request continues</text>
+<text x="455.5" y="224.563" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">compliance finding</text>
+<rect x="578" y="115" width="159" height="99" rx="8" ry="8" fill="#eaf5ee" stroke="#2e7d55" stroke-width="1.4"/>
+<text x="657.5" y="151.214" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="700" fill="#1f5c3d" text-anchor="middle">Resource Provider</text>
+<text x="657.5" y="170.434" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">handles accepted</text>
+<text x="657.5" y="186.434" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">request</text>
+<path d="M331 119 L379 94" fill="none" stroke="#c0504d" stroke-width="1.6" marker-end="url(#marrowc0504d)" stroke-linejoin="round"/>
+<rect x="339.075" y="90.375" width="31.850000000000005" height="9.75" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="355.0" y="97.5" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.5" font-weight="500" fill="#c0504d" text-anchor="middle">effect</text>
+<path d="M331 148 L379 201" fill="none" stroke="#e0954a" stroke-width="1.6" marker-end="url(#marrowe0954a)" stroke-linejoin="round"/>
+<rect x="336.075" y="167.375" width="31.850000000000005" height="9.75" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="352.0" y="174.5" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.5" font-weight="500" fill="#e0954a" text-anchor="middle">effect</text>
+<path d="M532 204 L578 174" fill="none" stroke="#2e7d55" stroke-width="1.6" marker-end="url(#marrow2e7d55)" stroke-linejoin="round"/>
+<rect x="220" y="290" width="316" height="66" rx="8" ry="8" fill="#e6f3f3" stroke="#1a8a8f" stroke-width="1.4"/>
+<text x="378.0" y="310.6845" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.1" font-weight="700" fill="#12676b" text-anchor="middle">deployIfNotExists</text>
+<text x="378.0" y="328.8695" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.9" font-weight="400" fill="#22313d" text-anchor="middle">provider success → configurable delay → existence check</text>
+<text x="378.0" y="343.8695" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.9" font-weight="400" fill="#22313d" text-anchor="middle">missing configuration → deployment using assignment identity</text>
+<path d="M656 214 L536 312" fill="none" stroke="#1a8a8f" stroke-width="1.6" marker-end="url(#marrow1a8a8f)" stroke-linejoin="round"/>
+<rect x="576.468" y="247.97" width="55.064000000000014" height="9.620000000000001" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="604.0" y="255.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.4" font-weight="500" fill="#1a8a8f" text-anchor="middle">post-success</text>
+<text x="380" y="386" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.1" font-weight="400" fill="#c0504d" text-anchor="middle">Existing non-compliant resources may require a remediation task; assignment alone does not prove repair.</text>
+</svg>

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 390" width="760" height="390" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif">
+<defs><marker id="marrowe0954a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#e0954a"/></marker><marker id="marrowc0504d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#c0504d"/></marker><marker id="marrow1a8a8f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#1a8a8f"/></marker></defs>
+<text x="380" y="23" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="11.7" font-weight="700" fill="#1d3b53" text-anchor="middle">Defender 评估姿态；选定 recommendation 才接入 Policy enforcement</text>
+<rect x="23" y="83" width="162" height="111" rx="8" ry="8" fill="#f2f5f7" stroke="#9fb3c1" stroke-width="1.4"/>
+<text x="104.0" y="117.214" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="700" fill="#41525f" text-anchor="middle">Resource assessment</text>
+<text x="104.0" y="136.434" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="400" fill="#5d6d7a" text-anchor="middle">MCSB / configured standard</text>
+<text x="104.0" y="152.434" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="400" fill="#5d6d7a" text-anchor="middle">assessment time</text>
+<text x="104.0" y="168.434" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="400" fill="#5d6d7a" text-anchor="middle">finding</text>
+<rect x="232" y="83" width="179" height="111" rx="8" ry="8" fill="#fdf1e3" stroke="#e0954a" stroke-width="1.4"/>
+<text x="321.5" y="117.214" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="700" fill="#9a5a1c" text-anchor="middle">Recommendation</text>
+<text x="321.5" y="136.434" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="400" fill="#22313d" text-anchor="middle">posture advice</text>
+<text x="321.5" y="152.434" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="400" fill="#22313d" text-anchor="middle">secure score summary</text>
+<text x="321.5" y="168.434" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="400" fill="#22313d" text-anchor="middle">does not itself deny</text>
+<path d="M185 138 L232 138" fill="none" stroke="#e0954a" stroke-width="1.6" marker-end="url(#marrowe0954a)" stroke-linejoin="round"/>
+<rect x="463" y="49" width="131" height="91" rx="8" ry="8" fill="#fbeceb" stroke="#c0504d" stroke-width="1.4"/>
+<text x="528.5" y="81.214" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="700" fill="#8e2f2c" text-anchor="middle">Optional Deny</text>
+<text x="528.5" y="100.434" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="400" fill="#22313d" text-anchor="middle">Policy blocks</text>
+<text x="528.5" y="116.434" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="400" fill="#22313d" text-anchor="middle">matching request</text>
+<rect x="463" y="157" width="131" height="91" rx="8" ry="8" fill="#e6f3f3" stroke="#1a8a8f" stroke-width="1.4"/>
+<text x="528.5" y="189.214" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="700" fill="#12676b" text-anchor="middle">Optional Enforce</text>
+<text x="528.5" y="208.434" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="400" fill="#22313d" text-anchor="middle">Policy DINE</text>
+<text x="528.5" y="224.434" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="400" fill="#22313d" text-anchor="middle">remediation path</text>
+<path d="M411 120 L463 96" fill="none" stroke="#c0504d" stroke-width="1.6" marker-end="url(#marrowc0504d)" stroke-linejoin="round"/>
+<rect x="410.896" y="92.255" width="68.20800000000001" height="9.23" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="445.0" y="99.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.1" font-weight="500" fill="#c0504d" text-anchor="middle">supported subset</text>
+<path d="M411 157 L463 202" fill="none" stroke="#1a8a8f" stroke-width="1.6" marker-end="url(#marrow1a8a8f)" stroke-linejoin="round"/>
+<rect x="406.831" y="177.755" width="70.33800000000001" height="9.23" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="442.0" y="184.5" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.1" font-weight="500" fill="#1a8a8f" text-anchor="middle">effect configured</text>
+<rect x="621" y="82" width="119" height="120" rx="8" ry="8" fill="#e9eff5" stroke="#1d3b53" stroke-width="1.4"/>
+<text x="680.5" y="120.6845" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.1" font-weight="700" fill="#17384f" text-anchor="middle">Workload plans</text>
+<text x="680.5" y="139.8695" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="400" fill="#22313d" text-anchor="middle">separate protection</text>
+<text x="680.5" y="155.8695" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="400" fill="#22313d" text-anchor="middle">scope / coverage</text>
+<text x="680.5" y="171.8695" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="400" fill="#22313d" text-anchor="middle">check current price</text>
+<text x="380" y="313" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.1" font-weight="400" fill="#c0504d" text-anchor="middle">Foundational CSPM is distinct from optional paid plans; Secure Score is not a request-time decision record.</text>
+<text x="380" y="365" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#5d6d7a" text-anchor="middle">Confirm recommendation support, Policy assignment, effect, scope and remediation identity.</text>
+</svg>

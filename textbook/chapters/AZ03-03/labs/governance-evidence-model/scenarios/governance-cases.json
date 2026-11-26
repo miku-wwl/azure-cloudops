@@ -1,0 +1,22 @@
+{
+  "policy": [
+    {"name":"audit-allows-matching-create","effect":"audit","condition_matches":true,"phase":"create"},
+    {"name":"deny-blocks-matching-update","effect":"deny","condition_matches":true,"phase":"update"},
+    {"name":"dine-existing-resource","effect":"deployIfNotExists","condition_matches":true,"phase":"existing"},
+    {"name":"condition-does-not-match","effect":"deny","condition_matches":false,"phase":"create"}
+  ],
+  "activity": [
+    {"name":"started-management-write","event_kind":"started_management_write"},
+    {"name":"started-management-action-failure","event_kind":"started_management_action_failure"},
+    {"name":"management-read","event_kind":"management_read"},
+    {"name":"pre-operation-authz-rejection","event_kind":"pre_operation_authn_authz_rejection"},
+    {"name":"key-vault-data-read-no-diagnostics","event_kind":"data_plane_read"},
+    {"name":"key-vault-data-read-with-diagnostics","event_kind":"data_plane_read","diagnostics_enabled":true}
+  ],
+  "defender": [
+    {"name":"defender-recommendation-only","recommendation_present":true,"configured_action":"none"},
+    {"name":"defender-audit-selected","recommendation_present":true,"configured_action":"audit"},
+    {"name":"defender-deny-enabled","recommendation_present":true,"configured_action":"deny"},
+    {"name":"defender-enforce-enabled","recommendation_present":true,"configured_action":"enforce","workload_plan_enabled":true}
+  ]
+}
