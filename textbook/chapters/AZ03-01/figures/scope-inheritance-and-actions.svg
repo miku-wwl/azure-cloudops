@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 408" width="760" height="408" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif">
+<defs><marker id="marrow2e7d55" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#2e7d55"/></marker></defs>
+<text x="380" y="23" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12" font-weight="700" fill="#1d3b53" text-anchor="middle">role assignment 向下继承到子 scope；不会横向穿过兄弟资源</text>
+<rect x="277" y="48" width="206" height="48" rx="8" ry="8" fill="#e9eff5" stroke="#1d3b53" stroke-width="1.4"/>
+<text x="380.0" y="69.223" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.6" font-weight="700" fill="#17384f" text-anchor="middle">Subscription</text>
+<text x="380.0" y="83.801" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.9" font-weight="400" fill="#22313d" text-anchor="middle">parent scope</text>
+<rect x="277" y="117" width="206" height="48" rx="8" ry="8" fill="#e6f3f3" stroke="#1a8a8f" stroke-width="1.4"/>
+<text x="380.0" y="138.164" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.4" font-weight="700" fill="#12676b" text-anchor="middle">Resource group</text>
+<text x="380.0" y="152.672" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.9" font-weight="400" fill="#22313d" text-anchor="middle">assignment may inherit</text>
+<rect x="277" y="186" width="206" height="48" rx="8" ry="8" fill="#e9eff5" stroke="#1d3b53" stroke-width="1.4"/>
+<text x="380.0" y="207.164" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.4" font-weight="700" fill="#17384f" text-anchor="middle">Storage account</text>
+<text x="380.0" y="221.672" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.9" font-weight="400" fill="#22313d" text-anchor="middle">common parent</text>
+<path d="M380 96 L380 117" fill="none" stroke="#2e7d55" stroke-width="1.6" marker-end="url(#marrow2e7d55)" stroke-linejoin="round"/>
+<rect x="402.014" y="99.47" width="35.97200000000001" height="9.620000000000001" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="420.0" y="106.5" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.4" font-weight="500" fill="#2e7d55" text-anchor="middle">inherits</text>
+<path d="M380 165 L380 186" fill="none" stroke="#2e7d55" stroke-width="1.6" marker-end="url(#marrow2e7d55)" stroke-linejoin="round"/>
+<rect x="402.014" y="168.47" width="35.97200000000001" height="9.620000000000001" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="420.0" y="175.5" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.4" font-weight="500" fill="#2e7d55" text-anchor="middle">inherits</text>
+<rect x="70" y="270" width="238" height="62" rx="8" ry="8" fill="#eaf5ee" stroke="#2e7d55" stroke-width="1.4"/>
+<text x="189.0" y="292.496" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="700" fill="#1f5c3d" text-anchor="middle">Container: payments</text>
+<text x="189.0" y="306.93399999999997" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.9" font-weight="400" fill="#22313d" text-anchor="middle">child scope</text>
+<text x="189.0" y="318.152" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.9" font-weight="400" fill="#22313d" text-anchor="middle">DataAction: blob read</text>
+<rect x="452" y="270" width="238" height="62" rx="8" ry="8" fill="#fdf1e3" stroke="#e0954a" stroke-width="1.4"/>
+<text x="571.0" y="292.496" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.2" font-weight="700" fill="#9a5a1c" text-anchor="middle">Container: audit</text>
+<text x="571.0" y="306.93399999999997" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.9" font-weight="400" fill="#22313d" text-anchor="middle">sibling scope</text>
+<text x="571.0" y="318.152" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.9" font-weight="400" fill="#22313d" text-anchor="middle">not inherited from payments</text>
+<path d="M333 234 L220 270" fill="none" stroke="#2e7d55" stroke-width="1.6" marker-end="url(#marrow2e7d55)" stroke-linejoin="round"/>
+<rect x="257.616" y="240.16" width="23.768" height="9.360000000000001" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="269.5" y="247.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.2" font-weight="500" fill="#2e7d55" text-anchor="middle">child</text>
+<path d="M427 234 L540 270" fill="none" stroke="#2e7d55" stroke-width="1.6" marker-end="url(#marrow2e7d55)" stroke-linejoin="round"/>
+<rect x="478.616" y="240.16" width="23.768" height="9.360000000000001" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="490.5" y="247.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.2" font-weight="500" fill="#2e7d55" text-anchor="middle">child</text>
+<rect x="70" y="350" width="620" height="38" rx="8" ry="8" fill="#f2f5f7" stroke="#9fb3c1" stroke-width="1.4"/>
+<text x="380.0" y="365.975" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.0" font-weight="700" fill="#41525f" text-anchor="middle">Operation plane must also match</text>
+<text x="380.0" y="380.485" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#5d6d7a" text-anchor="middle">Actions govern control-plane operations · DataActions govern data-plane operations</text>
+<text x="380" y="402" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="400" fill="#5d6d7a" text-anchor="middle">A role&#x27;s assignableScopes limits where a custom role can be assigned; it is separate from an assignment&#x27;s scope.</text>
+</svg>

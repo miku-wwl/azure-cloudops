@@ -1,0 +1,208 @@
+{
+  "scopes": [
+    {"id": "sub-ledger", "parent": null},
+    {"id": "rg-ledger", "parent": "sub-ledger"},
+    {"id": "sa-ledger", "parent": "rg-ledger"},
+    {"id": "container-payments", "parent": "sa-ledger"},
+    {"id": "container-audit", "parent": "sa-ledger"}
+  ],
+  "roles": [
+    {
+      "id": "control-reader",
+      "name": "Synthetic control-plane reader",
+      "actions": ["Microsoft.Storage/storageAccounts/read"],
+      "not_actions": [],
+      "data_actions": [],
+      "not_data_actions": []
+    },
+    {
+      "id": "control-contributor",
+      "name": "Synthetic contributor-like role",
+      "actions": ["*"],
+      "not_actions": ["Microsoft.Authorization/roleAssignments/write"],
+      "data_actions": [],
+      "not_data_actions": []
+    },
+    {
+      "id": "blob-data-reader",
+      "name": "Synthetic blob data reader",
+      "actions": [],
+      "not_actions": [],
+      "data_actions": ["Microsoft.Storage/storageAccounts/blobServices/containers/blobs/read"],
+      "not_data_actions": []
+    },
+    {
+      "id": "data-wildcard-minus-delete",
+      "name": "Synthetic broad data role with a local subtraction",
+      "actions": [],
+      "not_actions": [],
+      "data_actions": ["Microsoft.Storage/storageAccounts/blobServices/containers/blobs/*"],
+      "not_data_actions": ["Microsoft.Storage/storageAccounts/blobServices/containers/blobs/delete"]
+    },
+    {
+      "id": "blob-delete-only",
+      "name": "Synthetic delete grant",
+      "actions": [],
+      "not_actions": [],
+      "data_actions": ["Microsoft.Storage/storageAccounts/blobServices/containers/blobs/delete"],
+      "not_data_actions": []
+    }
+  ],
+  "assignments": [
+    {
+      "id": "a-control-reader",
+      "tenant_id": "11111111-1111-4111-8111-111111111111",
+      "principal_id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "role_id": "control-reader",
+      "scope": "rg-ledger"
+    },
+    {
+      "id": "a-contributor",
+      "tenant_id": "11111111-1111-4111-8111-111111111111",
+      "principal_id": "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
+      "role_id": "control-contributor",
+      "scope": "rg-ledger"
+    },
+    {
+      "id": "a-blob-reader",
+      "tenant_id": "11111111-1111-4111-8111-111111111111",
+      "principal_id": "cccccccc-cccc-4ccc-8ccc-cccccccccccc",
+      "role_id": "blob-data-reader",
+      "scope": "container-payments"
+    },
+    {
+      "id": "a-inherited-data-reader",
+      "tenant_id": "11111111-1111-4111-8111-111111111111",
+      "principal_id": "eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee",
+      "role_id": "blob-data-reader",
+      "scope": "sa-ledger"
+    },
+    {
+      "id": "a-data-minus-delete",
+      "tenant_id": "11111111-1111-4111-8111-111111111111",
+      "principal_id": "dddddddd-dddd-4ddd-8ddd-dddddddddddd",
+      "role_id": "data-wildcard-minus-delete",
+      "scope": "rg-ledger"
+    },
+    {
+      "id": "a-second-delete-grant",
+      "tenant_id": "11111111-1111-4111-8111-111111111111",
+      "principal_id": "dddddddd-dddd-4ddd-8ddd-dddddddddddd",
+      "role_id": "blob-delete-only",
+      "scope": "rg-ledger"
+    }
+  ],
+  "requests": [
+    {
+      "id": "wrong-audience",
+      "signature_trusted": true,
+      "expected_issuer": "https://login.microsoftonline.com/11111111-1111-4111-8111-111111111111/v2.0",
+      "expected_tenant": "11111111-1111-4111-8111-111111111111",
+      "expected_audience": "https://storage.azure.com/",
+      "now": 2000000000,
+      "token": {
+        "iss": "https://login.microsoftonline.com/11111111-1111-4111-8111-111111111111/v2.0",
+        "tid": "11111111-1111-4111-8111-111111111111",
+        "oid": "cccccccc-cccc-4ccc-8ccc-cccccccccccc",
+        "aud": "https://management.azure.com/",
+        "exp": 2000000100,
+        "scp": "ledger.read"
+      },
+      "plane": "data",
+      "operation": "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/read",
+      "target": "container-payments"
+    },
+    {
+      "id": "control-reader-is-not-data-reader",
+      "signature_trusted": true,
+      "expected_issuer": "https://login.microsoftonline.com/11111111-1111-4111-8111-111111111111/v2.0",
+      "expected_tenant": "11111111-1111-4111-8111-111111111111",
+      "expected_audience": "https://management.azure.com/",
+      "now": 2000000000,
+      "token": {
+        "iss": "https://login.microsoftonline.com/11111111-1111-4111-8111-111111111111/v2.0",
+        "tid": "11111111-1111-4111-8111-111111111111",
+        "oid": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+        "aud": "https://management.azure.com/",
+        "exp": 2000000100,
+        "roles": ["Reader"]
+      },
+      "plane": "data",
+      "operation": "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/read",
+      "target": "container-payments"
+    },
+    {
+      "id": "data-role-at-child-scope",
+      "signature_trusted": true,
+      "expected_issuer": "https://login.microsoftonline.com/11111111-1111-4111-8111-111111111111/v2.0",
+      "expected_tenant": "11111111-1111-4111-8111-111111111111",
+      "expected_audience": "https://storage.azure.com/",
+      "now": 2000000000,
+      "token": {
+        "iss": "https://login.microsoftonline.com/11111111-1111-4111-8111-111111111111/v2.0",
+        "tid": "11111111-1111-4111-8111-111111111111",
+        "oid": "cccccccc-cccc-4ccc-8ccc-cccccccccccc",
+        "aud": "https://storage.azure.com/",
+        "exp": 2000000100,
+        "scp": "ledger.read"
+      },
+      "plane": "data",
+      "operation": "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/read",
+      "target": "container-payments"
+    },
+    {
+      "id": "sibling-scope-is-not-inherited",
+      "signature_trusted": true,
+      "expected_issuer": "https://login.microsoftonline.com/11111111-1111-4111-8111-111111111111/v2.0",
+      "expected_tenant": "11111111-1111-4111-8111-111111111111",
+      "expected_audience": "https://storage.azure.com/",
+      "now": 2000000000,
+      "token": {
+        "iss": "https://login.microsoftonline.com/11111111-1111-4111-8111-111111111111/v2.0",
+        "tid": "11111111-1111-4111-8111-111111111111",
+        "oid": "cccccccc-cccc-4ccc-8ccc-cccccccccccc",
+        "aud": "https://storage.azure.com/",
+        "exp": 2000000100
+      },
+      "plane": "data",
+      "operation": "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/read",
+      "target": "container-audit"
+    },
+    {
+      "id": "parent-scope-inherits-to-child",
+      "signature_trusted": true,
+      "expected_issuer": "https://login.microsoftonline.com/11111111-1111-4111-8111-111111111111/v2.0",
+      "expected_tenant": "11111111-1111-4111-8111-111111111111",
+      "expected_audience": "https://storage.azure.com/",
+      "now": 2000000000,
+      "token": {
+        "iss": "https://login.microsoftonline.com/11111111-1111-4111-8111-111111111111/v2.0",
+        "tid": "11111111-1111-4111-8111-111111111111",
+        "oid": "eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee",
+        "aud": "https://storage.azure.com/",
+        "exp": 2000000100
+      },
+      "plane": "data",
+      "operation": "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/read",
+      "target": "container-payments"
+    },
+    {
+      "id": "not-data-actions-is-not-a-deny-assignment",
+      "signature_trusted": true,
+      "expected_issuer": "https://login.microsoftonline.com/11111111-1111-4111-8111-111111111111/v2.0",
+      "expected_tenant": "11111111-1111-4111-8111-111111111111",
+      "expected_audience": "https://storage.azure.com/",
+      "now": 2000000000,
+      "token": {
+        "iss": "https://login.microsoftonline.com/11111111-1111-4111-8111-111111111111/v2.0",
+        "tid": "11111111-1111-4111-8111-111111111111",
+        "oid": "dddddddd-dddd-4ddd-8ddd-dddddddddddd",
+        "aud": "https://storage.azure.com/",
+        "exp": 2000000100
+      },
+      "plane": "data",
+      "operation": "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/delete",
+      "target": "container-payments"
+    }
+  ]
+}

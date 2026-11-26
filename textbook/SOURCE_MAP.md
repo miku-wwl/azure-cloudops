@@ -169,3 +169,30 @@ Research date: 2026-11-26. Current Microsoft Learn service, probe, routing, WAF,
 - https://learn.microsoft.com/en-us/azure/frontdoor/billing
 - https://azure.microsoft.com/en-us/pricing/details/load-balancer/
 - https://learn.microsoft.com/en-us/cli/azure/network/application-gateway?view=azure-cli-latest
+
+## AZ03-01 — Microsoft Entra ID, tokens and Azure RBAC
+
+Research date: 2026-11-26. Primary references are Microsoft Learn, Microsoft identity platform, Azure Storage and Azure CLI documentation. The local program is a synthetic decision fixture, not an Azure or JWT implementation.
+
+| Chapter section / figure | Claim or teaching point | Source anchor | Classification and limit |
+|---|---|---|---|
+| AZ03-01 §01, Fig 7-1 | Access-token audience identifies its intended recipient; API validators check their configured audience, issuer, tenant and token validity; access-token claim shape differs by token version | Microsoft identity platform access token and claims references | SOURCE-ANALYSED; the local model does not verify JWT signatures, signing keys, metadata or token-version variations |
+| AZ03-01 §01–02 | Azure Storage Entra access involves identity authentication followed by service authorization; resource ID determines token audience; principal IDs are tenant-local Entra object IDs | Authorize Blob Access with Microsoft Entra ID; Azure RBAC role assignments | SOURCE-ANALYSED; the lecture covers Entra + RBAC only and does not model Shared Key, SAS or anonymous access |
+| AZ03-01 §03, Fig 7-2 / Fig 7-3 | A role assignment binds principal, role definition and scope; parent assignments apply to descendants; role-definition AssignableScopes differs from assignment scope | Azure RBAC role assignments and scope overview | SOURCE-ANALYSED; actual tenant hierarchy and service scopes must be checked against resource IDs |
+| AZ03-01 §03–04 | Actions/NotActions describe control-plane permissions; DataActions/NotDataActions describe data-plane permissions; not-lists subtract within one role and are not deny assignments | Azure RBAC role definitions | SOURCE-ANALYSED; deny assignments, role conditions, group/PIM state and service-specific decisions are outside the local model |
+| AZ03-01 §05 | A valid Storage token audience does not itself grant blob-data access; matching DataActions and scope are needed for the Entra authorization path; role-change propagation may be delayed | Azure Storage Entra authorization and role definitions | SOURCE-ANALYSED; propagation bounds vary by scope and resource; no permission change or service call was observed |
+| AZ03-01 §06 | Azure CLI can list role assignments with all, inherited and group assignments, and inspect a role definition | Azure CLI assignment and definition references | DOCUMENTED; command syntax checked only, not executed in an Azure session |
+| AZ03-01 §07 | Synthetic trust assertion, issuer/tenant/audience/time checks, tenant+object principal match, scope ancestry, action planes and role-local exclusion/union | chapters/AZ03-01/labs/authorization-model and 17 unit tests | LOCAL_VERIFIED 2026-11-26; fixture logic only, no JWT, Azure, Entra, Graph or network calls |
+| AZ03-01 cost / authorization | No Azure sign-in, token acquisition, role query, subscription query, mutation or billing request was made | Session and command execution record | LIVE_NOT_RUN; actual project billing remains NOT_VERIFIED |
+
+### AZ03-01 primary references
+
+- https://learn.microsoft.com/en-us/entra/identity-platform/access-token-claims-reference
+- https://learn.microsoft.com/en-us/entra/identity-platform/access-tokens
+- https://learn.microsoft.com/en-us/azure/storage/blobs/authorize-access-azure-active-directory
+- https://learn.microsoft.com/en-us/azure/role-based-access-control/role-definitions
+- https://learn.microsoft.com/en-us/azure/role-based-access-control/role-assignments
+- https://learn.microsoft.com/en-us/azure/role-based-access-control/scope-overview
+- https://learn.microsoft.com/en-us/azure/role-based-access-control/role-assignments-list-cli
+- https://learn.microsoft.com/en-us/cli/azure/role/assignment?view=azure-cli-latest
+- https://learn.microsoft.com/en-us/cli/azure/role/definition?view=azure-cli-latest

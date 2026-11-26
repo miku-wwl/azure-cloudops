@@ -8,9 +8,9 @@
 ## Current gate
 
 - Overall stage: Stage 1 — Technical Textbook Engineering & Publication
-- Current phase: B2 — Lectures 03–06, 4/4 lectures accepted. Next phase B3 — AZ03-01 through AZ03-03; 0/3 accepted.
+- Current phase: B3 — Lectures 07–09, 1/3 lectures accepted. AZ03-01 accepted; AZ03-02 is next.
 - B0 status: COMPLETE. Read-only AWS source, toolchain, two reference PDFs and package consistency reviewed; Azure publisher adaptation built an Azure chapter and passed the recorded checks.
-- Completed lectures: 6/23 — AZ00-01, AZ01-01 and AZ02-01 through AZ02-04. AZ03-01 is next.
+- Completed lectures: 7/23 — AZ00-01, AZ01-01, AZ02-01 through AZ02-04, and AZ03-01. AZ03-02 is next.
 - Implementation is being tracked on main from the approved baseline; see repository history for the current checkpoint.
 - Cloud resource operations: none performed for this project.
 - Azure authorization and subscription scope: NOT_CHECKED; Stage 3 read-only preflight is later.
@@ -42,7 +42,8 @@
 
 - AZ02-03 passed its lecture gate: Microsoft Private Link/Storage/Private DNS research, three editable figures, an 18-test synthetic DNS/access decision model, full Windows and WSL runs of 63 tests across 5 lab directories, and an 11-page PDF with all pages visually inspected. Its source map and evidence record distinguish documented behavior, TLS inference and model limits. No Azure authentication, DNS query, resource operation, network probe or billing query was performed.
 - AZ02-04 passed its lecture gate: current Microsoft Load Balancer, Application Gateway and Front Door research, three editable mechanism figures, a 20-test synthetic probe/priority decision model, Windows and WSL full-suite runs of 83 tests across 6 lab directories, and a 9-page A4 PDF with all pages reviewed (pages 3–4 also at 140 DPI). The source map distinguishes service documentation from local results and model limits. No Azure authentication, query, probe, WAF request, resource operation or billing query was performed.
+- AZ03-01 passed its lecture gate: Microsoft identity platform, Azure RBAC, Storage and CLI research; three editable mechanism figures; a 17-test synthetic token-boundary/RBAC model; full Windows and WSL suites each passed 100 tests across 7 lab directories; and a 9-page PDF with all pages reviewed at 88 DPI and mechanism/experiment pages additionally reviewed at 140 DPI. No token was acquired, no Azure/Entra/Graph query or role operation was performed, and billing remains unverified. See chapters/AZ03-01/ACCEPTANCE.md.
 
 ## First next action
 
-Research AZ03-01 with current Microsoft Entra ID token and Azure RBAC documentation; design a narrow offline model that separates identity, token audience, action/DataAction and scope inheritance, then run its full lecture acceptance sequence. Do not query Entra ID, Azure RBAC or a subscription before Stage 3 gates.
+Research AZ03-02 with current Microsoft documentation for managed identities, Key Vault and workload federation; design a narrow offline credential-flow model, then run its full lecture acceptance sequence. Do not authenticate to Azure, query a subscription or mutate cloud resources before Stage 3 gates.

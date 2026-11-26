@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 366" width="760" height="366" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif">
+<defs><marker id="marrow1d3b53" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#1d3b53"/></marker><marker id="marrow2e7d55" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#2e7d55"/></marker><marker id="marrowc0504d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#c0504d"/></marker></defs>
+<text x="380" y="23" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12.2" font-weight="700" fill="#1d3b53" text-anchor="middle">先让接收 API 信任这张 token：audience 是资源边界</text>
+<rect x="22" y="82" width="142" height="76" rx="8" ry="8" fill="#f2f5f7" stroke="#9fb3c1" stroke-width="1.4"/>
+<text x="93.0" y="110.96300000000001" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.8" font-weight="700" fill="#41525f" text-anchor="middle">Client</text>
+<text x="93.0" y="126.32100000000001" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.4" font-weight="400" fill="#5d6d7a" text-anchor="middle">asks Entra for</text>
+<text x="93.0" y="138.24900000000002" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.4" font-weight="400" fill="#5d6d7a" text-anchor="middle">API-A access token</text>
+<rect x="210" y="82" width="160" height="76" rx="8" ry="8" fill="#e9eff5" stroke="#1d3b53" stroke-width="1.4"/>
+<text x="290.0" y="111.15849999999999" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.5" font-weight="700" fill="#17384f" text-anchor="middle">Microsoft Entra ID</text>
+<text x="290.0" y="126.12749999999998" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.2" font-weight="400" fill="#22313d" text-anchor="middle">signs token for</text>
+<text x="290.0" y="137.77149999999997" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.2" font-weight="400" fill="#22313d" text-anchor="middle">requested resource</text>
+<rect x="431" y="51" width="146" height="91" rx="8" ry="8" fill="#eaf5ee" stroke="#2e7d55" stroke-width="1.4"/>
+<text x="504.0" y="82.2625" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.5" font-weight="700" fill="#1f5c3d" text-anchor="middle">API-A</text>
+<text x="504.0" y="96.9475" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">check signature + issuer</text>
+<text x="504.0" y="108.3075" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">tenant + audience</text>
+<text x="504.0" y="119.6675" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">time + API policy</text>
+<rect x="617" y="51" width="122" height="91" rx="8" ry="8" fill="#e6f3f3" stroke="#1a8a8f" stroke-width="1.4"/>
+<text x="678.0" y="87.65849999999999" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.5" font-weight="700" fill="#12676b" text-anchor="middle">Accept</text>
+<text x="678.0" y="102.62749999999998" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.2" font-weight="400" fill="#22313d" text-anchor="middle">then evaluate</text>
+<text x="678.0" y="114.27149999999997" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.2" font-weight="400" fill="#22313d" text-anchor="middle">authorization</text>
+<path d="M164 120 L210 120" fill="none" stroke="#1d3b53" stroke-width="1.6" marker-end="url(#marrow1d3b53)" stroke-linejoin="round"/>
+<rect x="156.129" y="103.59" width="61.74200000000002" height="10.14" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="187.0" y="111.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="500" fill="#1d3b53" text-anchor="middle">token request</text>
+<path d="M370 120 L431 104" fill="none" stroke="#2e7d55" stroke-width="1.6" marker-end="url(#marrow2e7d55)" stroke-linejoin="round"/>
+<rect x="372.359" y="95.59" width="56.28200000000001" height="10.14" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="400.5" y="103.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="500" fill="#2e7d55" text-anchor="middle">aud = API-A</text>
+<path d="M577 96 L617 96" fill="none" stroke="#2e7d55" stroke-width="1.6" marker-end="url(#marrow2e7d55)" stroke-linejoin="round"/>
+<rect x="431" y="202" width="146" height="81" rx="8" ry="8" fill="#fbeceb" stroke="#c0504d" stroke-width="1.4"/>
+<text x="504.0" y="233.91299999999998" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.4" font-weight="700" fill="#8e2f2c" text-anchor="middle">API-B</text>
+<text x="504.0" y="248.563" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">audience mismatch</text>
+<text x="504.0" y="259.923" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">reject before RBAC</text>
+<path d="M370 137 L431 235" fill="none" stroke="#c0504d" stroke-width="1.6" marker-end="url(#marrowc0504d)" stroke-linejoin="round"/>
+<rect x="376.582" y="178.59" width="51.83600000000001" height="10.14" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="402.5" y="186.0" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="500" fill="#c0504d" text-anchor="middle">same token</text>
+<rect x="617" y="202" width="122" height="81" rx="8" ry="8" fill="#fdf1e3" stroke="#e0954a" stroke-width="1.4"/>
+<text x="678.0" y="228.9015" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.5" font-weight="700" fill="#9a5a1c" text-anchor="middle">Reject</text>
+<text x="678.0" y="243.16049999999998" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.7" font-weight="400" fill="#22313d" text-anchor="middle">wrong recipient</text>
+<text x="678.0" y="254.09449999999998" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.7" font-weight="400" fill="#22313d" text-anchor="middle">does not mean</text>
+<text x="678.0" y="265.0285" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.7" font-weight="400" fill="#22313d" text-anchor="middle">identity is invalid</text>
+<path d="M577 242 L617 242" fill="none" stroke="#c0504d" stroke-width="1.6" marker-end="url(#marrowc0504d)" stroke-linejoin="round"/>
+<text x="380" y="319" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.2" font-weight="400" fill="#5d6d7a" text-anchor="middle">Model boundary: a fixture boolean stands in for prior signature trust; this lab does not parse or cryptographically validate a JWT.</text>
+<text x="380" y="341" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.6" font-weight="400" fill="#c0504d" text-anchor="middle">A token for Azure Resource Manager is not automatically a token for Azure Storage data endpoints.</text>
+</svg>
