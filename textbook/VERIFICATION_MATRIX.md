@@ -59,6 +59,7 @@ Every lecture and incident will receive its own evidence and limitations before 
 | AZ06-01 | ACCEPTED; 7-page PDF, 5 figures, 6 synthetic cases, 16 local tests; Windows + WSL suites each passed 280 tests across 17 lab directories | Synthetic recovery timestamps, integrity, application-probe, isolation and cleanup gates; no Azure Backup/Site Recovery request, restore, resource operation or billing check |
 | AZ06-02 | ACCEPTED; 7-page PDF, 5 figures, one synthetic banking incident, 30 local tests; Windows + WSL suites each passed 310 tests across 18 lab directories | Synthetic event/ingestion timeline, competing hypotheses, scoped identity repair, same-probe/data checks; none of the twelve live or eight mandatory local incident contracts is marked complete |
 | AZ07-01 | ACCEPTED; 8-page PDF, 5 figures, 26 local model tests; Windows Terraform 1.15.5 init/validate/3 plan-only tests and repository-wide fmt check; Windows + WSL Python suites each passed 336 tests across 19 lab directories | Local built-in terraform_data lab and synthetic reasoning model only; no AzureRM/AzAPI initialization, Azure plan/import, resource operation or billing check; WSL Terraform CLI unavailable |
-| AZ07-02 onward | PLANNED | Not yet authored or run |
+| AZ07-02 | ACCEPTED; 7-page PDF, 5 figures; actual local State lock contention, provider-specific drift and State recovery; 2 Terraform plan tests; Windows + WSL suites each 336 tests across 19 directories | Windows local backend/file locking and hashicorp/local v2.9.1 only; no Azure Blob lease, AzureRM drift, remote backend or billing check; WSL Terraform CLI unavailable |
+| AZ07-03 onward | PLANNED | Not yet authored or run |
 
-All nineteen accepted lecture PDFs are independent outputs in textbook/dist/pdf/. Package verification awaits all 23 chapters.
+All twenty accepted lecture PDFs are independent outputs in textbook/dist/pdf/. Package verification awaits all 23 chapters.

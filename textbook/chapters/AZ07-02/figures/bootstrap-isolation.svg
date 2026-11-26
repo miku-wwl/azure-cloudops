@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="520" viewBox="0 0 1100 520">
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#688091"/></marker><marker id="tealArrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#167e83"/></marker><marker id="redArrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#b76464"/></marker></defs>
+<style>
+:root{--ink:#18334a;--muted:#52697a;--teal:#167e83;--blue:#dcebf2;--tealbg:#e1f1ef;--amber:#f6e7cc;--red:#f6dddd;--paper:#ffffff;--line:#688091;--pale:#f5f8fa}
+text{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;fill:var(--ink)}
+.title{font-size:25px;font-weight:700}.label{font-size:20px;font-weight:700}.body{font-size:16px}.small{font-size:14px;fill:var(--muted)}.tiny{font-size:12px;fill:var(--muted)}
+.box{stroke:#9aaeb9;stroke-width:2;rx:15}.line{stroke:var(--line);stroke-width:3;fill:none}.dash{stroke-dasharray:9 7}.safe{fill:var(--tealbg);stroke:var(--teal)}.cloud{fill:var(--blue);stroke:#477c9b}.warn{fill:var(--amber);stroke:#c18a3a}.bad{fill:var(--red);stroke:#b76464}.neutral{fill:var(--paper);stroke:#8fa2ad}
+</style><rect width="1100" height="520" rx="22" fill="#fff"/>
+<text x="40" y="42" class="title">先造后端，再迁移状态；每个 key 是隔离单元</text>
+<rect x="60" y="102" width="215" height="130" class="box warn"/><text x="87" y="141" class="label">1 · bootstrap</text><text x="87" y="176" class="body">本地 / 单独状态</text><text x="87" y="205" class="small">创建 Storage + container</text>
+<rect x="340" y="102" width="215" height="130" class="box neutral"/><text x="365" y="141" class="label">2 · 配后端</text><text x="365" y="176" class="body">backend azurerm</text><text x="365" y="205" class="small">密钥与参数分开传入</text>
+<rect x="620" y="102" width="215" height="130" class="box cloud"/><text x="648" y="141" class="label">3 · init 迁移</text><text x="648" y="176" class="body">审阅来源 / 目标</text><text x="648" y="205" class="small">备份，再 migrate-state</text>
+<path d="M275 167 H330" class="line" marker-end="url(#arrow)"/><path d="M555 167 H610" class="line" marker-end="url(#arrow)"/>
+<rect x="880" y="102" width="175" height="130" class="box safe"/><text x="905" y="141" class="label">4 · 验证</text><text x="905" y="176" class="body">Plan / key / scope</text><text x="905" y="205" class="small">旧本地状态受保护</text>
+<path d="M835 167 H870" class="line" marker-end="url(#arrow)"/>
+<text x="62" y="293" class="label">container: tfstate</text>
+<rect x="62" y="316" width="455" height="97" class="box cloud"/><text x="89" y="352" class="label">dev / platform.tfstate</text><text x="89" y="383" class="body">lock A · 独立读取/恢复范围</text>
+<rect x="580" y="316" width="475" height="97" class="box safe"/><text x="607" y="352" class="label">prod / platform.tfstate</text><text x="607" y="383" class="body">lock B · 不共享同一 State 生命周期</text>
+<text x="62" y="467" class="small">两把锁互不冲突；但若两个 key 同时管理同一个 Azure 对象，仍会发生双重管理。</text>
+</svg>

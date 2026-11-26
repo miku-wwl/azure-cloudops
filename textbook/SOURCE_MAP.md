@@ -571,3 +571,39 @@ Research date: 2026-11-27. HashiCorp Developer and the official Terraform Regist
 - https://developer.hashicorp.com/terraform/cli/state/mv
 - https://developer.hashicorp.com/terraform/language/resources/terraform-data
 - https://developer.hashicorp.com/terraform/language/tests
+
+## AZ07-02 — Azure Remote State, locking and drift
+
+Research date: 2026-11-27. HashiCorp Developer documents Terraform backend, lock, state, CLI and recovery behavior; Microsoft Learn documents Blob RBAC, versioning and soft-delete behavior. The local lab uses Windows Terraform CLI with the pinned `hashicorp/local` v2.9.1 provider and a local State/file only.
+
+| Chapter section / figure | Claim or teaching point | Source anchor | Classification and limit |
+|---|---|---|---|
+| AZ07-02 §01, Fig 20-1 | AzureRM backend stores State in the selected Blob key; backend credentials must access the Blob data plane; Entra Storage Blob Data Contributor is scoped to the container; ordinary ARM Contributor alone does not grant Blob data access | AzureRM backend docs; Microsoft Storage built-in roles; Blob authorization with Entra ID | SOURCE-ANALYSED; no backend, principal, role or Azure endpoint was configured or queried |
+| AZ07-02 §01 | Backend blocks cannot reference Terraform variables/resources; `.terraform/` may contain initialized backend configuration; `-backend-config` values must be handled as sensitive where appropriate | Terraform backend configuration docs; `terraform init` | SOURCE-ANALYSED; no credential or backend configuration was used |
+| AZ07-02 §02, Fig 20-2 | Terraform locks state for operations that could write when the backend supports it; AzureRM uses Blob leases; the lock protects one key, not distinct keys or duplicate management of an Azure object; `force-unlock` needs the matching lock ID and must not break an active writer | AzureRM backend; state locking; force-unlock | SOURCE-ANALYSED; no Azure Blob lease was acquired or released |
+| AZ07-02 §03, Fig 20-3 | Bootstrap the account/container outside the backend it enables; `init -migrate-state` attempts to migrate existing State while `-reconfigure` disregards old backend config; key and container scopes define different isolation boundaries | Terraform backend and init docs; Microsoft Blob RBAC scope docs | SOURCE-ANALYSED; no remote migration or Azure scope was used |
+| AZ07-02 §04, Fig 20-4 | Normal plan refreshes observable objects and compares against configuration; refresh-only proposes State changes and does not change the remote object; intentional drift requires updating HCL and reviewing a new plan | `terraform plan` docs | SOURCE-ANALYSED; AzureRM drift was not executed |
+| AZ07-02 §04, labs/terraform-state | With Terraform v1.15.5 and local provider v2.9.1, editing the managed file yielded exit code 2 and a `+ create` plan; refresh-only removed the local_file binding while leaving the modified file; normal apply recreated the declared content | `labs/terraform-state/scripts/verify_lab.py`; local provider `local_file` schema docs | LOCAL_VERIFIED 2026-11-27; specific to this provider resource/version, not an AzureRM drift claim |
+| AZ07-02 §05, Fig 20-5 | Blob versioning retains versions on writes but incurs storage; versioning cannot restore deleted accounts/containers; state push has lineage/serial protections that `-force` bypasses | Microsoft Blob versioning/soft-delete docs; Terraform state and state-push docs | SOURCE-ANALYSED; no Blob version or Azure State recovery was performed |
+| AZ07-02 §06, labs/terraform-state | An actual Terraform apply held the Windows local state backend operation open; a second CLI `plan -lock-timeout=0s` against the same state returned `Error acquiring the state lock`; local backend diagnostic reported an OS file-lock conflict | `scripts/hold_state_lock.py`, `scripts/release_state_lock.py`, `scripts/verify_lab.py`; actual CLI transcript in ignored `work/verification.log` | LOCAL_VERIFIED 2026-11-27; Windows local file locking is not Azure Blob lease evidence |
+| AZ07-02 §06, State recovery | `state pull` captured lineage/serial; after moving the state file, `state list` reported no file; `state push` restored `local_file.marker`; next plan returned no changes; destroy removed the local resource | `scripts/verify_lab.py`; Terraform state-backend/state-push docs | LOCAL_VERIFIED 2026-11-27; local state only, no cloud resource restore |
+| AZ07-02 suite | Windows `terraform init -backend=false`, validate, two local plan tests and repository-wide fmt check passed; full Python suites on Windows and WSL each passed 336 tests across 19 lab directories | Terraform CLI output; `textbook/tools/test_all.sh --python`; full project runner | LOCAL_VERIFIED 2026-11-27; WSL has no Terraform CLI |
+| AZ07-02 cost / authorization | No Azure authentication, subscription/ARM/Entra query, Azure provider/backend initialization, Storage request, network probe, mutation or billing request occurred | Session and command execution record | LIVE_NOT_RUN; no project Azure charge from local execution; actual cumulative spend remains NOT_VERIFIED |
+
+### AZ07-02 primary references
+
+- https://developer.hashicorp.com/terraform/language/backend/azurerm
+- https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles/storage
+- https://learn.microsoft.com/en-us/azure/storage/blobs/authorize-access-azure-active-directory
+- https://developer.hashicorp.com/terraform/language/backend
+- https://developer.hashicorp.com/terraform/cli/commands/init
+- https://developer.hashicorp.com/terraform/language/state/locking
+- https://developer.hashicorp.com/terraform/cli/commands/force-unlock
+- https://developer.hashicorp.com/terraform/cli/state/recover
+- https://developer.hashicorp.com/terraform/cli/commands/state/push
+- https://developer.hashicorp.com/terraform/language/state/backends
+- https://developer.hashicorp.com/terraform/cli/commands/plan
+- https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file
+- https://learn.microsoft.com/en-us/azure/storage/blobs/versioning-overview
+- https://learn.microsoft.com/en-us/azure/storage/blobs/soft-delete-blob-overview
+- https://developer.hashicorp.com/terraform/language/state

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="520" viewBox="0 0 1100 520">
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#688091"/></marker><marker id="tealArrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#167e83"/></marker><marker id="redArrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#b76464"/></marker></defs>
+<style>
+:root{--ink:#18334a;--muted:#52697a;--teal:#167e83;--blue:#dcebf2;--tealbg:#e1f1ef;--amber:#f6e7cc;--red:#f6dddd;--paper:#ffffff;--line:#688091;--pale:#f5f8fa}
+text{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;fill:var(--ink)}
+.title{font-size:25px;font-weight:700}.label{font-size:20px;font-weight:700}.body{font-size:16px}.small{font-size:14px;fill:var(--muted)}.tiny{font-size:12px;fill:var(--muted)}
+.box{stroke:#9aaeb9;stroke-width:2;rx:15}.line{stroke:var(--line);stroke-width:3;fill:none}.dash{stroke-dasharray:9 7}.safe{fill:var(--tealbg);stroke:var(--teal)}.cloud{fill:var(--blue);stroke:#477c9b}.warn{fill:var(--amber);stroke:#c18a3a}.bad{fill:var(--red);stroke:#b76464}.neutral{fill:var(--paper);stroke:#8fa2ad}
+</style><rect width="1100" height="520" rx="22" fill="#fff"/>
+<text x="40" y="42" class="title">恢复状态先停止写入，再证明要恢复哪一版</text>
+<rect x="55" y="104" width="205" height="105" class="box bad"/><text x="80" y="144" class="label">冻结 writer</text><text x="80" y="178" class="body">停止 pipeline / CLI</text>
+<rect x="315" y="104" width="205" height="105" class="box neutral"/><text x="340" y="144" class="label">保护副本</text><text x="340" y="178" class="body">state pull / Blob 版本</text>
+<rect x="575" y="104" width="205" height="105" class="box warn"/><text x="600" y="144" class="label">核验身份</text><text x="600" y="178" class="body">key / lineage / serial</text>
+<rect x="835" y="104" width="205" height="105" class="box cloud"/><text x="860" y="144" class="label">隔离恢复</text><text x="860" y="178" class="body">审阅备份，再恢复</text>
+<path d="M260 157 H305" class="line" marker-end="url(#arrow)"/><path d="M520 157 H565" class="line" marker-end="url(#arrow)"/><path d="M780 157 H825" class="line" marker-end="url(#arrow)"/>
+<path d="M935 210 V271 H700" class="line" marker-end="url(#arrow)"/>
+<rect x="418" y="273" width="442" height="92" class="box safe"/><text x="454" y="312" class="label">恢复后先 plan 对账</text><text x="454" y="342" class="body">查绑定、差异、作用范围；必要时再修复对象</text>
+<rect x="85" y="416" width="425" height="75" class="box warn"/><text x="112" y="447" class="label">Blob versioning：保存对象历史</text><text x="112" y="474" class="small">不会阻止 Storage account / container 被删除</text>
+<rect x="590" y="416" width="425" height="75" class="box bad"/><text x="617" y="447" class="label">force-unlock / state push -force</text><text x="617" y="474" class="small">可能绕过并发与 State 身份保护，不能当作常规修复</text>
+<path d="M645 365 V405" class="line dash" marker-end="url(#arrow)"/><path d="M490 209 C460 310 325 338 300 407" class="line dash" marker-end="url(#arrow)"/>
+</svg>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="530" viewBox="0 0 1100 530">
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#688091"/></marker><marker id="tealArrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#167e83"/></marker><marker id="redArrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#b76464"/></marker></defs>
+<style>
+:root{--ink:#18334a;--muted:#52697a;--teal:#167e83;--blue:#dcebf2;--tealbg:#e1f1ef;--amber:#f6e7cc;--red:#f6dddd;--paper:#ffffff;--line:#688091;--pale:#f5f8fa}
+text{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;fill:var(--ink)}
+.title{font-size:25px;font-weight:700}.label{font-size:20px;font-weight:700}.body{font-size:16px}.small{font-size:14px;fill:var(--muted)}.tiny{font-size:12px;fill:var(--muted)}
+.box{stroke:#9aaeb9;stroke-width:2;rx:15}.line{stroke:var(--line);stroke-width:3;fill:none}.dash{stroke-dasharray:9 7}.safe{fill:var(--tealbg);stroke:var(--teal)}.cloud{fill:var(--blue);stroke:#477c9b}.warn{fill:var(--amber);stroke:#c18a3a}.bad{fill:var(--red);stroke:#b76464}.neutral{fill:var(--paper);stroke:#8fa2ad}
+</style><rect width="1100" height="530" rx="22" fill="#fff"/>
+<text x="40" y="42" class="title">漂移是配置、State 与可观测对象三方不一致</text>
+<rect x="65" y="100" width="270" height="115" class="box safe"/><text x="91" y="140" class="label">HCL configuration</text><text x="91" y="178" class="body">期望：setting = blue</text>
+<rect x="415" y="100" width="270" height="115" class="box neutral"/><text x="441" y="140" class="label">当前 Terraform State</text><text x="441" y="178" class="body">上次记录：setting = blue</text>
+<rect x="765" y="100" width="270" height="115" class="box bad"/><text x="791" y="140" class="label">实际对象 / Provider 读取</text><text x="791" y="178" class="body">带外改动：setting = green</text>
+<path d="M335 157 H405" class="line" marker-end="url(#arrow)"/><path d="M685 157 H755" class="line" marker-end="url(#arrow)"/>
+<rect x="117" y="276" width="395" height="105" class="box cloud"/><text x="147" y="317" class="label">正常 plan</text><text x="147" y="349" class="body">读取对象 → 报告漂移 → 提议改回 blue</text>
+<rect x="588" y="276" width="395" height="105" class="box warn"/><text x="618" y="317" class="label">plan -refresh-only</text><text x="618" y="349" class="body">只提议把 State 更新为 green，不改对象</text>
+<path d="M820 215 V263" class="line" marker-end="url(#arrow)"/><path d="M200 215 C200 248 280 245 310 263" class="line" marker-end="url(#arrow)"/>
+<rect x="100" y="430" width="420" height="65" class="box safe"/><text x="128" y="458" class="label">非预期漂移 → 审阅 normal apply 修正对象</text>
+<rect x="580" y="430" width="420" height="65" class="box neutral"/><text x="608" y="458" class="label">有意变更 → 改 HCL，再计划收敛</text>
+<path d="M312 381 V410 H310 V422" class="line" marker-end="url(#arrow)"/><path d="M785 381 V410 H790 V422" class="line" marker-end="url(#arrow)"/>
+</svg>

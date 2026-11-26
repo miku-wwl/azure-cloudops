@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="520" viewBox="0 0 1100 520">
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#688091"/></marker><marker id="tealArrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#167e83"/></marker><marker id="redArrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#b76464"/></marker></defs>
+<style>
+:root{--ink:#18334a;--muted:#52697a;--teal:#167e83;--blue:#dcebf2;--tealbg:#e1f1ef;--amber:#f6e7cc;--red:#f6dddd;--paper:#ffffff;--line:#688091;--pale:#f5f8fa}
+text{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;fill:var(--ink)}
+.title{font-size:25px;font-weight:700}.label{font-size:20px;font-weight:700}.body{font-size:16px}.small{font-size:14px;fill:var(--muted)}.tiny{font-size:12px;fill:var(--muted)}
+.box{stroke:#9aaeb9;stroke-width:2;rx:15}.line{stroke:var(--line);stroke-width:3;fill:none}.dash{stroke-dasharray:9 7}.safe{fill:var(--tealbg);stroke:var(--teal)}.cloud{fill:var(--blue);stroke:#477c9b}.warn{fill:var(--amber);stroke:#c18a3a}.bad{fill:var(--red);stroke:#b76464}.neutral{fill:var(--paper);stroke:#8fa2ad}
+</style><rect width="1100" height="520" rx="22" fill="#fff"/>
+<text x="40" y="42" class="title">后端锁住的是一个 Blob 状态对象</text>
+<rect x="38" y="70" width="485" height="405" rx="20" fill="#f5f8fa" stroke="#b3c2ca" stroke-width="2"/>
+<text x="60" y="104" class="label">Terraform runner</text>
+<rect x="66" y="128" width="425" height="125" class="box neutral"/>
+<text x="90" y="163" class="label">Terraform Core + azurerm backend</text>
+<text x="90" y="195" class="body">配置 / State / Plan / 后端协议</text>
+<text x="90" y="225" class="small">backend 身份与 AzureRM resource provider 分开</text>
+<rect x="67" y="300" width="195" height="105" class="box safe"/>
+<text x="86" y="337" class="label">Entra 身份</text><text x="86" y="368" class="body">OIDC / CLI 等认证</text>
+<rect x="294" y="300" width="197" height="105" class="box warn"/>
+<text x="311" y="337" class="label">数据面权限</text><text x="311" y="368" class="body">容器范围 Blob 读写</text>
+<path d="M260 351 H286" class="line" marker-end="url(#arrow)"/>
+<path d="M485 254 V279 H165 V292" class="line" marker-end="url(#arrow)"/>
+<text x="310" y="280" class="small">获取可访问 Blob 的 token</text>
+<rect x="577" y="92" width="480" height="250" rx="20" fill="#eaf3f7" stroke="#477c9b" stroke-width="2"/>
+<text x="604" y="130" class="label">Azure Storage · Blob data plane</text>
+<rect x="622" y="163" width="388" height="137" class="box cloud"/>
+<text x="651" y="201" class="label">container / state key</text>
+<text x="651" y="235" class="body">state blob contents + Blob lease</text>
+<text x="651" y="270" class="small">租约互斥该 key 的并发写入</text>
+<path d="M523 187 H612" class="line" marker-end="url(#arrow)"/>
+<text x="533" y="175" class="small">HTTPS data calls</text>
+<path d="M612 242 H523" class="line dash" marker-end="url(#tealArrow)"/>
+<text x="534" y="266" class="small">read / write / lease</text>
+<rect x="577" y="380" width="480" height="95" class="box warn"/>
+<text x="603" y="416" class="label">管理面控制是另一套授权</text>
+<text x="603" y="448" class="body">Contributor 不自动授予 Entra Blob 数据读写权限</text>
+<path d="M820 342 V370" class="line dash" marker-end="url(#arrow)"/>
+<text x="836" y="365" class="tiny">仅需查 endpoint 时再考虑 ARM Reader</text>
+</svg>
