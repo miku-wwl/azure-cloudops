@@ -47,6 +47,7 @@ Every lecture and incident will receive its own evidence and limitations before 
 | AZ02-03 | ACCEPTED; 11-page PDF, 3 figures, 18 local tests; full Windows and WSL suites each passed 63 tests across 5 directories | Synthetic DNS/access model; no Azure DNS, PE, TLS, Storage or billing query |
 | AZ02-04 | ACCEPTED; 9-page PDF, 3 figures, 20 local tests; Windows + WSL suites each passed 83 tests across 6 directories | Synthetic probe contracts and priority candidates only; no Azure health, routing, WAF, TLS, network or billing observation |
 | AZ03-01 | ACCEPTED; 9-page PDF, 3 figures, 17 local tests; Windows + WSL suites each passed 100 tests across 7 lab directories | Synthetic token assertions and RBAC fixture only; no JWT, Entra/Azure/Graph query, role change or billing observation |
-| AZ03-02 onward | PLANNED | Not yet authored or run |
+| AZ03-02 | ACCEPTED; 9-page PDF, 3 figures, 16 local tests; Windows + WSL suites each passed 116 tests across 8 lab directories | Synthetic managed-identity selection, FIC match, token claims, network boolean and Key Vault authorization only; no real token, Azure/network request, vault read, role change or billing observation |
+| AZ03-03 onward | PLANNED | Not yet authored or run |
 
 All seven accepted lecture PDFs are independent outputs in textbook/dist/pdf/. Package verification awaits all 23 chapters.

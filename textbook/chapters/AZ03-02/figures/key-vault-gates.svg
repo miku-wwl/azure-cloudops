@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 390" width="760" height="390" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif">
+<defs><marker id="marrowe0954a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#e0954a"/></marker><marker id="marrow1d3b53" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#1d3b53"/></marker><marker id="marrow2e7d55" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#2e7d55"/></marker></defs>
+<text x="380" y="23" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12" font-weight="700" fill="#1d3b53" text-anchor="middle">Key Vault secret read 要同时通过网络、身份认证与数据面授权</text>
+<rect x="22" y="99" width="162" height="119" rx="8" ry="8" fill="#fdf1e3" stroke="#e0954a" stroke-width="1.4"/>
+<text x="103.0" y="137.3025" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.5" font-weight="700" fill="#9a5a1c" text-anchor="middle">1 · Network</text>
+<text x="103.0" y="156.6275" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">DNS / route</text>
+<text x="103.0" y="172.6275" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">firewall / private endpoint</text>
+<text x="103.0" y="188.6275" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">caller path allowed?</text>
+<rect x="217" y="99" width="162" height="119" rx="8" ry="8" fill="#e9eff5" stroke="#1d3b53" stroke-width="1.4"/>
+<text x="298.0" y="137.2435" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.3" font-weight="700" fill="#17384f" text-anchor="middle">2 · Authentication</text>
+<text x="298.0" y="156.4985" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">Entra access token</text>
+<text x="298.0" y="172.4985" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">aud = https://vault.azure.net</text>
+<text x="298.0" y="188.4985" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">tenant + principal</text>
+<rect x="412" y="99" width="162" height="119" rx="8" ry="8" fill="#e6f3f3" stroke="#1a8a8f" stroke-width="1.4"/>
+<text x="493.0" y="137.155" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.0" font-weight="700" fill="#12676b" text-anchor="middle">3 · Data authorization</text>
+<text x="493.0" y="156.305" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="400" fill="#22313d" text-anchor="middle">Azure RBAC mode:</text>
+<text x="493.0" y="172.305" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="400" fill="#22313d" text-anchor="middle">Key Vault Secrets User</text>
+<text x="493.0" y="188.305" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="400" fill="#22313d" text-anchor="middle">or legacy access policy</text>
+<rect x="607" y="99" width="131" height="119" rx="8" ry="8" fill="#eaf5ee" stroke="#2e7d55" stroke-width="1.4"/>
+<text x="672.5" y="137.2435" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.3" font-weight="700" fill="#1f5c3d" text-anchor="middle">4 · Operation</text>
+<text x="672.5" y="156.4985" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">secrets/get</text>
+<text x="672.5" y="172.4985" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">secret value</text>
+<text x="672.5" y="188.4985" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">returned</text>
+<path d="M184 158 L217 158" fill="none" stroke="#e0954a" stroke-width="1.6" marker-end="url(#marrowe0954a)" stroke-linejoin="round"/>
+<path d="M379 158 L412 158" fill="none" stroke="#1d3b53" stroke-width="1.6" marker-end="url(#marrow1d3b53)" stroke-linejoin="round"/>
+<path d="M574 158 L607 158" fill="none" stroke="#2e7d55" stroke-width="1.6" marker-end="url(#marrow2e7d55)" stroke-linejoin="round"/>
+<rect x="106" y="274" width="548" height="69" rx="8" ry="8" fill="#f2f5f7" stroke="#9fb3c1" stroke-width="1.4"/>
+<text x="380.0" y="296.155" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.0" font-weight="700" fill="#41525f" text-anchor="middle">Planes are separate</text>
+<text x="380.0" y="314.30499999999995" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="400" fill="#5d6d7a" text-anchor="middle">Key Vault Contributor manages the vault control plane; it grants no secret data read by itself.</text>
+<text x="380.0" y="329.30499999999995" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.8" font-weight="400" fill="#5d6d7a" text-anchor="middle">Firewall failure is a network result, not proof that the RBAC role is missing.</text>
+<text x="380" y="374" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.1" font-weight="400" fill="#c0504d" text-anchor="middle">Valid identity, correct audience and a data role still cannot bypass a blocked network path.</text>
+</svg>

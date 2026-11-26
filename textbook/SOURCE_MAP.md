@@ -196,3 +196,37 @@ Research date: 2026-11-26. Primary references are Microsoft Learn, Microsoft ide
 - https://learn.microsoft.com/en-us/azure/role-based-access-control/role-assignments-list-cli
 - https://learn.microsoft.com/en-us/cli/azure/role/assignment?view=azure-cli-latest
 - https://learn.microsoft.com/en-us/cli/azure/role/definition?view=azure-cli-latest
+
+## AZ03-02 — Managed Identity, Key Vault and Workload Identity Federation
+
+Research date: 2026-11-26. Claims use Microsoft Learn and the Microsoft REST API reference as primary sources. The Python SDK sample is documented but was not executed against Azure. The local model uses fictional claims and symbolic permissions; it is not a token, identity, network, or Key Vault emulator.
+
+| Chapter section / figure | Claim or teaching point | Source anchor | Classification and limit |
+|---|---|---|---|
+| AZ03-02 §01, Fig 8-1 | System-assigned identity lifecycle follows its Azure host; UAMI lifecycle is independent and can be shared; identity security boundary is the attached resource | Managed identities overview; developer guidance; FAQ | SOURCE-ANALYSED; no identity was created or inspected |
+| AZ03-02 §01 | IMDS default selection depends on system identity and attached UAMIs; explicit selection is recommended even when one UAMI is currently attached; VM token `resource` is the target App ID URI and appears as token audience; `Metadata: true` is required | Managed identities FAQ; VM token acquisition | SOURCE-ANALYSED; no IMDS call or token was requested |
+| AZ03-02 §01 | Azure Identity `ManagedIdentityCredential` accepts a UAMI client ID; Key Vault `SecretClient` accepts the credential and vault URL | Azure Identity Python reference; Key Vault Secrets SDK | DOCUMENTED; code shape checked against current API docs, not executed |
+| AZ03-02 §02, Fig 8-2 | External workload assertion is exchanged for an Entra access token after federated trust; `issuer`, `subject`, and `audience` must match; matching is case-sensitive; common external audience is `api://AzureADTokenExchange` | Workload identity federation; FIC considerations; identity platform breaking changes | SOURCE-ANALYSED; no real OIDC assertion or Entra exchange was used |
+| AZ03-02 §02 | External assertion audience and final Key Vault access-token audience identify different receivers; Key Vault resource audience is `https://vault.azure.net` and REST API scope is `https://vault.azure.net/.default` | Key Vault authentication requests/responses; Key Vault REST API reference | SOURCE-ANALYSED; no access token was acquired or decoded |
+| AZ03-02 §03, Fig 8-3 | Key Vault control and data planes use Entra authentication but independent authorization; Contributor is control plane only; Secrets User reads secret content; RBAC mode invalidates legacy access policies | Key Vault RBAC guide; RBAC migration | SOURCE-ANALYSED; no role assignment or permission model was queried or changed |
+| AZ03-02 §03–05 | Vault network/firewall/private endpoint path is an independent gate from token audience and data authorization; a denied request is not by itself proof of missing RBAC | Key Vault network security; authentication requests/responses | SOURCE-ANALYSED; model reduces network to a boolean and does not issue a request |
+| AZ03-02 §05 | Synthetic identity selection, exact FIC claim match, Key Vault audience/tenant/principal match, network result, and a small role/access-policy mapping | chapters/AZ03-02/labs/credential-flow and 16 tests | LOCAL_VERIFIED 2026-11-26; fixture logic only; full Windows and WSL suites each passed 116 tests in 8 lab directories |
+| AZ03-02 cost / authorization | No real token acquisition, Azure/Entra/Graph/IMDS/OIDC request, Key Vault read, network query, role query/change, resource operation or billing request | Session and command execution record | LIVE_NOT_RUN; actual project billing remains NOT_VERIFIED |
+
+### AZ03-02 primary references
+
+- https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/overview
+- https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/overview-for-developers
+- https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/managed-identities-faq
+- https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/how-to-use-vm-token
+- https://learn.microsoft.com/en-us/python/api/azure-identity/azure.identity.managedidentitycredential?view=azure-python
+- https://learn.microsoft.com/en-us/python/api/overview/azure/keyvault-secrets-readme
+- https://learn.microsoft.com/en-us/entra/workload-id/workload-identity-federation
+- https://learn.microsoft.com/en-us/entra/workload-id/workload-identity-federation-considerations
+- https://learn.microsoft.com/en-us/entra/identity-platform/reference-breaking-changes#august-2024
+- https://learn.microsoft.com/en-us/azure/key-vault/general/authentication-requests-and-responses
+- https://learn.microsoft.com/en-us/rest/api/keyvault/secrets/get-secrets/get-secrets
+- https://learn.microsoft.com/en-us/azure/key-vault/general/rbac-guide
+- https://learn.microsoft.com/en-us/azure/key-vault/general/rbac-migration
+- https://learn.microsoft.com/en-us/azure/key-vault/general/network-security
+- https://learn.microsoft.com/en-us/cli/azure/role/assignment?view=azure-cli-latest

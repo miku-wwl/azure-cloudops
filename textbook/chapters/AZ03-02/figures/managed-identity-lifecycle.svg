@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 390" width="760" height="390" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif">
+<defs><marker id="marrow1d3b53" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#1d3b53"/></marker><marker id="marrow1a8a8f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#1a8a8f"/></marker><marker id="marrowe0954a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0.8 L9.2 5 L0 9.2 z" fill="#e0954a"/></marker></defs>
+<text x="380" y="23" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="12" font-weight="700" fill="#1d3b53" text-anchor="middle">managed identity 把凭证生命周期交给平台；工作负载仍要选对身份</text>
+<rect x="28" y="72" width="305" height="109" rx="8" ry="8" fill="#e9eff5" stroke="#1d3b53" stroke-width="1.4"/>
+<text x="180.5" y="99.332" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.6" font-weight="700" fill="#17384f" text-anchor="middle">System-assigned identity</text>
+<text x="180.5" y="117.692" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">在 Azure resource 上启用</text>
+<text x="180.5" y="132.692" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">生命周期与宿主绑定</text>
+<text x="180.5" y="147.692" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">宿主删除时身份一并删除</text>
+<text x="180.5" y="162.692" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">仅该宿主可使用</text>
+<rect x="427" y="72" width="305" height="109" rx="8" ry="8" fill="#e6f3f3" stroke="#1a8a8f" stroke-width="1.4"/>
+<text x="579.5" y="99.332" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.6" font-weight="700" fill="#12676b" text-anchor="middle">User-assigned identity</text>
+<text x="579.5" y="117.692" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">作为独立 Azure resource 创建</text>
+<text x="579.5" y="132.692" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">生命周期独立于 compute</text>
+<text x="579.5" y="147.692" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">可关联多个宿主</text>
+<text x="579.5" y="162.692" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">适合预授权与可替换工作负载</text>
+<rect x="224" y="228" width="312" height="83" rx="8" ry="8" fill="#eaf5ee" stroke="#2e7d55" stroke-width="1.4"/>
+<text x="380.0" y="256.3025" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="9.5" font-weight="700" fill="#1f5c3d" text-anchor="middle">Azure Identity SDK / managed identity endpoint</text>
+<text x="380.0" y="275.6275" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">选择附加在此宿主上的 identity</text>
+<text x="380.0" y="291.6275" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.0" font-weight="400" fill="#22313d" text-anchor="middle">按目标资源请求 access token</text>
+<path d="M180 181 L300 228" fill="none" stroke="#1d3b53" stroke-width="1.6" marker-end="url(#marrow1d3b53)" stroke-linejoin="round"/>
+<rect x="211.6" y="191.185" width="38.8" height="10.01" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="231.0" y="198.5" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.7" font-weight="500" fill="#1d3b53" text-anchor="middle">宿主提供</text>
+<path d="M580 181 L460 228" fill="none" stroke="#1a8a8f" stroke-width="1.6" marker-end="url(#marrow1a8a8f)" stroke-linejoin="round"/>
+<rect x="509.6" y="191.185" width="38.8" height="10.01" rx="3" ry="3" fill="#ffffff" stroke="none" stroke-width="1.2" opacity="0.92"/>
+<text x="529.0" y="198.5" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.7" font-weight="500" fill="#1a8a8f" text-anchor="middle">显式选择</text>
+<rect x="244" y="329" width="272" height="43" rx="8" ry="8" fill="#fdf1e3" stroke="#e0954a" stroke-width="1.4"/>
+<text x="380.0" y="347.771" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.8" font-weight="700" fill="#9a5a1c" text-anchor="middle">Credential boundary</text>
+<text x="380.0" y="361.50100000000003" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="7.5" font-weight="400" fill="#22313d" text-anchor="middle">宿主上的代码都能请求该宿主可用的 identity token</text>
+<path d="M380 311 L380 329" fill="none" stroke="#e0954a" stroke-width="1.6" marker-end="url(#marrowe0954a)" stroke-linejoin="round"/>
+<text x="380" y="386" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.1" font-weight="400" fill="#c0504d" text-anchor="middle">多份 user-assigned identity 并存时，请显式指定目标 identity；不要把“默认选中”当作稳定合同。</text>
+</svg>
