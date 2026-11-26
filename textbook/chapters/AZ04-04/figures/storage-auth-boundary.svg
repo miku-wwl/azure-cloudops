@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="560" viewBox="0 0 1440 560">
+<defs>
+<marker id="arrow-17324d" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L0,8 L9,4 z" fill="#17324d"/></marker>
+<marker id="arrow-087f8c" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L0,8 L9,4 z" fill="#087f8c"/></marker>
+<marker id="arrow-c96a18" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L0,8 L9,4 z" fill="#c96a18"/></marker>
+<marker id="arrow-23764d" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L0,8 L9,4 z" fill="#23764d"/></marker>
+<marker id="arrow-684bb1" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L0,8 L9,4 z" fill="#684bb1"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="34" y="46" font-family="Aptos,Arial,sans-serif" font-size="27" font-weight="700" fill="#17324d" text-anchor="start">Storage 的管理权限与 Blob 数据权限分属不同授权面</text>
+<text x="34" y="77" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#5d7183" text-anchor="start">网络准入先决定请求能否到达；访问模式随后决定谁能读取或修改对象</text>
+<rect x="42" y="200" width="260" height="112" rx="17" fill="#fff3e5" stroke="#c96a18" stroke-width="2.2"/>
+<text x="172" y="232" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#c96a18" text-anchor="middle">网络可达</text>
+<text x="172" y="261" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="middle">PE / public firewall</text>
+<text x="172" y="286" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="middle">TLS + storage endpoint</text>
+<rect x="388" y="122" width="370" height="112" rx="17" fill="#f2edfb" stroke="#684bb1" stroke-width="2.2"/>
+<text x="573" y="154" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#684bb1" text-anchor="middle">Microsoft Entra + OAuth</text>
+<text x="573" y="183" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="middle">token principal</text>
+<text x="573" y="208" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="middle">Storage Blob Data Reader / Contributor</text>
+<rect x="388" y="263" width="370" height="95" rx="17" fill="#edf5f7" stroke="#087f8c" stroke-width="2.2"/>
+<text x="573" y="295" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#087f8c" text-anchor="middle">SAS</text>
+<text x="573" y="324" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="middle">resource + permission + expiry</text>
+<text x="573" y="349" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="middle">delegated authorization</text>
+<rect x="388" y="384" width="370" height="95" rx="17" fill="#fff3e5" stroke="#c96a18" stroke-width="2.2"/>
+<text x="573" y="416" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#c96a18" text-anchor="middle">Shared Key</text>
+<text x="573" y="445" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="middle">account key authorization</text>
+<text x="573" y="470" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="middle">subject to account policy</text>
+<rect x="888" y="220" width="340" height="142" rx="17" fill="#eaf6ef" stroke="#23764d" stroke-width="2.2"/>
+<text x="1058" y="252" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#23764d" text-anchor="middle">Blob data plane</text>
+<text x="1058" y="281" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">read / write / delete</text>
+<text x="1058" y="306" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">container and blob scope</text>
+<text x="1058" y="331" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#273b4d" text-anchor="middle">object/version state</text>
+<rect x="42" y="398" width="260" height="94" rx="17" fill="#eaf1f8" stroke="#17324d" stroke-width="2.2"/>
+<text x="172" y="430" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#17324d" text-anchor="middle">ARM management plane</text>
+<text x="172" y="459" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="middle">Owner / Contributor</text>
+<text x="172" y="484" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="middle">manage account resource</text>
+<path d="M302,250 L378,178" fill="none" stroke="#c96a18" stroke-width="3" marker-end="url(#arrow-c96a18)"/>
+<path d="M758,178 L878,250" fill="none" stroke="#684bb1" stroke-width="3" marker-end="url(#arrow-684bb1)"/>
+<path d="M758,310 L878,285" fill="none" stroke="#087f8c" stroke-width="3" marker-end="url(#arrow-087f8c)"/>
+<path d="M758,431 L878,330" fill="none" stroke="#c96a18" stroke-width="3" marker-end="url(#arrow-c96a18)"/>
+<path d="M302,440 L382,440" fill="none" stroke="#17324d" stroke-width="3" stroke-dasharray="8 7" marker-end="url(#arrow-17324d)"/>
+<text x="444" y="516" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="700" fill="#aa4052" text-anchor="start">Management role alone ≠ Entra data read; listKeys permission may enable key access if Shared Key is allowed.</text>
+<text x="1190" y="440" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="700" fill="#5d7183" text-anchor="middle">SAS / key do not bypass network rules</text>
+</svg>

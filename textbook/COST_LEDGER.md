@@ -15,6 +15,7 @@
 | AZ04-01 local model | No Azure sign-in, VM/VMSS/monitor query, CLI execution, network probe, resource operation or billing request; no project Azure charge from this local run | Windows + WSL offline tests only |
 | AZ04-02 local model | No Azure sign-in, subscription query, CLI execution, container, probe, identity-token request, resource operation or billing request; no project Azure charge from this local run | Windows + WSL offline tests only |
 | AZ04-03 local model | No Azure sign-in, subscription/CLI request, Kubernetes API request, token, network/DNS probe, resource operation or billing request; no project Azure charge from this local run | Windows + WSL offline tests only; Docker engine unavailable |
+| AZ04-04 local model | No Azure sign-in, control/data-plane query, DNS/network probe, Storage or SQL request, restore, resource operation or billing request; no project Azure charge from this local run | Windows + WSL offline tests only |
 | Current cumulative actual Azure spend | NOT_VERIFIED | Billing data has not been queried; do not report USD 0.00 actual |
 | Current cumulative gross estimate | Not applicable yet | No live experiment has passed L0 scope, pricing and authorization preflight |
 | Remaining ceiling | USD 1.00 nominal; actual headroom unverified | Reconcile gross charges separately from credits and billing |

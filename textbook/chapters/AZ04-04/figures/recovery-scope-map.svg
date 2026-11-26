@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="600" viewBox="0 0 1440 600">
+<defs>
+<marker id="arrow-17324d" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L0,8 L9,4 z" fill="#17324d"/></marker>
+<marker id="arrow-087f8c" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L0,8 L9,4 z" fill="#087f8c"/></marker>
+<marker id="arrow-c96a18" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L0,8 L9,4 z" fill="#c96a18"/></marker>
+<marker id="arrow-23764d" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L0,8 L9,4 z" fill="#23764d"/></marker>
+<marker id="arrow-684bb1" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L0,8 L9,4 z" fill="#684bb1"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="34" y="46" font-family="Aptos,Arial,sans-serif" font-size="27" font-weight="700" fill="#17324d" text-anchor="start">恢复机制必须匹配被删资源、时间窗口与备份位置</text>
+<text x="34" y="77" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#5d7183" text-anchor="start">保护状态、恢复点和目标资源都要在操作前核实</text>
+<rect x="34" y="114" width="672" height="428" rx="18" fill="#f5f9fb" stroke="#cbd9e2"/>
+<rect x="734" y="114" width="672" height="428" rx="18" fill="#f8f5fc" stroke="#d8ccec"/>
+<text x="64" y="153" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#087f8c" text-anchor="start">Azure Storage / Blob</text>
+<text x="764" y="153" font-family="Aptos,Arial,sans-serif" font-size="21" font-weight="700" fill="#684bb1" text-anchor="start">Azure SQL Database</text>
+<rect x="62" y="180" width="290" height="96" rx="17" fill="#edf5f7" stroke="#087f8c" stroke-width="2.2"/>
+<text x="207" y="212" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#087f8c" text-anchor="middle">Blob overwrite/delete</text>
+<text x="207" y="241" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">versions / soft delete</text>
+<text x="207" y="266" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">PITR: block blobs + 3 prerequisites</text>
+<rect x="390" y="180" width="286" height="96" rx="17" fill="#fff3e5" stroke="#c96a18" stroke-width="2.2"/>
+<text x="533" y="212" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#c96a18" text-anchor="middle">Container delete</text>
+<text x="533" y="241" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">container soft delete</text>
+<text x="533" y="266" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">Blob PITR 不还原 container</text>
+<rect x="62" y="300" width="290" height="96" rx="17" fill="#fff0f1" stroke="#aa4052" stroke-width="2.2"/>
+<text x="207" y="332" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#aa4052" text-anchor="middle">Hierarchical namespace</text>
+<text x="207" y="361" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">versioning unsupported</text>
+<text x="207" y="386" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">不能套用 Blob PITR 前提</text>
+<rect x="390" y="300" width="286" height="96" rx="17" fill="#eaf1f8" stroke="#17324d" stroke-width="2.2"/>
+<text x="533" y="332" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#17324d" text-anchor="middle">Account deletion</text>
+<text x="533" y="361" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">account-level recovery plan</text>
+<text x="533" y="386" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">与 blob 级 PITR 不同</text>
+<rect x="62" y="420" width="614" height="84" rx="17" fill="#eaf6ef" stroke="#23764d" stroke-width="2.2"/>
+<text x="369" y="452" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#23764d" text-anchor="middle">核实 scope + retention + 时间点 + 当前数据影响</text>
+<text x="369" y="481" font-family="Aptos,Arial,sans-serif" font-size="15" font-weight="400" fill="#273b4d" text-anchor="middle">启用某项保护，不等于所需恢复点仍然可用</text>
+<rect x="762" y="180" width="290" height="96" rx="17" fill="#f2edfb" stroke="#684bb1" stroke-width="2.2"/>
+<text x="907" y="212" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#684bb1" text-anchor="middle">Recent logical error</text>
+<text x="907" y="241" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">PITR within actual window</text>
+<text x="907" y="266" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">restore creates a new database</text>
+<rect x="1090" y="180" width="286" height="96" rx="17" fill="#fff3e5" stroke="#c96a18" stroke-width="2.2"/>
+<text x="1233" y="212" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#c96a18" text-anchor="middle">Regional outage</text>
+<text x="1233" y="241" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">geo-restore from replicated backup</text>
+<text x="1233" y="266" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">requires GRS / GZRS backup</text>
+<rect x="762" y="300" width="290" height="96" rx="17" fill="#edf5f7" stroke="#087f8c" stroke-width="2.2"/>
+<text x="907" y="332" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#087f8c" text-anchor="middle">Historical full backup</text>
+<text x="907" y="361" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">Long-term retention (LTR)</text>
+<text x="907" y="386" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">up to 10 years when configured</text>
+<rect x="1090" y="300" width="286" height="96" rx="17" fill="#eaf6ef" stroke="#23764d" stroke-width="2.2"/>
+<text x="1233" y="332" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#23764d" text-anchor="middle">Recovery validation</text>
+<text x="1233" y="361" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">data + identity + network</text>
+<text x="1233" y="386" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">then approved application cutover</text>
+<path d="M1052,228 L1082,228" fill="none" stroke="#684bb1" stroke-width="3" marker-end="url(#arrow-684bb1)"/>
+<path d="M1052,348 L1082,348" fill="none" stroke="#087f8c" stroke-width="3" marker-end="url(#arrow-087f8c)"/>
+<text x="1064" y="438" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="700" fill="#aa4052" text-anchor="middle">PITR / geo / LTR restore a new target; they are not failover cutover by themselves.</text>
+<text x="720" y="575" font-family="Aptos,Arial,sans-serif" font-size="18" font-weight="700" fill="#17324d" text-anchor="middle">A backup policy is configuration evidence; a restore drill is recovery evidence.</text>
+</svg>

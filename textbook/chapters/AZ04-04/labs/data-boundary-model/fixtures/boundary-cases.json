@@ -1,0 +1,290 @@
+[
+  {
+    "id": "blob-private-ready",
+    "mode": "blob_read",
+    "private_required": true,
+    "resolved_endpoint": "private",
+    "private_endpoint_approved": true,
+    "private_subresources": ["blob"],
+    "required_subresource": "blob",
+    "private_path_allowed": true,
+    "public_network_enabled": false,
+    "auth_mode": "entra",
+    "token_valid": true,
+    "data_role": "Storage Blob Data Reader",
+    "role_effective": true,
+    "object_state": "present",
+    "expected": "STORAGE_BLOB_READ_READY"
+  },
+  {
+    "id": "blob-private-dns-returns-public",
+    "mode": "blob_read",
+    "private_required": true,
+    "resolved_endpoint": "public",
+    "public_network_enabled": false,
+    "auth_mode": "entra",
+    "token_valid": true,
+    "data_role": "Storage Blob Data Reader",
+    "expected": "STORAGE_DNS_PATH_MISMATCH"
+  },
+  {
+    "id": "adls-dfs-endpoint-missing",
+    "mode": "blob_read",
+    "private_required": true,
+    "resolved_endpoint": "private",
+    "private_endpoint_approved": true,
+    "private_subresources": ["blob"],
+    "required_subresource": "dfs",
+    "expected": "STORAGE_PRIVATE_SUBRESOURCE_MISSING"
+  },
+  {
+    "id": "storage-public-firewall-deny",
+    "mode": "blob_read",
+    "private_required": false,
+    "resolved_endpoint": "public",
+    "public_network_enabled": true,
+    "firewall_default": "Deny",
+    "public_source_allowed": false,
+    "expected": "STORAGE_PUBLIC_FIREWALL_DENY"
+  },
+  {
+    "id": "storage-management-reader-is-not-data-reader",
+    "mode": "blob_read",
+    "resolved_endpoint": "public",
+    "public_network_enabled": true,
+    "public_source_allowed": true,
+    "auth_mode": "entra",
+    "token_valid": true,
+    "data_role": "Reader",
+    "expected": "STORAGE_DATA_ROLE_MISSING"
+  },
+  {
+    "id": "storage-role-not-yet-effective",
+    "mode": "blob_read",
+    "resolved_endpoint": "private",
+    "private_endpoint_approved": true,
+    "private_subresources": ["blob"],
+    "token_valid": true,
+    "data_role": "Storage Blob Data Reader",
+    "role_effective": false,
+    "expected": "STORAGE_ROLE_PROPAGATION_PENDING"
+  },
+  {
+    "id": "storage-sas-does-not-bypass-private-only-network",
+    "mode": "blob_read",
+    "resolved_endpoint": "public",
+    "public_network_enabled": false,
+    "auth_mode": "sas",
+    "sas_valid": true,
+    "expected": "STORAGE_PUBLIC_ENDPOINT_DISABLED"
+  },
+  {
+    "id": "storage-shared-key-disabled",
+    "mode": "blob_read",
+    "resolved_endpoint": "private",
+    "private_endpoint_approved": true,
+    "private_subresources": ["blob"],
+    "auth_mode": "shared_key",
+    "shared_key_allowed": false,
+    "expected": "STORAGE_SHARED_KEY_DISABLED"
+  },
+  {
+    "id": "deleted-blob-with-soft-delete",
+    "mode": "blob_read",
+    "resolved_endpoint": "private",
+    "private_endpoint_approved": true,
+    "private_subresources": ["blob"],
+    "auth_mode": "entra",
+    "token_valid": true,
+    "data_role": "Storage Blob Data Reader",
+    "role_effective": true,
+    "object_state": "deleted",
+    "blob_soft_delete_enabled": true,
+    "expected": "STORAGE_BLOB_DELETED_RECOVERABLE"
+  },
+  {
+    "id": "sql-private-dns-returns-public",
+    "mode": "sql_connect",
+    "private_required": true,
+    "resolved_endpoint": "public",
+    "public_network_enabled": false,
+    "expected": "SQL_DNS_PATH_MISMATCH"
+  },
+  {
+    "id": "sql-private-endpoint-pending-approval",
+    "mode": "sql_connect",
+    "private_required": true,
+    "resolved_endpoint": "private",
+    "private_endpoint_approved": false,
+    "expected": "SQL_PRIVATE_ENDPOINT_NOT_APPROVED"
+  },
+  {
+    "id": "sql-public-firewall-deny",
+    "mode": "sql_connect",
+    "resolved_endpoint": "public",
+    "public_network_enabled": true,
+    "public_source_allowed": false,
+    "expected": "SQL_PUBLIC_FIREWALL_DENY"
+  },
+  {
+    "id": "sql-redirect-ports-blocked-after-handshake",
+    "mode": "sql_connect",
+    "resolved_endpoint": "private",
+    "private_endpoint_approved": true,
+    "private_path_allowed": true,
+    "port_1433_reachable": true,
+    "connection_policy": "Redirect",
+    "redirect_ports_reachable": false,
+    "expected": "SQL_REDIRECT_PORTS_BLOCKED"
+  },
+  {
+    "id": "sql-entra-token-valid-but-principal-missing",
+    "mode": "sql_connect",
+    "resolved_endpoint": "private",
+    "private_endpoint_approved": true,
+    "port_1433_reachable": true,
+    "connection_policy": "Proxy",
+    "tls_hostname_valid": true,
+    "auth_mode": "entra",
+    "token_valid": true,
+    "database_principal_exists": false,
+    "expected": "SQL_DATABASE_PRINCIPAL_MISSING"
+  },
+  {
+    "id": "sql-principal-exists-database-grant-missing",
+    "mode": "sql_connect",
+    "resolved_endpoint": "private",
+    "private_endpoint_approved": true,
+    "port_1433_reachable": true,
+    "connection_policy": "Proxy",
+    "auth_mode": "entra",
+    "token_valid": true,
+    "database_principal_exists": true,
+    "database_permission": false,
+    "expected": "SQL_DATABASE_PERMISSION_DENIED"
+  },
+  {
+    "id": "blob-pitr-valid-block-blob",
+    "mode": "blob_recovery",
+    "resource_scope": "blob",
+    "method": "blob_pitr",
+    "hierarchical_namespace": false,
+    "blob_type": "block",
+    "blob_soft_delete_enabled": true,
+    "change_feed_enabled": true,
+    "versioning_enabled": true,
+    "within_retention": true,
+    "expected": "STORAGE_BLOB_PITR_CANDIDATE"
+  },
+  {
+    "id": "blob-pitr-hierarchical-namespace",
+    "mode": "blob_recovery",
+    "resource_scope": "blob",
+    "method": "blob_pitr",
+    "hierarchical_namespace": true,
+    "expected": "STORAGE_PITR_UNSUPPORTED_HNS"
+  },
+  {
+    "id": "blob-pitr-missing-change-feed",
+    "mode": "blob_recovery",
+    "resource_scope": "blob",
+    "method": "blob_pitr",
+    "hierarchical_namespace": false,
+    "blob_type": "block",
+    "blob_soft_delete_enabled": true,
+    "change_feed_enabled": false,
+    "versioning_enabled": true,
+    "within_retention": true,
+    "expected": "STORAGE_PITR_PREREQUISITES_MISSING"
+  },
+  {
+    "id": "container-deletion-is-outside-blob-pitr-scope",
+    "mode": "blob_recovery",
+    "resource_scope": "container",
+    "method": "blob_pitr",
+    "expected": "STORAGE_RECOVERY_SCOPE_MISMATCH"
+  },
+  {
+    "id": "blob-pitr-expired-window",
+    "mode": "blob_recovery",
+    "resource_scope": "blob",
+    "method": "blob_pitr",
+    "hierarchical_namespace": false,
+    "blob_type": "block",
+    "blob_soft_delete_enabled": true,
+    "change_feed_enabled": true,
+    "versioning_enabled": true,
+    "within_retention": false,
+    "expected": "STORAGE_RECOVERY_POINT_OUTSIDE_RETENTION"
+  },
+  {
+    "id": "container-soft-delete-recovery",
+    "mode": "blob_recovery",
+    "resource_scope": "container",
+    "method": "container_soft_delete",
+    "container_soft_delete_enabled": true,
+    "within_retention": true,
+    "expected": "STORAGE_CONTAINER_RECOVERY_CANDIDATE"
+  },
+  {
+    "id": "sql-pitr-new-database",
+    "mode": "sql_restore",
+    "method": "pitr",
+    "restore_permission": true,
+    "pitr_point_available": true,
+    "target_name_available": true,
+    "expected": "SQL_PITR_NEW_DATABASE"
+  },
+  {
+    "id": "sql-pitr-point-unavailable",
+    "mode": "sql_restore",
+    "method": "pitr",
+    "restore_permission": true,
+    "pitr_point_available": false,
+    "expected": "SQL_PITR_POINT_UNAVAILABLE"
+  },
+  {
+    "id": "sql-geo-restore-gzrs-backup",
+    "mode": "sql_restore",
+    "method": "geo_restore",
+    "restore_permission": true,
+    "backup_redundancy": "GZRS",
+    "geo_point_available": true,
+    "target_name_available": true,
+    "expected": "SQL_GEO_RESTORE_NEW_DATABASE"
+  },
+  {
+    "id": "sql-geo-restore-local-backups-only",
+    "mode": "sql_restore",
+    "method": "geo_restore",
+    "restore_permission": true,
+    "backup_redundancy": "LRS",
+    "geo_point_available": true,
+    "expected": "SQL_GEO_RESTORE_POINT_UNAVAILABLE"
+  },
+  {
+    "id": "sql-ltr-backup-not-verified",
+    "mode": "sql_restore",
+    "method": "ltr",
+    "restore_permission": true,
+    "ltr_backup_verified": false,
+    "expected": "SQL_LTR_BACKUP_UNVERIFIED"
+  },
+  {
+    "id": "sql-restore-target-cannot-be-overwritten",
+    "mode": "sql_restore",
+    "method": "pitr",
+    "restore_permission": true,
+    "pitr_point_available": true,
+    "target_name_available": false,
+    "expected": "SQL_RESTORE_TARGET_NAME_CONFLICT"
+  },
+  {
+    "id": "sql-restore-operator-scope-missing",
+    "mode": "sql_restore",
+    "method": "pitr",
+    "restore_permission": false,
+    "pitr_point_available": true,
+    "expected": "SQL_RESTORE_PERMISSION_MISSING"
+  }
+]

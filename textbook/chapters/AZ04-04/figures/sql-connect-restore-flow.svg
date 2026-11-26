@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="600" viewBox="0 0 1440 600">
+<defs>
+<marker id="arrow-17324d" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L0,8 L9,4 z" fill="#17324d"/></marker>
+<marker id="arrow-087f8c" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L0,8 L9,4 z" fill="#087f8c"/></marker>
+<marker id="arrow-c96a18" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L0,8 L9,4 z" fill="#c96a18"/></marker>
+<marker id="arrow-23764d" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L0,8 L9,4 z" fill="#23764d"/></marker>
+<marker id="arrow-684bb1" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L0,8 L9,4 z" fill="#684bb1"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="34" y="46" font-family="Aptos,Arial,sans-serif" font-size="27" font-weight="700" fill="#17324d" text-anchor="start">Azure SQL 的连接与恢复是两条不同流程</text>
+<text x="34" y="77" font-family="Aptos,Arial,sans-serif" font-size="16" font-weight="400" fill="#5d7183" text-anchor="start">先证明目标 database 可达且可授权，再验证 restore target 和应用切换</text>
+<text x="50" y="138" font-family="Aptos,Arial,sans-serif" font-size="20" font-weight="700" fill="#684bb1" text-anchor="start">连接诊断</text>
+<rect x="52" y="162" width="240" height="94" rx="17" fill="#edf5f7" stroke="#087f8c" stroke-width="2.2"/>
+<text x="172" y="194" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#087f8c" text-anchor="middle">Server FQDN</text>
+<text x="172" y="223" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">normal hostname</text>
+<text x="172" y="248" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">private DNS or public DNS</text>
+<rect x="348" y="162" width="240" height="94" rx="17" fill="#fff3e5" stroke="#c96a18" stroke-width="2.2"/>
+<text x="468" y="194" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#c96a18" text-anchor="middle">Network</text>
+<text x="468" y="223" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">PE / firewall / TCP 1433</text>
+<text x="468" y="248" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">Redirect may use more ports</text>
+<rect x="644" y="162" width="240" height="94" rx="17" fill="#f2edfb" stroke="#684bb1" stroke-width="2.2"/>
+<text x="764" y="194" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#684bb1" text-anchor="middle">TLS + authentication</text>
+<text x="764" y="223" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">validate server name</text>
+<text x="764" y="248" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">Entra token or SQL login</text>
+<rect x="940" y="162" width="240" height="94" rx="17" fill="#eaf1f8" stroke="#17324d" stroke-width="2.2"/>
+<text x="1060" y="194" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#17324d" text-anchor="middle">Database authorization</text>
+<text x="1060" y="223" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">principal / user exists</text>
+<text x="1060" y="248" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">database grants</text>
+<rect x="1234" y="162" width="158" height="94" rx="17" fill="#eaf6ef" stroke="#23764d" stroke-width="2.2"/>
+<text x="1313" y="194" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#23764d" text-anchor="middle">Query</text>
+<text x="1313" y="223" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">data result</text>
+<path d="M292,210 L338,210" fill="none" stroke="#087f8c" stroke-width="3" marker-end="url(#arrow-087f8c)"/>
+<path d="M588,210 L634,210" fill="none" stroke="#c96a18" stroke-width="3" marker-end="url(#arrow-c96a18)"/>
+<path d="M884,210 L930,210" fill="none" stroke="#684bb1" stroke-width="3" marker-end="url(#arrow-684bb1)"/>
+<path d="M1180,210 L1224,210" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow-17324d)"/>
+<line x1="50" y1="302" x2="1390" y2="302" stroke="#d5dfe5" stroke-width="2"/>
+<text x="50" y="350" font-family="Aptos,Arial,sans-serif" font-size="20" font-weight="700" fill="#23764d" text-anchor="start">恢复与切换</text>
+<rect x="52" y="374" width="270" height="100" rx="17" fill="#eaf1f8" stroke="#17324d" stroke-width="2.2"/>
+<text x="187" y="406" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#17324d" text-anchor="middle">Verified backup</text>
+<text x="187" y="435" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">PITR / geo / LTR</text>
+<text x="187" y="460" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">actual point + permissions</text>
+<rect x="400" y="374" width="270" height="100" rx="17" fill="#f2edfb" stroke="#684bb1" stroke-width="2.2"/>
+<text x="535" y="406" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#684bb1" text-anchor="middle">Restore to new DB</text>
+<text x="535" y="435" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">target name must be free</text>
+<text x="535" y="460" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">source remains separate</text>
+<rect x="748" y="374" width="270" height="100" rx="17" fill="#edf5f7" stroke="#087f8c" stroke-width="2.2"/>
+<text x="883" y="406" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#087f8c" text-anchor="middle">Validate target</text>
+<text x="883" y="435" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">row / business invariants</text>
+<text x="883" y="460" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">DNS, identity, TLS, grants</text>
+<rect x="1096" y="374" width="292" height="100" rx="17" fill="#eaf6ef" stroke="#23764d" stroke-width="2.2"/>
+<text x="1242" y="406" font-family="Aptos,Arial,sans-serif" font-size="19" font-weight="700" fill="#23764d" text-anchor="middle">Controlled cutover</text>
+<text x="1242" y="435" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">approved route change</text>
+<text x="1242" y="460" font-family="Aptos,Arial,sans-serif" font-size="14" font-weight="400" fill="#273b4d" text-anchor="middle">measured RTO / RPO</text>
+<path d="M322,424 L390,424" fill="none" stroke="#17324d" stroke-width="3" marker-end="url(#arrow-17324d)"/>
+<path d="M670,424 L738,424" fill="none" stroke="#684bb1" stroke-width="3" marker-end="url(#arrow-684bb1)"/>
+<path d="M1018,424 L1086,424" fill="none" stroke="#087f8c" stroke-width="3" marker-end="url(#arrow-087f8c)"/>
+<text x="720" y="530" font-family="Aptos,Arial,sans-serif" font-size="17" font-weight="700" fill="#aa4052" text-anchor="middle">DNS success, login success, or restore completion each proves only one boundary.</text>
+</svg>

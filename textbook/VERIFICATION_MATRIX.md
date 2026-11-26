@@ -52,6 +52,7 @@ Every lecture and incident will receive its own evidence and limitations before 
 | AZ04-01 | ACCEPTED; 6-page PDF, 3 figures, 18 local tests; Windows + WSL suites each passed 150 tests across 10 lab directories | Synthetic VM lifecycle, VMSS rollout, disk cap and boot/app evidence only; Flexible upgrade-policy docs conflict; no Azure query or resource operation |
 | AZ04-02 | ACCEPTED; 7-page PDF, 4 figures, 16 local tests; Windows + WSL suites each passed 166 tests across 11 lab directories | Synthetic slot swap, warm-up filter, revision/app-scope separation, readiness policy and traffic rollback; no Azure query or resource operation |
 | AZ04-03 | ACCEPTED; 9-page PDF, 5 figures, 21 local tests; Windows + WSL suites each passed 187 tests across 12 lab directories | Synthetic scheduling, scale eligibility, identity matching, ACR authorization, readiness, DNS, PDB and version skew; Docker engine unavailable; no Azure or Kubernetes API operation |
-| AZ04-04 onward | PLANNED | Not yet authored or run |
+| AZ04-04 | ACCEPTED; 8-page PDF, 5 figures, 28 fixture cases, 30 local tests; Windows + WSL suites each passed 217 tests across 13 lab directories | Synthetic DNS/network/auth/data and recovery selection; no Azure query, Storage/SQL request, restore or billing check |
+| AZ05-01 onward | PLANNED | Not yet authored or run |
 
-All twelve accepted lecture PDFs are independent outputs in textbook/dist/pdf/. Package verification awaits all 23 chapters.
+All thirteen accepted lecture PDFs are independent outputs in textbook/dist/pdf/. Package verification awaits all 23 chapters.

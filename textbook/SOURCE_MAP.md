@@ -346,3 +346,35 @@ Research date: 2026-11-26. Microsoft Learn is the primary source. The lab is an 
 - https://learn.microsoft.com/en-us/azure/container-registry/container-registry-rbac-abac-repository-permissions
 - https://learn.microsoft.com/en-us/azure/aks/upgrade-node-pools
 - https://learn.microsoft.com/en-us/azure/aks/upgrade-options
+
+## AZ04-04 — Azure Storage and Azure SQL data boundaries
+
+Research date: 2026-11-27. Microsoft Learn is the primary source. The lab is an offline synthetic decision model; it does not call Azure, query DNS, connect to Storage or SQL, or restore data.
+
+| Chapter section / figure | Claim or teaching point | Source anchor | Classification and limit |
+|---|---|---|---|
+| AZ04-04 §01, Fig 13-1 | Read requests pass through DNS/endpoint, network, authentication/data authorization, and object/database state gates; failures at one gate do not establish the next | Storage network security FAQ; Azure SQL network controls; Blob authorization; SQL Entra authentication | SOURCE-ANALYSED; no client request or identity was observed |
+| AZ04-04 §02, Fig 13-2 | Storage PE routes a normal service FQDN to a private IP through DNS; PE target subresources differ; Storage firewall applies to the public endpoint, while a service endpoint still uses it | Storage private endpoints; private endpoint DNS; Storage network security | SOURCE-ANALYSED; no DNS, PE, route, firewall or service endpoint was queried |
+| AZ04-04 §03, Fig 13-3 | ARM resource roles are distinct from Blob data roles; `listKeys` permission can permit Shared Key access if allowed; SAS/key authorization does not provide network reachability | Blob authorization with Microsoft Entra ID; Storage data authorization | SOURCE-ANALYSED; no role assignment, key, SAS or token was used |
+| AZ04-04 §04, Fig 13-4 | SQL PE does not disable public access by itself; private DNS, Redirect/Proxy transport, Entra authentication, SQL principal and database grants are separate checks | Azure SQL Private Link; connectivity architecture; Entra authentication; connection troubleshooting | SOURCE-ANALYSED; connection policy, ports, DNS, identities and database grants remain unqueried |
+| AZ04-04 §05, Fig 13-5 | Blob versioning/PITR has resource and feature constraints; SQL PITR, geo-restore and LTR use different windows and backup requirements, and backup restores create a new database | Storage data protection; Blob versioning and PITR; SQL automated backups, restore and RTO/RPO | SOURCE-ANALYSED; current protection settings and recoverable backup inventory are unverified |
+| AZ04-04 §06 | Lab classifies 28 synthetic Storage/SQL read and recovery cases with 30 unit tests | `chapters/AZ04-04/labs/data-boundary-model` | LOCAL_VERIFIED 2026-11-27; Windows and WSL suites each passed 217 tests across 13 directories; no service emulation |
+| AZ04-04 cost / authorization | No Azure authentication, control/data-plane query, DNS or network probe, Storage/SQL request, token, restore, resource mutation or billing query was performed | Session and command execution record | LIVE_NOT_RUN; actual cumulative spend remains NOT_VERIFIED |
+
+### AZ04-04 primary references
+
+- https://learn.microsoft.com/en-us/troubleshoot/azure/azure-storage/blobs/networking/storage-network-security-faq
+- https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints
+- https://learn.microsoft.com/en-us/azure/networking/design-guide/dns-security
+- https://learn.microsoft.com/en-us/azure/storage/blobs/authorize-access-azure-active-directory
+- https://learn.microsoft.com/en-us/azure/storage/common/authorize-data-access?tabs=blobs
+- https://learn.microsoft.com/en-us/azure/azure-sql/database/private-endpoint-overview
+- https://learn.microsoft.com/en-us/azure/azure-sql/database/connectivity-architecture
+- https://learn.microsoft.com/en-us/azure/azure-sql/database/authentication-aad-overview
+- https://learn.microsoft.com/en-us/azure/storage/blobs/data-protection-overview
+- https://learn.microsoft.com/en-us/azure/storage/blobs/versioning-overview
+- https://learn.microsoft.com/en-us/azure/storage/blobs/point-in-time-restore-overview
+- https://learn.microsoft.com/en-us/azure/azure-sql/database/automated-backups-overview
+- https://learn.microsoft.com/en-us/azure/azure-sql/database/recovery-using-backups
+- https://learn.microsoft.com/en-us/azure/azure-sql/database/business-continuity-high-availability-disaster-recover-hadr-overview
+- https://learn.microsoft.com/en-us/azure/azure-sql/database/troubleshoot-common-errors-issues
