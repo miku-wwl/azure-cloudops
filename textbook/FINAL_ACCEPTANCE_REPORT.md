@@ -48,6 +48,8 @@ The existing Azure CLI session remained Enabled and on its existing default subs
 
 The Microsoft.ResourceGraph provider is Registered, but installing the official Azure CLI extension failed locally because the embedded Python 3.13.13 pip process could not load `pyexpat`. The existing Azure CLI session then used the documented Resource Graph REST endpoint for an explicit-subscription aggregate query. It returned three `microsoft.network/networkwatchers` resources without truncation, confirming the earlier ARM list; resource names and IDs were not projected or retained. No Azure resource write or provider registration occurred. See L0_READ_ONLY_PREFLIGHT.md for exact evidence and command limits.
 
+The reusable `tools/azure_inventory.py` now automatically falls back to this REST transport when the extension is absent. Its focused 19-test suite and the complete Windows Python suite (530 tests across 24 directories) passed, and a live read-only run completed through the fallback in one page with the same three-resource result. The current Windows Azure CLI `.cmd` launcher is invoked through its bundled Python interpreter without a shell; REST request-body files are deleted after each call.
+
 After recording this evidence, the repository verifier passed 23 curriculum/source/PDF mappings, 155 local Markdown references and 13 catalogue cards. Package verification confirmed 23 PDFs and a 427-file source archive byte-matched to the current source tree; the PDF ZIP SHA-256 remains `575F22B9958B68752B54539534E020902135B04BFF22C0BAF0924C8AA0C65608`. No Azure operation occurred during the documentation/package refresh.
 
 ## Incident state

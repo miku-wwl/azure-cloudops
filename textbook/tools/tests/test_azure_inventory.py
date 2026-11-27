@@ -21,7 +21,7 @@ def row(resource_id: str, name: str, resource_type: str, **extra: Any) -> dict[s
 
 
 def response(rows: list[dict[str, Any]], *, total: int, token: str | None = None) -> str:
-    return json.dumps({"count": len(rows), "data": rows, "skip_token": token, "total_records": total})
+    return json.dumps({"count": len(rows), "data": rows, "skip_token": token, "total_records": total, "resultTruncated": "false"})
 
 
 class FakeRunner:
@@ -29,11 +29,20 @@ class FakeRunner:
         self.results = list(results)
         self.extension = extension or completed('{"name":"resource-graph","version":"1.0.0"}')
         self.calls: list[tuple[list[str], float]] = []
+        self.request_bodies: list[dict[str, Any]] = []
+        self.request_body_paths: list[Path] = []
 
     def __call__(self, command: Sequence[str], timeout: float) -> subprocess.CompletedProcess[str]:
         self.calls.append((list(command), timeout))
         if list(command[:3]) == ["az", "extension", "show"]:
             return self.extension
+        if list(command[:2]) == ["az", "rest"]:
+            body_arg = command[command.index("--body") + 1]
+            if not body_arg.startswith("@"):
+                raise AssertionError("REST body must use Azure CLI's @file syntax")
+            body_path = Path(body_arg[1:])
+            self.request_body_paths.append(body_path)
+            self.request_bodies.append(json.loads(body_path.read_text(encoding="utf-8")))
         result = self.results.pop(0)
         if isinstance(result, BaseException):
             raise result
@@ -56,6 +65,7 @@ class AzureInventoryTests(unittest.TestCase):
         self.assertIn(SUBSCRIPTION, command)
         self.assertNotIn("--subscription", command)
         self.assertIn(SUBSCRIPTION, command[command.index("--graph-query") + 1])
+        self.assertEqual(result["transport"], "az graph")
         self.assertEqual(result["status"], "complete")
 
     def test_follows_continuation_token_and_deduplicates_stable_ids(self) -> None:
@@ -131,14 +141,47 @@ class AzureInventoryTests(unittest.TestCase):
         self.assertEqual(len(runner.calls), 2)
         self.assertEqual(runner.calls[1][0][:3], ["az", "graph", "query"])
 
-    def test_missing_resource_graph_extension_fails_before_query(self) -> None:
-        runner = FakeRunner([], extension=completed(stderr="extension not found", code=1))
-        with self.assertRaises(azure_inventory.InventoryError) as raised:
-            self.inventory(runner).collect()
-        self.assertEqual(raised.exception.code, "EXTENSION_REQUIRED")
-        self.assertEqual(raised.exception.exit_code, azure_inventory.EXIT_DEPENDENCY)
-        self.assertEqual(len(runner.calls), 1)
+    def test_missing_resource_graph_extension_uses_scoped_rest_fallback(self) -> None:
+        runner = FakeRunner(
+            [completed(response([row(RESOURCE_1, "vm-a", "Microsoft.Compute/virtualMachines")], total=1))],
+            extension=completed(stderr="extension not found", code=1),
+        )
+        result = self.inventory(runner, page_size=25, resource_group="lab").collect()
+        self.assertEqual(result["status"], "complete")
+        self.assertEqual(result["transport"], "az rest")
+        self.assertEqual(len(runner.calls), 2)
         self.assertEqual(runner.calls[0][0][:3], ["az", "extension", "show"])
+        rest_command = runner.calls[1][0]
+        self.assertEqual(rest_command[:4], ["az", "rest", "--method", "post"])
+        self.assertIn("api-version=2022-10-01", rest_command[rest_command.index("--uri") + 1])
+        body = runner.request_bodies[0]
+        self.assertEqual(body["subscriptions"], [SUBSCRIPTION])
+        self.assertEqual(body["options"], {"$top": 25})
+        self.assertIn(f"where subscriptionId =~ '{SUBSCRIPTION}'", body["query"])
+        self.assertIn("where resourceGroup =~ 'lab'", body["query"])
+        self.assertFalse(any("extension" in call[0] and "add" in call[0] for call in runner.calls))
+        self.assertFalse(runner.request_body_paths[0].exists())
+
+    def test_rest_fallback_passes_continuation_token_and_counts_pages(self) -> None:
+        runner = FakeRunner(
+            [
+                completed(response([row(RESOURCE_1, "vm-a", "Microsoft.Compute/virtualMachines")], total=2, token="opaque-next")),
+                completed(response([row(RESOURCE_2, "nic-a", "Microsoft.Network/networkInterfaces")], total=2)),
+            ],
+            extension=completed(stderr="extension not found", code=1),
+        )
+        result = self.inventory(runner, page_size=1).collect()
+        self.assertEqual(result["status"], "complete")
+        self.assertEqual(result["pagination"]["pages"], 2)
+        self.assertEqual(runner.request_bodies[0]["options"], {"$top": 1})
+        self.assertEqual(runner.request_bodies[1]["options"], {"$top": 1, "$skipToken": "opaque-next"})
+
+    def test_rest_truncated_result_without_token_fails_closed(self) -> None:
+        raw = json.dumps({"count": 1, "data": [row(RESOURCE_1, "vm-a", "Microsoft.Compute/virtualMachines")], "totalRecords": 1, "resultTruncated": "true"})
+        runner = FakeRunner([completed(raw)], extension=completed(stderr="extension not found", code=1))
+        result = self.inventory(runner).collect()
+        self.assertEqual(result["status"], "incomplete")
+        self.assertEqual(result["error"]["code"], "RESULT_TRUNCATED")
 
     def test_throttled_request_retries_with_bounded_backoff(self) -> None:
         runner = FakeRunner([

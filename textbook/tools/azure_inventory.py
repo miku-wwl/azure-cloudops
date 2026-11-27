@@ -11,13 +11,17 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
+import shutil
 import subprocess
 import sys
+import tempfile
 import time
 import uuid
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any, Callable, Sequence
 
 
@@ -44,6 +48,7 @@ _RETRY_MARKERS = (
     "serviceunavailable", "temporarily unavailable", "http 502", "http 503", "http 504",
 )
 _TRANSIENT_HTTP_STATUS = re.compile(r"\b(?:429|502|503|504)\b")
+_RESOURCE_GRAPH_REST_ENDPOINT = "https://management.azure.com/providers/Microsoft.ResourceGraph/resources?api-version=2022-10-01"
 
 
 @dataclass(frozen=True)
@@ -51,6 +56,7 @@ class Page:
     rows: list[dict[str, Any]]
     skip_token: str | None
     total_records: int | None
+    result_truncated: bool | None
 
 
 class InventoryError(RuntimeError):
@@ -73,8 +79,23 @@ def _safe_error_class(stderr: str) -> tuple[str, str, int, bool]:
 
 
 def _default_runner(command: Sequence[str], timeout: float) -> subprocess.CompletedProcess[str]:
+    args = list(command)
+    if os.name == "nt" and args and args[0].casefold() == "az":
+        launcher = shutil.which("az")
+        if launcher is None:
+            raise FileNotFoundError("Azure CLI was not found on PATH.")
+        launcher_path = Path(launcher)
+        if launcher_path.suffix.casefold() in {".cmd", ".bat"}:
+            # Azure CLI's Windows installer exposes a batch wrapper. Invoke its
+            # bundled interpreter directly so subprocess does not need a shell.
+            cli_python = launcher_path.parent.parent / "python.exe"
+            if not cli_python.is_file():
+                raise FileNotFoundError("Azure CLI's bundled Python launcher was not found.")
+            args = [str(cli_python), "-IBm", "azure.cli", *args[1:]]
+        else:
+            args[0] = launcher
     return subprocess.run(
-        list(command),
+        args,
         check=False,
         capture_output=True,
         text=True,
@@ -111,7 +132,17 @@ def parse_page(raw: str) -> Page:
     if token is not None and (not isinstance(token, str) or not token):
         raise InventoryError("INVALID_RESPONSE", "Azure Resource Graph returned an invalid continuation token.", EXIT_INCOMPLETE)
     total = value.get("total_records", value.get("totalRecords"))
-    return Page(rows=rows, skip_token=token, total_records=_int_or_none(total, "total-record count"))
+    truncated = value.get("result_truncated", value.get("resultTruncated"))
+    if isinstance(truncated, str) and truncated.casefold() in {"true", "false"}:
+        truncated = truncated.casefold() == "true"
+    elif truncated is not None and not isinstance(truncated, bool):
+        raise InventoryError("INVALID_RESPONSE", "Azure Resource Graph returned an invalid truncation flag.", EXIT_INCOMPLETE)
+    return Page(
+        rows=rows,
+        skip_token=token,
+        total_records=_int_or_none(total, "total-record count"),
+        result_truncated=truncated,
+    )
 
 
 def _resource_row(item: dict[str, Any], show_identifiers: bool) -> dict[str, Any]:
@@ -171,21 +202,21 @@ class AzureInventory:
         self.show_identifiers = show_identifiers
         self.runner = runner
         self.sleep = sleep
+        self.transport: str | None = None
 
-    def _require_resource_graph_extension(self) -> None:
-        """Check the local CLI extension without allowing dynamic installation."""
+    def _select_transport(self) -> str:
+        """Prefer az graph when installed; otherwise use the built-in az rest command."""
         try:
             result = self.runner(["az", "extension", "show", "--name", "resource-graph", "--only-show-errors", "--output", "json"], self.timeout)
         except (OSError, subprocess.TimeoutExpired) as exc:
             raise InventoryError("EXTENSION_CHECK_FAILED", "Could not verify the local Azure CLI Resource Graph extension.", EXIT_DEPENDENCY) from exc
         if result.returncode != 0:
-            raise InventoryError("EXTENSION_REQUIRED", "Install the Azure CLI resource-graph extension explicitly before running inventory.", EXIT_DEPENDENCY)
+            return "rest"
         try:
             metadata = json.loads(result.stdout)
-        except (json.JSONDecodeError, TypeError) as exc:
-            raise InventoryError("EXTENSION_CHECK_FAILED", "Azure CLI returned invalid extension metadata.", EXIT_DEPENDENCY) from exc
-        if not isinstance(metadata, dict) or metadata.get("name") != "resource-graph":
-            raise InventoryError("EXTENSION_REQUIRED", "Install the Azure CLI resource-graph extension explicitly before running inventory.", EXIT_DEPENDENCY)
+        except (json.JSONDecodeError, TypeError):
+            return "rest"
+        return "graph" if isinstance(metadata, dict) and metadata.get("name") == "resource-graph" else "rest"
 
     def _query(self) -> str:
         query = (
@@ -196,22 +227,48 @@ class AzureInventory:
             query += f"| where resourceGroup =~ '{self.resource_group}'\n"
         return query + "| project id, name, type, resourceGroup, subscriptionId, location\n| order by id asc"
 
-    def _get_page(self, skip_token: str | None) -> tuple[Page, int]:
-        command = [
-            "az", "graph", "query", "--graph-query", self._query(),
-            "--subscriptions", self.subscription_id,
-            "--first", str(self.page_size), "--only-show-errors", "--output", "json",
-        ]
+    def _run_page(self, transport: str, skip_token: str | None) -> subprocess.CompletedProcess[str]:
+        if transport == "graph":
+            command = [
+                "az", "graph", "query", "--graph-query", self._query(),
+                "--subscriptions", self.subscription_id,
+                "--first", str(self.page_size), "--only-show-errors", "--output", "json",
+            ]
+            if skip_token is not None:
+                command.extend(["--skip-token", skip_token])
+            return self.runner(command, self.timeout)
+
+        options: dict[str, Any] = {"$top": self.page_size}
         if skip_token is not None:
-            command.extend(["--skip-token", skip_token])
+            options["$skipToken"] = skip_token
+        body = {
+            "subscriptions": [self.subscription_id],
+            "query": self._query(),
+            "options": options,
+        }
+        # Azure CLI's JSON argument parsing differs between shells. Use its
+        # documented @file form and remove the scoped request body immediately.
+        with tempfile.TemporaryDirectory(prefix="azure-inventory-") as request_dir:
+            body_path = Path(request_dir) / "request.json"
+            body_path.write_text(json.dumps(body, separators=(",", ":")), encoding="utf-8")
+            command = [
+                "az", "rest", "--method", "post", "--uri", _RESOURCE_GRAPH_REST_ENDPOINT,
+                "--headers", "Content-Type=application/json", "--body", f"@{body_path}",
+                "--only-show-errors", "--output", "json",
+            ]
+            return self.runner(command, self.timeout)
+
+    def _get_page(self, transport: str, skip_token: str | None) -> tuple[Page, int]:
         for attempt in range(self.retries + 1):
             try:
-                result = self.runner(command, self.timeout)
+                result = self._run_page(transport, skip_token)
             except subprocess.TimeoutExpired as exc:
                 if attempt < self.retries:
                     self.sleep(min(0.5 * (2 ** attempt), 8.0))
                     continue
                 raise InventoryError("REQUEST_TIMEOUT", "Azure Resource Graph request exceeded its timeout.", EXIT_TIMEOUT, attempt + 1) from exc
+            except OSError as exc:
+                raise InventoryError("REQUEST_UNAVAILABLE", "Could not prepare or run the Azure Resource Graph request locally.", EXIT_DEPENDENCY, attempt + 1) from exc
             if result.returncode == 0:
                 try:
                     return parse_page(result.stdout), attempt + 1
@@ -225,7 +282,8 @@ class AzureInventory:
         raise AssertionError("retry loop must return or raise")
 
     def collect(self) -> dict[str, Any]:
-        self._require_resource_graph_extension()
+        transport = self._select_transport()
+        self.transport = "az graph" if transport == "graph" else "az rest"
         records: list[dict[str, Any]] = []
         seen_ids: set[str] = set()
         seen_tokens: set[str] = set()
@@ -238,7 +296,7 @@ class AzureInventory:
         duplicate_count = 0
 
         while pages < self.max_pages:
-            page, attempts = self._get_page(skip_token)
+            page, attempts = self._get_page(transport, skip_token)
             pages += 1
             page_row_count += len(page.rows)
             if page.total_records is not None:
@@ -259,6 +317,10 @@ class AzureInventory:
                 seen_ids.add(key)
                 records.append(_resource_row(item, self.show_identifiers))
             next_token = page.skip_token
+            if page.result_truncated is True and next_token is None:
+                return self._result(records, pages, total_records, page_row_count, duplicate_count, warnings, complete=False, error={
+                    "code": "RESULT_TRUNCATED", "message": "Azure Resource Graph marked the response truncated without a continuation token."
+                })
             if next_token is None:
                 break
             if next_token in seen_tokens:
@@ -305,6 +367,7 @@ class AzureInventory:
             "status": "complete" if complete and records else "empty" if complete else "incomplete",
             "scope": {"subscription_id": self.subscription_id, "resource_group": self.resource_group},
             "query": "Azure Resource Graph Resources; projected inventory fields only",
+            "transport": self.transport or "unknown",
             "pagination": {
                 "page_size": self.page_size,
                 "pages": pages,
