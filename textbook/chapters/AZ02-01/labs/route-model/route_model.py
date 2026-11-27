@@ -20,7 +20,22 @@ class UnsupportedRoutingSemantics(ModelError):
 
 
 SOURCE_RANK = {"system": 0, "bgp": 1, "udr": 2}
-SPECIAL_KINDS = {"virtual_network", "virtual_network_peering", "service_endpoint"}
+SPECIAL_KINDS = {
+    "virtual_network", "virtual_network_peering", "service_endpoint",
+    "microsoft_edge", "virtual_appliance_ecmp",
+}
+NEXT_HOP_TYPES = {
+    "Internet", "None", "VirtualAppliance", "VirtualNetworkGateway", "VnetLocal",
+    "VirtualNetwork", "VirtualNetworkPeering", "VirtualNetworkServiceEndpoint",
+    "MicrosoftEdge", "VirtualApplianceEcmp",
+}
+SPECIAL_NEXT_HOP_KINDS = {
+    "VirtualNetwork": "virtual_network",
+    "VirtualNetworkPeering": "virtual_network_peering",
+    "VirtualNetworkServiceEndpoint": "service_endpoint",
+    "MicrosoftEdge": "microsoft_edge",
+    "VirtualApplianceEcmp": "virtual_appliance_ecmp",
+}
 
 
 @dataclass(frozen=True)
@@ -41,11 +56,11 @@ class Route:
         if not isinstance(prefix, ipaddress.IPv4Network):
             raise ModelError("this teaching model supports IPv4 routes only")
         source = row.get("source")
-        if source not in SOURCE_RANK:
+        if not isinstance(source, str) or source not in SOURCE_RANK:
             raise ModelError(f"unsupported route source: {source!r}")
         next_hop_type = row.get("next_hop_type")
-        if not isinstance(next_hop_type, str) or not next_hop_type:
-            raise ModelError("route next_hop_type is required")
+        if not isinstance(next_hop_type, str) or next_hop_type not in NEXT_HOP_TYPES:
+            raise ModelError(f"unsupported route next_hop_type: {next_hop_type!r}")
         next_hop_ip = row.get("next_hop_ip")
         if next_hop_type == "VirtualAppliance":
             try:
@@ -55,9 +70,18 @@ class Route:
             if not isinstance(address, ipaddress.IPv4Address):
                 raise ModelError("this teaching model supports IPv4 appliance addresses only")
             next_hop_ip = str(address)
+        elif next_hop_ip is not None:
+            raise ModelError("next_hop_ip is supported only for a VirtualAppliance route")
         kind = row.get("kind", "ordinary")
-        if kind not in {"ordinary", *SPECIAL_KINDS}:
+        if not isinstance(kind, str) or kind not in {"ordinary", *SPECIAL_KINDS}:
             raise ModelError(f"unsupported route kind: {kind!r}")
+        inferred_kind = SPECIAL_NEXT_HOP_KINDS.get(next_hop_type)
+        if inferred_kind is not None:
+            if kind not in {"ordinary", inferred_kind}:
+                raise ModelError(
+                    f"route kind {kind!r} conflicts with next hop {next_hop_type!r}"
+                )
+            kind = inferred_kind
         return cls(str(row.get("name", row["prefix"])), prefix, source, next_hop_type, next_hop_ip, kind)
 
     def display(self) -> str:

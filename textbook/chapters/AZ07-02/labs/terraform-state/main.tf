@@ -21,10 +21,22 @@ variable "hold_lock" {
   default     = false
 }
 
+variable "import_enabled" {
+  description = "Opt in to a built-in terraform_data identity for import and State-address practice."
+  type        = bool
+  default     = false
+}
+
 resource "local_file" "marker" {
   filename        = "${path.module}/work/managed-marker.txt"
   content         = var.desired_content
   file_permission = "0600"
+}
+
+resource "terraform_data" "imported" {
+  count = var.import_enabled ? 1 : 0
+
+  input = null
 }
 
 resource "terraform_data" "lock_holder" {

@@ -5,7 +5,7 @@ This lab verifies Terraform CLI behavior against a disposable file and local sta
 ## Requirements
 
 - Terraform CLI 1.10 or later (recorded run: Windows Terraform 1.15.5)
-- Python 3, for the lock holder and verification script
+- Python 3.10 or later, for the lock holder and verification script
 - Network access only for the first `terraform init` to download the pinned `hashicorp/local` provider. This is a Terraform Registry package fetch, not an Azure request.
 
 Run all commands from this directory. The root `.gitignore` excludes generated state, `.terraform`, plans, and the `work/` directory. Never commit a real state file or plan.
@@ -20,10 +20,10 @@ terraform plan -no-color
 terraform apply -auto-approve -no-color
 terraform state list
 terraform state show local_file.marker
-terraform state pull | Set-Content -Encoding utf8 work/state-backup.json
+terraform state pull | Set-Content -Encoding utf8NoBOM work/state-backup.json
 ```
 
-The last command creates a local backup that can contain sensitive state values. Keep it in `work/`, which is ignored by Git.
+The last command assumes PowerShell 7 and creates a local backup that can contain sensitive state values. Keep it in `work/`, which is ignored by Git. Inspect the exact lab root and existing local state before running the apply; this root is disposable and its manual exercise updates local Terraform state.
 
 ## Observe genuine local state-lock contention
 
@@ -31,7 +31,13 @@ The last command creates a local backup that can contain sensitive state values.
 2. While terminal A is paused, in terminal B at the same lab directory run `terraform plan -no-color -lock-timeout=0s -var hold_lock=true`. Confirm Terraform itself rejects the operation because the state is locked. Save the actual terminal output as evidence; a diagram, fabricated line, or an unrelated process lock is not evidence.
 3. After observing the actual refusal, run `python scripts/release_state_lock.py` from terminal B. Confirm the first apply completes and releases its lock. Then run `terraform apply -auto-approve -no-color -var hold_lock=false` to remove the temporary `terraform_data.lock_holder` entry from state.
 
-Do not use `-lock=false` or `force-unlock` to make this exercise pass. The local named-pipe gate keeps one actual Terraform operation in flight; the competing operation and refusal are both Terraform CLI processes against the same state. Run `python scripts/verify_lab.py` to reproduce the lock, drift and local State recovery checks and save actual outputs to ignored `work/verification.log`.
+Do not use `-lock=false` or `force-unlock` to make this exercise pass. The local named-pipe gate keeps one actual Terraform operation in flight on Windows; the Unix version uses a local domain socket. The competing operation and refusal are both Terraform CLI processes against the same state. Run `python scripts/verify_lab.py` to reproduce lifecycle, import, lock contention, drift, configuration rollback, and State recovery in a fresh temporary copy of the lab. The script bounds each Terraform command and the total runtime, suppresses raw State output, and removes its temporary State and marker even if a check fails; it does not touch this checkout's current `terraform.tfstate` or `work/` evidence.
+
+## Import and configuration rollback
+
+The automated import case runs the real Terraform CLI `import` command against the built-in `terraform_data.imported[0]` resource with the synthetic ID `synthetic-existing-state-id`, then checks that the plan is empty and removes only the State address. The `terraform_data` importer is local and state-only: it has no cloud or external object. The pinned `hashicorp/local` provider does not implement import for `local_file`, so this exercise does not claim to import a real Azure resource. For an Azure import, use that resource type's documented ID format, confirm the provider supports import, read the current object, and reconcile HCL before applying.
+
+The rollback case edits only the script's isolated copy of `main.tf`, changes the declared marker content, plans and applies that value, restores the original HCL bytes, and produces a second plan/apply to return the file to the prior declaration. It demonstrates configuration reconciliation, not an undo of external side effects or an Azure resource rollback.
 
 ## Observe drift and corrective reconciliation
 

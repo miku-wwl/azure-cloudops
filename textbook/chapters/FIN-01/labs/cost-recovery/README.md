@@ -11,7 +11,7 @@ python textbook/chapters/FIN-01/labs/cost-recovery/finops_contract.py
 python -m unittest discover -s textbook/chapters/FIN-01/labs/cost-recovery/tests -p "test_*.py" -v
 ```
 
-The default report selects `actual` cost. Copy the JSON and change `selected_view` to `amortized` to inspect the alternative representation. The local contract keeps positive gross charges, credits and net cost separate; it resolves one direct or explicitly inherited tag; allocates shared costs only when weights total 100; leaves unexplained records unallocated; measures unused plan commitment per hour; warns on a budget threshold without stopping consumption; and returns review decisions without executing cleanup.
+The default report selects `actual` cost. Copy the JSON and change `selected_view` to `amortized` to inspect the alternative representation. The local contract keeps positive gross charges, credits and net cost separate; it resolves one direct or explicitly inherited tag; allocates shared costs only when weights total 100 using deterministic largest-remainder cent allocation; leaves unexplained records unallocated; measures unused plan commitment per hour; warns on a budget threshold without stopping consumption; and returns review decisions without executing cleanup. This preserves the exact cent total even for one-cent pools and fractional weights.
 
 The checker deliberately does not parse Azure Cost Management exports, enforce Azure tag-inheritance behavior, model taxes/contracts/rerating, emulate reservation matching, evaluate actual retention policy or connect to Azure. A passing report proves only that this synthetic input satisfies these explicit checks.
 

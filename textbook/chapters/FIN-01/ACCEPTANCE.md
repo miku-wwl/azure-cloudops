@@ -1,9 +1,9 @@
 # FIN-01 acceptance — Azure FinOps and resource cost recovery
 
 - Acceptance date: 2026-11-27 (Pacific/Auckland).
-- Gate: ACCEPTED for the offline lecture milestone only; Stage 1 B9 remains separate.
+- Gate: ACCEPTED for the offline lecture milestone; Stage 1 B9 publication acceptance was recorded separately.
 - Deliverable: `textbook/dist/pdf/FIN-01_azure-finops-resource-cost-recovery.pdf`.
-- PDF: 9 pages, 1,745,465 bytes; SHA-256 `B84F35E95AD74B3419618BE5F93990CB98064C93E4A6222459E8F1657A9E06DC`.
+- Stage 1 PDF: 9 pages, 1,745,465 bytes; SHA-256 `B84F35E95AD74B3419618BE5F93990CB98064C93E4A6222459E8F1657A9E06DC`. See the E0 addendum for the corrected artifact hash and size.
 
 ## Scope and learning result
 
@@ -16,7 +16,7 @@ The claim map and research date are recorded in [`textbook/SOURCE_MAP.md`](../..
 - `python textbook/tools/build.py FIN-01` generated nine pages and 10,868 extracted characters. The build report found no placeholder markers. Page fill was 20%, 99%, 66%, 83%, 95%, 86%, 89%, 93% and 59%, including the intentionally sparse cover.
 - Every page was rendered and visually reviewed in page pairs at 88 DPI and 140 DPI. The first review caught duplicate section numbering and an incomplete source-output excerpt; these were corrected before the final rebuild. Final title hierarchy, figures, table, code output, references, margins, page breaks and numbering were checked without clipping or corruption.
 - The synthetic ledger baseline reports USD 180.50 gross charges, USD 12.00 credits, USD 168.50 net, USD 171.00 allocated gross and USD 9.50 unallocated gross. These values are fictional lab data, not an Azure estimate or bill.
-- FIN-01's local suite passed 27 tests. The full Python suite passed on Windows and in the `devops-lab` WSL distribution: 402 tests across 22 test directories, zero failing directories.
+- Stage 1 baseline: FIN-01's local suite passed 27 tests. The full Python suite passed on Windows and in the `devops-lab` WSL distribution: 402 tests across 22 test directories, zero failing directories. See the E0 addendum for the corrected current test count.
 - The teaching model separates gross charges, credits and net; selects one view at a time; checks allocation reconciliation and tag inheritance; reports budget thresholds as `alert_only`; calculates hourly unused commitment; and returns review decisions without resource changes. It is not a Cost Management export parser, Azure pricing engine, reservation matcher, or deletion tool.
 
 ## Authorization, live scope and cost boundary
@@ -28,3 +28,10 @@ No actual Azure cost is estimated or claimed. The future read-only query has no 
 ## Release decision
 
 The research-backed chapter, editable figures, local synthetic lab, documented read-only procedure, PDF and visual checks meet the FIN-01 offline lecture gate. Stage 1's B9 package acceptance and all Stage 2 engineering gates remain separate.
+
+## E0 independent-audit addendum (2026-11-27)
+
+- Audit defect: shared allocations rounded every cost-center share independently to cents. A one-cent 50/50 pool rounded to zero total and failed the reconciliation gate; other fractions could create or lose cents.
+- Correction: use deterministic largest-remainder allocation in integer cents, with stable cost-center ordering for equal remainders. Add regression coverage for one-cent and two-cent pools; the suite now has 29 tests, all passing on Windows Python 3.13.9.
+- The historical Stage 1 PDF values remain unchanged because the fixture weights divide evenly. The chapter and lab text now state the cents-preserving rule. The updated nine-page PDF was rebuilt (10,913 extracted characters; no placeholder markers), rendered as five page-pair sheets, and every page was visually checked. Current artifact: 1,749,094 bytes; SHA-256 `C706F37752378D0D4A80463532CF76A8301D6BF75DB0A0BAC6E1F2E94AE3A880`.
+- The full Windows and WSL suites each pass 407 tests across 22 directories. No Azure pricing or billing query was made. Updated source and PDF ZIP consistency remain part of Stage 2 publication acceptance.

@@ -107,4 +107,62 @@ svg('state-recovery.svg', '''
 <path d="M645 365 V405" class="line dash" marker-end="url(#arrow)"/><path d="M490 209 C460 310 325 338 300 407" class="line dash" marker-end="url(#arrow)"/>
 ''', 520)
 
+svg('controlled-delivery.svg', '''
+<text x="40" y="42" class="title">审批必须指向同一份可执行字节</text>
+<rect x="35" y="82" width="225" height="350" class="box neutral"/>
+<text x="57" y="120" class="label">计划输入</text>
+<text x="57" y="157" class="body">Git commit + 环境</text>
+<text x="57" y="184" class="body">订阅 + 资源组</text>
+<text x="57" y="211" class="body">Provider lock 摘要</text>
+<rect x="55" y="239" width="185" height="78" class="box cloud"/>
+<text x="73" y="270" class="label">二进制 Plan</text>
+<text x="73" y="298" class="small">精确 SHA-256</text>
+<text x="57" y="356" class="small">敏感文件在仓库外</text>
+<text x="57" y="384" class="small">审阅同一摘要</text>
+
+<rect x="310" y="82" width="230" height="350" class="box safe"/>
+<text x="333" y="120" class="label">外部批准边界</text>
+<text x="333" y="157" class="body">服务端审批 / signer</text>
+<rect x="330" y="181" width="190" height="133" class="box neutral"/>
+<text x="346" y="213" class="body">签名载荷包括</text>
+<text x="346" y="242" class="small">代码 · 目标 · lock · Plan</text>
+<text x="346" y="269" class="small">operation · approver</text>
+<text x="346" y="296" class="small">time · expiry · run ID</text>
+<text x="333" y="356" class="body">Ed25519 signature</text>
+<text x="333" y="384" class="small">私钥留在受保护签发端</text>
+
+<rect x="590" y="82" width="235" height="350" class="box warn"/>
+<text x="613" y="120" class="label">验证与准入</text>
+<text x="613" y="157" class="body">仓库外 trust store</text>
+<text x="613" y="184" class="small">摘要由受保护配置固定</text>
+<text x="613" y="225" class="body">验签 + 身份 + scope</text>
+<text x="613" y="252" class="small">commit / env / sub / RG</text>
+<text x="613" y="279" class="small">lock / Plan / time / run</text>
+<text x="613" y="320" class="body">动作分类 + 一次 nonce</text>
+<text x="613" y="357" class="small">同一 target scope 加锁</text>
+<text x="613" y="385" class="small">delete 要求独立许可</text>
+
+<rect x="875" y="82" width="190" height="350" class="box cloud"/>
+<text x="898" y="120" class="label">精确执行</text>
+<rect x="896" y="157" width="148" height="78" class="box safe"/>
+<text x="910" y="188" class="body">密封 Plan 副本</text>
+<text x="910" y="216" class="small">再次核对摘要</text>
+<text x="898" y="278" class="body">terraform apply</text>
+<text x="898" y="310" class="small">仅 workload identity</text>
+<text x="898" y="350" class="body">AzureRM backend</text>
+<text x="898" y="381" class="small">Blob lease 锁一个 key</text>
+
+<path d="M260 250 H300" class="line" marker-end="url(#arrow)"/>
+<text x="263" y="235" class="tiny">摘要 + scope</text>
+<path d="M540 250 H580" class="line" marker-end="url(#arrow)"/>
+<text x="543" y="235" class="tiny">签名 envelope</text>
+<path d="M825 250 H865" class="line" marker-end="url(#tealArrow)"/>
+<text x="828" y="235" class="tiny">精确副本</text>
+
+<rect x="62" y="476" width="976" height="100" class="box bad"/>
+<text x="86" y="516" class="label">拒绝</text>
+<text x="180" y="516" class="body">缺件 / 过期 / 错签名 · commit、scope 或 lock 不同 · Plan 被改 · 未授权身份</text>
+<text x="180" y="549" class="body">nonce 重放 / 并发执行 · delete 没有独立的破坏性许可</text>
+''', 610)
+
 print(f'Wrote {len(list(OUT.glob("*.svg")))} editable mechanism figures to {OUT}')

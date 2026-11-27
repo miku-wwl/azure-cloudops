@@ -20,6 +20,44 @@ The output path is textbook/dist/pdf/<id>_<slug>.pdf. A build and automated repo
 
 The collection package is accepted only with exactly 23 PDFs. The source package includes editable sources and Terraform dependency lock files, and excludes build directories, provider caches, local-only redaction maps, raw state and plans. Optional local secret-pattern scans use tools/sensitive.local.txt, which is ignored by Git.
 
+## Local lab lifecycle harness (E2)
+
+Run the local-only harness from the repository root:
+
+```powershell
+python textbook/tools/labctl.py preflight --target-scope local
+$run = python textbook/tools/labctl.py setup --target-scope local | ConvertFrom-Json
+$runDir = $run.run_dir
+python textbook/tools/labctl.py baseline --target-scope local --run-dir $runDir
+python textbook/tools/labctl.py test --target-scope local --run-dir $runDir
+python textbook/tools/labctl.py inject --target-scope local --run-dir $runDir
+python textbook/tools/labctl.py diagnose --target-scope local --run-dir $runDir
+python textbook/tools/labctl.py recover --target-scope local --run-dir $runDir
+python textbook/tools/labctl.py test --target-scope local --run-dir $runDir
+python textbook/tools/labctl.py residual --target-scope local --run-dir $runDir
+python textbook/tools/labctl.py teardown --target-scope local --run-dir $runDir --confirm-run-id $run.run_id
+```
+
+All commands require the explicit `local` target. The harness uses a deterministic synthetic fixture under a new, tool-owned temporary directory; it makes no network request, launches no child process, and implements no Azure operation. Teardown requires the exact run ID, a healthy fixture and a clean file list. Unknown files are reported as residuals and preserved. `SMOKE-LOCAL` validates lifecycle and cleanup mechanics only; it is not one of the eight mandatory incident experiments and is not evidence of Azure or network behavior.
+
+Run the cross-platform Python test aggregate with `python textbook/tools/test_python.py`; `bash textbook/tools/test_all.sh --python` calls the same runner in WSL. Every test directory runs in a separate process with a five-minute timeout. Shared tests live in `tools/tests/` and are included in the aggregate.
+
+## Terraform checks (E3)
+
+The opt-in Azure reference is at `textbook/terraform/azure-enterprise-reference/`; reusable modules are in `textbook/terraform/modules/`. Run `python textbook/tools/verify_terraform.py` or `bash textbook/tools/test_all.sh --terraform`. The runner discovers test roots from `*.tftest.hcl`, checks recursive Terraform formatting, then runs backend-free init, validate, and mock-provider tests. It strips `ARM_*`, `AZURE_*`, and `TF_*` child environment values, disables CLI/OIDC/MSI authentication, and uses a temporary empty CLI config. It does not call Azure CLI or execute apply/destroy. Registry downloads are required for provider schema and test verification.
+
+Every test block in the Azure reference uses `command = plan`, mock providers, and fake scope identifiers. Azure feature flags default off. Provider registration is disabled for AzureRM and AzAPI. See `../terraform/azure-enterprise-reference/README.md` for exact scope, cost, and cleanup limits.
+
+## State and controlled delivery (E4)
+
+`../chapters/AZ07-02/labs/terraform-state/scripts/verify_lab.py` reproduces the genuine local lifecycle, built-in `terraform_data` import, local backend lock contention, local-file drift, HCL configuration rollback, state recovery, and destroy sequence inside a bounded temporary copy. Its import case changes only the local State address; it does not import a cloud object. See the lab README for its exact boundary.
+
+`controlled_apply.py` applies only a sealed copy of a saved Terraform plan after checking the clean Git SHA, exact Azure target variables, provider lock digest, plan digest, Ed25519 signature, trusted key-set digest, signer identity/operation policy, approval time, run ID, nonce, and a same-filesystem target lock. The approval, trust store, plan artifact, and persistent control directory must be outside the checkout. The private signing key and protected key-set digest must come from a separate trusted release service. The CLI requires workload identity federation and rejects long-lived credentials; it does not create or configure the approval service, Azure DevOps Environment checks, or a distributed replay/lock service.
+
+Install its Python dependency with `python -m pip install -r textbook/tools/requirements-controlled-apply.txt`. Unit tests use temporary generated keys and a synthetic plan-JSON fixture. They do not invoke Terraform apply or Azure. Terraform `show -json` can expose sensitive State/Plan values, so the production verifier parses it in memory and must not print it. For a distributed Azure DevOps deployment, configure the Environment approval and exclusive-lock checks server-side and use durable shared replay protection; the local directory lock is not distributed.
+
+The separate `../terraform/azure-remote-state-backend/` root contains conditional Azure Storage backend HCL using Entra ID/OIDC and Blob-key locking. The sample expects an existing state account/container and has not been initialized. Do not run `terraform init` against it without a separately authorized Stage 3 scope.
+
 ## Azure Portal captures
 
 Capture only an existing owner-authorized browser session and navigate read-only. Do not create resources, save configuration, enable a paid service or change identity/tenant settings. Use console_prep.js only as a visual redaction aid; review the resulting image before it enters the chapter. The script redacts Azure resource paths, GUIDs, email addresses and IP addresses and supports additional local substitutions through window.__AZURE_REDACTIONS__. Do not place live replacement values in tracked files. Never claim a screenshot is genuine unless it was actually captured from the interface.

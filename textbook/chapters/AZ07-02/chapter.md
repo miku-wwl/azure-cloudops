@@ -91,16 +91,37 @@ Terraform 的 `terraform state pull` 可作为受保护的恢复副本。`terraf
 
 对僵持锁也采用证据判断，而非直接执行 `force-unlock`。如果原进程仍在刷新或应用，解除租约会允许第二个写者进入同一状态区；若操作意外终止且 lock 已残留，先调查执行器和后端状态，再用自己的 lock ID 解除。不要在共享状态练习里用人工加锁、sleep 日志或伪造提示替代 Terraform CLI 的真实竞争结果。[6][7]
 
-## 本地实验：先看到真正的 lock refusal
+## 批准必须绑定到同一份代码、State 与计划
 
-在 `labs/terraform-state/`，Terraform 本地 backend 与 `hashicorp/local` Provider 只管理实验目录中的 State 和文本文件；Registry 下载固定 Provider，不初始化 Azure Provider。完整手动步骤在同目录 `README.md`，自动复验入口如下：
+评审者点过“Approve”并不自动说明即将执行的字节仍是他看过的那份。受控交付要把 Git commit、环境、订阅、资源组、Provider lockfile 摘要、二进制 Plan 摘要、操作种类、审批身份、审批时间、失效时间和流水线 run ID 组成一个签名载荷。验证端从外部保护配置取得公钥集合，并先核对它的固定 SHA-256；只有签名可验证、身份和范围在该 key 的 allowlist 内、时间有效且当前 run 完全匹配，才继续。可编辑的 JSON 只是承载这些声明，Ed25519 签名才证明声明未被改写。[14][16]
+
+Terraform 的 `terraform show -json` 能提供 `resource_changes[].change.actions`，但机器 JSON 也可能显示敏感 State 与 Plan 值。验证器在内存里解析密封的 Plan 副本，不把 JSON 写入日志；只接受 `applyable=true` 且没有错误的 Plan，检查 Plan 自带的 `target_subscription_id` 和 `target_resource_group_name`，并将所有 `delete`（包括替换中的 delete）归入单独的破坏性操作。默认审批不能执行该操作。执行端先以原子目录锁排除同机同范围并发，再一次性登记 nonce，最后把同一份摘要核验过的 Plan 副本交给 `terraform apply`。失败后 nonce 仍已消费，必须重新生成计划和审批。[15][17]
+
+![图 20-6：计划摘要连同代码与 Provider lockfile 进入签名审批；外部受保护的信任配置、目标范围、时间和操作策略共同决定是否放行。密封 Plan 副本只进入一次 apply；nonce 与范围锁抵挡重放和同机并发。](figures/controlled-delivery.svg)
+
+这条链有两种不同的互斥：本地原子目录仅在多个执行进程共享同一受保护文件系统时有效；生产流水线还必须在 Azure DevOps Environment 上配置服务端独占锁与审批，并把可持久化的防重放存储放到受保护的共享服务。AzureRM Blob lease 则保护一个远端 State key 的 Terraform 写操作。任何一层都不能替代其他层。流水线 YAML 可以引用 Environment，却不能自行证明该 Environment 的服务端审批、检查、分支策略或权限已配置。[1][6]
+
+仓库中的 `tools/controlled_apply.py` 实现验证器，不包含审批私钥或真实审批发行端。单元测试每次在临时目录生成一次性 Ed25519 密钥，验证绑定和拒绝路径；它证明本地代码合同，不是 Azure DevOps 服务端审批，也不是已配置的生产信任根。Azure 远端 backend 的可选 HCL 位于 `terraform/azure-remote-state-backend/`，保留 Entra ID + OIDC 参数，并刻意没有运行 `terraform init`。[1][16]
+
+```python
+signer["public_key"].verify(signature, canonical_json(payload))
+...
+if sha256_file(sealed_plan).casefold() != authorization.plan_sha256:
+    raise ApprovalError("sealed plan changed before Terraform apply")
+```
+
+这段代码只证明签名与计划副本相符；可信签发身份仍依赖部署平台从仓库外注入、并保护摘要固定值和信任密钥文件。使用前必须在受保护服务端配置审批人、scope、独占锁、授权身份和持久防重放策略，并用受控的 workload identity 限定后端 Blob 数据面权限。不得把签名 JSON、公钥摘要配置或可编辑的 pipeline YAML 单独当作信任根。[16]
+
+## 本地实验：先看到真正的 lock refusal {.pagebreak}
+
+在 `labs/terraform-state/`，Terraform 本地 backend 与 `hashicorp/local` Provider 只管理实验目录中的 State 和文本文件；内建 `terraform_data` import 演练只写本地 State，不代表导入了外部对象。Registry 下载固定 Provider，不初始化 Azure Provider。完整手动步骤在同目录 `README.md`，自动复验入口如下。脚本将所需文件复制到新建的系统临时目录，限定每个命令和总运行时间，抑制原始 State 输出，并在成功或失败时删除临时 State；不会覆盖当前 checkout 中已有的 State、证据或 `work/` 文件：
 
 ```powershell
 terraform init -input=false
 python scripts/verify_lab.py
 ```
 
-Windows Terraform 1.15.5 的实测中，Apply 正持有本地 State 时，第二个 Terraform `plan -lock-timeout=0s` 进程收到 `Error acquiring the state lock`。带外改文件触发 exit code 2 和 local provider 的 `+ create`；refresh-only 移除了 State 绑定而未改文件，普通 Apply 随后恢复声明内容。把 State 文件移开后，`state push` 从备份恢复了 `local_file.marker`，后续 Plan 为 0 差异；最后本地资源已 destroy。这里验证的是 Windows 本地文件锁、local Provider 行为和 Terraform State CLI，不是 Azure Blob lease 或 AzureRM drift 实测。
+Windows Terraform 1.15.5 的实测中，Apply 正持有本地 State 时，第二个 Terraform `plan -lock-timeout=0s` 进程收到 `Error acquiring the state lock`。导入 `terraform_data.imported[0]` 后 Plan 为 0 差异，再用 `state rm` 移除该 state-only 地址。带外改文件触发 exit code 2 和 local provider 的 `+ create`；refresh-only 移除了 State 绑定而未改文件，普通 Apply 随后恢复声明内容。改写临时 HCL 中的期望内容后，Apply 更新文件；恢复原 HCL 并生成新 Plan，Apply 把文件恢复到旧声明。把 State 文件移开后，`state push` 从备份恢复了 `local_file.marker`，后续 Plan 为 0 差异；最后本地资源已 destroy。这里验证的是 Windows 本地文件锁、local Provider 行为和 Terraform State CLI，不是 Azure Blob lease 或 AzureRM drift 实测。
 
 ::: lab
 **评审题**：两个独立 key 若同时声明管理同一个 NSG，为什么租约仍挡不住双重管理？如果事故期间的带外修改需要保留，应先改哪份配置，何时选择 refresh-only，最终用什么 Plan 和业务检查证明恢复？哪些结论必须等 Stage 3 才能用 Azure 证据确认？
@@ -121,5 +142,9 @@ Windows Terraform 1.15.5 的实测中，Apply 正持有本地 State 时，第二
 11. [Blob versioning](https://learn.microsoft.com/en-us/azure/storage/blobs/versioning-overview) — 每次写入生成版本、成本与账户/容器删除限制。
 12. [Blob soft delete](https://learn.microsoft.com/en-us/azure/storage/blobs/soft-delete-blob-overview) — 软删除与 versioning 的交互。
 13. [Terraform state](https://developer.hashicorp.com/terraform/language/state) — State 文件、备份和本地状态风险。
+14. [Terraform import command](https://developer.hashicorp.com/terraform/cli/commands/import) — 资源类型决定 ID 形式，且并非每种资源均支持 ImportState。
+15. [Terraform `show`](https://developer.hashicorp.com/terraform/cli/commands/show) 与 [Terraform JSON output format](https://developer.hashicorp.com/terraform/internals/json-format) — `terraform show -json` 可检查 saved Plan 的 actions；JSON 可能包含敏感状态与计划值。
+16. [Ed25519 signing and verification](https://cryptography.io/en/latest/hazmat/primitives/asymmetric/ed25519/) — 本地 verifier 所用签名 API；验证仍依赖外部可信公钥来源和身份策略。
+17. [terraform_data](https://developer.hashicorp.com/terraform/language/resources/terraform-data) 与本讲 Stage 2 实现和离线测试：`textbook/tools/controlled_apply.py`、`textbook/tools/tests/test_controlled_apply.py`、`textbook/terraform/azure-remote-state-backend/`。本地拒绝/通过合同已执行；Azure DevOps 环境、远端 backend 与生产信任根均 NOT_RUN。
 
 ---

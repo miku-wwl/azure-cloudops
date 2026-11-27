@@ -124,7 +124,7 @@ az network watcher show-next-hop `
 - **前提**：Python 3.11+；本地终端；无需 Azure CLI、身份登录、订阅或容器。
 - **输入**：`labs/route-model/scenarios/banking-hub-spoke.json`，所有地址、VM、NVA 与路由均为合成数据。
 - **方法**：IPv4 前缀包含与窄化的路由选择；遇到特殊 system route 或同优先级多路由时拒绝猜测。
-- **验证**：运行 13 个单元测试，并分别检查 `/24`、`/16`、`/0`、None blackhole、asymmetric 与 symmetric 路径。
+- **验证**：运行 16 个单元测试，并分别检查 `/24`、`/16`、`/0`、None blackhole、asymmetric 与 symmetric 路径；负例还验证未知 next-hop 拼写和无效 next-hop IP 会被拒绝。
 - **成本与清理**：程序没有 Azure API；不创建网络或其他资源。可删除本地 `__pycache__`。
 :::
 
@@ -139,6 +139,8 @@ Pop-Location
 ::::
 
 **本地观察（2026-11-26，Python 3.13.9）：** 13 个单元测试通过。`172.20.40.15` 选择 `/24` UDR；`172.20.8.15` 选择同前缀 UDR 而不是 BGP；非合作方目的选择 `/0` UDR 而不是 system Internet。返回通过 `10.20.0.8` 的变体被标记 `ASYMMETRIC_AT_STATEFUL_INSPECTOR`；回到 `.4` 的变体被标记 `SYMMETRIC_THROUGH_INSPECTOR`。
+
+**E0 审计复验（2026-11-27）：** 发现模型原先接受拼错的 `next_hop_type`，可能把无效 fixture 当成有效选路；现依官方 next-hop 类型边界拒绝未知值、拒绝非 `VirtualAppliance` 路由上的 `next_hop_ip`，并自动将已知特殊 next-hop 标为不支持而不猜测。新增 3 个负例，16 个测试通过。现有 Azure 行为仍未查询。
 
 ~~~text
 return-via-other-nva:

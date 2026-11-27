@@ -1,7 +1,7 @@
 # Azure CloudOps & Enterprise Infrastructure — V3 工程实施与学习路线图
 
 > **版本：** V3.1 implementation contract / 2026-11-26；承接 V3.0，增加已批准的三阶段交付顺序与 USD 1.00 累计 Azure 费用边界。
-> **当前状态：** Stage 1 B2 进行中；B0 出版基础完成，已验收 AZ00-01、AZ01-01、AZ02-01、AZ02-02 与 AZ02-03，下一讲 AZ02-04。Stage 1 的教材实验为本地验证；实时 Azure 验证尚未进行。
+> **当前状态（2026-11-27）：** Stage 1 B0–B9、Stage 2 E0–E4 离线门槛已完成；当前进入 E5 Azure DevOps 交付。Master prompt 的 GitHub Actions/secret-scan 验收和 Stage 2 最终发布包仍未完成。Stage 3 Azure 只读预检尚未开始。
 > **原始 V3 基线：** miku-wwl/azure-cloudops main，提交 853ba6cbaa4ee67e448550fbe192c6c89b24fd2f；该提交已与 origin/main 同步。
 > **目标：** Azure Cloud / Senior Infrastructure / Platform / SRE / DevOps Engineer，尤其适合金融等重视安全、治理、变更与恢复的企业环境。  
 > **学习原则：** 不重复 AZ-104、AZ-305、Terraform 认证备考；以技术机制、工程实施、独立排障和可复验结果为主。
@@ -19,13 +19,18 @@ V2 的 M0–M9 全部保留其核心学习目标，但不再以十个孤立知�
 
 本次切换时目标仓库 main 和 origin/main 均为批准基线 853ba6c。工作仅在 main 持续前进，不创建分支或 PR。AWS 参考仓库在 b44160ea0f864ce7edf40cc0edb402cb53687a63 上只读分析，不修改。
 
-#### 0.1.1 当前执行记录
+#### 0.1.1 当前执行记录（更新至 2026-11-27）
 
-- B0 已完成：AWS 参考章节、离线实验、Terraform mock、SVG 工具、截图脱敏、出版工具、CI 源码和代表性 PDF 已检查；AWS PDF/source ZIP 只读一致性检查通过；Azure 出版工具可用。
-- B1 完成 2/2 讲：AZ00-01 与 AZ01-01 已研究、编写、绘图、运行适用的本地实验并检查最终 PDF。B2 当前完成 3/4 讲：AZ02-01、AZ02-02 与 AZ02-03 均通过 source map、本地测试及逐页 PDF 审阅；下一讲 AZ02-04。逐讲证据见对应 chapter/ACCEPTANCE.md。
-- Azure Portal 截图、Azure RBAC/provider 实际验证和费用尚未查询或运行。
-- Stage 2 和 Stage 3 未开始。当前没有为项目创建或修改 Azure 资源；Azure billing 实际值尚未查询，不能写作 USD 0.00 actual.
-- 本机检查发现 Podman 未安装。其余运行时能力须按阶段实际探测，不以命令存在代替运行通过。
+- Stage 1 B0–B9 完成：23/23 讲、PDF、源稿与逐讲 acceptance 均已交付；历史 B9 验收详见 `textbook/RELEASE_ACCEPTANCE.md`。该较窄 B9 不代表 master prompt 的 hosted CI、secret scan 或 PDF/UA 验收已通过。
+- Stage 2 E0 完成：审计发现并修正 FIN-01 成本分摊分币错误、AZ02-01 路由模型接受无效 next-hop contract，以及 AZ07-02 本地 Terraform State verifier 对 checkout 状态和失败清理的安全问题。修复、测试和证据见 `textbook/E0_INDEPENDENT_AUDIT.md` 及对应 chapter acceptance addenda。
+- E0 回归：Windows 与 WSL 各通过 407 个 Python 测试、22 个目录；Windows Terraform 1.15.5 递归 fmt 通过，两 Terraform roots backend-free init/validate 与 5 个 mock contract tests 通过。三个修订 PDF 共 24 页已逐页复看。
+- E1 已完成：三个不同用途的架构视图和六个 ADR 已写入 `textbook/architecture/`，本地检查确认 3 个 Mermaid 图、6 个 ADR、内部链接无缺失。
+- E2 已完成：Windows/WSL 工具清单、可复用本地生命周期命令和公共 Python 测试入口已在工作树；两端各通过 418 tests/23 directories，合成 smoke 的 teardown 后残留检查通过。Docker Linux Engine 缺失，因此未生成 kind/k3d 运行证据。
+- E3 已完成：`textbook/terraform/azure-enterprise-reference/` 锁定 AzureRM 5.15.0 与 AzAPI 2.14.0，覆盖网络、VM、AKS/ACR、身份、Key Vault、Storage、监控、Recovery Services 与 audit-only Policy；所有资源旗标默认关闭，存在准确范围/成本/运行时前置条件，并关闭自动 Provider 注册。Windows Terraform 1.15.5 通过 chapter/terraform 递归 fmt、3 roots 的 backend-free init/validate 和 13 个 plan-only 测试运行；Azure root 8 个 mock-provider 场景全过。Windows 和 WSL Python suites 各 429 tests/23 directories；静态合同检查强制所有 Terraform test 为 plan-only，并实测环境凭据移除。AZ07-01 的 9 页新版在 88/140 DPI 逐页检查。Stage 2 禁止创建或修改 Azure 资源；Stage 3 L0 尚未开始。详见 `textbook/E3_TERRAFORM_ENGINEERING.md`。
+- E4 已完成：精确 Plan 签名包验证器绑定 Git SHA、环境和订阅/RG、Provider lock、Plan hash、操作、审批身份/时间、run/approval ID 与一次性 nonce；隔离 sealed Plan，破坏性操作独立授权，并在本地拒绝重放、并发及不安全 Azure 凭据回退。外部 trust store 和 trust digest 需受保护平台注入；未实现 signer、Azure DevOps 服务端 Environment checks 或分布式锁。AzureRM OIDC backend 仅通过 `init -backend=false`/validate，远端 init 未运行。AZ07-02 的 9 页/6 图教材完成复排；本地 Terraform 锁竞争、state-only import、drift、HCL rollback、State 恢复和 destroy 通过。Windows/WSL 各通过 458 tests/23 directories；无 Azure API、远端状态、资源操作或账单查询。详见 `textbook/E4_STATE_CONTROLLED_DELIVERY.md`。
+- 当前阶段为 E5；之后依次 E6–E10。Stage 3 尚未执行 Azure 登录、订阅查询、账单查询或资源操作。
+- Docker Desktop Linux Engine 在之前的 host 检查中不可用；开始 E2 时重新检查。Azure CLI 命令存在不代表登录、scope 或授权可用。
+- 实际累计 Azure 支出：`NOT_VERIFIED`。USD 1.00 总上限、USD 0.70 计划线和 USD 0.30 清理/未知费用余量继续适用；不得声明 actual spend 为 USD 0.00。
 
 #### 0.1.2 旧 P0–P8 与 E0–E10 的关系
 
@@ -426,6 +431,6 @@ P0–P1 优先建立最小可运行骨架；P2–P6 按阶段增加真实练习�
 - [Azure Resource Inventory](https://github.com/microsoft/ARI)
 - [Azure pricing calculator](https://azure.microsoft.com/en-us/pricing/calculator/)
 
-## 11. 当前交接指令
+## 11. 执行与授权边界
 
-本次 V3 文档更新不启动工程，不登录 Azure，不创建资源，不新增任何目录/工作流/实验结果。保持 `PLANNED`，所有 live 场景 `NOT_RUN`。下一次独立实施任务从 P0 开始：先确认实际仓库与工作环境，再形成架构和实验合同、服务覆盖矩阵、风险/成本边界以及可复验的阶段验收清单；提交前审查实际 diff。没有获得所有者指令，不自动推进后续阶段或启用付费资源。
+原始 2026-11-26 文档更新的交接约束仅适用于当时，不限制后续获批工程。本轮 owner 已通过 master prompt 与“开始执行”授权连续推进 Stage 1–3，并授权对 main 提交/推送已验证增量。Stage 2 继续禁止 Azure 资源创建或修改；Stage 3 先执行授权范围内的 L0 只读预检。任何 live 资源变更仍必须拥有对应实验的明确授权、精确资源/scope allowlist 和可复核成本估算；USD 1.00 是全项目累计上限，可靠成本无法估计则不部署。

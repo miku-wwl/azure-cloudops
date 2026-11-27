@@ -80,6 +80,27 @@ class RouteModelTests(unittest.TestCase):
         with self.assertRaises(ModelError):
             RouteModel(document)
 
+    def test_unknown_next_hop_spelling_is_rejected(self):
+        document = load_document()
+        document["route_tables"]["rt-payments"]["routes"][0]["next_hop_type"] = "VirtualApppliance"
+        with self.assertRaisesRegex(ModelError, "next_hop_type"):
+            RouteModel(document)
+
+    def test_next_hop_ip_is_rejected_for_non_appliance_route(self):
+        document = load_document()
+        document["route_tables"]["rt-payments"]["routes"][0]["next_hop_type"] = "Internet"
+        with self.assertRaisesRegex(ModelError, "only for a VirtualAppliance"):
+            RouteModel(document)
+
+    def test_special_service_endpoint_route_is_refused_without_manual_tag(self):
+        document = load_document()
+        document["subnets"]["payments"]["system_routes"].append(
+            {"name": "service-endpoint", "prefix": "198.51.100.0/24", "source": "system",
+             "next_hop_type": "VirtualNetworkServiceEndpoint"}
+        )
+        with self.assertRaises(UnsupportedRoutingSemantics):
+            RouteModel(document).select("payments", "198.51.100.7")
+
     def test_duplicate_prefixes_in_one_route_table_are_rejected(self):
         document = load_document()
         duplicate = copy.deepcopy(document["route_tables"]["rt-payments"]["routes"][0])

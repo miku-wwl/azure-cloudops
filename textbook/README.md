@@ -9,6 +9,13 @@ This directory is the single authoritative home for the 23 lecture sources, edit
 - LIVE_LAB_INDEX.md — twelve incident contracts and their evidence status.
 - COST_LEDGER.md — cumulative Azure estimate, actual-billing status and budget controls.
 - VERIFICATION_MATRIX.md — independent evidence-state definitions.
+- E0_INDEPENDENT_AUDIT.md — E0 findings, corrections and current offline re-verification.
+- E3_TERRAFORM_ENGINEERING.md — E3 provider configuration, locked versions, fail-closed guards and offline verification evidence.
+- E4_STATE_CONTROLLED_DELIVERY.md — E4 local State lifecycle/import/recovery, signed exact-plan gate, and conditional Azure Storage backend evidence and limits.
+- architecture/ — E1 enterprise/local/conditional-live views and architecture decision records.
+- LAB_ENVIRONMENT.md and E2_LOCAL_SUBSTRATE.md — checked local tool inventory and E2 runner/lifecycle acceptance.
+- terraform/azure-enterprise-reference/ and E3_TERRAFORM_ENGINEERING.md — E3 AzureRM/AzAPI reference root, reusable modules, plan-only mock tests, and provider/authentication safeguards.
+- terraform/azure-remote-state-backend/ and tools/controlled_apply.py — conditional OIDC Azure Storage backend and signature-verified saved-plan apply gate; remote backend and service-side approval remain NOT_RUN.
 - REFERENCE_ANALYSIS.md — B0 AWS source and publication audit.
 - tools/ — adapted, reproducible publication and offline verification tools.
 - chapters/<lecture-id>/ — chapter.md, figures, screenshots and only the applicable lab sources.

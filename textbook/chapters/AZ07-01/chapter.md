@@ -148,6 +148,24 @@ terraform -chdir=textbook/chapters/AZ07-01/labs/terraform-core test
 
 labs/core-model/ 的标准库 Python 模型补充了 Provider 选择、DAG 排序、State 一对一绑定、生命周期动作和导入计划检查。它是显式简化的教学模型，不是 Terraform Core 的另一种实现，不验证 AzureRM/AzAPI schema、Azure API 行为、真实 State、Provider 注册或云端 Plan。
 
+## E3 扩展实验：用真实 Provider schema 做离线 Plan
+
+Stage 2 增加了一个独立 Azure reference root：`textbook/terraform/azure-enterprise-reference/`。它使用可复用的 network、private endpoint、VM、AKS、Key Vault、Storage、Registry 与 monitoring modules，并在 root 组合身份、角色、Recovery Services vault 和 AzAPI policy assignment。它消费明确的既有 resource group，不创建 resource group。
+
+该 root 锁定 AzureRM 5.15.0 与 AzAPI 2.14.0。Provider 配置关闭 CLI、MSI 与 OIDC 登录路径，并将 AzureRM 的自动 resource-provider 注册设为 `none`；AzAPI 使用 `skip_provider_registration = true`。资源类别全部默认关闭。若以后启用资源，Terraform preconditions 还要求准确的订阅/资源组 allowlist、书面授权引用、成本估算、短运行时和剩余预算。AKS 的 node resource group 也必须单独加入 allowlist，因为 AKS 会在其中创建资源。
+
+资源安全字段还需结合服务路径理解：VM 只接受 SSH public key 且没有 public IP；AKS 控制平面使用 private cluster；Storage、Key Vault 与 ACR 使用 private endpoint；Storage 关闭 shared key；Key Vault 启用 RBAC 与 purge protection。Log Analytics 把 Entra authentication 作为本地认证的关闭条件，但互联网 ingestion/query 仍开启，因为本模块没有构建 Private Link Scope。Key Vault 删除后仍可能处于软删除保留期；Recovery Services vault 本身尚无 backup policy 或受保护项目。这些选项不能单凭 `terraform validate` 推导出端到端服务可用，任何 live 设计都须再次核实目标区域、SKU、网络和费用。
+
+E3 的 `terraform test` 明确使用 mock providers，而且每条 `run` 都写 `command = plan`。代表性测试覆盖默认零 Azure 类别、私网 Storage、audit-only (`DoNotEnforce`) Policy、完整企业类别图，以及未授权、未列入 allowlist、超预算负例。执行入口还会从子进程环境移除 `ARM_*`、`AZURE_*` 与 `TF_*` 变量。Registry 下载 provider 是网络访问，但 mock test 不向 Azure 发请求、不注册 provider、不 apply 或 destroy。成功只证明本地 HCL/schema/plan 合同；不证明 API、DNS、RBAC propagation、价格或真实 Azure 行为。[20–23]
+
+```powershell
+python textbook/tools/verify_terraform.py
+```
+
+该执行入口覆盖全仓 Terraform roots：recursive fmt check、`terraform init -backend=false`、validate 与 mock-provider tests。不要把 mock test 的费用输入样例当成价格资料；它只是验证本地 guard 的合成数值。
+
+::: {.pagebreak}
+
 ::: lab
 **练习：审阅一个 Terraform 变更**
 
@@ -182,3 +200,7 @@ labs/core-model/ 的标准库 Python 模型补充了 Provider 选择、DAG 排�
 
 18. [terraform_data](https://developer.hashicorp.com/terraform/language/resources/terraform-data) — Terraform 内建资源生命周期，不直接创建远端基础设施。
 19. [Terraform tests](https://developer.hashicorp.com/terraform/language/tests) — plan 命令与 expect_failures 检查。
+20. [AzureRM Provider (locked 5.15.0)](https://registry.terraform.io/providers/hashicorp/azurerm/5.15.0/docs) — provider authentication and resource-provider registration settings.
+21. [AzAPI Provider (locked 2.14.0)](https://registry.terraform.io/providers/Azure/azapi/2.14.0/docs) — provider authentication and registration behavior.
+22. [Terraform provider mocking](https://developer.hashicorp.com/terraform/language/tests/mocking) — mock_provider and synthetic plan values.
+23. [Terraform test command](https://developer.hashicorp.com/terraform/cli/commands/test) — run commands and plan-only tests.

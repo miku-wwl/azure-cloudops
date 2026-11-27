@@ -7,7 +7,7 @@ cost allocation service, reservation matcher, or deletion tool.
 
 import json
 import sys
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal, InvalidOperation, ROUND_DOWN
 from pathlib import Path
 
 
@@ -97,8 +97,36 @@ def summarize(data, view=None):
             weight_total = sum((money(weight) for weight in weights.values()), Decimal("0.00"))
             if weight_total != Decimal("100.00"):
                 raise ContractError(f"shared weights must total 100: {row['id']}")
-            for cost_center, weight in weights.items():
-                share = (amount * money(weight) / Decimal("100")).quantize(CENT)
+            if any(not isinstance(cost_center, str) or not cost_center for cost_center in weights):
+                raise ContractError(f"shared cost-center names must be non-empty strings: {row['id']}")
+
+            # Allocate integer cents by the largest-remainder method. Independent
+            # rounding can lose or create cents (for example, 1 cent split 50/50).
+            total_cents = int((amount / CENT).to_integral_exact())
+            exact_cents = {
+                cost_center: Decimal(total_cents) * money(weight) / Decimal("100")
+                for cost_center, weight in weights.items()
+            }
+            cents = {
+                cost_center: int(value.to_integral_value(rounding=ROUND_DOWN))
+                for cost_center, value in exact_cents.items()
+            }
+            remainder = total_cents - sum(cents.values())
+            remainder_order = sorted(
+                exact_cents,
+                key=lambda cost_center: (
+                    -(exact_cents[cost_center] - Decimal(cents[cost_center])),
+                    cost_center.casefold(),
+                    cost_center,
+                ),
+            )
+            if remainder < 0 or remainder > len(remainder_order):
+                raise ContractError(f"shared allocation rounding could not reconcile: {row['id']}")
+            for cost_center in remainder_order[:remainder]:
+                cents[cost_center] += 1
+
+            for cost_center, allocated_cents in cents.items():
+                share = Decimal(allocated_cents) * CENT
                 allocations[cost_center] = allocations.get(cost_center, Decimal("0.00")) + share
                 shared_allocations[cost_center] = shared_allocations.get(cost_center, Decimal("0.00")) + share
             continue

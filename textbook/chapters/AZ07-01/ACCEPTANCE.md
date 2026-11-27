@@ -7,12 +7,12 @@
 ## Publication artifact
 
 - PDF: textbook/dist/pdf/AZ07-01_terraform-core-provider-graph-state-plan-import.pdf
-- Pages: 8.
-- Size: 1,556,167 bytes.
-- SHA-256: f97417d58cba31e0298f24aafc7ed67e5c3bd442d6fb379594967c2fbca629d
-- Publisher QA: 9,890 extracted characters; no placeholder markers or overflow warnings.
-- Page fill ratios: 25%, 96%, 99%, 75%, 65%, 91%, 62%, 59%.
-- All eight pages were rendered and visually reviewed at 88 and 140 DPI. Pages 7–8 were rechecked after the last reference update.
+- Pages: 9.
+- Size: 1,634,307 bytes.
+- SHA-256: 19C9C7A4BB23FF258214EC2954A016271C043B0D2B9236C1EE7931831C4674A5
+- Publisher QA: 11,981 extracted characters; no placeholder markers or overflow warnings.
+- Page fill ratios: 25%, 96%, 99%, 75%, 65%, 91%, 96%, 31%, 69%.
+- All nine pages were rendered and visually reviewed at 88 and 140 DPI. Pages 7–9 were rechecked after the E3 extension and exercise reflow.
 
 ## Technical and teaching evidence
 
@@ -32,6 +32,14 @@
 - No Azure sign-in, Azure/ARM/Entra query, Azure provider initialization or registration, resource mutation, live plan/import, network probe, or billing query was performed.
 - This chapter's local execution made no Azure request or project Azure resource charge. Actual cumulative Azure spend remains NOT_VERIFIED.
 - Stage 2 E3 Terraform engineering and Stage 3 authorization/cost gates remain outstanding for the overall project.
+
+## E3 engineering addendum (2026-11-27)
+
+- Added a separate AzureRM/AzAPI reference root plus reusable modules for networking, private endpoints, Linux VM, AKS, ACR, managed identity, Key Vault, private Storage, Log Analytics, and supporting services. The root uses an existing resource group and enables no Azure resources by default.
+- Locked `hashicorp/azurerm` 5.15.0 and `Azure/azapi` 2.14.0 after current-version verification and successful Windows provider installation. `terraform validate` checked all module resource schemas. AzureRM resource-provider registration is `none`; AzAPI registration is skipped; provider CLI/MSI/OIDC login is disabled for this root.
+- Windows Terraform 1.15.5: repository-wide chapter/terraform recursive fmt check passed; backend-free init, validate, and Terraform tests passed in all three Terraform roots. AZ07 E3 mock suite passed 8/8; all eight runs specify `command = plan`. Full Windows Python suite passed 428 tests across 23 directories.
+- Test runner removes Azure credential and `TF_*` override environment variables. It makes no Azure API call and invokes no Azure apply/destroy. Provider packages were downloaded from Terraform Registry. Provider schema validation and mocked plans are local evidence only.
+- Actual Azure authorization, regional support, private DNS, RBAC propagation, service functionality, live pricing and actual billing remain unverified. The guard defaults remain closed; no Azure resource, billing or subscription request was made.
 
 ## Reproduction
 

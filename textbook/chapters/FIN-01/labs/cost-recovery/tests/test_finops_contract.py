@@ -74,6 +74,34 @@ class FinOpsContractTests(unittest.TestCase):
         self.assertEqual(report["shared_by_cost_center"]["Payments"], Decimal("21.00"))
         self.assertEqual(report["shared_by_cost_center"]["Analytics"], Decimal("9.00"))
 
+    def test_one_cent_shared_pool_reconciles_with_deterministic_remainder(self):
+        data = {
+            "selected_view": "actual",
+            "cost_records": [{
+                "id": "one-cent", "view": "actual", "currency": "USD", "amount": "0.01",
+                "shared_weights": {"Beta": "50.00", "Alpha": "50.00"},
+            }],
+        }
+        report = fc.summarize(data)
+        self.assertEqual(report["gross_charges"], Decimal("0.01"))
+        self.assertEqual(report["allocated_gross"], Decimal("0.01"))
+        self.assertEqual(report["shared_by_cost_center"], {
+            "Alpha": Decimal("0.01"), "Beta": Decimal("0.00")
+        })
+
+    def test_fractional_shared_pool_cents_reconcile_by_largest_remainder(self):
+        data = {
+            "selected_view": "actual",
+            "cost_records": [{
+                "id": "two-cents", "view": "actual", "currency": "USD", "amount": "0.02",
+                "shared_weights": {"C": "33.34", "B": "33.33", "A": "33.33"},
+            }],
+        }
+        report = fc.summarize(data)
+        self.assertEqual(report["allocated_gross"], Decimal("0.02"))
+        self.assertEqual(report["unallocated_gross"], Decimal("0.00"))
+        self.assertEqual(sum(report["shared_by_cost_center"].values()), Decimal("0.02"))
+
     def test_shared_weights_must_total_one_hundred(self):
         data = load_fixture()
         row = next(r for r in data["cost_records"] if r["id"] == "network-shared" and r["view"] == "actual")

@@ -10,6 +10,10 @@ work/
 *.tfplan
 tfplan
 plan.json
+*.tfplan.json
+*.tfapproval*
+approval-envelope.json
+approval-trust-store.json
 crash.log
 *.local.*
 sensitive.local.txt
