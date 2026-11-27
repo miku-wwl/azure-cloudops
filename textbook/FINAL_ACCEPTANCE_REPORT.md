@@ -50,6 +50,8 @@ The Microsoft.ResourceGraph provider is Registered, but installing the official 
 
 The reusable `tools/azure_inventory.py` now automatically falls back to this REST transport when the extension is absent. Its focused 19-test suite and the complete Windows Python suite (530 tests across 24 directories) passed, and a live read-only run completed through the fallback in one page with the same three-resource result. The current Windows Azure CLI `.cmd` launcher is invoked through its bundled Python interpreter without a shell; REST request-body files are deleted after each call.
 
+A fresh LAB-IR-11 read-only preflight confirmed the dedicated group was absent, no F1/Free plan was visible in Australia East, Linux F1 and `NODE:24-lts` were listed, and the candidate name was available. Microsoft's Azure for Students offer publicly includes an always-free App Service allocation, supporting the conditional USD 0.00 estimate for the 45-minute, no-dependency drill. These reads do not prove actual deployment capacity or invoice spend. The exact LAB-IR-11 resource batch remains unapproved, so no Azure write was made.
+
 After recording this evidence, the repository verifier passed 23 curriculum/source/PDF mappings, 155 local Markdown references and 13 catalogue cards. Package verification confirmed 23 PDFs and a 427-file source archive byte-matched to the current source tree; the PDF ZIP SHA-256 remains `575F22B9958B68752B54539534E020902135B04BFF22C0BAF0924C8AA0C65608`. No Azure operation occurred during the documentation/package refresh.
 
 ## Incident state
