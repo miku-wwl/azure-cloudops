@@ -7,7 +7,8 @@
 1) <PDF ZIP>：dist/pdf 下的 23 个 PDF（原样，不重新压缩内容）
 2) <源稿 ZIP>：textbook/ 下全部可编辑源稿与实验工程。文件清单取自 git（已跟踪 + 未被 .gitignore 忽略的新文件），
    因而与仓库内容一致；再额外排除 dist/ 与下列兜底规则（构建中间产物、Terraform 缓存与锁文件、状态文件、
-   字节码、*.local.* 本机文件）。不在 git 仓库中运行时退回为遍历目录 + 兜底规则。
+   字节码、*.local.* 本机文件）。文本内容统一为 LF 换行，避免 Windows 与 Linux 工作树换行差异；二进制内容原样保留。
+   不在 git 仓库中运行时退回为遍历目录 + 兜底规则。
 
 敏感信息检查：若存在 tools/sensitive.local.txt（每行一个正则，本机专用、不入库），
 会扫描所有将被打包的文本文件，命中即失败退出。
@@ -71,6 +72,14 @@ def sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def source_bytes(path: Path) -> bytes:
+    """Return portable archive bytes, normalizing only known text formats to LF."""
+    data = path.read_bytes()
+    if path.suffix.lower() in TEXT_SUFFIX:
+        return data.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+    return data
+
+
 def build() -> None:
     pdfs = sorted((DIST / "pdf").glob("*.pdf"))
     if len(pdfs) != 23:
@@ -89,7 +98,10 @@ def build() -> None:
             z.write(p, f"Azure-CloudOps-PDF/{p.name}")
     with zipfile.ZipFile(SRC_ZIP, "w", zipfile.ZIP_DEFLATED) as z:
         for p in files:
-            z.write(p, "Azure-CloudOps-sources/" + p.relative_to(ROOT).as_posix())
+            arcname = "Azure-CloudOps-sources/" + p.relative_to(ROOT).as_posix()
+            info = zipfile.ZipInfo.from_file(p, arcname)
+            info.compress_type = zipfile.ZIP_DEFLATED
+            z.writestr(info, source_bytes(p))
     print(f"{PDF_ZIP.name}: {len(pdfs)} 个 PDF，{PDF_ZIP.stat().st_size / 1e6:.1f} MB")
     print(f"{SRC_ZIP.name}: {len(files)} 个文件，{SRC_ZIP.stat().st_size / 1e6:.1f} MB")
     print("敏感信息检查：" + ("通过" if deny else "跳过（没有 tools/sensitive.local.txt）"))
@@ -109,9 +121,9 @@ def verify() -> bool:
         if z.testzip():
             print("源稿 ZIP 损坏"); ok = False
         inzip = {n.split("/", 1)[1]: sha256(z.read(n)) for n in z.namelist()}
-    ondisk = {p.relative_to(ROOT).as_posix(): sha256(p.read_bytes()) for p in source_files()}
+    ondisk = {p.relative_to(ROOT).as_posix(): sha256(source_bytes(p)) for p in source_files()}
     diff = sorted(set(inzip.items()) ^ set(ondisk.items()))
-    print(f"源稿 ZIP：{len(inzip)} 个文件，与 textbook/ 源稿逐字节{'一致' if not diff else '不一致：' + str([d[0] for d in diff[:5]])}")
+    print(f"源稿 ZIP：{len(inzip)} 个文件，与 textbook/ 源稿（文本统一 LF）逐字节{'一致' if not diff else '不一致：' + str([d[0] for d in diff[:5]])}")
     ok &= not diff
     return ok
 
