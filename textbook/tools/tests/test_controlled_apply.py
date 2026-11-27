@@ -40,8 +40,10 @@ class ControlledApplyTests(unittest.TestCase):
         self.approval_path = self.artifacts / "approval-envelope.json"
         self.trust_path = self.artifacts / "trusted-approvers.json"
         self.control_root = self.external / "control"
+        work_dir = REPOSITORY / "work"
+        work_dir.mkdir(exist_ok=True)
         self.lock_temp = tempfile.TemporaryDirectory(
-            prefix="controlled-apply-lock-", dir=REPOSITORY / "work"
+            prefix="controlled-apply-lock-", dir=work_dir
         )
         self.terraform_root = Path(self.lock_temp.name)
         self.lock_file = self.terraform_root / ".terraform.lock.hcl"
