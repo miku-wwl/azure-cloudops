@@ -17,6 +17,10 @@ Two Cost Management Usage queries returned HTTP 429. No actual billing value was
 
 The existing default CLI context remained Enabled. A current subscription-wide App Service plan listing returned 0 visible F1/Free plans in Australia East; the dedicated resource group was absent, `NODE:24-lts` and Linux F1 in Australia East were listed, and the candidate site name check returned available. The inline JSON name-check request failed with an empty-body HTTP 400; the same read-only check succeeded using a temporary file body. The guarded runbook now uses that file-based form and removes it. Account offer entitlement, live deployment capacity and actual billing remain NOT_VERIFIED. Repeat the checks immediately before any authorized write.
 
+## Candidate A governance reads — 2026-11-27
+
+Subscription-scoped reads returned 996 role definitions, 3,760 policy definitions (2,928 BuiltIn and 832 Static), and 2 policy assignments. The seven-day Activity Log query returned 10 Administrative events, which is the request's sample cap. No event details or identifiers were retained. The management-group list was unavailable with provider auto-registration disabled. Microsoft.ResourceGraph was Registered, but the CLI extension was not installed and no Resource Graph data query ran. No provider registration, resource write, sign-in or context switch occurred. See L0_READ_ONLY_PREFLIGHT.md for limits.
+
 ## LAB-L0-01 — Read-only account and scope preflight
 
 | Field | Plan |

@@ -33,6 +33,12 @@ The existing Azure CLI context was still Enabled in AzureCloud and remained the 
 
 These are time-bound observations, not provisioning approval. Recheck every condition immediately before a write. Account entitlement, current deployment capacity and actual Azure billing remain **NOT_VERIFIED**. The HTTP 429 cost-query result remains the latest billing evidence.
 
+## Candidate A governance reads — 2026-11-27
+
+Using the same existing default session and explicit subscription scope, the CLI returned 996 role definitions, 3,760 policy definitions (2,928 `BuiltIn`, 832 `Static`; no `Custom` entries in this result), and 2 policy assignments at the subscription scope. These are definition/assignment inventory counts, not an evaluation of effective permissions or inherited policy. A seven-day Activity Log request returned its capped sample of 10 events, all in the `Administrative` category; the cap prevents treating that sample as a complete event inventory. No names, principal IDs, subscription IDs or event details were retained.
+
+The subscription's management-group list command returned exit code 1 with provider auto-registration explicitly disabled, so hierarchy membership was not established and no provider was registered. `Microsoft.ResourceGraph` reported `Registered`, but the Resource Graph CLI extension is absent and no Resource Graph data query was run. The documented Resource Graph REST query endpoint is a POST request; the attempted CLI invocation was blocked by local command policy before execution, so no request reached Azure. These gaps remain unverified; the earlier ARM inventory remains the only resource inventory used. All executed calls in this snapshot were reads and made no Azure resource changes.
+
 ## Candidate LAB-IR-11 pricing and scope
 
 Microsoft’s current public pricing page lists Linux App Service F1 at USD 0, with shared compute limited to 60 CPU minutes/day, 1 GB RAM and 1 GB storage; the plan is intended for experimentation and learning and has no SLA. The Azure bandwidth pricing page lists the first 100 GB/month of internet egress as free. These public prices support only a conditional USD 0.00 gross estimate for one 45-minute F1 app with tiny request/response bodies, if the account offer includes F1 and no paid dependency is required. The 2026-11-27 subscription inventory showed 0 visible F1/Free plans in Australia East, but does not establish account offer entitlement or regional capacity. Actual billing was not queried successfully. Reconfirm current pricing, account offer, the documented regional Free-plan limit and app-name availability before any write; stop if the estimate is not reliable, any paid dependency is required, or cumulative estimate exceeds USD 0.70.
@@ -63,3 +69,4 @@ This is a concrete candidate, not authorization. Exact owner approval is still r
 - [Cost Management Usage Query API](https://learn.microsoft.com/en-us/rest/api/cost-management/query/usage)
 - [Cost Management work scopes and permissions](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/understand-work-scopes)
 - [Network Watcher pricing](https://azure.microsoft.com/en-us/pricing/details/network-watcher/)
+- [Azure Resource Graph REST query API](https://learn.microsoft.com/en-us/rest/api/azureresourcegraph/resourcegraph/resources/resources?view=rest-azureresourcegraph-resourcegraph-2024-04-01)
