@@ -1,0 +1,369 @@
+{
+  "incident_id": "IR-02",
+  "status": "LOCAL_VERIFIED",
+  "started_at_utc": "2026-11-27T06:50:06+00:00",
+  "scope": {
+    "container": "azure-cloudops-ir02-6f888c2da1",
+    "network": "none",
+    "firewall": "container network namespace INPUT chain only",
+    "tuple": {
+      "interface": "lo",
+      "source": "127.0.0.1",
+      "destination": "127.0.0.1",
+      "protocol": "tcp",
+      "fault_port": 18080,
+      "negative_control_port": 18081
+    }
+  },
+  "mechanism": "A run-owned Docker container with --network none, a namespace-local veth pair, and one exact iptables REJECT rule. No host firewall command or external destination is used.",
+  "commands": {
+    "create_isolated_namespace": {
+      "command": [
+        "docker",
+        "run",
+        "--detach",
+        "--name",
+        "azure-cloudops-ir02-6f888c2da1",
+        "--network",
+        "none",
+        "--entrypoint",
+        "/bin/bash",
+        "--cap-drop",
+        "ALL",
+        "--cap-add",
+        "NET_ADMIN",
+        "--security-opt",
+        "no-new-privileges",
+        "kindest/node@sha256:099e049362a1526b2db71494e1947aae99bd16290d7c895f2b7ea312e3cbfaed",
+        "-lc",
+        "sleep 600"
+      ],
+      "returncode": 0,
+      "output": "31872c11818c478d36f9cff32bb3dd8cb1339bb1672ec5e7c5657f05bb49c5b4"
+    },
+    "copy_health_server": {
+      "command": [
+        "docker",
+        "cp",
+        "D:\\workshop\\nov\\azure-cloudops\\work\\cycle-2-7koekbww\\health_server_linux_amd64",
+        "azure-cloudops-ir02-6f888c2da1:/tmp/health_server"
+      ],
+      "returncode": 0,
+      "output": ""
+    },
+    "create_veth_pair": {
+      "command": [
+        "docker",
+        "exec",
+        "azure-cloudops-ir02-6f888c2da1",
+        "ip",
+        "link",
+        "add",
+        "e8v0",
+        "type",
+        "veth",
+        "peer",
+        "name",
+        "e8v1"
+      ],
+      "returncode": 0,
+      "output": ""
+    },
+    "enable_veth_pair": {
+      "command": [
+        "docker",
+        "exec",
+        "azure-cloudops-ir02-6f888c2da1",
+        "ip",
+        "link",
+        "set",
+        "e8v0",
+        "up"
+      ],
+      "returncode": 0,
+      "output": ""
+    },
+    "enable_veth_peer": {
+      "command": [
+        "docker",
+        "exec",
+        "azure-cloudops-ir02-6f888c2da1",
+        "ip",
+        "link",
+        "set",
+        "e8v1",
+        "up"
+      ],
+      "returncode": 0,
+      "output": ""
+    },
+    "inspect_links": {
+      "command": [
+        "docker",
+        "exec",
+        "azure-cloudops-ir02-6f888c2da1",
+        "ip",
+        "-brief",
+        "link"
+      ],
+      "returncode": 0,
+      "output": "lo               UNKNOWN        00:00:00:00:00:00 <LOOPBACK,UP,LOWER_UP> \ne8v1@e8v0        UP             a2:02:f3:59:6c:af <BROADCAST,MULTICAST,UP,LOWER_UP> \ne8v0@e8v1        UP             b6:85:0e:e6:59:36 <BROADCAST,MULTICAST,UP,LOWER_UP>"
+    },
+    "inspect_routes": {
+      "command": [
+        "docker",
+        "exec",
+        "azure-cloudops-ir02-6f888c2da1",
+        "ip",
+        "route"
+      ],
+      "returncode": 0,
+      "output": ""
+    },
+    "start_listener_18080": {
+      "command": [
+        "docker",
+        "exec",
+        "--detach",
+        "azure-cloudops-ir02-6f888c2da1",
+        "/tmp/health_server",
+        "--listen",
+        "0.0.0.0:18080",
+        "--release",
+        "ir02-18080"
+      ],
+      "returncode": 0,
+      "output": ""
+    },
+    "inject_fault_rule": {
+      "command": [
+        "docker",
+        "exec",
+        "azure-cloudops-ir02-6f888c2da1",
+        "iptables",
+        "-I",
+        "INPUT",
+        "1",
+        "-i",
+        "lo",
+        "-s",
+        "127.0.0.1",
+        "-d",
+        "127.0.0.1",
+        "-p",
+        "tcp",
+        "--dport",
+        "18080",
+        "-j",
+        "REJECT",
+        "--reject-with",
+        "tcp-reset"
+      ],
+      "returncode": 0,
+      "output": ""
+    },
+    "observe_firewall_counters": {
+      "command": [
+        "docker",
+        "exec",
+        "azure-cloudops-ir02-6f888c2da1",
+        "iptables",
+        "-L",
+        "INPUT",
+        "-n",
+        "-v",
+        "-x",
+        "--line-numbers"
+      ],
+      "returncode": 0,
+      "output": "Chain INPUT (policy ACCEPT 1 packets, 40 bytes)\nnum      pkts      bytes target     prot opt in     out     source               destination         \n1           1       60 REJECT     tcp  --  lo     *       127.0.0.1            127.0.0.1            tcp dpt:18080 reject-with tcp-reset"
+    },
+    "remove_only_fault_rule": {
+      "command": [
+        "docker",
+        "exec",
+        "azure-cloudops-ir02-6f888c2da1",
+        "iptables",
+        "-D",
+        "INPUT",
+        "-i",
+        "lo",
+        "-s",
+        "127.0.0.1",
+        "-d",
+        "127.0.0.1",
+        "-p",
+        "tcp",
+        "--dport",
+        "18080",
+        "-j",
+        "REJECT",
+        "--reject-with",
+        "tcp-reset"
+      ],
+      "returncode": 0,
+      "output": ""
+    }
+  },
+  "container_id": "31872c11818c478d36f9cff32bb3dd8cb1339bb1672ec5e7c5657f05bb49c5b4",
+  "probes": {
+    "listener_18080_readiness_1": {
+      "command": [
+        "docker",
+        "exec",
+        "azure-cloudops-ir02-6f888c2da1",
+        "curl",
+        "--silent",
+        "--show-error",
+        "--max-time",
+        "2",
+        "--output",
+        "/dev/null",
+        "--write-out",
+        "%{http_code}",
+        "http://127.0.0.1:18080/health"
+      ],
+      "returncode": 0,
+      "output": "200"
+    },
+    "baseline_allowed_port": {
+      "command": [
+        "docker",
+        "exec",
+        "azure-cloudops-ir02-6f888c2da1",
+        "curl",
+        "--silent",
+        "--show-error",
+        "--max-time",
+        "2",
+        "--output",
+        "/dev/null",
+        "--write-out",
+        "%{http_code}",
+        "http://127.0.0.1:18080/health"
+      ],
+      "returncode": 0,
+      "output": "200"
+    },
+    "baseline_negative_control_before_rule": {
+      "command": [
+        "docker",
+        "exec",
+        "azure-cloudops-ir02-6f888c2da1",
+        "curl",
+        "--silent",
+        "--show-error",
+        "--max-time",
+        "2",
+        "--output",
+        "/dev/null",
+        "--write-out",
+        "%{http_code}",
+        "http://127.0.0.1:18081/health"
+      ],
+      "returncode": 7,
+      "output": "curl: (7) Failed to connect to 127.0.0.1 port 18081 after 0 ms: Could not connect to server\n000"
+    },
+    "allowed_control_during_incident": {
+      "command": [
+        "docker",
+        "exec",
+        "azure-cloudops-ir02-6f888c2da1",
+        "curl",
+        "--silent",
+        "--show-error",
+        "--max-time",
+        "2",
+        "--output",
+        "/dev/null",
+        "--write-out",
+        "%{http_code}",
+        "http://127.0.0.1:18080/health"
+      ],
+      "returncode": 0,
+      "output": "200"
+    },
+    "fault_same_probe": {
+      "command": [
+        "docker",
+        "exec",
+        "azure-cloudops-ir02-6f888c2da1",
+        "curl",
+        "--silent",
+        "--show-error",
+        "--max-time",
+        "2",
+        "--output",
+        "/dev/null",
+        "--write-out",
+        "%{http_code}",
+        "http://127.0.0.1:18080/health"
+      ],
+      "returncode": 7,
+      "output": "curl: (7) Failed to connect to 127.0.0.1 port 18080 after 0 ms: Could not connect to server\n000"
+    },
+    "recovery_same_probe": {
+      "command": [
+        "docker",
+        "exec",
+        "azure-cloudops-ir02-6f888c2da1",
+        "curl",
+        "--silent",
+        "--show-error",
+        "--max-time",
+        "2",
+        "--output",
+        "/dev/null",
+        "--write-out",
+        "%{http_code}",
+        "http://127.0.0.1:18080/health"
+      ],
+      "returncode": 0,
+      "output": "200"
+    },
+    "negative_control_after_recovery": {
+      "command": [
+        "docker",
+        "exec",
+        "azure-cloudops-ir02-6f888c2da1",
+        "curl",
+        "--silent",
+        "--show-error",
+        "--max-time",
+        "2",
+        "--output",
+        "/dev/null",
+        "--write-out",
+        "%{http_code}",
+        "http://127.0.0.1:18081/health"
+      ],
+      "returncode": 7,
+      "output": "curl: (7) Failed to connect to 127.0.0.1 port 18081 after 0 ms: Could not connect to server\n000"
+    }
+  },
+  "checks": {
+    "baseline_functional_probe_passed": true,
+    "negative_control_remained_blocked": true,
+    "allowed_control_remained_healthy": true,
+    "fault_tuple_failed": true,
+    "root_cause_rule_counter_incremented": true,
+    "same_probe_recovered": true,
+    "fault_rule_removed": true
+  },
+  "ok": true,
+  "host_scope_assertion": "Windows host firewall and host routes were not addressed by any command; container network is none and veth endpoints exist only inside the disposable namespace.",
+  "cleanup": {
+    "remove_container": {
+      "command": [
+        "docker",
+        "rm",
+        "--force",
+        "azure-cloudops-ir02-6f888c2da1"
+      ],
+      "returncode": 0,
+      "output": "azure-cloudops-ir02-6f888c2da1"
+    },
+    "container_absent": true
+  },
+  "completed_at_utc": "2026-11-27T06:50:11+00:00"
+}

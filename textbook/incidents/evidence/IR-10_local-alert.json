@@ -1,0 +1,177 @@
+{
+  "incident_id": "IR-10",
+  "status": "LOCAL_VERIFIED",
+  "started_at_utc": "2026-11-27T06:36:34+00:00",
+  "mechanism": "All alert inputs are measured HTTP response rows written by a local server during actual GET /health requests; the rule evaluator only references captured event IDs.",
+  "azure_monitor_used": false,
+  "scope": {
+    "bind": "127.0.0.1",
+    "port": 63373,
+    "telemetry_store": "run-owned temporary JSONL"
+  },
+  "baseline_probes": [
+    {
+      "status": 200,
+      "body": "healthy\n",
+      "observation_id": "0ea4cf4e3d4f4bd2a0255b0f06ea628c",
+      "method": "GET",
+      "path": "/health"
+    },
+    {
+      "status": 200,
+      "body": "healthy\n",
+      "observation_id": "226ca76c12ac427babd09f144b2cce62",
+      "method": "GET",
+      "path": "/health"
+    }
+  ],
+  "initial_evaluation": {
+    "threshold": 2,
+    "failure_count": 0,
+    "fired": false,
+    "source_event_ids": [
+      "0ea4cf4e3d4f4bd2a0255b0f06ea628c",
+      "226ca76c12ac427babd09f144b2cce62"
+    ]
+  },
+  "failure_probes": [
+    {
+      "status": 503,
+      "body": "synthetic dependency failure\n",
+      "observation_id": "e4ee54a1976c45b2aedbceb57e0aeec2",
+      "method": "GET",
+      "path": "/health"
+    },
+    {
+      "status": 503,
+      "body": "synthetic dependency failure\n",
+      "observation_id": "6c241b4c43894fd5af99a2e1582ec147",
+      "method": "GET",
+      "path": "/health"
+    }
+  ],
+  "misconfigured_rule_evaluation": {
+    "threshold": 99,
+    "failure_count": 2,
+    "fired": false,
+    "source_event_ids": [
+      "e4ee54a1976c45b2aedbceb57e0aeec2",
+      "6c241b4c43894fd5af99a2e1582ec147"
+    ]
+  },
+  "repaired_rule_evaluation_same_ids": {
+    "threshold": 2,
+    "failure_count": 2,
+    "fired": true,
+    "source_event_ids": [
+      "e4ee54a1976c45b2aedbceb57e0aeec2",
+      "6c241b4c43894fd5af99a2e1582ec147"
+    ]
+  },
+  "recovery_probes": [
+    {
+      "status": 200,
+      "body": "healthy\n",
+      "observation_id": "41369a611fdf4406b5172e54606519c8",
+      "method": "GET",
+      "path": "/health"
+    },
+    {
+      "status": 200,
+      "body": "healthy\n",
+      "observation_id": "493671e501bf4ead95d9f588ad6ba9e4",
+      "method": "GET",
+      "path": "/health"
+    }
+  ],
+  "recovery_rule_evaluation": {
+    "threshold": 2,
+    "failure_count": 0,
+    "fired": false,
+    "source_event_ids": [
+      "41369a611fdf4406b5172e54606519c8",
+      "493671e501bf4ead95d9f588ad6ba9e4"
+    ]
+  },
+  "alert_transitions": [
+    {
+      "from": "Resolved",
+      "to": "Fired",
+      "source_event_ids": [
+        "e4ee54a1976c45b2aedbceb57e0aeec2",
+        "6c241b4c43894fd5af99a2e1582ec147"
+      ],
+      "reason": "threshold corrected to 2 failures"
+    },
+    {
+      "from": "Fired",
+      "to": "Resolved",
+      "source_event_ids": [
+        "41369a611fdf4406b5172e54606519c8",
+        "493671e501bf4ead95d9f588ad6ba9e4"
+      ],
+      "reason": "successful recovery probes"
+    }
+  ],
+  "telemetry": [
+    {
+      "event_id": "0ea4cf4e3d4f4bd2a0255b0f06ea628c",
+      "observed_at_utc": "2026-11-27T06:36:34.141+00:00",
+      "method": "GET",
+      "path": "/health",
+      "http_status": 200
+    },
+    {
+      "event_id": "226ca76c12ac427babd09f144b2cce62",
+      "observed_at_utc": "2026-11-27T06:36:34.147+00:00",
+      "method": "GET",
+      "path": "/health",
+      "http_status": 200
+    },
+    {
+      "event_id": "e4ee54a1976c45b2aedbceb57e0aeec2",
+      "observed_at_utc": "2026-11-27T06:36:34.151+00:00",
+      "method": "GET",
+      "path": "/health",
+      "http_status": 503
+    },
+    {
+      "event_id": "6c241b4c43894fd5af99a2e1582ec147",
+      "observed_at_utc": "2026-11-27T06:36:34.153+00:00",
+      "method": "GET",
+      "path": "/health",
+      "http_status": 503
+    },
+    {
+      "event_id": "41369a611fdf4406b5172e54606519c8",
+      "observed_at_utc": "2026-11-27T06:36:34.156+00:00",
+      "method": "GET",
+      "path": "/health",
+      "http_status": 200
+    },
+    {
+      "event_id": "493671e501bf4ead95d9f588ad6ba9e4",
+      "observed_at_utc": "2026-11-27T06:36:34.161+00:00",
+      "method": "GET",
+      "path": "/health",
+      "http_status": 200
+    }
+  ],
+  "final_alert_state": "Resolved",
+  "checks": {
+    "baseline_real_http_probes_healthy": true,
+    "failure_measurements_are_real_503_responses": true,
+    "telemetry_rows_match_real_requests": true,
+    "broken_threshold_misses_same_failures": true,
+    "corrected_threshold_fires_from_same_measurements": true,
+    "recovery_same_probe_resolves_alert": true,
+    "state_transitions_reference_measured_event_ids": true
+  },
+  "ok": true,
+  "cleanup": {
+    "listener_closed": true,
+    "worker_stopped": true,
+    "temporary_telemetry_deleted_after_capture": true
+  },
+  "completed_at_utc": "2026-11-27T06:36:34+00:00"
+}

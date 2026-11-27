@@ -27,7 +27,7 @@ try:
     with Listener(ADDRESS, family=FAMILY, authkey=AUTHKEY) as listener:
         print(
             "LOCK_GATE_OPEN: terraform apply is active and holds the local backend lock. "
-            "Run the competing Terraform plan, then run scripts/release_state_lock.py.",
+            "Run a competing state-changing Terraform apply, then run scripts/release_state_lock.py.",
             flush=True,
         )
         with listener.accept() as connection:

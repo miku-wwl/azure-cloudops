@@ -1,5 +1,7 @@
 # E2 local lab substrate acceptance
 
+> **Historical snapshot:** The engine-unavailable and no-cluster statements below describe the E2 checkpoint. After Docker Desktop became available, E8 rechecked the host, ran the real local kind experiment, and recorded current environment details in `LAB_ENVIRONMENT.md`.
+
 - Date: 2026-11-27 (Pacific/Auckland).
 - Status: ACCEPTED for the local-only reusable command/test substrate.
 - Scope: host capability inventory, repository-wide bounded Python runner, deterministic local lifecycle smoke, and cleanup safety.

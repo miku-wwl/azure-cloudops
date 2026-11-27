@@ -1,0 +1,1410 @@
+{
+  "incident_id": "IR-07",
+  "status": "LOCAL_VERIFIED",
+  "started_at_utc": "2026-11-27T06:50:17+00:00",
+  "scope": {
+    "cluster": "azure-cloudops-ir07-e7763074",
+    "namespace": "ir07-e7763074",
+    "registry_endpoint": "127.0.0.1:5000 inside the unique kind control-plane node",
+    "baseline_image": "azure-cloudops/ir07-health:e8-e7763074",
+    "fault_image": "localhost:5000/azure-cloudops/ir07-health:missing-e7763074",
+    "network_policy": "manifest request is remapped to node loopback; no public registry is contacted"
+  },
+  "mechanism": "A real kubelet/containerd pull request reaches a run-owned local Distribution API fixture, which returns an actual 404 MANIFEST_UNKNOWN for the unique missing manifest. Recovery uses a separately built local image preloaded into this disposable cluster.",
+  "commands": {
+    "build_static_app_image": {
+      "command": [
+        "docker",
+        "build",
+        "--pull=false",
+        "--network=none",
+        "--tag",
+        "azure-cloudops/ir07-health:e8-e7763074",
+        "D:\\workshop\\nov\\azure-cloudops\\work\\ir07-5joadeng\\image"
+      ],
+      "returncode": 0,
+      "output": "#0 building with \"desktop-linux\" instance using docker driver\n\n#1 [internal] load build definition from Dockerfile\n#1 transferring dockerfile: 117B done\n#1 DONE 0.0s\n\n#2 [internal] load .dockerignore\n#2 transferring context: 2B done\n#2 DONE 0.0s\n\n#3 [internal] load build context\n#3 transferring context: 8.65MB 0.5s done\n#3 DONE 0.5s\n\n#4 [1/1] COPY health_server /health_server\n#4 CACHED\n\n#5 exporting to image\n#5 exporting layers done\n#5 exporting manifest sha256:87c738a8e35e16a5335cfc3c8618fd0c2b041a09f23f5cf5045475127124d8c8 done\n#5 exporting config sha256:b915cc0a0977bd281c2cb44b38fbb1edf37d016a473d7004cbc3015e7f7c5a44 done\n#5 exporting attestation manifest sha256:a702923df3e855bce766bf002e58c8a6f71b81fbaf32328c95a3de679a7887be\n#5 exporting attestation manifest sha256:a702923df3e855bce766bf002e58c8a6f71b81fbaf32328c95a3de679a7887be 0.0s done\n#5 exporting manifest list sha256:23c5f829add8759dbfa9ee1af93a01a585a77e26f888438e58a1fe294744f9ca 0.0s done\n#5 naming to docker.io/azure-cloudops/ir07-health:e8-e7763074 done\n#5 unpacking to docker.io/azure-cloudops/ir07-health:e8-e7763074 0.1s done\n#5 DONE 0.3s"
+    },
+    "create_unique_kind_cluster": {
+      "command": [
+        "kind",
+        "create",
+        "cluster",
+        "--name",
+        "azure-cloudops-ir07-e7763074",
+        "--image",
+        "kindest/node@sha256:099e049362a1526b2db71494e1947aae99bd16290d7c895f2b7ea312e3cbfaed",
+        "--config",
+        "D:\\workshop\\nov\\azure-cloudops\\work\\ir07-5joadeng\\kind-config.yaml",
+        "--kubeconfig",
+        "D:\\workshop\\nov\\azure-cloudops\\work\\ir07-5joadeng\\kubeconfig",
+        "--wait",
+        "120s"
+      ],
+      "returncode": 0,
+      "output": "Creating cluster \"azure-cloudops-ir07-e7763074\" ...\n • Ensuring node image (kindest/node) 🖼️  ...\n ✓ Ensuring node image (kindest/node) 🖼️\n • Preparing nodes 📦   ...\n ✓ Preparing nodes 📦 \n • Writing configuration 📜  ...\n ✓ Writing configuration 📜\n • Starting control-plane 🕹️  ...\n ✓ Starting control-plane 🕹️\n • Installing CNI 🔌  ...\n ✓ Installing CNI 🔌\n • Installing StorageClass 💾  ...\n ✓ Installing StorageClass 💾\n • Waiting ≤ 2m0s for control-plane = Ready ⏳  ...\n ✓ Waiting ≤ 2m0s for control-plane = Ready ⏳\n • Ready after 15s 💚\nSet kubectl context to \"kind-azure-cloudops-ir07-e7763074\"\nYou can now use your cluster with:\n\nkubectl cluster-info --context kind-azure-cloudops-ir07-e7763074 --kubeconfig 'D:\\workshop\\nov\\azure-cloudops\\work\\ir07-5joadeng\\kubeconfig'\n\nThanks for using kind! 😊"
+    },
+    "list_unique_cluster_nodes": {
+      "command": [
+        "kind",
+        "get",
+        "nodes",
+        "--name",
+        "azure-cloudops-ir07-e7763074"
+      ],
+      "returncode": 0,
+      "output": "azure-cloudops-ir07-e7763074-control-plane"
+    },
+    "load_synthetic_app_image": {
+      "command": [
+        "kind",
+        "load",
+        "docker-image",
+        "azure-cloudops/ir07-health:e8-e7763074",
+        "--name",
+        "azure-cloudops-ir07-e7763074"
+      ],
+      "returncode": 0,
+      "output": "Image: \"azure-cloudops/ir07-health:e8-e7763074\" with ID \"sha256:23c5f829add8759dbfa9ee1af93a01a585a77e26f888438e58a1fe294744f9ca\" not yet present on node \"azure-cloudops-ir07-e7763074-control-plane\", loading..."
+    },
+    "write_local_registry_binary": {
+      "command": [
+        "docker",
+        "exec",
+        "-i",
+        "azure-cloudops-ir07-e7763074-control-plane",
+        "sh",
+        "-c",
+        "cat > /root/ir07-registry && chmod 0755 /root/ir07-registry"
+      ],
+      "returncode": 0,
+      "output": ""
+    },
+    "verify_local_registry_binary": {
+      "command": [
+        "docker",
+        "exec",
+        "azure-cloudops-ir07-e7763074-control-plane",
+        "test",
+        "-x",
+        "/root/ir07-registry"
+      ],
+      "returncode": 0,
+      "output": ""
+    },
+    "start_loopback_registry_fixture": {
+      "command": [
+        "docker",
+        "exec",
+        "--detach",
+        "azure-cloudops-ir07-e7763074-control-plane",
+        "/root/ir07-registry",
+        "--listen",
+        "127.0.0.1:5000",
+        "--log",
+        "/root/ir07-registry.jsonl"
+      ],
+      "returncode": 0,
+      "output": ""
+    },
+    "configure_localhost_registry_remap": {
+      "command": [
+        "docker",
+        "exec",
+        "azure-cloudops-ir07-e7763074-control-plane",
+        "sh",
+        "-c",
+        "mkdir -p /etc/containerd/certs.d/localhost:5000 && printf '%s\\n' '[host.\"http://127.0.0.1:5000\"]' '  capabilities = [\"pull\", \"resolve\"]' > /etc/containerd/certs.d/localhost:5000/hosts.toml"
+      ],
+      "returncode": 0,
+      "output": ""
+    },
+    "registry_loopback_baseline": {
+      "command": [
+        "docker",
+        "exec",
+        "azure-cloudops-ir07-e7763074-control-plane",
+        "curl",
+        "--silent",
+        "--show-error",
+        "--fail",
+        "--max-time",
+        "2",
+        "http://127.0.0.1:5000/v2/"
+      ],
+      "returncode": 0,
+      "output": "{}"
+    },
+    "create_namespace": {
+      "command": [
+        "kubectl",
+        "--kubeconfig",
+        "D:\\workshop\\nov\\azure-cloudops\\work\\ir07-5joadeng\\kubeconfig",
+        "create",
+        "namespace",
+        "ir07-e7763074"
+      ],
+      "returncode": 0,
+      "output": "namespace/ir07-e7763074 created"
+    },
+    "apply_baseline_pod": {
+      "command": [
+        "kubectl",
+        "--kubeconfig",
+        "D:\\workshop\\nov\\azure-cloudops\\work\\ir07-5joadeng\\kubeconfig",
+        "apply",
+        "-f",
+        "D:\\workshop\\nov\\azure-cloudops\\work\\ir07-5joadeng\\good-e7763074.yaml"
+      ],
+      "returncode": 0,
+      "output": "pod/good-e7763074 created"
+    },
+    "wait_baseline_ready": {
+      "command": [
+        "kubectl",
+        "--kubeconfig",
+        "D:\\workshop\\nov\\azure-cloudops\\work\\ir07-5joadeng\\kubeconfig",
+        "wait",
+        "--namespace",
+        "ir07-e7763074",
+        "--for=condition=Ready",
+        "pod/good-e7763074",
+        "--timeout=90s"
+      ],
+      "returncode": 0,
+      "output": "pod/good-e7763074 condition met"
+    },
+    "baseline_pod_status": {
+      "command": [
+        "kubectl",
+        "--kubeconfig",
+        "D:\\workshop\\nov\\azure-cloudops\\work\\ir07-5joadeng\\kubeconfig",
+        "get",
+        "pod",
+        "--namespace",
+        "ir07-e7763074",
+        "good-e7763074",
+        "-o",
+        "json"
+      ],
+      "returncode": 0,
+      "output": "{\n    \"apiVersion\": \"v1\",\n    \"kind\": \"Pod\",\n    \"metadata\": {\n        \"annotations\": {\n            \"kubectl.kubernetes.io/last-applied-configuration\": \"{\\\"apiVersion\\\":\\\"v1\\\",\\\"kind\\\":\\\"Pod\\\",\\\"metadata\\\":{\\\"annotations\\\":{},\\\"name\\\":\\\"good-e7763074\\\",\\\"namespace\\\":\\\"ir07-e7763074\\\"},\\\"spec\\\":{\\\"containers\\\":[{\\\"command\\\":[\\\"/health_server\\\",\\\"--listen\\\",\\\"0.0.0.0:8080\\\",\\\"--release\\\",\\\"e8-ir07-good\\\"],\\\"image\\\":\\\"azure-cloudops/ir07-health:e8-e7763074\\\",\\\"imagePullPolicy\\\":\\\"Never\\\",\\\"name\\\":\\\"app\\\",\\\"ports\\\":[{\\\"containerPort\\\":8080}]}],\\\"restartPolicy\\\":\\\"Never\\\"}}\\n\"\n        },\n        \"creationTimestamp\": \"2026-11-27T06:51:08Z\",\n        \"generation\": 1,\n        \"name\": \"good-e7763074\",\n        \"namespace\": \"ir07-e7763074\",\n        \"resourceVersion\": \"536\",\n        \"uid\": \"bc73239a-1bdf-4d63-b8ce-2a1fa1c5b6c1\"\n    },\n    \"spec\": {\n        \"containers\": [\n            {\n                \"command\": [\n                    \"/health_server\",\n                    \"--listen\",\n                    \"0.0.0.0:8080\",\n                    \"--release\",\n                    \"e8-ir07-good\"\n                ],\n                \"image\": \"azure-cloudops/ir07-health:e8-e7763074\",\n                \"imagePullPolicy\": \"Never\",\n                \"name\": \"app\",\n                \"ports\": [\n                    {\n                        \"containerPort\": 8080,\n                        \"protocol\": \"TCP\"\n                    }\n                ],\n                \"resources\": {},\n                \"terminationMessagePath\": \"/dev/termination-log\",\n                \"terminationMessagePolicy\": \"File\",\n                \"volumeMounts\": [\n                    {\n                        \"mountPath\": \"/var/run/secrets/kubernetes.io/serviceaccount\",\n                        \"name\": \"kube-api-access-n9clx\",\n                        \"readOnly\": true\n                    }\n                ]\n            }\n        ],\n        \"dnsPolicy\": \"ClusterFirst\",\n        \"enableServiceLinks\": true,\n        \"nodeName\": \"azure-cloudops-ir07-e7763074-control-plane\",\n        \"preemptionPolicy\": \"PreemptLowerPriority\",\n        \"priority\": 0,\n        \"restartPolicy\": \"Never\",\n        \"schedulerName\": \"default-scheduler\",\n        \"securityContext\": {},\n        \"serviceAccount\": \"default\",\n        \"serviceAccountName\": \"default\",\n        \"terminationGracePeriodSeconds\": 30,\n        \"tolerations\": [\n            {\n                \"effect\": \"NoExecute\",\n                \"key\": \"node.kubernetes.io/not-ready\",\n                \"operator\": \"Exists\",\n                \"tolerationSeconds\": 300\n            },\n            {\n                \"effect\": \"NoExecute\",\n                \"key\": \"node.kubernetes.io/unreachable\",\n                \"operator\": \"Exists\",\n                \"tolerationSeconds\": 300\n            }\n        ],\n        \"volumes\": [\n            {\n                \"name\": \"kube-api-access-n9clx\",\n                \"projected\": {\n                    \"defaultMode\": 420,\n                    \"sources\": [\n                        {\n                            \"serviceAccountToken\": {\n                                \"expirationSeconds\": 3607,\n                                \"path\": \"token\"\n                            }\n                        },\n                        {\n                            \"configMap\": {\n                                \"items\": [\n                                    {\n                                        \"key\": \"ca.crt\",\n                                        \"path\": \"ca.crt\"\n                                    }\n                                ],\n                                \"name\": \"kube-root-ca.crt\"\n                            }\n                        },\n                        {\n                            \"downwardAPI\": {\n                                \"items\": [\n                                    {\n                                        \"fieldRef\": {\n                                            \"apiVersion\": \"v1\",\n                                            \"fieldPath\": \"metadata.namespace\"\n                                        },\n                                        \"path\": \"namespace\"\n                                    }\n                                ]\n                            }\n                        }\n                    ]\n                }\n            }\n        ]\n    },\n    \"status\": {\n        \"conditions\": [\n            {\n                \"lastProbeTime\": null,\n                \"lastTransitionTime\": \"2026-11-27T06:51:09Z\",\n                \"observedGeneration\": 1,\n                \"status\": \"True\",\n                \"type\": \"PodReadyToStartContainers\"\n            },\n            {\n                \"lastProbeTime\": null,\n                \"lastTransitionTime\": \"2026-11-27T06:51:08Z\",\n                \"observedGeneration\": 1,\n                \"status\": \"True\",\n                \"type\": \"Initialized\"\n            },\n            {\n                \"lastProbeTime\": null,\n                \"lastTransitionTime\": \"2026-11-27T06:51:09Z\",\n                \"observedGeneration\": 1,\n                \"status\": \"True\",\n                \"type\": \"Ready\"\n            },\n            {\n                \"lastProbeTime\": null,\n                \"lastTransitionTime\": \"2026-11-27T06:51:09Z\",\n                \"observedGeneration\": 1,\n                \"status\": \"True\",\n                \"type\": \"ContainersReady\"\n            },\n            {\n                \"lastProbeTime\": null,\n                \"lastTransitionTime\": \"2026-11-27T06:51:08Z\",\n                \"observedGeneration\": 1,\n                \"status\": \"True\",\n                \"type\": \"PodScheduled\"\n            }\n        ],\n        \"containerStatuses\": [\n            {\n                \"containerID\": \"containerd://5bd74b894e5912324210dc0b5abf3577618acdb53b450379444b6e69bbabeb8b\",\n                \"image\": \"docker.io/azure-cloudops/ir07-health:e8-e7763074\",\n                \"imageID\": \"docker.io/library/import-2026-11-27@sha256:bcd58dcdd6a78725d46e87791d67892d549e0a85369cccf07db5ed4aaa4703cd\",\n                \"lastState\": {},\n                \"name\": \"app\",\n                \"ready\": true,\n                \"resources\": {},\n                \"restartCount\": 0,\n                \"started\": true,\n                \"state\": {\n                    \"running\": {\n                        \"startedAt\": \"2026-11-27T06:51:09Z\"\n                    }\n                },\n                \"user\": {\n                    \"linux\": {\n                        \"gid\": 0,\n                        \"supplementalGroups\": [\n                            0\n                        ],\n                        \"uid\": 0\n                    }\n                },\n                \"volumeMounts\": [\n                    {\n                        \"mountPath\": \"/var/run/secrets/kubernetes.io/serviceaccount\",\n                        \"name\": \"kube-api-access-n9clx\",\n                        \"readOnly\": true,\n                        \"recursiveReadOnly\": \"Disabled\"\n                    }\n                ]\n            }\n        ],\n        \"hostIP\": \"172.18.0.3\",\n        \"hostIPs\": [\n            {\n                \"ip\": \"172.18.0.3\"\n            }\n        ],\n        \"observedGeneration\": 1,\n        \"phase\": \"Running\",\n        \"podIP\": \"10.244.0.5\",\n        \"podIPs\": [\n            {\n                \"ip\": \"10.244.0.5\"\n            }\n        ],\n        \"qosClass\": \"BestEffort\",\n        \"resources\": {},\n        \"startTime\": \"2026-11-27T06:51:08Z\"\n    }\n}"
+    },
+    "apply_missing_manifest_pod": {
+      "command": [
+        "kubectl",
+        "--kubeconfig",
+        "D:\\workshop\\nov\\azure-cloudops\\work\\ir07-5joadeng\\kubeconfig",
+        "apply",
+        "-f",
+        "D:\\workshop\\nov\\azure-cloudops\\work\\ir07-5joadeng\\bad-e7763074.yaml"
+      ],
+      "returncode": 0,
+      "output": "pod/bad-e7763074 created"
+    },
+    "poll_fault_pod_status": {
+      "command": [
+        "kubectl",
+        "--kubeconfig",
+        "D:\\workshop\\nov\\azure-cloudops\\work\\ir07-5joadeng\\kubeconfig",
+        "get",
+        "pod",
+        "--namespace",
+        "ir07-e7763074",
+        "bad-e7763074",
+        "-o",
+        "json"
+      ],
+      "returncode": 0,
+      "output": "{\n    \"apiVersion\": \"v1\",\n    \"kind\": \"Pod\",\n    \"metadata\": {\n        \"annotations\": {\n            \"kubectl.kubernetes.io/last-applied-configuration\": \"{\\\"apiVersion\\\":\\\"v1\\\",\\\"kind\\\":\\\"Pod\\\",\\\"metadata\\\":{\\\"annotations\\\":{},\\\"name\\\":\\\"bad-e7763074\\\",\\\"namespace\\\":\\\"ir07-e7763074\\\"},\\\"spec\\\":{\\\"containers\\\":[{\\\"command\\\":[\\\"/health_server\\\",\\\"--listen\\\",\\\"0.0.0.0:8080\\\",\\\"--release\\\",\\\"unused\\\"],\\\"image\\\":\\\"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\\\",\\\"imagePullPolicy\\\":\\\"Always\\\",\\\"name\\\":\\\"app\\\",\\\"ports\\\":[{\\\"containerPort\\\":8080}]}],\\\"restartPolicy\\\":\\\"Never\\\"}}\\n\"\n        },\n        \"creationTimestamp\": \"2026-11-27T06:51:10Z\",\n        \"generation\": 1,\n        \"name\": \"bad-e7763074\",\n        \"namespace\": \"ir07-e7763074\",\n        \"resourceVersion\": \"550\",\n        \"uid\": \"de03d0e1-db85-41df-961a-3d918da549e7\"\n    },\n    \"spec\": {\n        \"containers\": [\n            {\n                \"command\": [\n                    \"/health_server\",\n                    \"--listen\",\n                    \"0.0.0.0:8080\",\n                    \"--release\",\n                    \"unused\"\n                ],\n                \"image\": \"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\",\n                \"imagePullPolicy\": \"Always\",\n                \"name\": \"app\",\n                \"ports\": [\n                    {\n                        \"containerPort\": 8080,\n                        \"protocol\": \"TCP\"\n                    }\n                ],\n                \"resources\": {},\n                \"terminationMessagePath\": \"/dev/termination-log\",\n                \"terminationMessagePolicy\": \"File\",\n                \"volumeMounts\": [\n                    {\n                        \"mountPath\": \"/var/run/secrets/kubernetes.io/serviceaccount\",\n                        \"name\": \"kube-api-access-6tnb7\",\n                        \"readOnly\": true\n                    }\n                ]\n            }\n        ],\n        \"dnsPolicy\": \"ClusterFirst\",\n        \"enableServiceLinks\": true,\n        \"nodeName\": \"azure-cloudops-ir07-e7763074-control-plane\",\n        \"preemptionPolicy\": \"PreemptLowerPriority\",\n        \"priority\": 0,\n        \"restartPolicy\": \"Never\",\n        \"schedulerName\": \"default-scheduler\",\n        \"securityContext\": {},\n        \"serviceAccount\": \"default\",\n        \"serviceAccountName\": \"default\",\n        \"terminationGracePeriodSeconds\": 30,\n        \"tolerations\": [\n            {\n                \"effect\": \"NoExecute\",\n                \"key\": \"node.kubernetes.io/not-ready\",\n                \"operator\": \"Exists\",\n                \"tolerationSeconds\": 300\n            },\n            {\n                \"effect\": \"NoExecute\",\n                \"key\": \"node.kubernetes.io/unreachable\",\n                \"operator\": \"Exists\",\n                \"tolerationSeconds\": 300\n            }\n        ],\n        \"volumes\": [\n            {\n                \"name\": \"kube-api-access-6tnb7\",\n                \"projected\": {\n                    \"defaultMode\": 420,\n                    \"sources\": [\n                        {\n                            \"serviceAccountToken\": {\n                                \"expirationSeconds\": 3607,\n                                \"path\": \"token\"\n                            }\n                        },\n                        {\n                            \"configMap\": {\n                                \"items\": [\n                                    {\n                                        \"key\": \"ca.crt\",\n                                        \"path\": \"ca.crt\"\n                                    }\n                                ],\n                                \"name\": \"kube-root-ca.crt\"\n                            }\n                        },\n                        {\n                            \"downwardAPI\": {\n                                \"items\": [\n                                    {\n                                        \"fieldRef\": {\n                                            \"apiVersion\": \"v1\",\n                                            \"fieldPath\": \"metadata.namespace\"\n                                        },\n                                        \"path\": \"namespace\"\n                                    }\n                                ]\n                            }\n                        }\n                    ]\n                }\n            }\n        ]\n    },\n    \"status\": {\n        \"conditions\": [\n            {\n                \"lastProbeTime\": null,\n                \"lastTransitionTime\": \"2026-11-27T06:51:11Z\",\n                \"observedGeneration\": 1,\n                \"status\": \"True\",\n                \"type\": \"PodReadyToStartContainers\"\n            },\n            {\n                \"lastProbeTime\": null,\n                \"lastTransitionTime\": \"2026-11-27T06:51:10Z\",\n                \"observedGeneration\": 1,\n                \"status\": \"True\",\n                \"type\": \"Initialized\"\n            },\n            {\n                \"lastProbeTime\": null,\n                \"lastTransitionTime\": \"2026-11-27T06:51:10Z\",\n                \"message\": \"containers with unready status: [app]\",\n                \"observedGeneration\": 1,\n                \"reason\": \"ContainersNotReady\",\n                \"status\": \"False\",\n                \"type\": \"Ready\"\n            },\n            {\n                \"lastProbeTime\": null,\n                \"lastTransitionTime\": \"2026-11-27T06:51:10Z\",\n                \"message\": \"containers with unready status: [app]\",\n                \"observedGeneration\": 1,\n                \"reason\": \"ContainersNotReady\",\n                \"status\": \"False\",\n                \"type\": \"ContainersReady\"\n            },\n            {\n                \"lastProbeTime\": null,\n                \"lastTransitionTime\": \"2026-11-27T06:51:10Z\",\n                \"observedGeneration\": 1,\n                \"status\": \"True\",\n                \"type\": \"PodScheduled\"\n            }\n        ],\n        \"containerStatuses\": [\n            {\n                \"image\": \"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\",\n                \"imageID\": \"\",\n                \"lastState\": {},\n                \"name\": \"app\",\n                \"ready\": false,\n                \"restartCount\": 0,\n                \"started\": false,\n                \"state\": {\n                    \"waiting\": {\n                        \"message\": \"rpc error: code = NotFound desc = failed to pull and unpack image \\\"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\\\": failed to resolve reference \\\"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\\\": localhost:5000/azure-cloudops/ir07-health:missing-e7763074: not found\",\n                        \"reason\": \"ErrImagePull\"\n                    }\n                },\n                \"volumeMounts\": [\n                    {\n                        \"mountPath\": \"/var/run/secrets/kubernetes.io/serviceaccount\",\n                        \"name\": \"kube-api-access-6tnb7\",\n                        \"readOnly\": true,\n                        \"recursiveReadOnly\": \"Disabled\"\n                    }\n                ]\n            }\n        ],\n        \"hostIP\": \"172.18.0.3\",\n        \"hostIPs\": [\n            {\n                \"ip\": \"172.18.0.3\"\n            }\n        ],\n        \"observedGeneration\": 1,\n        \"phase\": \"Pending\",\n        \"podIP\": \"10.244.0.6\",\n        \"podIPs\": [\n            {\n                \"ip\": \"10.244.0.6\"\n            }\n        ],\n        \"qosClass\": \"BestEffort\",\n        \"resources\": {},\n        \"startTime\": \"2026-11-27T06:51:10Z\"\n    }\n}"
+    },
+    "poll_fault_pod_events": {
+      "command": [
+        "kubectl",
+        "--kubeconfig",
+        "D:\\workshop\\nov\\azure-cloudops\\work\\ir07-5joadeng\\kubeconfig",
+        "get",
+        "events",
+        "--namespace",
+        "ir07-e7763074",
+        "--field-selector",
+        "involvedObject.name=bad-e7763074",
+        "-o",
+        "json"
+      ],
+      "returncode": 0,
+      "output": "{\n    \"apiVersion\": \"v1\",\n    \"items\": [\n        {\n            \"apiVersion\": \"v1\",\n            \"count\": 1,\n            \"eventTime\": null,\n            \"firstTimestamp\": \"2026-11-27T06:51:10Z\",\n            \"involvedObject\": {\n                \"apiVersion\": \"v1\",\n                \"kind\": \"Pod\",\n                \"name\": \"bad-e7763074\",\n                \"namespace\": \"ir07-e7763074\",\n                \"resourceVersion\": \"540\",\n                \"uid\": \"de03d0e1-db85-41df-961a-3d918da549e7\"\n            },\n            \"kind\": \"Event\",\n            \"lastTimestamp\": \"2026-11-27T06:51:10Z\",\n            \"message\": \"Successfully assigned ir07-e7763074/bad-e7763074 to azure-cloudops-ir07-e7763074-control-plane\",\n            \"metadata\": {\n                \"creationTimestamp\": \"2026-11-27T06:51:10Z\",\n                \"name\": \"bad-e7763074.18ebd445624b52a0\",\n                \"namespace\": \"ir07-e7763074\",\n                \"resourceVersion\": \"542\",\n                \"uid\": \"628c76bf-36fa-4d9e-8ee4-c3ab9de7e511\"\n            },\n            \"reason\": \"Scheduled\",\n            \"reportingComponent\": \"default-scheduler\",\n            \"reportingInstance\": \"\",\n            \"source\": {\n                \"component\": \"default-scheduler\"\n            },\n            \"type\": \"Normal\"\n        },\n        {\n            \"apiVersion\": \"v1\",\n            \"count\": 1,\n            \"eventTime\": null,\n            \"firstTimestamp\": \"2026-11-27T06:51:11Z\",\n            \"involvedObject\": {\n                \"apiVersion\": \"v1\",\n                \"fieldPath\": \"spec.containers{app}\",\n                \"kind\": \"Pod\",\n                \"name\": \"bad-e7763074\",\n                \"namespace\": \"ir07-e7763074\",\n                \"resourceVersion\": \"541\",\n                \"uid\": \"de03d0e1-db85-41df-961a-3d918da549e7\"\n            },\n            \"kind\": \"Event\",\n            \"lastTimestamp\": \"2026-11-27T06:51:11Z\",\n            \"message\": \"Pulling image \\\"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\\\"\",\n            \"metadata\": {\n                \"creationTimestamp\": \"2026-11-27T06:51:11Z\",\n                \"name\": \"bad-e7763074.18ebd44591b4c672\",\n                \"namespace\": \"ir07-e7763074\",\n                \"resourceVersion\": \"545\",\n                \"uid\": \"8d6e89e3-d665-4bf5-a4be-c19541cd0b7c\"\n            },\n            \"reason\": \"Pulling\",\n            \"reportingComponent\": \"kubelet\",\n            \"reportingInstance\": \"azure-cloudops-ir07-e7763074-control-plane\",\n            \"source\": {\n                \"component\": \"kubelet\",\n                \"host\": \"azure-cloudops-ir07-e7763074-control-plane\"\n            },\n            \"type\": \"Normal\"\n        },\n        {\n            \"apiVersion\": \"v1\",\n            \"count\": 1,\n            \"eventTime\": null,\n            \"firstTimestamp\": \"2026-11-27T06:51:11Z\",\n            \"involvedObject\": {\n                \"apiVersion\": \"v1\",\n                \"fieldPath\": \"spec.containers{app}\",\n                \"kind\": \"Pod\",\n                \"name\": \"bad-e7763074\",\n                \"namespace\": \"ir07-e7763074\",\n                \"resourceVersion\": \"541\",\n                \"uid\": \"de03d0e1-db85-41df-961a-3d918da549e7\"\n            },\n            \"kind\": \"Event\",\n            \"lastTimestamp\": \"2026-11-27T06:51:11Z\",\n            \"message\": \"Failed to pull image \\\"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\\\": rpc error: code = NotFound desc = failed to pull and unpack image \\\"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\\\": failed to resolve reference \\\"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\\\": localhost:5000/azure-cloudops/ir07-health:missing-e7763074: not found\",\n            \"metadata\": {\n                \"creationTimestamp\": \"2026-11-27T06:51:11Z\",\n                \"name\": \"bad-e7763074.18ebd44592a402a9\",\n                \"namespace\": \"ir07-e7763074\",\n                \"resourceVersion\": \"547\",\n                \"uid\": \"71ea8153-9889-43ff-9b68-0740a18984fb\"\n            },\n            \"reason\": \"Failed\",\n            \"reportingComponent\": \"kubelet\",\n            \"reportingInstance\": \"azure-cloudops-ir07-e7763074-control-plane\",\n            \"source\": {\n                \"component\": \"kubelet\",\n                \"host\": \"azure-cloudops-ir07-e7763074-control-plane\"\n            },\n            \"type\": \"Warning\"\n        },\n        {\n            \"apiVersion\": \"v1\",\n            \"count\": 1,\n            \"eventTime\": null,\n            \"firstTimestamp\": \"2026-11-27T06:51:11Z\",\n            \"involvedObject\": {\n                \"apiVersion\": \"v1\",\n                \"fieldPath\": \"spec.containers{app}\",\n                \"kind\": \"Pod\",\n                \"name\": \"bad-e7763074\",\n                \"namespace\": \"ir07-e7763074\",\n                \"resourceVersion\": \"541\",\n                \"uid\": \"de03d0e1-db85-41df-961a-3d918da549e7\"\n            },\n            \"kind\": \"Event\",\n            \"lastTimestamp\": \"2026-11-27T06:51:11Z\",\n            \"message\": \"Error: ErrImagePull\",\n            \"metadata\": {\n                \"creationTimestamp\": \"2026-11-27T06:51:11Z\",\n                \"name\": \"bad-e7763074.18ebd44592a7b1e4\",\n                \"namespace\": \"ir07-e7763074\",\n                \"resourceVersion\": \"548\",\n                \"uid\": \"2ca81ad6-2df0-4049-a908-6f81fccd60f4\"\n            },\n            \"reason\": \"Failed\",\n            \"reportingComponent\": \"kubelet\",\n            \"reportingInstance\": \"azure-cloudops-ir07-e7763074-control-plane\",\n            \"source\": {\n                \"component\": \"kubelet\",\n                \"host\": \"azure-cloudops-ir07-e7763074-control-plane\"\n            },\n            \"type\": \"Warning\"\n        },\n        {\n            \"apiVersion\": \"v1\",\n            \"count\": 1,\n            \"eventTime\": null,\n            \"firstTimestamp\": \"2026-11-27T06:51:12Z\",\n            \"involvedObject\": {\n                \"apiVersion\": \"v1\",\n                \"fieldPath\": \"spec.containers{app}\",\n                \"kind\": \"Pod\",\n                \"name\": \"bad-e7763074\",\n                \"namespace\": \"ir07-e7763074\",\n                \"resourceVersion\": \"541\",\n                \"uid\": \"de03d0e1-db85-41df-961a-3d918da549e7\"\n            },\n            \"kind\": \"Event\",\n            \"lastTimestamp\": \"2026-11-27T06:51:12Z\",\n            \"message\": \"Back-off pulling image \\\"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\\\"\",\n            \"metadata\": {\n                \"creationTimestamp\": \"2026-11-27T06:51:12Z\",\n                \"name\": \"bad-e7763074.18ebd445b8bd6859\",\n                \"namespace\": \"ir07-e7763074\",\n                \"resourceVersion\": \"549\",\n                \"uid\": \"3fee8cf4-c487-4f8a-a90c-77224ad7e82e\"\n            },\n            \"reason\": \"BackOff\",\n            \"reportingComponent\": \"kubelet\",\n            \"reportingInstance\": \"azure-cloudops-ir07-e7763074-control-plane\",\n            \"source\": {\n                \"component\": \"kubelet\",\n                \"host\": \"azure-cloudops-ir07-e7763074-control-plane\"\n            },\n            \"type\": \"Normal\"\n        },\n        {\n            \"apiVersion\": \"v1\",\n            \"count\": 1,\n            \"eventTime\": null,\n            \"firstTimestamp\": \"2026-11-27T06:51:12Z\",\n            \"involvedObject\": {\n                \"apiVersion\": \"v1\",\n                \"fieldPath\": \"spec.containers{app}\",\n                \"kind\": \"Pod\",\n                \"name\": \"bad-e7763074\",\n                \"namespace\": \"ir07-e7763074\",\n                \"resourceVersion\": \"541\",\n                \"uid\": \"de03d0e1-db85-41df-961a-3d918da549e7\"\n            },\n            \"kind\": \"Event\",\n            \"lastTimestamp\": \"2026-11-27T06:51:12Z\",\n            \"message\": \"Error: ImagePullBackOff\",\n            \"metadata\": {\n                \"creationTimestamp\": \"2026-11-27T06:51:12Z\",\n                \"name\": \"bad-e7763074.18ebd445b8c017da\",\n                \"namespace\": \"ir07-e7763074\",\n                \"resourceVersion\": \"551\",\n                \"uid\": \"b9c685bf-b9ad-4bf3-9397-47d2361634c0\"\n            },\n            \"reason\": \"Failed\",\n            \"reportingComponent\": \"kubelet\",\n            \"reportingInstance\": \"azure-cloudops-ir07-e7763074-control-plane\",\n            \"source\": {\n                \"component\": \"kubelet\",\n                \"host\": \"azure-cloudops-ir07-e7763074-control-plane\"\n            },\n            \"type\": \"Warning\"\n        }\n    ],\n    \"kind\": \"List\",\n    \"metadata\": {\n        \"resourceVersion\": \"\"\n    }\n}"
+    },
+    "describe_fault_pod": {
+      "command": [
+        "kubectl",
+        "--kubeconfig",
+        "D:\\workshop\\nov\\azure-cloudops\\work\\ir07-5joadeng\\kubeconfig",
+        "describe",
+        "pod",
+        "--namespace",
+        "ir07-e7763074",
+        "bad-e7763074"
+      ],
+      "returncode": 0,
+      "output": "Name:             bad-e7763074\nNamespace:        ir07-e7763074\nPriority:         0\nService Account:  default\nNode:             azure-cloudops-ir07-e7763074-control-plane/172.18.0.3\nStart Time:       Fri, 27 Nov 2026 19:51:10 +1300\nLabels:           <none>\nAnnotations:      <none>\nStatus:           Pending\nIP:               10.244.0.6\nIPs:\n  IP:  10.244.0.6\nContainers:\n  app:\n    Container ID:  \n    Image:         localhost:5000/azure-cloudops/ir07-health:missing-e7763074\n    Image ID:      \n    Port:          8080/TCP\n    Host Port:     0/TCP\n    Command:\n      /health_server\n      --listen\n      0.0.0.0:8080\n      --release\n      unused\n    State:          Waiting\n      Reason:       ErrImagePull\n    Ready:          False\n    Restart Count:  0\n    Environment:    <none>\n    Mounts:\n      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-6tnb7 (ro)\nConditions:\n  Type                        Status\n  PodReadyToStartContainers   True \n  Initialized                 True \n  Ready                       False \n  ContainersReady             False \n  PodScheduled                True \nVolumes:\n  kube-api-access-6tnb7:\n    Type:                    Projected (a volume that contains injected data from multiple sources)\n    TokenExpirationSeconds:  3607\n    ConfigMapName:           kube-root-ca.crt\n    Optional:                false\n    DownwardAPI:             true\nQoS Class:                   BestEffort\nNode-Selectors:              <none>\nTolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s\n                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s\nEvents:\n  Type     Reason     Age   From               Message\n  ----     ------     ----  ----               -------\n  Normal   Scheduled  3s    default-scheduler  Successfully assigned ir07-e7763074/bad-e7763074 to azure-cloudops-ir07-e7763074-control-plane\n  Normal   Pulling    2s    kubelet            spec.containers{app}: Pulling image \"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\"\n  Warning  Failed     2s    kubelet            spec.containers{app}: Failed to pull image \"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\": rpc error: code = NotFound desc = failed to pull and unpack image \"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\": failed to resolve reference \"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\": localhost:5000/azure-cloudops/ir07-health:missing-e7763074: not found\n  Warning  Failed     2s    kubelet            spec.containers{app}: Error: ErrImagePull\n  Normal   BackOff    1s    kubelet            spec.containers{app}: Back-off pulling image \"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\"\n  Warning  Failed     1s    kubelet            spec.containers{app}: Error: ImagePullBackOff"
+    },
+    "capture_registry_request_log": {
+      "command": [
+        "docker",
+        "exec",
+        "azure-cloudops-ir07-e7763074-control-plane",
+        "cat",
+        "/root/ir07-registry.jsonl"
+      ],
+      "returncode": 0,
+      "output": "{\"at_utc\":\"2026-11-27T06:51:07.382116248Z\",\"method\":\"GET\",\"path\":\"/v2/\",\"status\":200}\n{\"at_utc\":\"2026-11-27T06:51:11.706718894Z\",\"method\":\"HEAD\",\"path\":\"/v2/azure-cloudops/ir07-health/manifests/missing-e7763074\",\"status\":404,\"error_code\":\"MANIFEST_UNKNOWN\"}\n{\"at_utc\":\"2026-11-27T06:51:11.710479549Z\",\"method\":\"HEAD\",\"path\":\"/v2/azure-cloudops/ir07-health/manifests/missing-e7763074\",\"status\":404,\"error_code\":\"MANIFEST_UNKNOWN\"}"
+    },
+    "apply_repaired_pod": {
+      "command": [
+        "kubectl",
+        "--kubeconfig",
+        "D:\\workshop\\nov\\azure-cloudops\\work\\ir07-5joadeng\\kubeconfig",
+        "apply",
+        "-f",
+        "D:\\workshop\\nov\\azure-cloudops\\work\\ir07-5joadeng\\recovered-e7763074.yaml"
+      ],
+      "returncode": 0,
+      "output": "pod/recovered-e7763074 created"
+    },
+    "wait_repaired_ready": {
+      "command": [
+        "kubectl",
+        "--kubeconfig",
+        "D:\\workshop\\nov\\azure-cloudops\\work\\ir07-5joadeng\\kubeconfig",
+        "wait",
+        "--namespace",
+        "ir07-e7763074",
+        "--for=condition=Ready",
+        "pod/recovered-e7763074",
+        "--timeout=90s"
+      ],
+      "returncode": 0,
+      "output": "pod/recovered-e7763074 condition met"
+    },
+    "repaired_pod_status": {
+      "command": [
+        "kubectl",
+        "--kubeconfig",
+        "D:\\workshop\\nov\\azure-cloudops\\work\\ir07-5joadeng\\kubeconfig",
+        "get",
+        "pod",
+        "--namespace",
+        "ir07-e7763074",
+        "recovered-e7763074",
+        "-o",
+        "json"
+      ],
+      "returncode": 0,
+      "output": "{\n    \"apiVersion\": \"v1\",\n    \"kind\": \"Pod\",\n    \"metadata\": {\n        \"annotations\": {\n            \"kubectl.kubernetes.io/last-applied-configuration\": \"{\\\"apiVersion\\\":\\\"v1\\\",\\\"kind\\\":\\\"Pod\\\",\\\"metadata\\\":{\\\"annotations\\\":{},\\\"name\\\":\\\"recovered-e7763074\\\",\\\"namespace\\\":\\\"ir07-e7763074\\\"},\\\"spec\\\":{\\\"containers\\\":[{\\\"command\\\":[\\\"/health_server\\\",\\\"--listen\\\",\\\"0.0.0.0:8080\\\",\\\"--release\\\",\\\"e8-ir07-recovered\\\"],\\\"image\\\":\\\"azure-cloudops/ir07-health:e8-e7763074\\\",\\\"imagePullPolicy\\\":\\\"Never\\\",\\\"name\\\":\\\"app\\\",\\\"ports\\\":[{\\\"containerPort\\\":8080}]}],\\\"restartPolicy\\\":\\\"Never\\\"}}\\n\"\n        },\n        \"creationTimestamp\": \"2026-11-27T06:51:14Z\",\n        \"generation\": 1,\n        \"name\": \"recovered-e7763074\",\n        \"namespace\": \"ir07-e7763074\",\n        \"resourceVersion\": \"566\",\n        \"uid\": \"4d022df4-8f47-43d0-a7b7-66c6c225f69b\"\n    },\n    \"spec\": {\n        \"containers\": [\n            {\n                \"command\": [\n                    \"/health_server\",\n                    \"--listen\",\n                    \"0.0.0.0:8080\",\n                    \"--release\",\n                    \"e8-ir07-recovered\"\n                ],\n                \"image\": \"azure-cloudops/ir07-health:e8-e7763074\",\n                \"imagePullPolicy\": \"Never\",\n                \"name\": \"app\",\n                \"ports\": [\n                    {\n                        \"containerPort\": 8080,\n                        \"protocol\": \"TCP\"\n                    }\n                ],\n                \"resources\": {},\n                \"terminationMessagePath\": \"/dev/termination-log\",\n                \"terminationMessagePolicy\": \"File\",\n                \"volumeMounts\": [\n                    {\n                        \"mountPath\": \"/var/run/secrets/kubernetes.io/serviceaccount\",\n                        \"name\": \"kube-api-access-wxlk8\",\n                        \"readOnly\": true\n                    }\n                ]\n            }\n        ],\n        \"dnsPolicy\": \"ClusterFirst\",\n        \"enableServiceLinks\": true,\n        \"nodeName\": \"azure-cloudops-ir07-e7763074-control-plane\",\n        \"preemptionPolicy\": \"PreemptLowerPriority\",\n        \"priority\": 0,\n        \"restartPolicy\": \"Never\",\n        \"schedulerName\": \"default-scheduler\",\n        \"securityContext\": {},\n        \"serviceAccount\": \"default\",\n        \"serviceAccountName\": \"default\",\n        \"terminationGracePeriodSeconds\": 30,\n        \"tolerations\": [\n            {\n                \"effect\": \"NoExecute\",\n                \"key\": \"node.kubernetes.io/not-ready\",\n                \"operator\": \"Exists\",\n                \"tolerationSeconds\": 300\n            },\n            {\n                \"effect\": \"NoExecute\",\n                \"key\": \"node.kubernetes.io/unreachable\",\n                \"operator\": \"Exists\",\n                \"tolerationSeconds\": 300\n            }\n        ],\n        \"volumes\": [\n            {\n                \"name\": \"kube-api-access-wxlk8\",\n                \"projected\": {\n                    \"defaultMode\": 420,\n                    \"sources\": [\n                        {\n                            \"serviceAccountToken\": {\n                                \"expirationSeconds\": 3607,\n                                \"path\": \"token\"\n                            }\n                        },\n                        {\n                            \"configMap\": {\n                                \"items\": [\n                                    {\n                                        \"key\": \"ca.crt\",\n                                        \"path\": \"ca.crt\"\n                                    }\n                                ],\n                                \"name\": \"kube-root-ca.crt\"\n                            }\n                        },\n                        {\n                            \"downwardAPI\": {\n                                \"items\": [\n                                    {\n                                        \"fieldRef\": {\n                                            \"apiVersion\": \"v1\",\n                                            \"fieldPath\": \"metadata.namespace\"\n                                        },\n                                        \"path\": \"namespace\"\n                                    }\n                                ]\n                            }\n                        }\n                    ]\n                }\n            }\n        ]\n    },\n    \"status\": {\n        \"conditions\": [\n            {\n                \"lastProbeTime\": null,\n                \"lastTransitionTime\": \"2026-11-27T06:51:15Z\",\n                \"observedGeneration\": 1,\n                \"status\": \"True\",\n                \"type\": \"PodReadyToStartContainers\"\n            },\n            {\n                \"lastProbeTime\": null,\n                \"lastTransitionTime\": \"2026-11-27T06:51:14Z\",\n                \"observedGeneration\": 1,\n                \"status\": \"True\",\n                \"type\": \"Initialized\"\n            },\n            {\n                \"lastProbeTime\": null,\n                \"lastTransitionTime\": \"2026-11-27T06:51:15Z\",\n                \"observedGeneration\": 1,\n                \"status\": \"True\",\n                \"type\": \"Ready\"\n            },\n            {\n                \"lastProbeTime\": null,\n                \"lastTransitionTime\": \"2026-11-27T06:51:15Z\",\n                \"observedGeneration\": 1,\n                \"status\": \"True\",\n                \"type\": \"ContainersReady\"\n            },\n            {\n                \"lastProbeTime\": null,\n                \"lastTransitionTime\": \"2026-11-27T06:51:14Z\",\n                \"observedGeneration\": 1,\n                \"status\": \"True\",\n                \"type\": \"PodScheduled\"\n            }\n        ],\n        \"containerStatuses\": [\n            {\n                \"containerID\": \"containerd://830d3cd3f2d2b854ca7a856bf7bd9a0f32d70327cdf4409bf828f3de0396bf59\",\n                \"image\": \"docker.io/azure-cloudops/ir07-health:e8-e7763074\",\n                \"imageID\": \"docker.io/library/import-2026-11-27@sha256:bcd58dcdd6a78725d46e87791d67892d549e0a85369cccf07db5ed4aaa4703cd\",\n                \"lastState\": {},\n                \"name\": \"app\",\n                \"ready\": true,\n                \"resources\": {},\n                \"restartCount\": 0,\n                \"started\": true,\n                \"state\": {\n                    \"running\": {\n                        \"startedAt\": \"2026-11-27T06:51:15Z\"\n                    }\n                },\n                \"user\": {\n                    \"linux\": {\n                        \"gid\": 0,\n                        \"supplementalGroups\": [\n                            0\n                        ],\n                        \"uid\": 0\n                    }\n                },\n                \"volumeMounts\": [\n                    {\n                        \"mountPath\": \"/var/run/secrets/kubernetes.io/serviceaccount\",\n                        \"name\": \"kube-api-access-wxlk8\",\n                        \"readOnly\": true,\n                        \"recursiveReadOnly\": \"Disabled\"\n                    }\n                ]\n            }\n        ],\n        \"hostIP\": \"172.18.0.3\",\n        \"hostIPs\": [\n            {\n                \"ip\": \"172.18.0.3\"\n            }\n        ],\n        \"observedGeneration\": 1,\n        \"phase\": \"Running\",\n        \"podIP\": \"10.244.0.7\",\n        \"podIPs\": [\n            {\n                \"ip\": \"10.244.0.7\"\n            }\n        ],\n        \"qosClass\": \"BestEffort\",\n        \"resources\": {},\n        \"startTime\": \"2026-11-27T06:51:14Z\"\n    }\n}"
+    },
+    "bad_image_negative_control_after_recovery": {
+      "command": [
+        "kubectl",
+        "--kubeconfig",
+        "D:\\workshop\\nov\\azure-cloudops\\work\\ir07-5joadeng\\kubeconfig",
+        "get",
+        "pod",
+        "--namespace",
+        "ir07-e7763074",
+        "bad-e7763074",
+        "-o",
+        "json"
+      ],
+      "returncode": 0,
+      "output": "{\n    \"apiVersion\": \"v1\",\n    \"kind\": \"Pod\",\n    \"metadata\": {\n        \"annotations\": {\n            \"kubectl.kubernetes.io/last-applied-configuration\": \"{\\\"apiVersion\\\":\\\"v1\\\",\\\"kind\\\":\\\"Pod\\\",\\\"metadata\\\":{\\\"annotations\\\":{},\\\"name\\\":\\\"bad-e7763074\\\",\\\"namespace\\\":\\\"ir07-e7763074\\\"},\\\"spec\\\":{\\\"containers\\\":[{\\\"command\\\":[\\\"/health_server\\\",\\\"--listen\\\",\\\"0.0.0.0:8080\\\",\\\"--release\\\",\\\"unused\\\"],\\\"image\\\":\\\"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\\\",\\\"imagePullPolicy\\\":\\\"Always\\\",\\\"name\\\":\\\"app\\\",\\\"ports\\\":[{\\\"containerPort\\\":8080}]}],\\\"restartPolicy\\\":\\\"Never\\\"}}\\n\"\n        },\n        \"creationTimestamp\": \"2026-11-27T06:51:10Z\",\n        \"generation\": 1,\n        \"name\": \"bad-e7763074\",\n        \"namespace\": \"ir07-e7763074\",\n        \"resourceVersion\": \"550\",\n        \"uid\": \"de03d0e1-db85-41df-961a-3d918da549e7\"\n    },\n    \"spec\": {\n        \"containers\": [\n            {\n                \"command\": [\n                    \"/health_server\",\n                    \"--listen\",\n                    \"0.0.0.0:8080\",\n                    \"--release\",\n                    \"unused\"\n                ],\n                \"image\": \"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\",\n                \"imagePullPolicy\": \"Always\",\n                \"name\": \"app\",\n                \"ports\": [\n                    {\n                        \"containerPort\": 8080,\n                        \"protocol\": \"TCP\"\n                    }\n                ],\n                \"resources\": {},\n                \"terminationMessagePath\": \"/dev/termination-log\",\n                \"terminationMessagePolicy\": \"File\",\n                \"volumeMounts\": [\n                    {\n                        \"mountPath\": \"/var/run/secrets/kubernetes.io/serviceaccount\",\n                        \"name\": \"kube-api-access-6tnb7\",\n                        \"readOnly\": true\n                    }\n                ]\n            }\n        ],\n        \"dnsPolicy\": \"ClusterFirst\",\n        \"enableServiceLinks\": true,\n        \"nodeName\": \"azure-cloudops-ir07-e7763074-control-plane\",\n        \"preemptionPolicy\": \"PreemptLowerPriority\",\n        \"priority\": 0,\n        \"restartPolicy\": \"Never\",\n        \"schedulerName\": \"default-scheduler\",\n        \"securityContext\": {},\n        \"serviceAccount\": \"default\",\n        \"serviceAccountName\": \"default\",\n        \"terminationGracePeriodSeconds\": 30,\n        \"tolerations\": [\n            {\n                \"effect\": \"NoExecute\",\n                \"key\": \"node.kubernetes.io/not-ready\",\n                \"operator\": \"Exists\",\n                \"tolerationSeconds\": 300\n            },\n            {\n                \"effect\": \"NoExecute\",\n                \"key\": \"node.kubernetes.io/unreachable\",\n                \"operator\": \"Exists\",\n                \"tolerationSeconds\": 300\n            }\n        ],\n        \"volumes\": [\n            {\n                \"name\": \"kube-api-access-6tnb7\",\n                \"projected\": {\n                    \"defaultMode\": 420,\n                    \"sources\": [\n                        {\n                            \"serviceAccountToken\": {\n                                \"expirationSeconds\": 3607,\n                                \"path\": \"token\"\n                            }\n                        },\n                        {\n                            \"configMap\": {\n                                \"items\": [\n                                    {\n                                        \"key\": \"ca.crt\",\n                                        \"path\": \"ca.crt\"\n                                    }\n                                ],\n                                \"name\": \"kube-root-ca.crt\"\n                            }\n                        },\n                        {\n                            \"downwardAPI\": {\n                                \"items\": [\n                                    {\n                                        \"fieldRef\": {\n                                            \"apiVersion\": \"v1\",\n                                            \"fieldPath\": \"metadata.namespace\"\n                                        },\n                                        \"path\": \"namespace\"\n                                    }\n                                ]\n                            }\n                        }\n                    ]\n                }\n            }\n        ]\n    },\n    \"status\": {\n        \"conditions\": [\n            {\n                \"lastProbeTime\": null,\n                \"lastTransitionTime\": \"2026-11-27T06:51:11Z\",\n                \"observedGeneration\": 1,\n                \"status\": \"True\",\n                \"type\": \"PodReadyToStartContainers\"\n            },\n            {\n                \"lastProbeTime\": null,\n                \"lastTransitionTime\": \"2026-11-27T06:51:10Z\",\n                \"observedGeneration\": 1,\n                \"status\": \"True\",\n                \"type\": \"Initialized\"\n            },\n            {\n                \"lastProbeTime\": null,\n                \"lastTransitionTime\": \"2026-11-27T06:51:10Z\",\n                \"message\": \"containers with unready status: [app]\",\n                \"observedGeneration\": 1,\n                \"reason\": \"ContainersNotReady\",\n                \"status\": \"False\",\n                \"type\": \"Ready\"\n            },\n            {\n                \"lastProbeTime\": null,\n                \"lastTransitionTime\": \"2026-11-27T06:51:10Z\",\n                \"message\": \"containers with unready status: [app]\",\n                \"observedGeneration\": 1,\n                \"reason\": \"ContainersNotReady\",\n                \"status\": \"False\",\n                \"type\": \"ContainersReady\"\n            },\n            {\n                \"lastProbeTime\": null,\n                \"lastTransitionTime\": \"2026-11-27T06:51:10Z\",\n                \"observedGeneration\": 1,\n                \"status\": \"True\",\n                \"type\": \"PodScheduled\"\n            }\n        ],\n        \"containerStatuses\": [\n            {\n                \"image\": \"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\",\n                \"imageID\": \"\",\n                \"lastState\": {},\n                \"name\": \"app\",\n                \"ready\": false,\n                \"restartCount\": 0,\n                \"started\": false,\n                \"state\": {\n                    \"waiting\": {\n                        \"message\": \"rpc error: code = NotFound desc = failed to pull and unpack image \\\"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\\\": failed to resolve reference \\\"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\\\": localhost:5000/azure-cloudops/ir07-health:missing-e7763074: not found\",\n                        \"reason\": \"ErrImagePull\"\n                    }\n                },\n                \"volumeMounts\": [\n                    {\n                        \"mountPath\": \"/var/run/secrets/kubernetes.io/serviceaccount\",\n                        \"name\": \"kube-api-access-6tnb7\",\n                        \"readOnly\": true,\n                        \"recursiveReadOnly\": \"Disabled\"\n                    }\n                ]\n            }\n        ],\n        \"hostIP\": \"172.18.0.3\",\n        \"hostIPs\": [\n            {\n                \"ip\": \"172.18.0.3\"\n            }\n        ],\n        \"observedGeneration\": 1,\n        \"phase\": \"Pending\",\n        \"podIP\": \"10.244.0.6\",\n        \"podIPs\": [\n            {\n                \"ip\": \"10.244.0.6\"\n            }\n        ],\n        \"qosClass\": \"BestEffort\",\n        \"resources\": {},\n        \"startTime\": \"2026-11-27T06:51:10Z\"\n    }\n}"
+    }
+  },
+  "http_probes": {
+    "good-e7763074": {
+      "status": 200,
+      "body": "healthy\n",
+      "release": "e8-ir07-good",
+      "url_path": "/health",
+      "method": "GET"
+    },
+    "recovered-e7763074": {
+      "status": 200,
+      "body": "healthy\n",
+      "release": "e8-ir07-recovered",
+      "url_path": "/health",
+      "method": "GET"
+    }
+  },
+  "port_forward_cleanup": {
+    "good-e7763074": {
+      "process_exit": 1,
+      "log": "Forwarding from 127.0.0.1:56595 -> 8080\nHandling connection for 56595\n"
+    },
+    "recovered-e7763074": {
+      "process_exit": 1,
+      "log": "Forwarding from 127.0.0.1:56610 -> 8080\nHandling connection for 56610\n"
+    }
+  },
+  "observations": {
+    "baseline_pod_status": {
+      "apiVersion": "v1",
+      "kind": "Pod",
+      "metadata": {
+        "annotations": {
+          "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"kind\":\"Pod\",\"metadata\":{\"annotations\":{},\"name\":\"good-e7763074\",\"namespace\":\"ir07-e7763074\"},\"spec\":{\"containers\":[{\"command\":[\"/health_server\",\"--listen\",\"0.0.0.0:8080\",\"--release\",\"e8-ir07-good\"],\"image\":\"azure-cloudops/ir07-health:e8-e7763074\",\"imagePullPolicy\":\"Never\",\"name\":\"app\",\"ports\":[{\"containerPort\":8080}]}],\"restartPolicy\":\"Never\"}}\n"
+        },
+        "creationTimestamp": "2026-11-27T06:51:08Z",
+        "generation": 1,
+        "name": "good-e7763074",
+        "namespace": "ir07-e7763074",
+        "resourceVersion": "536",
+        "uid": "bc73239a-1bdf-4d63-b8ce-2a1fa1c5b6c1"
+      },
+      "spec": {
+        "containers": [
+          {
+            "command": [
+              "/health_server",
+              "--listen",
+              "0.0.0.0:8080",
+              "--release",
+              "e8-ir07-good"
+            ],
+            "image": "azure-cloudops/ir07-health:e8-e7763074",
+            "imagePullPolicy": "Never",
+            "name": "app",
+            "ports": [
+              {
+                "containerPort": 8080,
+                "protocol": "TCP"
+              }
+            ],
+            "resources": {},
+            "terminationMessagePath": "/dev/termination-log",
+            "terminationMessagePolicy": "File",
+            "volumeMounts": [
+              {
+                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                "name": "kube-api-access-n9clx",
+                "readOnly": true
+              }
+            ]
+          }
+        ],
+        "dnsPolicy": "ClusterFirst",
+        "enableServiceLinks": true,
+        "nodeName": "azure-cloudops-ir07-e7763074-control-plane",
+        "preemptionPolicy": "PreemptLowerPriority",
+        "priority": 0,
+        "restartPolicy": "Never",
+        "schedulerName": "default-scheduler",
+        "securityContext": {},
+        "serviceAccount": "default",
+        "serviceAccountName": "default",
+        "terminationGracePeriodSeconds": 30,
+        "tolerations": [
+          {
+            "effect": "NoExecute",
+            "key": "node.kubernetes.io/not-ready",
+            "operator": "Exists",
+            "tolerationSeconds": 300
+          },
+          {
+            "effect": "NoExecute",
+            "key": "node.kubernetes.io/unreachable",
+            "operator": "Exists",
+            "tolerationSeconds": 300
+          }
+        ],
+        "volumes": [
+          {
+            "name": "kube-api-access-n9clx",
+            "projected": {
+              "defaultMode": 420,
+              "sources": [
+                {
+                  "serviceAccountToken": {
+                    "expirationSeconds": 3607,
+                    "path": "token"
+                  }
+                },
+                {
+                  "configMap": {
+                    "items": [
+                      {
+                        "key": "ca.crt",
+                        "path": "ca.crt"
+                      }
+                    ],
+                    "name": "kube-root-ca.crt"
+                  }
+                },
+                {
+                  "downwardAPI": {
+                    "items": [
+                      {
+                        "fieldRef": {
+                          "apiVersion": "v1",
+                          "fieldPath": "metadata.namespace"
+                        },
+                        "path": "namespace"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "status": {
+        "conditions": [
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-11-27T06:51:09Z",
+            "observedGeneration": 1,
+            "status": "True",
+            "type": "PodReadyToStartContainers"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-11-27T06:51:08Z",
+            "observedGeneration": 1,
+            "status": "True",
+            "type": "Initialized"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-11-27T06:51:09Z",
+            "observedGeneration": 1,
+            "status": "True",
+            "type": "Ready"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-11-27T06:51:09Z",
+            "observedGeneration": 1,
+            "status": "True",
+            "type": "ContainersReady"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-11-27T06:51:08Z",
+            "observedGeneration": 1,
+            "status": "True",
+            "type": "PodScheduled"
+          }
+        ],
+        "containerStatuses": [
+          {
+            "containerID": "containerd://5bd74b894e5912324210dc0b5abf3577618acdb53b450379444b6e69bbabeb8b",
+            "image": "docker.io/azure-cloudops/ir07-health:e8-e7763074",
+            "imageID": "docker.io/library/import-2026-11-27@sha256:bcd58dcdd6a78725d46e87791d67892d549e0a85369cccf07db5ed4aaa4703cd",
+            "lastState": {},
+            "name": "app",
+            "ready": true,
+            "resources": {},
+            "restartCount": 0,
+            "started": true,
+            "state": {
+              "running": {
+                "startedAt": "2026-11-27T06:51:09Z"
+              }
+            },
+            "user": {
+              "linux": {
+                "gid": 0,
+                "supplementalGroups": [
+                  0
+                ],
+                "uid": 0
+              }
+            },
+            "volumeMounts": [
+              {
+                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                "name": "kube-api-access-n9clx",
+                "readOnly": true,
+                "recursiveReadOnly": "Disabled"
+              }
+            ]
+          }
+        ],
+        "hostIP": "172.18.0.3",
+        "hostIPs": [
+          {
+            "ip": "172.18.0.3"
+          }
+        ],
+        "observedGeneration": 1,
+        "phase": "Running",
+        "podIP": "10.244.0.5",
+        "podIPs": [
+          {
+            "ip": "10.244.0.5"
+          }
+        ],
+        "qosClass": "BestEffort",
+        "resources": {},
+        "startTime": "2026-11-27T06:51:08Z"
+      }
+    },
+    "fault_pod_status": {
+      "apiVersion": "v1",
+      "kind": "Pod",
+      "metadata": {
+        "annotations": {
+          "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"kind\":\"Pod\",\"metadata\":{\"annotations\":{},\"name\":\"bad-e7763074\",\"namespace\":\"ir07-e7763074\"},\"spec\":{\"containers\":[{\"command\":[\"/health_server\",\"--listen\",\"0.0.0.0:8080\",\"--release\",\"unused\"],\"image\":\"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\",\"imagePullPolicy\":\"Always\",\"name\":\"app\",\"ports\":[{\"containerPort\":8080}]}],\"restartPolicy\":\"Never\"}}\n"
+        },
+        "creationTimestamp": "2026-11-27T06:51:10Z",
+        "generation": 1,
+        "name": "bad-e7763074",
+        "namespace": "ir07-e7763074",
+        "resourceVersion": "550",
+        "uid": "de03d0e1-db85-41df-961a-3d918da549e7"
+      },
+      "spec": {
+        "containers": [
+          {
+            "command": [
+              "/health_server",
+              "--listen",
+              "0.0.0.0:8080",
+              "--release",
+              "unused"
+            ],
+            "image": "localhost:5000/azure-cloudops/ir07-health:missing-e7763074",
+            "imagePullPolicy": "Always",
+            "name": "app",
+            "ports": [
+              {
+                "containerPort": 8080,
+                "protocol": "TCP"
+              }
+            ],
+            "resources": {},
+            "terminationMessagePath": "/dev/termination-log",
+            "terminationMessagePolicy": "File",
+            "volumeMounts": [
+              {
+                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                "name": "kube-api-access-6tnb7",
+                "readOnly": true
+              }
+            ]
+          }
+        ],
+        "dnsPolicy": "ClusterFirst",
+        "enableServiceLinks": true,
+        "nodeName": "azure-cloudops-ir07-e7763074-control-plane",
+        "preemptionPolicy": "PreemptLowerPriority",
+        "priority": 0,
+        "restartPolicy": "Never",
+        "schedulerName": "default-scheduler",
+        "securityContext": {},
+        "serviceAccount": "default",
+        "serviceAccountName": "default",
+        "terminationGracePeriodSeconds": 30,
+        "tolerations": [
+          {
+            "effect": "NoExecute",
+            "key": "node.kubernetes.io/not-ready",
+            "operator": "Exists",
+            "tolerationSeconds": 300
+          },
+          {
+            "effect": "NoExecute",
+            "key": "node.kubernetes.io/unreachable",
+            "operator": "Exists",
+            "tolerationSeconds": 300
+          }
+        ],
+        "volumes": [
+          {
+            "name": "kube-api-access-6tnb7",
+            "projected": {
+              "defaultMode": 420,
+              "sources": [
+                {
+                  "serviceAccountToken": {
+                    "expirationSeconds": 3607,
+                    "path": "token"
+                  }
+                },
+                {
+                  "configMap": {
+                    "items": [
+                      {
+                        "key": "ca.crt",
+                        "path": "ca.crt"
+                      }
+                    ],
+                    "name": "kube-root-ca.crt"
+                  }
+                },
+                {
+                  "downwardAPI": {
+                    "items": [
+                      {
+                        "fieldRef": {
+                          "apiVersion": "v1",
+                          "fieldPath": "metadata.namespace"
+                        },
+                        "path": "namespace"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "status": {
+        "conditions": [
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-11-27T06:51:11Z",
+            "observedGeneration": 1,
+            "status": "True",
+            "type": "PodReadyToStartContainers"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-11-27T06:51:10Z",
+            "observedGeneration": 1,
+            "status": "True",
+            "type": "Initialized"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-11-27T06:51:10Z",
+            "message": "containers with unready status: [app]",
+            "observedGeneration": 1,
+            "reason": "ContainersNotReady",
+            "status": "False",
+            "type": "Ready"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-11-27T06:51:10Z",
+            "message": "containers with unready status: [app]",
+            "observedGeneration": 1,
+            "reason": "ContainersNotReady",
+            "status": "False",
+            "type": "ContainersReady"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-11-27T06:51:10Z",
+            "observedGeneration": 1,
+            "status": "True",
+            "type": "PodScheduled"
+          }
+        ],
+        "containerStatuses": [
+          {
+            "image": "localhost:5000/azure-cloudops/ir07-health:missing-e7763074",
+            "imageID": "",
+            "lastState": {},
+            "name": "app",
+            "ready": false,
+            "restartCount": 0,
+            "started": false,
+            "state": {
+              "waiting": {
+                "message": "rpc error: code = NotFound desc = failed to pull and unpack image \"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\": failed to resolve reference \"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\": localhost:5000/azure-cloudops/ir07-health:missing-e7763074: not found",
+                "reason": "ErrImagePull"
+              }
+            },
+            "volumeMounts": [
+              {
+                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                "name": "kube-api-access-6tnb7",
+                "readOnly": true,
+                "recursiveReadOnly": "Disabled"
+              }
+            ]
+          }
+        ],
+        "hostIP": "172.18.0.3",
+        "hostIPs": [
+          {
+            "ip": "172.18.0.3"
+          }
+        ],
+        "observedGeneration": 1,
+        "phase": "Pending",
+        "podIP": "10.244.0.6",
+        "podIPs": [
+          {
+            "ip": "10.244.0.6"
+          }
+        ],
+        "qosClass": "BestEffort",
+        "resources": {},
+        "startTime": "2026-11-27T06:51:10Z"
+      }
+    },
+    "fault_warning_events": {
+      "apiVersion": "v1",
+      "items": [
+        {
+          "apiVersion": "v1",
+          "count": 1,
+          "eventTime": null,
+          "firstTimestamp": "2026-11-27T06:51:10Z",
+          "involvedObject": {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "name": "bad-e7763074",
+            "namespace": "ir07-e7763074",
+            "resourceVersion": "540",
+            "uid": "de03d0e1-db85-41df-961a-3d918da549e7"
+          },
+          "kind": "Event",
+          "lastTimestamp": "2026-11-27T06:51:10Z",
+          "message": "Successfully assigned ir07-e7763074/bad-e7763074 to azure-cloudops-ir07-e7763074-control-plane",
+          "metadata": {
+            "creationTimestamp": "2026-11-27T06:51:10Z",
+            "name": "bad-e7763074.18ebd445624b52a0",
+            "namespace": "ir07-e7763074",
+            "resourceVersion": "542",
+            "uid": "628c76bf-36fa-4d9e-8ee4-c3ab9de7e511"
+          },
+          "reason": "Scheduled",
+          "reportingComponent": "default-scheduler",
+          "reportingInstance": "",
+          "source": {
+            "component": "default-scheduler"
+          },
+          "type": "Normal"
+        },
+        {
+          "apiVersion": "v1",
+          "count": 1,
+          "eventTime": null,
+          "firstTimestamp": "2026-11-27T06:51:11Z",
+          "involvedObject": {
+            "apiVersion": "v1",
+            "fieldPath": "spec.containers{app}",
+            "kind": "Pod",
+            "name": "bad-e7763074",
+            "namespace": "ir07-e7763074",
+            "resourceVersion": "541",
+            "uid": "de03d0e1-db85-41df-961a-3d918da549e7"
+          },
+          "kind": "Event",
+          "lastTimestamp": "2026-11-27T06:51:11Z",
+          "message": "Pulling image \"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\"",
+          "metadata": {
+            "creationTimestamp": "2026-11-27T06:51:11Z",
+            "name": "bad-e7763074.18ebd44591b4c672",
+            "namespace": "ir07-e7763074",
+            "resourceVersion": "545",
+            "uid": "8d6e89e3-d665-4bf5-a4be-c19541cd0b7c"
+          },
+          "reason": "Pulling",
+          "reportingComponent": "kubelet",
+          "reportingInstance": "azure-cloudops-ir07-e7763074-control-plane",
+          "source": {
+            "component": "kubelet",
+            "host": "azure-cloudops-ir07-e7763074-control-plane"
+          },
+          "type": "Normal"
+        },
+        {
+          "apiVersion": "v1",
+          "count": 1,
+          "eventTime": null,
+          "firstTimestamp": "2026-11-27T06:51:11Z",
+          "involvedObject": {
+            "apiVersion": "v1",
+            "fieldPath": "spec.containers{app}",
+            "kind": "Pod",
+            "name": "bad-e7763074",
+            "namespace": "ir07-e7763074",
+            "resourceVersion": "541",
+            "uid": "de03d0e1-db85-41df-961a-3d918da549e7"
+          },
+          "kind": "Event",
+          "lastTimestamp": "2026-11-27T06:51:11Z",
+          "message": "Failed to pull image \"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\": rpc error: code = NotFound desc = failed to pull and unpack image \"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\": failed to resolve reference \"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\": localhost:5000/azure-cloudops/ir07-health:missing-e7763074: not found",
+          "metadata": {
+            "creationTimestamp": "2026-11-27T06:51:11Z",
+            "name": "bad-e7763074.18ebd44592a402a9",
+            "namespace": "ir07-e7763074",
+            "resourceVersion": "547",
+            "uid": "71ea8153-9889-43ff-9b68-0740a18984fb"
+          },
+          "reason": "Failed",
+          "reportingComponent": "kubelet",
+          "reportingInstance": "azure-cloudops-ir07-e7763074-control-plane",
+          "source": {
+            "component": "kubelet",
+            "host": "azure-cloudops-ir07-e7763074-control-plane"
+          },
+          "type": "Warning"
+        },
+        {
+          "apiVersion": "v1",
+          "count": 1,
+          "eventTime": null,
+          "firstTimestamp": "2026-11-27T06:51:11Z",
+          "involvedObject": {
+            "apiVersion": "v1",
+            "fieldPath": "spec.containers{app}",
+            "kind": "Pod",
+            "name": "bad-e7763074",
+            "namespace": "ir07-e7763074",
+            "resourceVersion": "541",
+            "uid": "de03d0e1-db85-41df-961a-3d918da549e7"
+          },
+          "kind": "Event",
+          "lastTimestamp": "2026-11-27T06:51:11Z",
+          "message": "Error: ErrImagePull",
+          "metadata": {
+            "creationTimestamp": "2026-11-27T06:51:11Z",
+            "name": "bad-e7763074.18ebd44592a7b1e4",
+            "namespace": "ir07-e7763074",
+            "resourceVersion": "548",
+            "uid": "2ca81ad6-2df0-4049-a908-6f81fccd60f4"
+          },
+          "reason": "Failed",
+          "reportingComponent": "kubelet",
+          "reportingInstance": "azure-cloudops-ir07-e7763074-control-plane",
+          "source": {
+            "component": "kubelet",
+            "host": "azure-cloudops-ir07-e7763074-control-plane"
+          },
+          "type": "Warning"
+        },
+        {
+          "apiVersion": "v1",
+          "count": 1,
+          "eventTime": null,
+          "firstTimestamp": "2026-11-27T06:51:12Z",
+          "involvedObject": {
+            "apiVersion": "v1",
+            "fieldPath": "spec.containers{app}",
+            "kind": "Pod",
+            "name": "bad-e7763074",
+            "namespace": "ir07-e7763074",
+            "resourceVersion": "541",
+            "uid": "de03d0e1-db85-41df-961a-3d918da549e7"
+          },
+          "kind": "Event",
+          "lastTimestamp": "2026-11-27T06:51:12Z",
+          "message": "Back-off pulling image \"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\"",
+          "metadata": {
+            "creationTimestamp": "2026-11-27T06:51:12Z",
+            "name": "bad-e7763074.18ebd445b8bd6859",
+            "namespace": "ir07-e7763074",
+            "resourceVersion": "549",
+            "uid": "3fee8cf4-c487-4f8a-a90c-77224ad7e82e"
+          },
+          "reason": "BackOff",
+          "reportingComponent": "kubelet",
+          "reportingInstance": "azure-cloudops-ir07-e7763074-control-plane",
+          "source": {
+            "component": "kubelet",
+            "host": "azure-cloudops-ir07-e7763074-control-plane"
+          },
+          "type": "Normal"
+        },
+        {
+          "apiVersion": "v1",
+          "count": 1,
+          "eventTime": null,
+          "firstTimestamp": "2026-11-27T06:51:12Z",
+          "involvedObject": {
+            "apiVersion": "v1",
+            "fieldPath": "spec.containers{app}",
+            "kind": "Pod",
+            "name": "bad-e7763074",
+            "namespace": "ir07-e7763074",
+            "resourceVersion": "541",
+            "uid": "de03d0e1-db85-41df-961a-3d918da549e7"
+          },
+          "kind": "Event",
+          "lastTimestamp": "2026-11-27T06:51:12Z",
+          "message": "Error: ImagePullBackOff",
+          "metadata": {
+            "creationTimestamp": "2026-11-27T06:51:12Z",
+            "name": "bad-e7763074.18ebd445b8c017da",
+            "namespace": "ir07-e7763074",
+            "resourceVersion": "551",
+            "uid": "b9c685bf-b9ad-4bf3-9397-47d2361634c0"
+          },
+          "reason": "Failed",
+          "reportingComponent": "kubelet",
+          "reportingInstance": "azure-cloudops-ir07-e7763074-control-plane",
+          "source": {
+            "component": "kubelet",
+            "host": "azure-cloudops-ir07-e7763074-control-plane"
+          },
+          "type": "Warning"
+        }
+      ],
+      "kind": "List",
+      "metadata": {
+        "resourceVersion": ""
+      }
+    },
+    "fault_pod_describe": "Name:             bad-e7763074\nNamespace:        ir07-e7763074\nPriority:         0\nService Account:  default\nNode:             azure-cloudops-ir07-e7763074-control-plane/172.18.0.3\nStart Time:       Fri, 27 Nov 2026 19:51:10 +1300\nLabels:           <none>\nAnnotations:      <none>\nStatus:           Pending\nIP:               10.244.0.6\nIPs:\n  IP:  10.244.0.6\nContainers:\n  app:\n    Container ID:  \n    Image:         localhost:5000/azure-cloudops/ir07-health:missing-e7763074\n    Image ID:      \n    Port:          8080/TCP\n    Host Port:     0/TCP\n    Command:\n      /health_server\n      --listen\n      0.0.0.0:8080\n      --release\n      unused\n    State:          Waiting\n      Reason:       ErrImagePull\n    Ready:          False\n    Restart Count:  0\n    Environment:    <none>\n    Mounts:\n      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-6tnb7 (ro)\nConditions:\n  Type                        Status\n  PodReadyToStartContainers   True \n  Initialized                 True \n  Ready                       False \n  ContainersReady             False \n  PodScheduled                True \nVolumes:\n  kube-api-access-6tnb7:\n    Type:                    Projected (a volume that contains injected data from multiple sources)\n    TokenExpirationSeconds:  3607\n    ConfigMapName:           kube-root-ca.crt\n    Optional:                false\n    DownwardAPI:             true\nQoS Class:                   BestEffort\nNode-Selectors:              <none>\nTolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s\n                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s\nEvents:\n  Type     Reason     Age   From               Message\n  ----     ------     ----  ----               -------\n  Normal   Scheduled  3s    default-scheduler  Successfully assigned ir07-e7763074/bad-e7763074 to azure-cloudops-ir07-e7763074-control-plane\n  Normal   Pulling    2s    kubelet            spec.containers{app}: Pulling image \"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\"\n  Warning  Failed     2s    kubelet            spec.containers{app}: Failed to pull image \"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\": rpc error: code = NotFound desc = failed to pull and unpack image \"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\": failed to resolve reference \"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\": localhost:5000/azure-cloudops/ir07-health:missing-e7763074: not found\n  Warning  Failed     2s    kubelet            spec.containers{app}: Error: ErrImagePull\n  Normal   BackOff    1s    kubelet            spec.containers{app}: Back-off pulling image \"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\"\n  Warning  Failed     1s    kubelet            spec.containers{app}: Error: ImagePullBackOff",
+    "registry_http_log": "{\"at_utc\":\"2026-11-27T06:51:07.382116248Z\",\"method\":\"GET\",\"path\":\"/v2/\",\"status\":200}\n{\"at_utc\":\"2026-11-27T06:51:11.706718894Z\",\"method\":\"HEAD\",\"path\":\"/v2/azure-cloudops/ir07-health/manifests/missing-e7763074\",\"status\":404,\"error_code\":\"MANIFEST_UNKNOWN\"}\n{\"at_utc\":\"2026-11-27T06:51:11.710479549Z\",\"method\":\"HEAD\",\"path\":\"/v2/azure-cloudops/ir07-health/manifests/missing-e7763074\",\"status\":404,\"error_code\":\"MANIFEST_UNKNOWN\"}",
+    "repaired_pod_status": {
+      "apiVersion": "v1",
+      "kind": "Pod",
+      "metadata": {
+        "annotations": {
+          "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"kind\":\"Pod\",\"metadata\":{\"annotations\":{},\"name\":\"recovered-e7763074\",\"namespace\":\"ir07-e7763074\"},\"spec\":{\"containers\":[{\"command\":[\"/health_server\",\"--listen\",\"0.0.0.0:8080\",\"--release\",\"e8-ir07-recovered\"],\"image\":\"azure-cloudops/ir07-health:e8-e7763074\",\"imagePullPolicy\":\"Never\",\"name\":\"app\",\"ports\":[{\"containerPort\":8080}]}],\"restartPolicy\":\"Never\"}}\n"
+        },
+        "creationTimestamp": "2026-11-27T06:51:14Z",
+        "generation": 1,
+        "name": "recovered-e7763074",
+        "namespace": "ir07-e7763074",
+        "resourceVersion": "566",
+        "uid": "4d022df4-8f47-43d0-a7b7-66c6c225f69b"
+      },
+      "spec": {
+        "containers": [
+          {
+            "command": [
+              "/health_server",
+              "--listen",
+              "0.0.0.0:8080",
+              "--release",
+              "e8-ir07-recovered"
+            ],
+            "image": "azure-cloudops/ir07-health:e8-e7763074",
+            "imagePullPolicy": "Never",
+            "name": "app",
+            "ports": [
+              {
+                "containerPort": 8080,
+                "protocol": "TCP"
+              }
+            ],
+            "resources": {},
+            "terminationMessagePath": "/dev/termination-log",
+            "terminationMessagePolicy": "File",
+            "volumeMounts": [
+              {
+                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                "name": "kube-api-access-wxlk8",
+                "readOnly": true
+              }
+            ]
+          }
+        ],
+        "dnsPolicy": "ClusterFirst",
+        "enableServiceLinks": true,
+        "nodeName": "azure-cloudops-ir07-e7763074-control-plane",
+        "preemptionPolicy": "PreemptLowerPriority",
+        "priority": 0,
+        "restartPolicy": "Never",
+        "schedulerName": "default-scheduler",
+        "securityContext": {},
+        "serviceAccount": "default",
+        "serviceAccountName": "default",
+        "terminationGracePeriodSeconds": 30,
+        "tolerations": [
+          {
+            "effect": "NoExecute",
+            "key": "node.kubernetes.io/not-ready",
+            "operator": "Exists",
+            "tolerationSeconds": 300
+          },
+          {
+            "effect": "NoExecute",
+            "key": "node.kubernetes.io/unreachable",
+            "operator": "Exists",
+            "tolerationSeconds": 300
+          }
+        ],
+        "volumes": [
+          {
+            "name": "kube-api-access-wxlk8",
+            "projected": {
+              "defaultMode": 420,
+              "sources": [
+                {
+                  "serviceAccountToken": {
+                    "expirationSeconds": 3607,
+                    "path": "token"
+                  }
+                },
+                {
+                  "configMap": {
+                    "items": [
+                      {
+                        "key": "ca.crt",
+                        "path": "ca.crt"
+                      }
+                    ],
+                    "name": "kube-root-ca.crt"
+                  }
+                },
+                {
+                  "downwardAPI": {
+                    "items": [
+                      {
+                        "fieldRef": {
+                          "apiVersion": "v1",
+                          "fieldPath": "metadata.namespace"
+                        },
+                        "path": "namespace"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "status": {
+        "conditions": [
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-11-27T06:51:15Z",
+            "observedGeneration": 1,
+            "status": "True",
+            "type": "PodReadyToStartContainers"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-11-27T06:51:14Z",
+            "observedGeneration": 1,
+            "status": "True",
+            "type": "Initialized"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-11-27T06:51:15Z",
+            "observedGeneration": 1,
+            "status": "True",
+            "type": "Ready"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-11-27T06:51:15Z",
+            "observedGeneration": 1,
+            "status": "True",
+            "type": "ContainersReady"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-11-27T06:51:14Z",
+            "observedGeneration": 1,
+            "status": "True",
+            "type": "PodScheduled"
+          }
+        ],
+        "containerStatuses": [
+          {
+            "containerID": "containerd://830d3cd3f2d2b854ca7a856bf7bd9a0f32d70327cdf4409bf828f3de0396bf59",
+            "image": "docker.io/azure-cloudops/ir07-health:e8-e7763074",
+            "imageID": "docker.io/library/import-2026-11-27@sha256:bcd58dcdd6a78725d46e87791d67892d549e0a85369cccf07db5ed4aaa4703cd",
+            "lastState": {},
+            "name": "app",
+            "ready": true,
+            "resources": {},
+            "restartCount": 0,
+            "started": true,
+            "state": {
+              "running": {
+                "startedAt": "2026-11-27T06:51:15Z"
+              }
+            },
+            "user": {
+              "linux": {
+                "gid": 0,
+                "supplementalGroups": [
+                  0
+                ],
+                "uid": 0
+              }
+            },
+            "volumeMounts": [
+              {
+                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                "name": "kube-api-access-wxlk8",
+                "readOnly": true,
+                "recursiveReadOnly": "Disabled"
+              }
+            ]
+          }
+        ],
+        "hostIP": "172.18.0.3",
+        "hostIPs": [
+          {
+            "ip": "172.18.0.3"
+          }
+        ],
+        "observedGeneration": 1,
+        "phase": "Running",
+        "podIP": "10.244.0.7",
+        "podIPs": [
+          {
+            "ip": "10.244.0.7"
+          }
+        ],
+        "qosClass": "BestEffort",
+        "resources": {},
+        "startTime": "2026-11-27T06:51:14Z"
+      }
+    },
+    "bad_image_negative_control_after_recovery": {
+      "apiVersion": "v1",
+      "kind": "Pod",
+      "metadata": {
+        "annotations": {
+          "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"kind\":\"Pod\",\"metadata\":{\"annotations\":{},\"name\":\"bad-e7763074\",\"namespace\":\"ir07-e7763074\"},\"spec\":{\"containers\":[{\"command\":[\"/health_server\",\"--listen\",\"0.0.0.0:8080\",\"--release\",\"unused\"],\"image\":\"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\",\"imagePullPolicy\":\"Always\",\"name\":\"app\",\"ports\":[{\"containerPort\":8080}]}],\"restartPolicy\":\"Never\"}}\n"
+        },
+        "creationTimestamp": "2026-11-27T06:51:10Z",
+        "generation": 1,
+        "name": "bad-e7763074",
+        "namespace": "ir07-e7763074",
+        "resourceVersion": "550",
+        "uid": "de03d0e1-db85-41df-961a-3d918da549e7"
+      },
+      "spec": {
+        "containers": [
+          {
+            "command": [
+              "/health_server",
+              "--listen",
+              "0.0.0.0:8080",
+              "--release",
+              "unused"
+            ],
+            "image": "localhost:5000/azure-cloudops/ir07-health:missing-e7763074",
+            "imagePullPolicy": "Always",
+            "name": "app",
+            "ports": [
+              {
+                "containerPort": 8080,
+                "protocol": "TCP"
+              }
+            ],
+            "resources": {},
+            "terminationMessagePath": "/dev/termination-log",
+            "terminationMessagePolicy": "File",
+            "volumeMounts": [
+              {
+                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                "name": "kube-api-access-6tnb7",
+                "readOnly": true
+              }
+            ]
+          }
+        ],
+        "dnsPolicy": "ClusterFirst",
+        "enableServiceLinks": true,
+        "nodeName": "azure-cloudops-ir07-e7763074-control-plane",
+        "preemptionPolicy": "PreemptLowerPriority",
+        "priority": 0,
+        "restartPolicy": "Never",
+        "schedulerName": "default-scheduler",
+        "securityContext": {},
+        "serviceAccount": "default",
+        "serviceAccountName": "default",
+        "terminationGracePeriodSeconds": 30,
+        "tolerations": [
+          {
+            "effect": "NoExecute",
+            "key": "node.kubernetes.io/not-ready",
+            "operator": "Exists",
+            "tolerationSeconds": 300
+          },
+          {
+            "effect": "NoExecute",
+            "key": "node.kubernetes.io/unreachable",
+            "operator": "Exists",
+            "tolerationSeconds": 300
+          }
+        ],
+        "volumes": [
+          {
+            "name": "kube-api-access-6tnb7",
+            "projected": {
+              "defaultMode": 420,
+              "sources": [
+                {
+                  "serviceAccountToken": {
+                    "expirationSeconds": 3607,
+                    "path": "token"
+                  }
+                },
+                {
+                  "configMap": {
+                    "items": [
+                      {
+                        "key": "ca.crt",
+                        "path": "ca.crt"
+                      }
+                    ],
+                    "name": "kube-root-ca.crt"
+                  }
+                },
+                {
+                  "downwardAPI": {
+                    "items": [
+                      {
+                        "fieldRef": {
+                          "apiVersion": "v1",
+                          "fieldPath": "metadata.namespace"
+                        },
+                        "path": "namespace"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "status": {
+        "conditions": [
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-11-27T06:51:11Z",
+            "observedGeneration": 1,
+            "status": "True",
+            "type": "PodReadyToStartContainers"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-11-27T06:51:10Z",
+            "observedGeneration": 1,
+            "status": "True",
+            "type": "Initialized"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-11-27T06:51:10Z",
+            "message": "containers with unready status: [app]",
+            "observedGeneration": 1,
+            "reason": "ContainersNotReady",
+            "status": "False",
+            "type": "Ready"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-11-27T06:51:10Z",
+            "message": "containers with unready status: [app]",
+            "observedGeneration": 1,
+            "reason": "ContainersNotReady",
+            "status": "False",
+            "type": "ContainersReady"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-11-27T06:51:10Z",
+            "observedGeneration": 1,
+            "status": "True",
+            "type": "PodScheduled"
+          }
+        ],
+        "containerStatuses": [
+          {
+            "image": "localhost:5000/azure-cloudops/ir07-health:missing-e7763074",
+            "imageID": "",
+            "lastState": {},
+            "name": "app",
+            "ready": false,
+            "restartCount": 0,
+            "started": false,
+            "state": {
+              "waiting": {
+                "message": "rpc error: code = NotFound desc = failed to pull and unpack image \"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\": failed to resolve reference \"localhost:5000/azure-cloudops/ir07-health:missing-e7763074\": localhost:5000/azure-cloudops/ir07-health:missing-e7763074: not found",
+                "reason": "ErrImagePull"
+              }
+            },
+            "volumeMounts": [
+              {
+                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                "name": "kube-api-access-6tnb7",
+                "readOnly": true,
+                "recursiveReadOnly": "Disabled"
+              }
+            ]
+          }
+        ],
+        "hostIP": "172.18.0.3",
+        "hostIPs": [
+          {
+            "ip": "172.18.0.3"
+          }
+        ],
+        "observedGeneration": 1,
+        "phase": "Pending",
+        "podIP": "10.244.0.6",
+        "podIPs": [
+          {
+            "ip": "10.244.0.6"
+          }
+        ],
+        "qosClass": "BestEffort",
+        "resources": {},
+        "startTime": "2026-11-27T06:51:10Z"
+      }
+    }
+  },
+  "checks": {
+    "preexisting_shared_cluster_not_selected": true,
+    "baseline_pod_ready_and_http_probe_passed": true,
+    "kubelet_observed_real_manifest_pull_failure": true,
+    "registry_recorded_local_404": true,
+    "recovery_same_http_probe_passed": true,
+    "missing_manifest_remains_rejected": true
+  },
+  "ok": true,
+  "cleanup": {
+    "delete_namespace": {
+      "command": [
+        "kubectl",
+        "--kubeconfig",
+        "D:\\workshop\\nov\\azure-cloudops\\work\\ir07-5joadeng\\kubeconfig",
+        "delete",
+        "namespace",
+        "ir07-e7763074",
+        "--wait=true",
+        "--timeout=60s"
+      ],
+      "returncode": 0,
+      "output": "namespace \"ir07-e7763074\" deleted"
+    },
+    "delete_unique_cluster": {
+      "command": [
+        "kind",
+        "delete",
+        "cluster",
+        "--name",
+        "azure-cloudops-ir07-e7763074"
+      ],
+      "returncode": 0,
+      "output": "Deleting cluster \"azure-cloudops-ir07-e7763074\" ...\nDeleted nodes: [\"azure-cloudops-ir07-e7763074-control-plane\"]"
+    },
+    "cluster_absent": true,
+    "shared_cluster_still_present": true,
+    "remove_unique_app_image": {
+      "command": [
+        "docker",
+        "image",
+        "rm",
+        "--force",
+        "azure-cloudops/ir07-health:e8-e7763074"
+      ],
+      "returncode": 0,
+      "output": "Untagged: azure-cloudops/ir07-health:e8-e7763074\nDeleted: sha256:23c5f829add8759dbfa9ee1af93a01a585a77e26f888438e58a1fe294744f9ca"
+    },
+    "app_image_absent": true,
+    "temporary_kubeconfig_and_build_context_removed": true
+  },
+  "completed_at_utc": "2026-11-27T06:51:31+00:00"
+}

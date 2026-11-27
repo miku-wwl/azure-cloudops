@@ -124,3 +124,18 @@ All twenty-three accepted lecture PDFs are independent outputs in `textbook/dist
 | Azure claims and live operations | No authentication, subscription query, billing query or resource operation was run during E0. | Actual spend remains `NOT_VERIFIED`; Stage 3 L0 remains outstanding. |
 | Cross-stage master-prompt CI/security milestone | PARTIAL; no `.github/workflows` workflow was present at audit start, and the V1 release record does not claim hosted CI or PDF/UA. | Add and execute offline CI and secret scanning; do not infer Milestone A from the narrower Stage 1 B9 acceptance. |
 | Independent audit report | COMPLETE for the audited Stage 1 scope and corrected findings; see `E0_INDEPENDENT_AUDIT.md`. | Stage 2 engineering, hosted CI/security, and final package refresh remain separate acceptance gates. |
+
+## Stage 2 E8 local incidents, E9 catalogue and E10 replay (2026-11-26)
+
+| Check | Result | Evidence / limit |
+|---|---|---|
+| Eight mandatory local incidents | `LOCAL_VERIFIED` | IR-01, IR-02, IR-05, IR-07, IR-08, IR-10, IR-11 and IR-12 ran through real bounded local mechanisms; each captured fault, diagnosis, same-probe recovery and cleanup. See `E8_LOCAL_INCIDENTS.md` and `incidents/evidence/`. |
+| Terraform state lock/drift (IR-08) | `LOCAL_VERIFIED` | Competing state-changing local `terraform apply` was rejected by the active lock; local provider drift was reconciled and a final no-change plan recorded. This does not verify Azure Blob leases. |
+| Kubernetes image pull (IR-07) | `LOCAL_VERIFIED` | Unique kind cluster produced real kubelet `ErrImagePull`/`ImagePullBackOff` events against a local loopback HTTP 404 fixture; a preloaded image passed the same health probe after recovery. This does not verify AKS/ACR. |
+| E9 lab catalogue | `STATIC_CHECK_PASS` | L0 and all 12 incidents have all 18 required fields and approved classification values. Exact target, region, SKU, permissions and numeric live costs remain unknown pending L0; catalogue is not mutation approval. |
+| E10 second clean cycle | `LOCAL_VERIFIED` | `cycle-2` passed all eight incidents; network, permission and data recovery replay checks used fresh or distinct run contexts. `verify_e10.py` confirms required evidence, unchanged Terraform artifacts and cleanup. It is an execution replay, not an independent human review. |
+| Current local container host | `LOCAL_VERIFIED` | Docker Engine 29.9.3 responds; existing `argo-canary-local` remained untouched. E8's run-owned kind cluster was removed. |
+| Final local Stage 2 checks | `LOCAL_VERIFIED` | Windows Python 3.13.9: 513 tests / 24 directories; Terraform 1.15.5: recursive fmt, backend-free init/validate, 13 plan/mock test runs / 3 roots; Pester 5.7.1: 2 tests passed; repository verifier: 23 lecture mappings, 150 local references and 13 complete E9 cards. No Azure credentials or requests were used. |
+| Refreshed Stage 2 packages | `LOCAL_VERIFIED` | PDF ZIP: 23 PDFs, SHA-256 `575F22B9958B68752B54539534E020902135B04BFF22C0BAF0924C8AA0C65608`; source ZIP: 414 files; package verifier confirms byte equality to the source directories. |
+| Azure resource operations and billing | `LIVE_NOT_RUN` / `NOT_VERIFIED` | No Azure sign-in/API/resource/billing call was made during E8–E10. Actual cumulative spend remains `NOT_VERIFIED`. |
+| Cross-stage hosted CI, security scan and final packages | `PLANNED` | Workflow and pinned dependencies are authored. Exact-revision GitHub Actions results and refreshed PDF/source ZIP integrity remain required before Stage 2 acceptance. |

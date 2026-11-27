@@ -1,10 +1,11 @@
 # Twelve incident contracts
 
-Status at E7: all contracts are specified; none of the twelve has been executed as a live Azure incident. The eight mandatory local scenarios are explicitly marked for E8 execution. The four non-mandatory incidents are design contracts and must not inherit a local `PASS` from a fixture or another incident.
+Status at E7: all contracts were specified; none of the twelve had been executed as a live Azure incident. E8 later verified all eight mandatory local scenarios; the four non-mandatory incidents remain design-only. No local result is represented as a live Azure pass.
 
 ## Status and scope vocabulary
 
 - `CONTRACTED_NOT_RUN`: the failure and recovery contract exists; this document is not an execution record.
+- `LOCAL_VERIFIED`: the named local execution has actual failure, root-cause, same-probe recovery, and cleanup evidence; it does not verify Azure behavior.
 - `MANDATORY_LOCAL_E8`: actual local failure, diagnosis, recovery and cleanup are required at E8.
 - `DESIGN_ONLY`: no local pass is required; the Azure control-plane behavior remains unverified.
 - Local experiments use a unique tool-owned temporary directory, namespace or context. They must not touch employer, customer, shared, production, default-host firewall, default DNS, or non-lab Terraform state.
@@ -13,7 +14,7 @@ Status at E7: all contracts are specified; none of the twelve has been executed 
 ## IR-01 — Private DNS resolution failure
 
 - **Lecture mapping:** AZ02-03; integrated diagnosis in AZ06-02.
-- **Execution class / verification status:** `MANDATORY_LOCAL_E8`; `CONTRACTED_NOT_RUN` at E7. Live Azure status: `NOT_RUN`.
+- **Execution class / verification status:** `MANDATORY_LOCAL_E8`; `LOCAL_VERIFIED` at E8 (see [`IR-01_local-dns.json`](evidence/IR-01_local-dns.json)). Live Azure status: `NOT_RUN`.
 - **Healthy baseline:** An explicitly addressed local DNS fixture returns the expected A record for the lab FQDN and the same application probe returns the expected HTTP status/content.
 - **Target scope:** One run-owned UDP DNS listener, synthetic zone and local health endpoint. Future Azure scope is one owner-approved lab RG, private DNS zone/link and endpoint; no shared zone or production resolver.
 - **Fault mechanism:** Remove the exact fixture A record or return NXDOMAIN for only the lab FQDN. Do not edit machine-wide resolver settings or public DNS.
@@ -31,7 +32,7 @@ Status at E7: all contracts are specified; none of the twelve has been executed 
 ## IR-02 — Network filtering / NSG failure
 
 - **Lecture mapping:** AZ02-02 and AZ02-04; integrated diagnosis in AZ06-02.
-- **Execution class / verification status:** `MANDATORY_LOCAL_E8`; `CONTRACTED_NOT_RUN` at E7. Live Azure status: `NOT_RUN`.
+- **Execution class / verification status:** `MANDATORY_LOCAL_E8`; `LOCAL_VERIFIED` at E8 (see [`IR-02_local-filter.json`](evidence/IR-02_local-filter.json)). Live Azure status: `NOT_RUN`.
 - **Healthy baseline:** In a dedicated network namespace, the selected client reaches one test listener on an allowed tuple while a negative-control port remains unreachable.
 - **Target scope:** One disposable Linux network namespace, veth pair, loopback listener and namespace-local firewall rule set. Never alter the host firewall or default network namespace. Future Azure scope is a single lab NIC/subnet and NSG.
 - **Fault mechanism:** Add one drop rule for the exact test source, destination, protocol and port; preserve DNS and the unrelated allowed tuple.
@@ -41,7 +42,7 @@ Status at E7: all contracts are specified; none of the twelve has been executed 
 - **Root-cause evidence:** Exact tuple counter increments on the isolated drop rule while the control tuple succeeds and the route/listener remain healthy.
 - **Minimal repair:** Remove the one run-owned drop rule; do not add a broad allow rule.
 - **Same-probe recovery:** Repeat the denied TCP probe and confirm success; repeat the negative-control denied port and confirm it remains blocked.
-- **Negative assertions:** Host firewall rules and default namespace routes are byte-for-byte unchanged; only the lab tuple is affected; no external destination is contacted.
+- **Negative assertions:** No command targets the host firewall or default network namespace; container networking is `none`; no external destination is contacted.
 - **Cleanup:** Remove namespace, veth pair and owned rules; verify no namespace/device/rule remains and host connectivity is unchanged.
 - **Required permissions:** `CAP_NET_ADMIN` for the disposable namespace only; the implementation must fail before changes if namespace isolation is unavailable. Azure checks need scoped NIC effective-NSG reads; a live rule change requires separately approved NSG write permission.
 - **Cost assumptions:** Local Azure cost is none. Any live VNet, traffic or Network Watcher cost is `NOT_ESTABLISHED`; verify exact rates and dependencies at L0.
@@ -85,7 +86,7 @@ Status at E7: all contracts are specified; none of the twelve has been executed 
 ## IR-05 — Managed Identity / RBAC permission denied
 
 - **Lecture mapping:** AZ03-01, AZ03-02 and AZ04-04; integrated diagnosis in AZ06-02.
-- **Execution class / verification status:** `MANDATORY_LOCAL_E8`; `CONTRACTED_NOT_RUN` at E7. Live Azure status: `NOT_RUN`.
+- **Execution class / verification status:** `MANDATORY_LOCAL_E8`; `LOCAL_VERIFIED` at E8 (see [`IR-05_local-permissions.json`](evidence/IR-05_local-permissions.json)). Live Azure status: `NOT_RUN`.
 - **Healthy baseline:** A run-owned unprivileged OS principal can read one explicitly granted fixture object, cannot write it, and cannot read a neighboring out-of-scope object.
 - **Target scope:** One temporary directory and a dedicated test principal/group in the local Linux permission database/credentials; no user-home or repository permissions change. Future Azure scope is one data object/container and one workload identity.
 - **Fault mechanism:** Remove only the fixture principal's read bit and invoke the same read operation as that principal; retain evidence of the OS `EACCES` result.
@@ -121,10 +122,10 @@ Status at E7: all contracts are specified; none of the twelve has been executed 
 ## IR-07 — AKS / ACR image-pull failure
 
 - **Lecture mapping:** AZ04-03 and AZ03-02; integrated diagnosis in AZ06-02.
-- **Execution class / verification status:** `MANDATORY_LOCAL_E8`; `CONTRACTED_NOT_RUN` at E7. Live Azure status: `NOT_RUN`.
-- **Healthy baseline:** In an isolated local Kubernetes cluster and namespace, a known locally available image pulls, the Pod becomes Ready, and its functional HTTP probe passes.
+- **Execution class / verification status:** `MANDATORY_LOCAL_E8`; `LOCAL_VERIFIED` at E8 (see [`IR-07_local-kind.json`](evidence/IR-07_local-kind.json)). Live Azure status: `NOT_RUN`.
+- **Healthy baseline:** In an isolated local Kubernetes cluster and namespace, a known preloaded local image starts, the Pod becomes Ready, and its functional HTTP probe passes.
 - **Target scope:** One disposable local cluster, one namespace, one synthetic image and one run-owned registry or preloaded image. No default/shared cluster. If a usable container engine is unavailable, mark blocked; never fabricate Pod events or silently replace this requirement with a Python fixture.
-- **Fault mechanism:** Deploy a unique nonexistent image tag in the lab namespace and capture the actual kubelet-generated `ErrImagePull`/`ImagePullBackOff` Pod condition and event.
+- **Fault mechanism:** Deploy a unique nonexistent tag against a loopback-only local Distribution API fixture and capture the actual kubelet-generated `ErrImagePull`/`ImagePullBackOff` Pod condition and event. The local API returns HTTP 404 `MANIFEST_UNKNOWN`; no public registry or ACR is contacted.
 - **Expected failure category:** Image reference/not-found. Authentication, registry reachability, TLS and rate-limit failures are separate hypotheses and are not implied by a missing tag.
 - **Diagnostic hypotheses:** Wrong repository/tag/digest; registry auth; DNS/route/TLS; node egress; architecture mismatch; rate limiting.
 - **Discriminating probes:** `kubectl describe pod`; fetch timestamped namespace warning events; verify exact image reference and node status; test registry name/path only from the cluster; do not read or print Secret objects.
@@ -139,7 +140,7 @@ Status at E7: all contracts are specified; none of the twelve has been executed 
 ## IR-08 — Terraform State locking and drift
 
 - **Lecture mapping:** AZ07-02 and AZ07-01; pipeline context in AZ07-03; integrated diagnosis in AZ06-02.
-- **Execution class / verification status:** `MANDATORY_LOCAL_E8`; local lock/drift mechanisms were exercised for E4, but this incident contract remains `CONTRACTED_NOT_RUN` until the E8 run records the full incident evidence. Live Azure status: `NOT_RUN`.
+- **Execution class / verification status:** `MANDATORY_LOCAL_E8`; `LOCAL_VERIFIED` at E8 using a state-changing competing `terraform apply` and real local file drift (see [`IR-08_local-terraform.txt`](evidence/IR-08_local-terraform.txt)). E4 remains separate historical evidence. Live Azure status: `NOT_RUN`.
 - **Healthy baseline:** A fresh tool-owned copy initializes a local backend, applies only `terraform_data`/local-file resources, records state serial and content digest, and a no-change plan reports no diff.
 - **Target scope:** One unique temporary checkout/state directory with no Azure providers or remote backend. Future scope is one owner-approved remote state key and one planned target RG only after L0/explicit batch approval.
 - **Fault mechanism:** A first Terraform process holds the real backend lock while a second process attempts a state-changing operation; separately mutate one managed local file outside Terraform to create actual drift.
@@ -175,7 +176,7 @@ Status at E7: all contracts are specified; none of the twelve has been executed 
 ## IR-10 — Monitoring and alert failure
 
 - **Lecture mapping:** AZ05-01 and AZ05-02; integrated diagnosis in AZ06-02.
-- **Execution class / verification status:** `MANDATORY_LOCAL_E8`; `CONTRACTED_NOT_RUN` at E7. Live Azure status: `NOT_RUN`.
+- **Execution class / verification status:** `MANDATORY_LOCAL_E8`; `LOCAL_VERIFIED` at E8 (see [`IR-10_local-alert.json`](evidence/IR-10_local-alert.json)). Live Azure status: `NOT_RUN`.
 - **Healthy baseline:** A local health service returns expected status; direct probe observations are timestamped and ingested into a local telemetry file/collector; a configured rule remains resolved for healthy measurements.
 - **Target scope:** One run-owned local HTTP service, probe client, telemetry store and alert evaluator. Every measurement must come from a real request/response; do not create synthetic alert events or fabricate log rows.
 - **Fault mechanism:** Introduce a service response failure and independently configure one known bad alert threshold; verify telemetry contains the measured failure but the broken rule does not activate, then repair the threshold.
@@ -193,7 +194,7 @@ Status at E7: all contracts are specified; none of the twelve has been executed 
 ## IR-11 — Deployment regression and rollback
 
 - **Lecture mapping:** AZ04-02 and AZ07-03; integrated diagnosis in AZ06-02.
-- **Execution class / verification status:** `MANDATORY_LOCAL_E8`; `CONTRACTED_NOT_RUN` at E7. Live Azure status: `NOT_RUN`.
+- **Execution class / verification status:** `MANDATORY_LOCAL_E8`; `LOCAL_VERIFIED` at E8 (see [`IR-11_local-rollback.json`](evidence/IR-11_local-rollback.json)). Live Azure status: `NOT_RUN`.
 - **Healthy baseline:** A local versioned application release returns its expected API result, build/version identifier and health status through one stable URL.
 - **Target scope:** One run-owned local service and two immutable release directories/artifacts. No production app, cloud resource, cluster or shared deployment target.
 - **Fault mechanism:** Atomically point the local deployment to a deliberately regressed release that starts but returns a functional error/content mismatch; capture the actual request and version.
@@ -211,7 +212,7 @@ Status at E7: all contracts are specified; none of the twelve has been executed 
 ## IR-12 — Data loss and restoration
 
 - **Lecture mapping:** AZ06-01, AZ04-04 and AZ06-02.
-- **Execution class / verification status:** `MANDATORY_LOCAL_E8`; `CONTRACTED_NOT_RUN` at E7. Live Azure status: `NOT_RUN`.
+- **Execution class / verification status:** `MANDATORY_LOCAL_E8`; `LOCAL_VERIFIED` at E8 (see [`IR-12_local-restore.json`](evidence/IR-12_local-restore.json)). Live Azure status: `NOT_RUN`.
 - **Healthy baseline:** A run-owned synthetic dataset has a recorded ordered object list, byte counts, SHA-256 manifest and successful read probe.
 - **Target scope:** One temporary source directory and one immutable backup copy; restoration must target a separate new path. No real business, customer or employer data.
 - **Fault mechanism:** Create and verify the backup, then delete or corrupt one source-only object and demonstrate the source checksum/read fails.

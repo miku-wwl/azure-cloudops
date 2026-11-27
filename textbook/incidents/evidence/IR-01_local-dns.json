@@ -1,0 +1,84 @@
+{
+  "incident_id": "IR-01",
+  "status": "LOCAL_VERIFIED",
+  "started_at_utc": "2026-11-27T06:18:15+00:00",
+  "scope": {
+    "dns_bind": "127.0.0.1",
+    "resolver_port": 63075,
+    "fqdn": "billing.ir01.lab.test",
+    "app_bind": "127.0.0.1",
+    "app_port": 49670
+  },
+  "mechanism": "DNS wire-format A query to an explicit run-owned loopback UDP resolver; no machine resolver configuration is changed.",
+  "baseline": {
+    "fqdn": "billing.ir01.lab.test",
+    "dns": {
+      "qname": "billing.ir01.lab.test",
+      "rcode": 0,
+      "answer_count": 1,
+      "address": "127.0.0.1"
+    },
+    "http": {
+      "status": 200,
+      "body": "IR01_APPLICATION_OK\n"
+    },
+    "failure_category": null
+  },
+  "fault": {
+    "fqdn": "billing.ir01.lab.test",
+    "dns": {
+      "qname": "billing.ir01.lab.test",
+      "rcode": 3,
+      "answer_count": 0,
+      "address": null
+    },
+    "http": null,
+    "failure_category": "DNS_NXDOMAIN"
+  },
+  "root_cause_observations": [
+    {
+      "qname": "billing.ir01.lab.test",
+      "rcode": 0,
+      "faulted": false
+    },
+    {
+      "qname": "billing.ir01.lab.test",
+      "rcode": 3,
+      "faulted": true
+    }
+  ],
+  "recovery": {
+    "fqdn": "billing.ir01.lab.test",
+    "dns": {
+      "qname": "billing.ir01.lab.test",
+      "rcode": 0,
+      "answer_count": 1,
+      "address": "127.0.0.1"
+    },
+    "http": {
+      "status": 200,
+      "body": "IR01_APPLICATION_OK\n"
+    },
+    "failure_category": null
+  },
+  "negative_control": {
+    "qname": "unrelated.ir01.lab.test",
+    "rcode": 3,
+    "answer_count": 0,
+    "address": null
+  },
+  "checks": {
+    "baseline_same_probe_passed": true,
+    "fault_was_real_nxdomain": true,
+    "resolver_captured_fault": true,
+    "same_probe_recovered": true,
+    "unrelated_name_did_not_fall_back": true
+  },
+  "ok": true,
+  "cleanup": {
+    "dns_listener_closed": true,
+    "http_listener_closed": true,
+    "background_threads_stopped": true
+  },
+  "completed_at_utc": "2026-11-27T06:18:16+00:00"
+}

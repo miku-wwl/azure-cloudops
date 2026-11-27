@@ -1,0 +1,134 @@
+{
+  "label": "cycle-2",
+  "status": "LOCAL_VERIFIED",
+  "started_at_utc": "2026-11-27T06:49:58+00:00",
+  "scope": "fresh process per scenario; unique Docker namespaces, kind cluster, Terraform temporary checkout, loopback ports and data paths",
+  "cloud_calls": "NONE",
+  "incidents": {
+    "IR-01": {
+      "exit_code": 0,
+      "command": [
+        "D:\\anaconda3\\python.exe",
+        "D:\\workshop\\nov\\azure-cloudops\\textbook\\incidents\\local\\ir01_dns.py",
+        "--evidence",
+        "D:\\workshop\\nov\\azure-cloudops\\textbook\\incidents\\evidence\\cycle-2\\IR-01.json"
+      ],
+      "status": "LOCAL_VERIFIED",
+      "checks_passed": true
+    },
+    "IR-02": {
+      "exit_code": 0,
+      "command": [
+        "D:\\anaconda3\\python.exe",
+        "D:\\workshop\\nov\\azure-cloudops\\textbook\\incidents\\local\\ir02_filter.py",
+        "--image",
+        "kindest/node@sha256:099e049362a1526b2db71494e1947aae99bd16290d7c895f2b7ea312e3cbfaed",
+        "--binary",
+        "D:\\workshop\\nov\\azure-cloudops\\work\\cycle-2-7koekbww\\health_server_linux_amd64",
+        "--evidence",
+        "D:\\workshop\\nov\\azure-cloudops\\textbook\\incidents\\evidence\\cycle-2\\IR-02.json"
+      ],
+      "status": "LOCAL_VERIFIED",
+      "checks_passed": true
+    },
+    "IR-05": {
+      "exit_code": 0,
+      "command": [
+        "D:\\anaconda3\\python.exe",
+        "D:\\workshop\\nov\\azure-cloudops\\textbook\\incidents\\local\\ir05_permissions.py",
+        "--image",
+        "kindest/node@sha256:099e049362a1526b2db71494e1947aae99bd16290d7c895f2b7ea312e3cbfaed",
+        "--evidence",
+        "D:\\workshop\\nov\\azure-cloudops\\textbook\\incidents\\evidence\\cycle-2\\IR-05.json"
+      ],
+      "status": "LOCAL_VERIFIED",
+      "checks_passed": true
+    },
+    "IR-07": {
+      "exit_code": 0,
+      "command": [
+        "D:\\anaconda3\\python.exe",
+        "D:\\workshop\\nov\\azure-cloudops\\textbook\\incidents\\local\\ir07_kind.py",
+        "--node-image",
+        "kindest/node@sha256:099e049362a1526b2db71494e1947aae99bd16290d7c895f2b7ea312e3cbfaed",
+        "--health-binary",
+        "D:\\workshop\\nov\\azure-cloudops\\work\\cycle-2-7koekbww\\health_server_linux_amd64",
+        "--registry-binary",
+        "D:\\workshop\\nov\\azure-cloudops\\work\\cycle-2-7koekbww\\registry_404_linux_amd64",
+        "--repo",
+        "D:\\workshop\\nov\\azure-cloudops",
+        "--evidence",
+        "D:\\workshop\\nov\\azure-cloudops\\textbook\\incidents\\evidence\\cycle-2\\IR-07.json"
+      ],
+      "status": "LOCAL_VERIFIED",
+      "checks_passed": true
+    },
+    "IR-10": {
+      "exit_code": 0,
+      "command": [
+        "D:\\anaconda3\\python.exe",
+        "D:\\workshop\\nov\\azure-cloudops\\textbook\\incidents\\local\\ir10_monitoring.py",
+        "--evidence",
+        "D:\\workshop\\nov\\azure-cloudops\\textbook\\incidents\\evidence\\cycle-2\\IR-10.json"
+      ],
+      "status": "LOCAL_VERIFIED",
+      "checks_passed": true
+    },
+    "IR-11": {
+      "exit_code": 0,
+      "command": [
+        "D:\\anaconda3\\python.exe",
+        "D:\\workshop\\nov\\azure-cloudops\\textbook\\incidents\\local\\ir11_rollback.py",
+        "--evidence",
+        "D:\\workshop\\nov\\azure-cloudops\\textbook\\incidents\\evidence\\cycle-2\\IR-11.json"
+      ],
+      "status": "LOCAL_VERIFIED",
+      "checks_passed": true
+    },
+    "IR-12": {
+      "exit_code": 0,
+      "command": [
+        "D:\\anaconda3\\python.exe",
+        "D:\\workshop\\nov\\azure-cloudops\\textbook\\incidents\\local\\ir12_restore.py",
+        "--evidence",
+        "D:\\workshop\\nov\\azure-cloudops\\textbook\\incidents\\evidence\\cycle-2\\IR-12.json"
+      ],
+      "status": "LOCAL_VERIFIED",
+      "checks_passed": true
+    },
+    "IR-08": {
+      "exit_code": 0,
+      "status": "LOCAL_VERIFIED",
+      "checks_passed": true,
+      "evidence": "cycle-2\\IR-08_local-terraform.txt"
+    }
+  },
+  "builds": {
+    "health_server": {
+      "command": [
+        "go",
+        "build",
+        "-o",
+        "D:\\workshop\\nov\\azure-cloudops\\work\\cycle-2-7koekbww\\health_server_linux_amd64",
+        "D:\\workshop\\nov\\azure-cloudops\\textbook\\incidents\\local\\health_server.go"
+      ],
+      "returncode": 0,
+      "output": ""
+    },
+    "registry_fixture": {
+      "command": [
+        "go",
+        "build",
+        "-o",
+        "D:\\workshop\\nov\\azure-cloudops\\work\\cycle-2-7koekbww\\registry_404_linux_amd64",
+        "D:\\workshop\\nov\\azure-cloudops\\textbook\\incidents\\local\\registry_404.go"
+      ],
+      "returncode": 0,
+      "output": ""
+    }
+  },
+  "terraform_checkout_unchanged": true,
+  "all_mandatory_passed": true,
+  "elapsed_seconds": 141.026,
+  "completed_at_utc": "2026-11-27T06:52:19+00:00"
+}

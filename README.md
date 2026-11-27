@@ -1,6 +1,6 @@
 # Azure CloudOps & Enterprise Infrastructure
 
-**Status:** Stage 2 E8 mandatory local experiments. Stage 1 B0–B9 and Stage 2 E0–E7 contract gates are complete. The master-prompt CI/secret-scan gate and refreshed Stage 2 packages remain open.
+**Status:** E8 incidents and E10 replay are complete; E9 catalogue is documented. Local regression and both refreshed publication ZIPs pass. Final Stage 2 acceptance is pending hosted CI/security runs. Stage 3 begins with a read-only L0 preflight only.
 **Repository:** miku-wwl/azure-cloudops, main
 **Approved implementation baseline:** 853ba6cbaa4ee67e448550fbe192c6c89b24fd2f
 **Roadmap:** AZURE_SPECIALTY_ROADMAP.md
@@ -13,8 +13,8 @@ This is an enterprise Azure engineering practice repository and a 23-lecture ill
 | Stage | Objective | Current status |
 |---|---|---|
 | 1 — Technical textbook | Research, author, illustrate, experiment and publish 23 independent PDFs with editable sources | `TEXTBOOK_V1_RELEASE_READY` for Stage 1 publication; current cross-stage CI/security acceptance remains separately tracked |
-| 2 — Engineering readiness | Harden local labs, Terraform, controlled delivery, automation and incident replay | E0–E7 complete; E8 mandatory local experiments current |
-| 3 — Live Azure validation | Read-only preflight first; perform only specifically authorized, reliably costed experiments | Not started; no Azure resources created; spend remains `NOT_VERIFIED` |
+| 2 — Engineering readiness | Harden local labs, Terraform, controlled delivery, automation and incident replay | E0–E10 implementation complete; hosted CI/security and final package acceptance pending |
+| 3 — Live Azure validation | Read-only preflight first; perform only specifically authorized, reliably costed experiments | L0 pending Stage 2 acceptance; no Azure resources created; spend remains `NOT_VERIFIED` |
 
 The cumulative incremental Azure ceiling is USD 1.00 for the entire project. Plan against USD 0.70 and retain USD 0.30 for contingency. Actual billing is not verified until billing evidence is checked. A budget alert is not a hard spending cap. Expensive services remain design-only unless current pricing, account capability, narrow authorization and cleanup all pass the live gate.
 
@@ -34,7 +34,10 @@ The lab scenario uses synthetic data. No employer, customer, production, shared 
 - textbook/E4_STATE_CONTROLLED_DELIVERY.md — state/import/recovery lab, signed exact-plan gate and conditional OIDC backend evidence/limits.
 - textbook/E5_AZURE_DEVOPS_DELIVERY.md — Plan/PlanReview/Apply template, exact-plan artifact binding, offline verification and server-side prerequisites.
 - textbook/E6_DIAGNOSTICS_AUTOMATION.md — explicit-scope Resource Graph inventory, 13 read-only diagnostics, five source-reviewed KQL templates and verification limits.
-- textbook/E7_INCIDENT_CONTRACTS.md and textbook/incidents/ — twelve mapped incident contracts; eight mandatory local closures remain an E8 execution gate.
+- textbook/E7_INCIDENT_CONTRACTS.md and textbook/incidents/ — twelve mapped incident contracts and local evidence.
+- textbook/E8_LOCAL_INCIDENTS.md and textbook/E10_INDEPENDENT_REPLAY.md — bounded local incident evidence and second complete replay cycle.
+- textbook/LIVE_LAB_CATALOGUE.md — E9 requirements, Terraform gaps, cost classes, and delayed-billing checks for L0 and all twelve incident candidates.
+- .github/workflows/ci.yml — offline Python/Terraform/Pester acceptance, publication checks and repository-history secret scan; read-only token and no Azure provisioning.
 - textbook/architecture/ — three distinct reference, local-learning and conditional live-lab views, plus six ADRs; designs do not authorize cloud changes.
 - textbook/LAB_ENVIRONMENT.md and textbook/E2_LOCAL_SUBSTRATE.md — checked Windows/WSL inventory and local command/test-substrate acceptance.
 - textbook/terraform/azure-enterprise-reference/ — safe-by-default AzureRM/AzAPI source and reusable Terraform modules.

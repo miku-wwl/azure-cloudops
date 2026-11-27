@@ -1,0 +1,62 @@
+{
+  "label": "cycle-1",
+  "source": "E8 first clean execution; evidence is stored at the incident paths in the parent directory",
+  "incidents": {
+    "IR-01": {
+      "status": "LOCAL_VERIFIED",
+      "cleanup_passed": true,
+      "source_evidence": "IR-01_local-dns.json",
+      "started_at_utc": "2026-11-27T06:18:15+00:00",
+      "completed_at_utc": "2026-11-27T06:18:16+00:00"
+    },
+    "IR-02": {
+      "status": "LOCAL_VERIFIED",
+      "cleanup_passed": true,
+      "source_evidence": "IR-02_local-filter.json",
+      "started_at_utc": "2026-11-27T06:24:18+00:00",
+      "completed_at_utc": "2026-11-27T06:24:23+00:00"
+    },
+    "IR-05": {
+      "status": "LOCAL_VERIFIED",
+      "cleanup_passed": true,
+      "source_evidence": "IR-05_local-permissions.json",
+      "started_at_utc": "2026-11-27T06:25:11+00:00",
+      "completed_at_utc": "2026-11-27T06:25:15+00:00"
+    },
+    "IR-07": {
+      "status": "LOCAL_VERIFIED",
+      "cleanup_passed": true,
+      "source_evidence": "IR-07_local-kind.json",
+      "started_at_utc": "2026-11-27T06:45:15+00:00",
+      "completed_at_utc": "2026-11-27T06:46:27+00:00"
+    },
+    "IR-08": {
+      "status": "LOCAL_VERIFIED",
+      "cleanup_passed": true,
+      "source_evidence": "IR-08_local-terraform.txt"
+    },
+    "IR-10": {
+      "status": "LOCAL_VERIFIED",
+      "cleanup_passed": true,
+      "source_evidence": "IR-10_local-alert.json",
+      "started_at_utc": "2026-11-27T06:36:34+00:00",
+      "completed_at_utc": "2026-11-27T06:36:34+00:00"
+    },
+    "IR-11": {
+      "status": "LOCAL_VERIFIED",
+      "cleanup_passed": true,
+      "source_evidence": "IR-11_local-rollback.json",
+      "started_at_utc": "2026-11-27T06:36:40+00:00",
+      "completed_at_utc": "2026-11-27T06:36:40+00:00"
+    },
+    "IR-12": {
+      "status": "LOCAL_VERIFIED",
+      "cleanup_passed": true,
+      "source_evidence": "IR-12_local-restore.json",
+      "started_at_utc": "2026-11-27T06:37:05+00:00",
+      "completed_at_utc": "2026-11-27T06:37:05+00:00"
+    }
+  },
+  "status": "LOCAL_VERIFIED",
+  "all_eight_verified_and_clean": true
+}

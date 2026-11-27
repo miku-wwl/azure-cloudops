@@ -1,0 +1,83 @@
+{
+  "incident_id": "IR-11",
+  "status": "LOCAL_VERIFIED",
+  "started_at_utc": "2026-11-27T06:51:42+00:00",
+  "mechanism": "One loopback HTTP service reads an atomic active-release pointer for every request; v1/v2 artifacts are immutable synthetic JSON fixtures.",
+  "scope": {
+    "stable_url_path": "/api/orders/42",
+    "bind": "127.0.0.1",
+    "cloud_deployment": false,
+    "port": 56907
+  },
+  "release_sha256": {
+    "v1": "7d5b59fb43e14a133fdf269aac21859d71a1bdb1eb5f8f8576c7fb0262788fa2",
+    "v2": "db74807594ccf0518790e61b745c5f06cf7c143b04686df5da7d9b4db1c153a5"
+  },
+  "baseline_probe": {
+    "status": 200,
+    "body": "{\"order_id\":\"synthetic-42\",\"state\":\"ready\"}\n",
+    "release": "v1",
+    "method": "GET",
+    "path": "/api/orders/42"
+  },
+  "fault_probe": {
+    "status": 500,
+    "body": "{\"order_id\":\"synthetic-42\",\"state\":\"regressed\"}\n",
+    "release": "v2",
+    "method": "GET",
+    "path": "/api/orders/42"
+  },
+  "recovery_probe": {
+    "status": 200,
+    "body": "{\"order_id\":\"synthetic-42\",\"state\":\"ready\"}\n",
+    "release": "v1",
+    "method": "GET",
+    "path": "/api/orders/42"
+  },
+  "observations": [
+    {
+      "at_utc": "2026-11-27T06:51:42.700+00:00",
+      "method": "GET",
+      "path": "/api/orders/42",
+      "release": "v1",
+      "status": 200,
+      "body_sha256": "5ec08a22e27f507ad6906e83ac21897523683650c3d5d84d43b0392351c6ec1b"
+    },
+    {
+      "at_utc": "2026-11-27T06:51:42.705+00:00",
+      "method": "GET",
+      "path": "/api/orders/42",
+      "release": "v2",
+      "status": 500,
+      "body_sha256": "5c46c9f3a9a31349ef89b38679f510730516c2aff092a1a3b446dec389ba6e1c"
+    },
+    {
+      "at_utc": "2026-11-27T06:51:42.709+00:00",
+      "method": "GET",
+      "path": "/api/orders/42",
+      "release": "v1",
+      "status": 200,
+      "body_sha256": "5ec08a22e27f507ad6906e83ac21897523683650c3d5d84d43b0392351c6ec1b"
+    }
+  ],
+  "active_pointer_after_each_phase": [
+    "v1",
+    "v2",
+    "v1"
+  ],
+  "checks": {
+    "baseline_contract_passed": true,
+    "fault_is_actual_functional_http_regression": true,
+    "active_bad_artifact_matches_immutable_digest": true,
+    "same_url_recovers_on_prior_release": true,
+    "prior_artifact_digest_unchanged": true,
+    "only_atomic_pointer_changed": true
+  },
+  "ok": true,
+  "cleanup": {
+    "listener_closed": true,
+    "worker_stopped": true,
+    "release_artifacts_deleted_after_capture": true
+  },
+  "completed_at_utc": "2026-11-27T06:51:43+00:00"
+}

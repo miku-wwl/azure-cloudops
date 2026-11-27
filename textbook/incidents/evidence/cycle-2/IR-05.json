@@ -1,0 +1,329 @@
+{
+  "incident_id": "IR-05",
+  "status": "LOCAL_VERIFIED",
+  "started_at_utc": "2026-11-27T06:50:11+00:00",
+  "scope": {
+    "container": "azure-cloudops-ir05-3d34c6cc0f",
+    "uid": 65534,
+    "gid": 65534,
+    "network": "none",
+    "objects": [
+      "/tmp/azure-cloudops-ir05-3d34c6cc0f/in-scope.txt",
+      "/tmp/azure-cloudops-ir05-3d34c6cc0f/neighbor.txt"
+    ]
+  },
+  "mechanism": "Root creates synthetic files inside one disposable networkless container; every authorization probe runs through docker exec as UID/GID 65534. No host account, Azure token, or cloud role is touched.",
+  "expected_sha256": "a6a022ea88bc09e863bd785d3b42953f6042f2419a02993d77a9d4b0c2b44f4f",
+  "commands": {
+    "create_isolated_container": {
+      "command": [
+        "docker",
+        "run",
+        "--detach",
+        "--name",
+        "azure-cloudops-ir05-3d34c6cc0f",
+        "--network",
+        "none",
+        "--entrypoint",
+        "/bin/bash",
+        "--cap-drop",
+        "ALL",
+        "--cap-add",
+        "CHOWN",
+        "--security-opt",
+        "no-new-privileges",
+        "kindest/node@sha256:099e049362a1526b2db71494e1947aae99bd16290d7c895f2b7ea312e3cbfaed",
+        "-lc",
+        "sleep 600"
+      ],
+      "returncode": 0,
+      "output": "756615c713c23945a23e04a9d8fe04ca0c2d12ea5e3433de6c6ffcecdd5f39b6"
+    },
+    "create_fixture_directory": {
+      "command": [
+        "docker",
+        "exec",
+        "-i",
+        "azure-cloudops-ir05-3d34c6cc0f",
+        "mkdir",
+        "-m",
+        "0711",
+        "/tmp/azure-cloudops-ir05-3d34c6cc0f"
+      ],
+      "returncode": 0,
+      "output": ""
+    },
+    "write_synthetic_object": {
+      "command": [
+        "docker",
+        "exec",
+        "-i",
+        "azure-cloudops-ir05-3d34c6cc0f",
+        "sh",
+        "-c",
+        "cat > /tmp/azure-cloudops-ir05-3d34c6cc0f/in-scope.txt"
+      ],
+      "returncode": 0,
+      "output": ""
+    },
+    "write_neighbor_control": {
+      "command": [
+        "docker",
+        "exec",
+        "-i",
+        "azure-cloudops-ir05-3d34c6cc0f",
+        "sh",
+        "-c",
+        "printf 'out-of-scope=IR-05\\n' > /tmp/azure-cloudops-ir05-3d34c6cc0f/neighbor.txt"
+      ],
+      "returncode": 0,
+      "output": ""
+    },
+    "assign_grants": {
+      "command": [
+        "docker",
+        "exec",
+        "-i",
+        "azure-cloudops-ir05-3d34c6cc0f",
+        "chown",
+        "root:65534",
+        "/tmp/azure-cloudops-ir05-3d34c6cc0f/in-scope.txt"
+      ],
+      "returncode": 0,
+      "output": ""
+    },
+    "set_granted_read_only_mode": {
+      "command": [
+        "docker",
+        "exec",
+        "-i",
+        "azure-cloudops-ir05-3d34c6cc0f",
+        "chmod",
+        "0640",
+        "/tmp/azure-cloudops-ir05-3d34c6cc0f/in-scope.txt"
+      ],
+      "returncode": 0,
+      "output": ""
+    },
+    "set_neighbor_owner_and_mode": {
+      "command": [
+        "docker",
+        "exec",
+        "-i",
+        "azure-cloudops-ir05-3d34c6cc0f",
+        "sh",
+        "-c",
+        "chown root:root /tmp/azure-cloudops-ir05-3d34c6cc0f/neighbor.txt && chmod 0400 /tmp/azure-cloudops-ir05-3d34c6cc0f/neighbor.txt"
+      ],
+      "returncode": 0,
+      "output": ""
+    },
+    "effective_principal": {
+      "command": [
+        "docker",
+        "exec",
+        "--user",
+        "65534:65534",
+        "azure-cloudops-ir05-3d34c6cc0f",
+        "id"
+      ],
+      "returncode": 0,
+      "output": "uid=65534(nobody) gid=65534(nogroup) groups=65534(nogroup)"
+    },
+    "baseline_read": {
+      "command": [
+        "docker",
+        "exec",
+        "-i",
+        "--user",
+        "65534:65534",
+        "azure-cloudops-ir05-3d34c6cc0f",
+        "cat",
+        "/tmp/azure-cloudops-ir05-3d34c6cc0f/in-scope.txt"
+      ],
+      "returncode": 0,
+      "output": "synthetic-fixture=IR-05"
+    },
+    "write_negative_control": {
+      "command": [
+        "docker",
+        "exec",
+        "-i",
+        "--user",
+        "65534:65534",
+        "azure-cloudops-ir05-3d34c6cc0f",
+        "sh",
+        "-c",
+        "printf x >> /tmp/azure-cloudops-ir05-3d34c6cc0f/in-scope.txt"
+      ],
+      "returncode": 2,
+      "output": "sh: 1: cannot create /tmp/azure-cloudops-ir05-3d34c6cc0f/in-scope.txt: Permission denied"
+    },
+    "neighbor_read_negative_control": {
+      "command": [
+        "docker",
+        "exec",
+        "-i",
+        "--user",
+        "65534:65534",
+        "azure-cloudops-ir05-3d34c6cc0f",
+        "cat",
+        "/tmp/azure-cloudops-ir05-3d34c6cc0f/neighbor.txt"
+      ],
+      "returncode": 1,
+      "output": "cat: /tmp/azure-cloudops-ir05-3d34c6cc0f/neighbor.txt: Permission denied"
+    },
+    "enumerate_parent_negative_control": {
+      "command": [
+        "docker",
+        "exec",
+        "-i",
+        "--user",
+        "65534:65534",
+        "azure-cloudops-ir05-3d34c6cc0f",
+        "ls",
+        "/tmp/azure-cloudops-ir05-3d34c6cc0f"
+      ],
+      "returncode": 2,
+      "output": "ls: cannot open directory '/tmp/azure-cloudops-ir05-3d34c6cc0f': Permission denied"
+    },
+    "remove_read_grant_fault": {
+      "command": [
+        "docker",
+        "exec",
+        "-i",
+        "azure-cloudops-ir05-3d34c6cc0f",
+        "chmod",
+        "0000",
+        "/tmp/azure-cloudops-ir05-3d34c6cc0f/in-scope.txt"
+      ],
+      "returncode": 0,
+      "output": ""
+    },
+    "fault_same_read": {
+      "command": [
+        "docker",
+        "exec",
+        "-i",
+        "--user",
+        "65534:65534",
+        "azure-cloudops-ir05-3d34c6cc0f",
+        "cat",
+        "/tmp/azure-cloudops-ir05-3d34c6cc0f/in-scope.txt"
+      ],
+      "returncode": 1,
+      "output": "cat: /tmp/azure-cloudops-ir05-3d34c6cc0f/in-scope.txt: Permission denied"
+    },
+    "root_confirm_object_exists": {
+      "command": [
+        "docker",
+        "exec",
+        "-i",
+        "azure-cloudops-ir05-3d34c6cc0f",
+        "stat",
+        "-c",
+        "%F mode=%a uid=%u gid=%g",
+        "/tmp/azure-cloudops-ir05-3d34c6cc0f/in-scope.txt"
+      ],
+      "returncode": 0,
+      "output": "regular file mode=0 uid=0 gid=65534"
+    },
+    "grant_minimal_group_read_repair": {
+      "command": [
+        "docker",
+        "exec",
+        "-i",
+        "azure-cloudops-ir05-3d34c6cc0f",
+        "chmod",
+        "0040",
+        "/tmp/azure-cloudops-ir05-3d34c6cc0f/in-scope.txt"
+      ],
+      "returncode": 0,
+      "output": ""
+    },
+    "recovery_same_read": {
+      "command": [
+        "docker",
+        "exec",
+        "-i",
+        "--user",
+        "65534:65534",
+        "azure-cloudops-ir05-3d34c6cc0f",
+        "cat",
+        "/tmp/azure-cloudops-ir05-3d34c6cc0f/in-scope.txt"
+      ],
+      "returncode": 0,
+      "output": "synthetic-fixture=IR-05"
+    },
+    "recovered_digest_as_same_principal": {
+      "command": [
+        "docker",
+        "exec",
+        "--user",
+        "65534:65534",
+        "azure-cloudops-ir05-3d34c6cc0f",
+        "sha256sum",
+        "/tmp/azure-cloudops-ir05-3d34c6cc0f/in-scope.txt"
+      ],
+      "returncode": 0,
+      "output": "a6a022ea88bc09e863bd785d3b42953f6042f2419a02993d77a9d4b0c2b44f4f  /tmp/azure-cloudops-ir05-3d34c6cc0f/in-scope.txt"
+    },
+    "write_negative_control_after_repair": {
+      "command": [
+        "docker",
+        "exec",
+        "-i",
+        "--user",
+        "65534:65534",
+        "azure-cloudops-ir05-3d34c6cc0f",
+        "sh",
+        "-c",
+        "printf x >> /tmp/azure-cloudops-ir05-3d34c6cc0f/in-scope.txt"
+      ],
+      "returncode": 2,
+      "output": "sh: 1: cannot create /tmp/azure-cloudops-ir05-3d34c6cc0f/in-scope.txt: Permission denied"
+    },
+    "neighbor_negative_control_after_repair": {
+      "command": [
+        "docker",
+        "exec",
+        "-i",
+        "--user",
+        "65534:65534",
+        "azure-cloudops-ir05-3d34c6cc0f",
+        "cat",
+        "/tmp/azure-cloudops-ir05-3d34c6cc0f/neighbor.txt"
+      ],
+      "returncode": 1,
+      "output": "cat: /tmp/azure-cloudops-ir05-3d34c6cc0f/neighbor.txt: Permission denied"
+    }
+  },
+  "container_id": "756615c713c23945a23e04a9d8fe04ca0c2d12ea5e3433de6c6ffcecdd5f39b6",
+  "recovery_digest_from_captured_text": "a6a022ea88bc09e863bd785d3b42953f6042f2419a02993d77a9d4b0c2b44f4f",
+  "checks": {
+    "principal_is_the_selected_uid_gid": true,
+    "baseline_same_object_readable": true,
+    "write_denied_before_fault": true,
+    "neighbor_denied_before_fault": true,
+    "directory_not_enumerable": true,
+    "fault_is_eacces_on_existing_object": true,
+    "same_read_recovered_and_hash_matches": true,
+    "write_and_neighbor_still_denied": true
+  },
+  "ok": true,
+  "cleanup": {
+    "remove_container": {
+      "command": [
+        "docker",
+        "rm",
+        "--force",
+        "azure-cloudops-ir05-3d34c6cc0f"
+      ],
+      "returncode": 0,
+      "output": "azure-cloudops-ir05-3d34c6cc0f"
+    },
+    "container_absent": true,
+    "host_accounts_modified": false
+  },
+  "completed_at_utc": "2026-11-27T06:50:16+00:00"
+}

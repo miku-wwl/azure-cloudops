@@ -1,0 +1,514 @@
+
+===== terraform version =====
+Terraform v1.15.5
+on windows_amd64
++ provider registry.terraform.io/hashicorp/local v2.9.1
+
+Your version of Terraform is out of date! The latest version
+is 1.17.2. You can update by downloading from https://developer.hashicorp.com/terraform/install
+
+===== terraform init -input=false -no-color =====
+Initializing provider plugins found in the configuration...
+- terraform.io/builtin/terraform is built in to Terraform
+- Reusing previous version of hashicorp/local from the dependency lock file
+- Using hashicorp/local v2.9.1 from the shared cache directory
+
+Initializing the backend...
+
+
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+
+===== terraform apply -auto-approve -no-color -var hold_lock=false =====
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # local_file.marker will be created
+  + resource "local_file" "marker" {
+      + content              = <<-EOT
+            managed=terraform
+        EOT
+      + content_base64sha256 = (known after apply)
+      + content_base64sha512 = (known after apply)
+      + content_md5          = (known after apply)
+      + content_sha1         = (known after apply)
+      + content_sha256       = (known after apply)
+      + content_sha512       = (known after apply)
+      + directory_permission = "0777"
+      + file_permission      = "0600"
+      + filename             = "./work/managed-marker.txt"
+      + id                   = (known after apply)
+    }
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+local_file.marker: Creating...
+local_file.marker: Creation complete after 0s [id=f2c2a0bd18226e96955f07f0f3245bd072f805cc]
+
+Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
+
+===== terraform import -input=false -no-color -var=import_enabled=true terraform_data.imported[0] synthetic-existing-state-id =====
+terraform_data.imported[0]: Importing from ID "synthetic-existing-state-id"...
+terraform_data.imported[0]: Import prepared!
+  Prepared terraform_data for import
+terraform_data.imported[0]: Refreshing state... [id=synthetic-existing-state-id]
+
+Import successful!
+
+The resources that were imported are shown above. These resources are now in
+your Terraform state and will henceforth be managed by Terraform.
+
+===== terraform plan -no-color -detailed-exitcode -var=import_enabled=true =====
+terraform_data.imported[0]: Refreshing state... [id=synthetic-existing-state-id]
+local_file.marker: Refreshing state... [id=f2c2a0bd18226e96955f07f0f3245bd072f805cc]
+
+No changes. Your infrastructure matches the configuration.
+
+Terraform has compared your real infrastructure against your configuration
+and found no differences, so no changes are needed.
+
+===== terraform state list =====
+local_file.marker
+terraform_data.imported[0]
+
+===== terraform state rm -no-color terraform_data.imported[0] =====
+Removed terraform_data.imported[0]
+Successfully removed 1 resource instance(s).
+
+===== local import and state removal =====
+Terraform imported a state-only terraform_data identity, produced a no-diff plan, then removed the State address.
+local_file.marker: Refreshing state... [id=f2c2a0bd18226e96955f07f0f3245bd072f805cc]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # terraform_data.lock_holder[0] will be created
+  + resource "terraform_data" "lock_holder" {
+      + id     = (known after apply)
+      + input  = "The local provisioner is holding this Terraform operation open."
+      + output = (known after apply)
+    }
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+terraform_data.lock_holder[0]: Creating...
+terraform_data.lock_holder[0]: Provisioning with 'local-exec'...
+terraform_data.lock_holder[0] (local-exec): Executing: ["cmd" "/C" "python scripts/hold_state_lock.py"]
+terraform_data.lock_holder[0] (local-exec): LOCK_GATE_OPEN: terraform apply is active and holds the local backend lock. Run a competing state-changing Terraform apply, then run scripts/release_state_lock.py.
+
+===== terraform apply -auto-approve -no-color -lock-timeout=0s -var hold_lock=true -var desired_content=managed=contender-attempt =====
+
+Error: Error acquiring the state lock
+
+Error message: Failed to read state file: The state file could not be read:
+read terraform.tfstate: The process cannot access the file because another
+process has locked a portion of the file.
+
+Terraform acquires a state lock to protect the state from being written
+by multiple users at the same time. Please resolve the issue above and try
+again. For most commands, you can disable locking with the "-lock=false"
+flag, but this is not recommended.
+terraform_data.lock_holder[0] (local-exec): LOCK_GATE_RELEASED
+
+===== release local lock gate =====
+Sent release to the waiting local Terraform operation.
+terraform_data.lock_holder[0]: Creation complete after 0s [id=f524cdc0-c9b7-4be9-75ed-2db0ca73a119]
+
+Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
+
+===== lock-holder apply completion =====
+local_file.marker: Refreshing state... [id=f2c2a0bd18226e96955f07f0f3245bd072f805cc]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # terraform_data.lock_holder[0] will be created
+  + resource "terraform_data" "lock_holder" {
+      + id     = (known after apply)
+      + input  = "The local provisioner is holding this Terraform operation open."
+      + output = (known after apply)
+    }
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+terraform_data.lock_holder[0]: Creating...
+terraform_data.lock_holder[0]: Provisioning with 'local-exec'...
+terraform_data.lock_holder[0] (local-exec): Executing: ["cmd" "/C" "python scripts/hold_state_lock.py"]
+terraform_data.lock_holder[0] (local-exec): LOCK_GATE_OPEN: terraform apply is active and holds the local backend lock. Run a competing state-changing Terraform apply, then run scripts/release_state_lock.py.
+terraform_data.lock_holder[0] (local-exec): LOCK_GATE_RELEASED
+terraform_data.lock_holder[0]: Creation complete after 0s [id=f524cdc0-c9b7-4be9-75ed-2db0ca73a119]
+
+Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
+
+===== terraform apply -auto-approve -no-color -var hold_lock=false =====
+terraform_data.lock_holder[0]: Refreshing state... [id=f524cdc0-c9b7-4be9-75ed-2db0ca73a119]
+local_file.marker: Refreshing state... [id=f2c2a0bd18226e96955f07f0f3245bd072f805cc]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  - destroy
+
+Terraform will perform the following actions:
+
+  # terraform_data.lock_holder[0] will be destroyed
+  # (because index [0] is out of range for count)
+  - resource "terraform_data" "lock_holder" {
+      - id     = "f524cdc0-c9b7-4be9-75ed-2db0ca73a119" -> null
+      - input  = "The local provisioner is holding this Terraform operation open." -> null
+      - output = "The local provisioner is holding this Terraform operation open." -> null
+    }
+
+Plan: 0 to add, 0 to change, 1 to destroy.
+terraform_data.lock_holder[0]: Destroying... [id=f524cdc0-c9b7-4be9-75ed-2db0ca73a119]
+terraform_data.lock_holder[0]: Destruction complete after 0s
+
+Apply complete! Resources: 0 added, 0 changed, 1 destroyed.
+
+===== terraform plan -no-color -detailed-exitcode =====
+local_file.marker: Refreshing state... [id=f2c2a0bd18226e96955f07f0f3245bd072f805cc]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # local_file.marker will be created
+  + resource "local_file" "marker" {
+      + content              = <<-EOT
+            managed=terraform
+        EOT
+      + content_base64sha256 = (known after apply)
+      + content_base64sha512 = (known after apply)
+      + content_md5          = (known after apply)
+      + content_sha1         = (known after apply)
+      + content_sha256       = (known after apply)
+      + content_sha512       = (known after apply)
+      + directory_permission = "0777"
+      + file_permission      = "0600"
+      + filename             = "./work/managed-marker.txt"
+      + id                   = (known after apply)
+    }
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+
+����������������������������������������������������������������������������������������������������������������������������������������������������������
+
+Note: You didn't use the -out option to save this plan, so Terraform can't
+guarantee to take exactly these actions if you run "terraform apply" now.
+
+===== terraform apply -auto-approve -no-color -refresh-only =====
+local_file.marker: Refreshing state... [id=f2c2a0bd18226e96955f07f0f3245bd072f805cc]
+
+Note: Objects have changed outside of Terraform
+
+Terraform detected the following changes made outside of Terraform since the
+last "terraform apply" which may have affected this plan:
+
+  # local_file.marker has been deleted
+  - resource "local_file" "marker" {
+      - content              = <<-EOT
+            managed=terraform
+        EOT -> null
+      - content_base64sha256 = "DXFAOP5LuHACIQ3bE4fnFBeIVJURFrbJmy5tLlv4YxM=" -> null
+      - content_base64sha512 = "f2bW94Hoe2a18bliRjYoKJPP8xRuMIpTnJUeEQbx064iZK52YudajXbss8vwpN8wemBuSNn9YBGRtt4LveTuzg==" -> null
+      - content_md5          = "1324b5945288285c149246da6e747829" -> null
+      - content_sha1         = "f2c2a0bd18226e96955f07f0f3245bd072f805cc" -> null
+      - content_sha256       = "0d714038fe4bb87002210ddb1387e714178854951116b6c99b2e6d2e5bf86313" -> null
+      - content_sha512       = "7f66d6f781e87b66b5f1b9624636282893cff3146e308a539c951e1106f1d3ae2264ae7662e75a8d76ecb3cbf0a4df307a606e48d9fd601191b6de0bbde4eece" -> null
+      - directory_permission = "0777" -> null
+      - file_permission      = "0600" -> null
+      - filename             = "./work/managed-marker.txt" -> null
+      - id                   = "f2c2a0bd18226e96955f07f0f3245bd072f805cc" -> null
+    }
+
+
+This is a refresh-only plan, so Terraform will not take any actions to undo
+these. If you were expecting these changes then you can apply this plan to
+record the updated values in the Terraform state without changing any remote
+objects.
+
+Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
+
+===== terraform plan -no-color -detailed-exitcode =====
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # local_file.marker will be created
+  + resource "local_file" "marker" {
+      + content              = <<-EOT
+            managed=terraform
+        EOT
+      + content_base64sha256 = (known after apply)
+      + content_base64sha512 = (known after apply)
+      + content_md5          = (known after apply)
+      + content_sha1         = (known after apply)
+      + content_sha256       = (known after apply)
+      + content_sha512       = (known after apply)
+      + directory_permission = "0777"
+      + file_permission      = "0600"
+      + filename             = "./work/managed-marker.txt"
+      + id                   = (known after apply)
+    }
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+
+����������������������������������������������������������������������������������������������������������������������������������������������������������
+
+Note: You didn't use the -out option to save this plan, so Terraform can't
+guarantee to take exactly these actions if you run "terraform apply" now.
+
+===== terraform apply -auto-approve -no-color =====
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # local_file.marker will be created
+  + resource "local_file" "marker" {
+      + content              = <<-EOT
+            managed=terraform
+        EOT
+      + content_base64sha256 = (known after apply)
+      + content_base64sha512 = (known after apply)
+      + content_md5          = (known after apply)
+      + content_sha1         = (known after apply)
+      + content_sha256       = (known after apply)
+      + content_sha512       = (known after apply)
+      + directory_permission = "0777"
+      + file_permission      = "0600"
+      + filename             = "./work/managed-marker.txt"
+      + id                   = (known after apply)
+    }
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+local_file.marker: Creating...
+local_file.marker: Creation complete after 0s [id=f2c2a0bd18226e96955f07f0f3245bd072f805cc]
+
+Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
+
+===== terraform plan -no-color -detailed-exitcode =====
+local_file.marker: Refreshing state... [id=f2c2a0bd18226e96955f07f0f3245bd072f805cc]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+-/+ destroy and then create replacement
+
+Terraform will perform the following actions:
+
+  # local_file.marker must be replaced
+-/+ resource "local_file" "marker" {
+      ~ content              = <<-EOT # forces replacement
+          - managed=terraform
+          + managed=rollback-candidate
+        EOT
+      ~ content_base64sha256 = "DXFAOP5LuHACIQ3bE4fnFBeIVJURFrbJmy5tLlv4YxM=" -> (known after apply)
+      ~ content_base64sha512 = "f2bW94Hoe2a18bliRjYoKJPP8xRuMIpTnJUeEQbx064iZK52YudajXbss8vwpN8wemBuSNn9YBGRtt4LveTuzg==" -> (known after apply)
+      ~ content_md5          = "1324b5945288285c149246da6e747829" -> (known after apply)
+      ~ content_sha1         = "f2c2a0bd18226e96955f07f0f3245bd072f805cc" -> (known after apply)
+      ~ content_sha256       = "0d714038fe4bb87002210ddb1387e714178854951116b6c99b2e6d2e5bf86313" -> (known after apply)
+      ~ content_sha512       = "7f66d6f781e87b66b5f1b9624636282893cff3146e308a539c951e1106f1d3ae2264ae7662e75a8d76ecb3cbf0a4df307a606e48d9fd601191b6de0bbde4eece" -> (known after apply)
+      ~ id                   = "f2c2a0bd18226e96955f07f0f3245bd072f805cc" -> (known after apply)
+        # (3 unchanged attributes hidden)
+    }
+
+Plan: 1 to add, 0 to change, 1 to destroy.
+
+����������������������������������������������������������������������������������������������������������������������������������������������������������
+
+Note: You didn't use the -out option to save this plan, so Terraform can't
+guarantee to take exactly these actions if you run "terraform apply" now.
+
+===== terraform apply -auto-approve -no-color =====
+local_file.marker: Refreshing state... [id=f2c2a0bd18226e96955f07f0f3245bd072f805cc]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+-/+ destroy and then create replacement
+
+Terraform will perform the following actions:
+
+  # local_file.marker must be replaced
+-/+ resource "local_file" "marker" {
+      ~ content              = <<-EOT # forces replacement
+          - managed=terraform
+          + managed=rollback-candidate
+        EOT
+      ~ content_base64sha256 = "DXFAOP5LuHACIQ3bE4fnFBeIVJURFrbJmy5tLlv4YxM=" -> (known after apply)
+      ~ content_base64sha512 = "f2bW94Hoe2a18bliRjYoKJPP8xRuMIpTnJUeEQbx064iZK52YudajXbss8vwpN8wemBuSNn9YBGRtt4LveTuzg==" -> (known after apply)
+      ~ content_md5          = "1324b5945288285c149246da6e747829" -> (known after apply)
+      ~ content_sha1         = "f2c2a0bd18226e96955f07f0f3245bd072f805cc" -> (known after apply)
+      ~ content_sha256       = "0d714038fe4bb87002210ddb1387e714178854951116b6c99b2e6d2e5bf86313" -> (known after apply)
+      ~ content_sha512       = "7f66d6f781e87b66b5f1b9624636282893cff3146e308a539c951e1106f1d3ae2264ae7662e75a8d76ecb3cbf0a4df307a606e48d9fd601191b6de0bbde4eece" -> (known after apply)
+      ~ id                   = "f2c2a0bd18226e96955f07f0f3245bd072f805cc" -> (known after apply)
+        # (3 unchanged attributes hidden)
+    }
+
+Plan: 1 to add, 0 to change, 1 to destroy.
+local_file.marker: Destroying... [id=f2c2a0bd18226e96955f07f0f3245bd072f805cc]
+local_file.marker: Destruction complete after 0s
+local_file.marker: Creating...
+local_file.marker: Creation complete after 0s [id=18f7eb2cdbb9fba0cf336d86950e7e3a79b57f81]
+
+Apply complete! Resources: 1 added, 0 changed, 1 destroyed.
+
+===== terraform plan -no-color -detailed-exitcode =====
+local_file.marker: Refreshing state... [id=18f7eb2cdbb9fba0cf336d86950e7e3a79b57f81]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+-/+ destroy and then create replacement
+
+Terraform will perform the following actions:
+
+  # local_file.marker must be replaced
+-/+ resource "local_file" "marker" {
+      ~ content              = <<-EOT # forces replacement
+          - managed=rollback-candidate
+          + managed=terraform
+        EOT
+      ~ content_base64sha256 = "AOCObM6Go7p77ML0WnJEtEzNVsA7aQsJs+/S3NyemqU=" -> (known after apply)
+      ~ content_base64sha512 = "0yPIdyzmlcz5GHgh8emJIKmf0x+RzoQToQ0DpQe+9BexwCfH2Hhg6U7XQGEayV5zUECPAJ1+JmnsXNmKCUQCSg==" -> (known after apply)
+      ~ content_md5          = "c3539eee748bb15c50d418fea1299b18" -> (known after apply)
+      ~ content_sha1         = "18f7eb2cdbb9fba0cf336d86950e7e3a79b57f81" -> (known after apply)
+      ~ content_sha256       = "00e08e6cce86a3ba7becc2f45a7244b44ccd56c03b690b09b3efd2dcdc9e9aa5" -> (known after apply)
+      ~ content_sha512       = "d323c8772ce695ccf9187821f1e98920a99fd31f91ce8413a10d03a507bef417b1c027c7d87860e94ed740611ac95e7350408f009d7e2669ec5cd98a0944024a" -> (known after apply)
+      ~ id                   = "18f7eb2cdbb9fba0cf336d86950e7e3a79b57f81" -> (known after apply)
+        # (3 unchanged attributes hidden)
+    }
+
+Plan: 1 to add, 0 to change, 1 to destroy.
+
+����������������������������������������������������������������������������������������������������������������������������������������������������������
+
+Note: You didn't use the -out option to save this plan, so Terraform can't
+guarantee to take exactly these actions if you run "terraform apply" now.
+
+===== terraform apply -auto-approve -no-color =====
+local_file.marker: Refreshing state... [id=18f7eb2cdbb9fba0cf336d86950e7e3a79b57f81]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+-/+ destroy and then create replacement
+
+Terraform will perform the following actions:
+
+  # local_file.marker must be replaced
+-/+ resource "local_file" "marker" {
+      ~ content              = <<-EOT # forces replacement
+          - managed=rollback-candidate
+          + managed=terraform
+        EOT
+      ~ content_base64sha256 = "AOCObM6Go7p77ML0WnJEtEzNVsA7aQsJs+/S3NyemqU=" -> (known after apply)
+      ~ content_base64sha512 = "0yPIdyzmlcz5GHgh8emJIKmf0x+RzoQToQ0DpQe+9BexwCfH2Hhg6U7XQGEayV5zUECPAJ1+JmnsXNmKCUQCSg==" -> (known after apply)
+      ~ content_md5          = "c3539eee748bb15c50d418fea1299b18" -> (known after apply)
+      ~ content_sha1         = "18f7eb2cdbb9fba0cf336d86950e7e3a79b57f81" -> (known after apply)
+      ~ content_sha256       = "00e08e6cce86a3ba7becc2f45a7244b44ccd56c03b690b09b3efd2dcdc9e9aa5" -> (known after apply)
+      ~ content_sha512       = "d323c8772ce695ccf9187821f1e98920a99fd31f91ce8413a10d03a507bef417b1c027c7d87860e94ed740611ac95e7350408f009d7e2669ec5cd98a0944024a" -> (known after apply)
+      ~ id                   = "18f7eb2cdbb9fba0cf336d86950e7e3a79b57f81" -> (known after apply)
+        # (3 unchanged attributes hidden)
+    }
+
+Plan: 1 to add, 0 to change, 1 to destroy.
+local_file.marker: Destroying... [id=18f7eb2cdbb9fba0cf336d86950e7e3a79b57f81]
+local_file.marker: Destruction complete after 0s
+local_file.marker: Creating...
+local_file.marker: Creation complete after 0s [id=f2c2a0bd18226e96955f07f0f3245bd072f805cc]
+
+Apply complete! Resources: 1 added, 0 changed, 1 destroyed.
+
+===== configuration rollback =====
+Restoring the prior HCL declaration produced a new plan and reconciled the local marker.
+
+===== terraform state pull =====
+<state contents suppressed>
+
+===== state backup identity =====
+lineage=ebd5401f-c73f-ea32-4562-14519dd52729
+serial=17
+
+===== terraform state list =====
+[31mNo state file was found!
+
+State management commands require a state file. Run this command
+in a directory where Terraform has been run or use the -state flag
+to point the command to a specific state location.[0m[0m
+
+===== terraform state push [LOCAL_TEMP_REDACTED]\work\state-backup.json =====
+
+
+===== terraform state list =====
+local_file.marker
+
+===== terraform plan -no-color -detailed-exitcode =====
+local_file.marker: Refreshing state... [id=f2c2a0bd18226e96955f07f0f3245bd072f805cc]
+
+No changes. Your infrastructure matches the configuration.
+
+Terraform has compared your real infrastructure against your configuration
+and found no differences, so no changes are needed.
+
+===== terraform destroy -auto-approve -no-color =====
+local_file.marker: Refreshing state... [id=f2c2a0bd18226e96955f07f0f3245bd072f805cc]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  - destroy
+
+Terraform will perform the following actions:
+
+  # local_file.marker will be destroyed
+  - resource "local_file" "marker" {
+      - content              = <<-EOT
+            managed=terraform
+        EOT -> null
+      - content_base64sha256 = "DXFAOP5LuHACIQ3bE4fnFBeIVJURFrbJmy5tLlv4YxM=" -> null
+      - content_base64sha512 = "f2bW94Hoe2a18bliRjYoKJPP8xRuMIpTnJUeEQbx064iZK52YudajXbss8vwpN8wemBuSNn9YBGRtt4LveTuzg==" -> null
+      - content_md5          = "1324b5945288285c149246da6e747829" -> null
+      - content_sha1         = "f2c2a0bd18226e96955f07f0f3245bd072f805cc" -> null
+      - content_sha256       = "0d714038fe4bb87002210ddb1387e714178854951116b6c99b2e6d2e5bf86313" -> null
+      - content_sha512       = "7f66d6f781e87b66b5f1b9624636282893cff3146e308a539c951e1106f1d3ae2264ae7662e75a8d76ecb3cbf0a4df307a606e48d9fd601191b6de0bbde4eece" -> null
+      - directory_permission = "0777" -> null
+      - file_permission      = "0600" -> null
+      - filename             = "./work/managed-marker.txt" -> null
+      - id                   = "f2c2a0bd18226e96955f07f0f3245bd072f805cc" -> null
+    }
+
+Plan: 0 to add, 0 to change, 1 to destroy.
+local_file.marker: Destroying... [id=f2c2a0bd18226e96955f07f0f3245bd072f805cc]
+local_file.marker: Destruction complete after 0s
+
+Destroy complete! Resources: 1 destroyed.
+
+===== verification summary =====
+terraform=Terraform v1.15.5
+provider=hashicorp/local 2.9.1
+actual_local_lock_contention=PASS
+provider_read_drift_and_reconcile=PASS
+local_import_and_unbind=PASS
+configuration_rollback=PASS
+state_backup_and_restore=PASS
+azure_calls=NONE
+state_artifacts=isolated_temp_directory_and_removed
+ISOLATED_TEMPORARY_LAB_CLEANED: no Terraform state or marker was left in the checkout.

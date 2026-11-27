@@ -1,0 +1,75 @@
+{
+  "incident_id": "IR-12",
+  "status": "LOCAL_VERIFIED",
+  "started_at_utc": "2026-11-27T06:37:05+00:00",
+  "mechanism": "All records are deterministic synthetic JSON. A pre-fault SHA-256 manifest validates a separate backup; the missing source object is restored into a new path without overwriting source data.",
+  "scope": {
+    "business_data_used": false,
+    "restore_overwrites_source": false
+  },
+  "manifest": {
+    "objects": [
+      {
+        "name": "record-001.json",
+        "bytes": 54,
+        "sha256": "a567bd1664747470cd87b5806fc95912584a2252b63a2162a4aba29141e3b6d8"
+      },
+      {
+        "name": "record-002.json",
+        "bytes": 54,
+        "sha256": "0f6421ddbdfd203dc2a4a00a3fc31ad5e0066f9e531069f4624d0d21b45dc610"
+      },
+      {
+        "name": "record-003.json",
+        "bytes": 53,
+        "sha256": "992a9858eebe0148aca3296492fc94b0e39515c0bdcfbc23ea71aa2c55489ad3"
+      }
+    ]
+  },
+  "manifest_sha256": "eba2c8b0c1960c07bca9c6b0f0241f1a021812aa49a162b12dd7a8b94c0ad2fd",
+  "baseline_application_reads": {
+    "record-001.json": {
+      "amount": 125,
+      "currency": "NZD",
+      "id": "synthetic-001"
+    },
+    "record-002.json": {
+      "amount": 340,
+      "currency": "NZD",
+      "id": "synthetic-002"
+    },
+    "record-003.json": {
+      "amount": 75,
+      "currency": "NZD",
+      "id": "synthetic-003"
+    }
+  },
+  "source_loss": {
+    "missing_object": "record-002.json",
+    "source_missing": true,
+    "read_error": "FileNotFoundError"
+  },
+  "backup_hash_after_source_loss": "0f6421ddbdfd203dc2a4a00a3fc31ad5e0066f9e531069f4624d0d21b45dc610",
+  "restored_object_sha256": "0f6421ddbdfd203dc2a4a00a3fc31ad5e0066f9e531069f4624d0d21b45dc610",
+  "restored_record": {
+    "amount": 340,
+    "currency": "NZD",
+    "id": "synthetic-002"
+  },
+  "recovery_seconds": 0.001178,
+  "checks": {
+    "baseline_manifest_covers_all_synthetic_objects": true,
+    "source_loss_is_observed_before_restore": true,
+    "backup_bytes_match_pre_loss_manifest": true,
+    "restore_target_was_new_and_separate": true,
+    "restored_object_matches_expected_hash_and_record": true,
+    "complete_restored_fixture_matches_manifest": true,
+    "backup_unchanged": true,
+    "recovery_time_measured": true
+  },
+  "ok": true,
+  "cleanup": {
+    "source_backup_restore_temp_paths_removed": true
+  },
+  "completed_at_utc": "2026-11-27T06:37:05+00:00"
+}

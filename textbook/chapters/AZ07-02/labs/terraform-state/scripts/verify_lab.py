@@ -172,15 +172,18 @@ def execute(run_root: Path, log: Path, deadline: float) -> None:
             run_root,
             log,
             deadline,
-            "plan",
+            "apply",
+            "-auto-approve",
             "-no-color",
             "-lock-timeout=0s",
             "-var",
             "hold_lock=true",
+            "-var",
+            "desired_content=managed=contender-attempt",
             expected={1},
         )
         if "lock" not in contender.stdout.casefold():
-            raise VerificationError("competing Terraform CLI failed without a state-lock diagnostic")
+            raise VerificationError("competing state-changing Terraform apply failed without a state-lock diagnostic")
         if not release_holder(run_root, log):
             raise VerificationError("could not release the interactive Terraform lock holder")
         released = True

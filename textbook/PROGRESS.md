@@ -1,6 +1,6 @@
 # Project progress
 
-- Last updated: 2026-11-27 (Pacific/Auckland)
+- Last updated: 2026-11-26 (Pacific/Auckland)
 - Repository: D:/workshop/nov/azure-cloudops
 - Branch: main
 - Starting and approved V3 baseline: 853ba6cbaa4ee67e448550fbe192c6c89b24fd2f
@@ -8,14 +8,14 @@
 ## Current gate
 
 - Overall stage: Stage 2 — Enterprise Engineering & Live-Lab Readiness
-- Current phase: E8 — mandatory local incident experiments. Stage 1 B0–B9 and Stage 2 E0–E7 are complete for their documented offline gates; `TEXTBOOK_V1_RELEASE_READY` remains a historical Stage 1 acceptance, while the master-prompt CI/security gate and refreshed Stage 2 packages remain open.
+- Current phase: E9/E10 complete; final Stage 2 acceptance is being closed by the new hosted CI, security scan, and refreshed publication packages. Stage 1 B0–B9 and Stage 2 E0–E8 are complete for their documented offline gates; `TEXTBOOK_V1_RELEASE_READY` remains a historical Stage 1 acceptance.
 - B0 status: COMPLETE. Read-only AWS source, toolchain, two reference PDFs and package consistency reviewed; Azure publisher adaptation built an Azure chapter and passed the recorded checks.
 - Completed lectures: 23/23 — AZ00-01, AZ01-01, AZ02-01 through AZ02-04, AZ03-01 through AZ03-03, AZ04-01 through AZ04-04, AZ05-01 through AZ05-03, AZ06-01 through AZ06-02, AZ07-01 through AZ07-03, AZ08-01, and FIN-01.
 - Implementation is being tracked on main from the approved baseline; see repository history for the current checkpoint.
 - Cloud resource operations: none performed for this project.
 - Azure authorization and subscription scope: NOT_CHECKED; Stage 3 read-only preflight is later.
 - Actual Azure billing: NOT_VERIFIED; billing source not queried. Do not report USD 0 actual spend.
-- Known host limit: Podman is not installed and Docker Desktop's Linux engine was unavailable during AZ04-03. A local `kind` cluster could not be used.
+- Current local runtime: Docker Engine 29.9.3, kind 0.33.0, kubectl 1.36.1, and Terraform 1.15.5 are available. The pre-existing `argo-canary-local` cluster was not changed. Podman is absent. See `LAB_ENVIRONMENT.md` for the checked state and limits.
 
 ## Stage sequence
 
@@ -88,8 +88,14 @@
 ## E7 completed evidence
 
 - All twelve roadmap incidents now have complete contracts, exact lecture mappings, local/live scope boundaries, fault/probe/root-cause/recovery/cleanup steps, permission and cost assumptions, and honest verification states. The eight mandatory local scenarios are explicitly separated from the four design-only contracts. Contract tests passed 3 cases; Windows and WSL full suites each passed 510 tests across 24 directories.
-- E7 did not execute any incident. E4 Terraform lock/drift results are prior local evidence only; they do not close E8 IR-08. No Azure resources, Azure DevOps, Kubernetes cluster, external endpoint, or billing source was queried. The last inventory still shows no working container engine; recheck before IR-07 and preserve it as blocked if unavailable. See `E7_INCIDENT_CONTRACTS.md` and `incidents/`.
+- E7 did not execute any incident. E4 Terraform lock/drift results were prior local evidence only and did not close E8 IR-08. No Azure resources, Azure DevOps, Kubernetes cluster, external endpoint, or billing source was queried. The E7-time container-engine check was unavailable; E8 later rechecked and successfully started Docker Desktop. See `E7_INCIDENT_CONTRACTS.md` and `incidents/`.
+- E8 completed all eight mandatory local incident experiments with bounded local mechanisms and evidence; no Azure API, resource or billing request was used. Docker Desktop's Linux Engine was available during E8. IR-07 used a new, run-owned kind cluster and local registry fixture; the unrelated `argo-canary-local` cluster was not changed. See `E8_LOCAL_INCIDENTS.md` and `incidents/evidence/`.
+- E9 added `LIVE_LAB_CATALOGUE.md` with 13 cards (L0 plus 12 incidents), all 18 required fields, Terraform readiness gaps, cost classes, teardown and delayed billing checks. Numeric live estimates remain unestablished until account/region/SKU preflight; no mutation is authorized by the catalogue.
+- E10 passed a second complete clean local execution cycle: all 8/8 mandatory scenarios recorded; independent replay exercised a network, identity/permission, and data-recovery incident. The verifier confirms distinct execution contexts and cleanup. This is replay evidence, not independent human review. See `E10_INDEPENDENT_REPLAY.md`.
+- Local Stage 2 gates passed: Python 3.13.9 ran 513 tests in 24 directories; Terraform 1.15.5 passed recursive fmt, backend-free init/validate, and 13 plan/mock test runs in 3 roots; Pester 5.7.1 passed both PowerShell contract tests. The repository verifier passed all 23 curriculum/source/PDF mappings, 150 local Markdown references, and 13 E9 cards.
+- Both final publication packages have been rebuilt and byte-verified: PDF ZIP has 23 PDFs (SHA-256 `575F22B9958B68752B54539534E020902135B04BFF22C0BAF0924C8AA0C65608`); source ZIP has 414 files. The PDF payloads are unchanged; this Stage 2 source update did not require a new PDF render or visual inspection.
+- The cross-stage GitHub Actions workflow uses pinned actions and Python/Pester dependencies, least-privilege read-only tokens, and repository-history secret scanning with comments/artifact uploads disabled. Hosted CI/secret scan and final Stage 2 acceptance remain open until the exact published revision runs successfully.
 
-## First next action
+## Next gate
 
-Begin E8 execution of IR-01, IR-02, IR-05, IR-07, IR-08, IR-10, IR-11 and IR-12. Recheck isolated Linux networking and local Kubernetes prerequisites before attempting their scenarios. Stage 2 remains free of Azure resource creation or modification; Azure DevOps and Azure validation stay NOT_RUN until their authorized gates.
+Review the final diff, publish it to main, and verify the exact revision's real GitHub Actions results and secret scan. If Stage 2 then passes, perform only the master-prompt's read-only L0 Azure preflight using the existing CLI session. Stage 3 mutations remain NOT_RUN until a specific live batch passes authorization, scope, pricing, contingency and cleanup gates.
