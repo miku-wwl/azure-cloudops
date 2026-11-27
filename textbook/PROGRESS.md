@@ -1,19 +1,19 @@
 # Project progress
 
-- Last updated: 2026-11-26 (Pacific/Auckland)
+- Last updated: 2026-11-27 (Pacific/Auckland)
 - Repository: D:/workshop/nov/azure-cloudops
 - Branch: main
 - Starting and approved V3 baseline: 853ba6cbaa4ee67e448550fbe192c6c89b24fd2f
 
 ## Current gate
 
-- Overall stage: Stage 3 — L0 read-only preflight complete; one specifically scoped live batch is prepared for owner authorization.
-- Current phase: Stage 1 B0–B9 and Stage 2 E0–E10 are accepted. Exact-revision hosted CI, security scan, package verification and the Stage 3 L0 preflight passed. Stage 3 incident mutations remain NOT_RUN pending approval of LAB-IR-11; the Node package candidate passed its local same-probe 200/500/200 checks.
+- Overall stage: Stage 3 — L0 read-only preflight is recorded with an evidence correction; one specifically scoped live batch is prepared for owner authorization.
+- Current phase: Stage 1 B0–B9 and Stage 2 E0–E10 are accepted. Exact-revision hosted CI, security scan and package verification passed. Stage 3 incident mutations remain NOT_RUN pending approval of LAB-IR-11; the Node package candidate passed its local same-probe 200/500/200 checks.
 - B0 status: COMPLETE. Read-only AWS source, toolchain, two reference PDFs and package consistency reviewed; Azure publisher adaptation built an Azure chapter and passed the recorded checks.
 - Completed lectures: 23/23 — AZ00-01, AZ01-01, AZ02-01 through AZ02-04, AZ03-01 through AZ03-03, AZ04-01 through AZ04-04, AZ05-01 through AZ05-03, AZ06-01 through AZ06-02, AZ07-01 through AZ07-03, AZ08-01, and FIN-01.
 - Implementation is being tracked on main from the approved baseline; see repository history for the current checkpoint.
 - Azure resource mutations: none performed by this project. Stage 3 L0 used read-only inventory, RBAC, provider, location, SKU, name-availability and cost-data checks.
-- Azure context: existing Azure CLI session is Enabled in AzureCloud and remained the default context. Two assignment records for the current principal showed Owner at subscription scope; group-derived effective access was not evaluated. The proposed project resource group does not exist. Microsoft.Web regional usage showed F1 current 0, limit 2 in Australia East; recheck capacity before a write.
+- Azure context: existing Azure CLI session was Enabled in AzureCloud and remained the default context. Two assignment records for the current principal showed Owner at subscription scope; group-derived effective access was not evaluated. The proposed project resource group did not exist when checked. A source review corrected the earlier interpretation of Microsoft.Web regional usage: its documented response is core usage, not F1 plan count. F1 plan count, entitlement and regional capacity remain NOT_VERIFIED.
 - Actual Azure billing: NOT_VERIFIED. Two read-only Cost Management Usage queries returned HTTP 429; no billing amount was retained or inferred.
 - Current local runtime: Docker Engine 29.9.3, kind 0.33.0, kubectl 1.36.1, and Terraform 1.15.5 are available. The pre-existing `argo-canary-local` cluster was not changed. Podman is absent. See `LAB_ENVIRONMENT.md` for the checked state and limits.
 
@@ -100,9 +100,11 @@
 
 - The final Windows Python run passed 515 tests across 24 directories, including the new IR-11 ZIP layout and same-probe 200/500/200 tests. Repository verification passed 23 curriculum/source/PDF mappings, 154 local Markdown references and 13 complete E9 cards. Package build and byte verification passed for 23 PDFs and 424 source/evidence files; the PDF ZIP hash is unchanged. `git diff --check` passed.
 - The report, L0 evidence and proposed IR-11 implementation are included in the source package. This handoff refresh made no Azure resource changes; the two billing queries remained throttled and actual Azure billing is NOT_VERIFIED. Exact-revision GitHub Actions run [45970519897](https://github.com/miku-wwl/azure-cloudops/actions/runs/45970519897) passed all five jobs on commit `de1e44972b876cf201e34748df814fb5f11ed4d6`; this progress-record/source-archive update will receive its own exact-revision run.
+- A later source-contract review corrected the earlier 0/2 interpretation without making another Azure request. The IR-11 runbook now checks the documented regional Free-plan limit from the read-only subscription inventory, and its independent watchdog remains active after the primary cleanup marker, with a bounded final verification window before the 45-minute cap.
+- The 2026-11-27 safety-gate refresh passed 528 Python tests / 24 directories, repository verification (23 mappings, 155 Markdown references, 13 catalogue cards), Terraform formatting/backend-free validation and 13 plan/mock tests across 3 roots, PowerShell parsing, and package verification. The refreshed source ZIP contains 427 files; the 23-PDF ZIP hash remains `575F22B9958B68752B54539534E020902135B04BFF22C0BAF0924C8AA0C65608`. This refresh made no Azure request or mutation; exact-revision hosted Pester, package and Gitleaks checks run on the published commit.
 
 ## Next gate
 
-Stage 3 L0 is complete; see L0_READ_ONLY_PREFLIGHT.md. All twelve Azure incident scenarios remain NOT_RUN. The only concrete candidate is LAB-IR-11, a disposable Linux App Service F1 rollback drill in Australia East. Its proposed resource allowlist, estimate, runtime, probes and teardown are in LIVE_LAB_CATALOGUE.md and FINAL_ACCEPTANCE_REPORT.md.
+Stage 3 L0 reads are complete; see L0_READ_ONLY_PREFLIGHT.md for the correction and limits. All twelve Azure incident scenarios remain NOT_RUN. The only concrete candidate is LAB-IR-11, a disposable Linux App Service F1 rollback drill in Australia East. Its proposed resource allowlist, conditional estimate, runtime, probes and teardown are in LIVE_LAB_CATALOGUE.md and FINAL_ACCEPTANCE_REPORT.md.
 
-No Azure write is authorized yet. Before provisioning, obtain owner approval for the exact dedicated resource group, F1 plan, app name, 45-minute maximum lifetime and USD 0.00 expected gross estimate. Recheck the account offer, F1 entitlement/capacity, pricing and app-name availability at execution time; stop if any check fails or a billable dependency is required. Keep the USD 0.30 contingency and the USD 1.00 cumulative ceiling. Never infer actual invoice spend from the estimate.
+No Azure write is authorized yet. Before provisioning, obtain owner approval for the exact dedicated resource group, F1 plan, app name, 45-minute maximum lifetime and conditional USD 0.00 gross estimate. Recheck the documented regional Free-plan count, account offer, F1 entitlement, service capacity, pricing and app-name availability at execution time; stop if any check fails or a billable dependency is required. Keep the USD 0.30 contingency and the USD 1.00 cumulative ceiling. Never infer actual invoice spend from the estimate.

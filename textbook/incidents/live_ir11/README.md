@@ -1,96 +1,39 @@
 # LAB-IR-11 — App Service release rollback candidate
 
-This is a local, reviewable package for the proposed disposable Azure App Service F1 drill. The packages use the built-in Node HTTP module only; there are no third-party dependencies, telemetry SDKs, log workspaces, secrets or external calls.
+This local, reviewable package prepares a proposed disposable Linux App Service F1 drill. The apps use only Node's built-in HTTP module; there are no third-party dependencies, telemetry SDKs, secrets, or external calls.
 
 ## Local preparation and verification
 
 From the repository root:
 
     python textbook/incidents/live_ir11/prepare_packages.py
-    python -m unittest -v textbook/incidents/tests/test_ir11_packages.py
+    python -m unittest -v textbook.incidents.tests.test_ir11_packages
+    python -m unittest -v textbook.incidents.tests.test_ir11_watchdog
 
-The package builder writes two ZIP files to the ignored work/azure-cloudops-ir11-packages directory. Each ZIP has package.json and server.js at its root, as required for deployment. The local test starts the same packaged apps in sequence and calls GET /health.
+The builder writes two ZIP files under the ignored `work/azure-cloudops-ir11-packages` directory. Each ZIP has `package.json` and `server.js` at its root. The local package test starts the packaged apps and sends the same `GET /health` probe through 200 → 500 → 200. Watchdog tests use mocked Azure CLI responses only; they never contact Azure.
 
-## Proposed Azure sequence, only after exact batch approval
+## Proposed Azure batch — exact owner approval required
 
-Use the approved resource group, F1 plan, site name and Australia East region from LIVE_LAB_CATALOGUE.md. Select the built-in runtime NODE:24-lts. Deploy good-v1.zip and require HTTP 200 plus release=known-good-v1. Deploy fault-v2.zip and require HTTP 500 plus release=intentional-failure-v2. Redeploy the exact same good-v1.zip and require HTTP 200 plus release=known-good-v1. Use the same HTTPS /health probe with cache disabled after each deployment. No production traffic or deployment slot is involved.
+The only proposed batch creates a dedicated resource group `rg-azure-cloudops-ir11-aue`, one Linux F1 plan `asp-azure-cloudops-ir11-aue`, and one Node 24 LTS app `azcoir11aue261126` in Australia East (`australiaeast`). It deploys the known-good package, deterministic HTTP 500 package, then the identical known-good package to the same endpoint. The same cache-disabled HTTPS probe must observe 200 → 500 → 200 with matching release IDs.
 
-## Exact Azure CLI runbook — only after owner approval
+No slots, production routes, Application Insights, Log Analytics, Storage, private networking, paid dependencies, or other Azure resources are in scope. The proposed maximum lifetime is 45 minutes from before the first write through teardown and residual checks. The currently approved gross estimate is USD 0.00; any nonzero estimate requires revised owner approval. Keep the USD 0.30 contingency and never exceed the USD 1.00 cumulative project ceiling. Actual account billing remains `NOT_VERIFIED` until a billing query succeeds.
 
-This example uses PowerShell and the existing default Azure CLI session. It captures the current subscription ID in a variable and passes it explicitly to every command. It does not log in, change the default context, install extensions, register providers or create any resource until all read-only gates pass.
+## Fail-closed runbook — only after exact owner approval
 
-Build and test the packages before any Azure write:
+The executable runbook is [run_ir11.ps1](run_ir11.ps1). It requires `-ApprovedBatch LAB-IR-11`, the exact approved tenant and subscription IDs, the approved gross estimate, and explicit current-price/account-offer and service-limit confirmation switches. It does not sign in, change the default subscription, install extensions, or register providers. It rechecks the tenant/subscription, dedicated group absence, the documented regional F1 plan count, Linux runtime, regional SKU availability, and app-name availability before creating any resource. A changed tenant, subscription, name, plan limit, region, runtime, price, or estimate stops the run. The regional Microsoft.Web usage endpoint reports core usage and is not treated as an F1 plan-count check.
+
+After approval, set these local variables to the exact tenant/subscription covered by the approval. Keep their values out of the repository and logs:
+
+    $subscription = $env:AZURE_CLOUDOPS_APPROVED_SUBSCRIPTION_ID
+    $tenant = $env:AZURE_CLOUDOPS_APPROVED_TENANT_ID
+    if (-not $subscription -or -not $tenant) { throw 'Approved tenant/subscription are required.' }
+
+Reopen the official F1 and bandwidth pricing pages linked in `L0_READ_ONLY_PREFLIGHT.md` and confirm the current account offer. Reopen Microsoft's subscription and service limits page linked there and confirm the Free-plan regional limit used by the runbook. If any current limit, account-specific offer or gross estimate is not reliable, stop. Then, from the repository root, run the local tests and the batch script:
 
     python textbook/incidents/live_ir11/prepare_packages.py
-    python -m unittest -v textbook/incidents/tests/test_ir11_packages.py
+    python -m unittest -v textbook.incidents.tests.test_ir11_packages textbook.incidents.tests.test_ir11_watchdog
+    .\textbook\incidents\live_ir11\run_ir11.ps1 -ApprovedBatch LAB-IR-11 -SubscriptionId $subscription -TenantId $tenant -EstimatedGrossUsd 0.00 -PriceAndOfferRechecked -FreePlanLimitRechecked
 
-After explicit approval of LAB-IR-11, run the following gate block. It stops unless the proposed group is absent, the candidate site name is still available, Australia East still lists F1/Linux and NODE:24-lts, the Microsoft.Web F1 regional quota has room, and the estimate remains USD 0.00.
+The script rejects estimates above USD 0.70 and rejects any nonzero estimate because this approval is specifically for USD 0.00. It tags the dedicated resource group with a unique run ID. Its `try/finally` path cleans up and checks for residual resources. Before the first write it also starts a separate hidden Python watchdog. The main operation window is 20 minutes; the watchdog begins cleanup after 25 minutes and continues checking for delayed resource-group creation through a final bounded cleanup window before the 45-minute hard limit. It deletes only a group bearing both the project tag and that run's exact ID, and verifies the group and residual inventory are empty. It remains active after the primary cleanup marker to catch an ARM create request that completes after the CLI call timed out. The primary process writes the watchdog completion marker only after it independently verifies cleanup.
 
-    $ErrorActionPreference = 'Stop'
-    $subscription = (az account show --query id -o tsv --only-show-errors).Trim()
-    if (-not $subscription) { throw 'No current subscription; stop without logging in.' }
-    $rg = 'rg-azure-cloudops-ir11-aue'
-    $plan = 'asp-azure-cloudops-ir11-aue'
-    $site = 'azcoir11aue261126'
-    $exists = az group exists --name $rg --subscription $subscription --only-show-errors
-    if ($exists -ne 'false') { throw 'The approved resource group already exists or its state is unknown.' }
-    $f1uri = "https://management.azure.com/subscriptions/$subscription/providers/Microsoft.Web/locations/australiaeast/usages?api-version=2026-03-15"
-    $f1 = @(az rest --method get --url $f1uri --query "value[?name.value=='F1'].{current:currentValue,limit:limit}" -o json --only-show-errors | ConvertFrom-Json)
-    if ($f1.Count -ne 1 -or $f1[0].limit -lt 1 -or $f1[0].current -ge $f1[0].limit) { throw 'F1 quota unavailable; stop.' }
-    $runtimes = az webapp list-runtimes --os linux -o tsv --only-show-errors
-    if ($runtimes -notcontains 'NODE:24-lts') { throw 'NODE:24-lts is not listed; stop.' }
-    $locations = az appservice list-locations --sku F1 --linux-workers-enabled --query "[?name=='Australia East'].name" -o tsv --only-show-errors
-    if ($locations -ne 'Australia East') { throw 'Linux F1 is not listed in Australia East; stop.' }
-    New-Item -ItemType Directory -Force work | Out-Null
-    $nameBodyPath = 'work/ir11-name-check.json'
-    Set-Content -LiteralPath $nameBodyPath -Value '{"name":"azcoir11aue261126","type":"Microsoft.Web/sites"}' -Encoding utf8
-    $nameUri = "https://management.azure.com/subscriptions/$subscription/providers/Microsoft.Web/checknameavailability?api-version=2025-03-01"
-    $available = az rest --method post --url $nameUri --headers 'Content-Type=application/json' --body "@$nameBodyPath" --query nameAvailable -o tsv --only-show-errors
-    Remove-Item -LiteralPath $nameBodyPath
-    if ($available -ne 'true') { throw 'App name is unavailable; request new approval before changing it.' }
-    $estimateUsd = [decimal]0.00
-    if ($estimateUsd -gt [decimal]0.70) { throw 'Estimated gross cost exceeds the planning threshold; stop.' }
-
-Immediately before a write, reopen the official F1 and bandwidth pricing pages linked from L0_READ_ONLY_PREFLIGHT.md and confirm the estimate is still USD 0.00. The CLI gate cannot fetch a billing quote. If the offer or price changed, stop and get a revised batch approval.
-
-Only after those checks pass, create exactly the approved resource group, one Linux F1 plan and one Node 24 LTS site. Put the following block inside a PowerShell try/finally. Check $LASTEXITCODE after every az and python command; any non-zero result throws and moves to cleanup.
-
-    try {
-        az group create --name $rg --location australiaeast --subscription $subscription --output none
-        if ($LASTEXITCODE -ne 0) { throw 'Resource group creation failed.' }
-        az appservice plan create --name $plan --resource-group $rg --location australiaeast --sku F1 --is-linux --subscription $subscription --output none
-        if ($LASTEXITCODE -ne 0) { throw 'F1 plan creation failed.' }
-        az webapp create --name $site --resource-group $rg --plan $plan --runtime 'NODE:24-lts' --subscription $subscription --output none
-        if ($LASTEXITCODE -ne 0) { throw 'Web app creation failed.' }
-        python textbook/incidents/live_ir11/prepare_packages.py
-        if ($LASTEXITCODE -ne 0) { throw 'Package preparation failed.' }
-        $url = "https://$site.azurewebsites.net/health"
-        az webapp deploy --resource-group $rg --name $site --src-path work/azure-cloudops-ir11-packages/good-v1.zip --type zip --subscription $subscription --output none
-        if ($LASTEXITCODE -ne 0) { throw 'Known-good deployment failed.' }
-        python textbook/incidents/live_ir11/probe.py --url $url --expected-status 200 --expected-release known-good-v1
-        if ($LASTEXITCODE -ne 0) { throw 'Baseline probe failed.' }
-        az webapp deploy --resource-group $rg --name $site --src-path work/azure-cloudops-ir11-packages/fault-v2.zip --type zip --subscription $subscription --output none
-        if ($LASTEXITCODE -ne 0) { throw 'Fault deployment failed.' }
-        python textbook/incidents/live_ir11/probe.py --url $url --expected-status 500 --expected-release intentional-failure-v2
-        if ($LASTEXITCODE -ne 0) { throw 'Fault probe did not match.' }
-        az webapp deploy --resource-group $rg --name $site --src-path work/azure-cloudops-ir11-packages/good-v1.zip --type zip --subscription $subscription --output none
-        if ($LASTEXITCODE -ne 0) { throw 'Recovery deployment failed.' }
-        python textbook/incidents/live_ir11/probe.py --url $url --expected-status 200 --expected-release known-good-v1
-        if ($LASTEXITCODE -ne 0) { throw 'Recovery probe failed.' }
-    }
-    finally {
-        $stillExists = az group exists --name $rg --subscription $subscription --only-show-errors
-        if ($LASTEXITCODE -ne 0) { throw 'Cannot verify the approved resource group before cleanup.' }
-        if ($stillExists -eq 'true') {
-            az group delete --name $rg --subscription $subscription --yes --output none
-            if ($LASTEXITCODE -ne 0) { throw 'Resource group cleanup failed; stop all further incidents.' }
-        }
-        $stillExists = az group exists --name $rg --subscription $subscription --only-show-errors
-        if ($LASTEXITCODE -ne 0 -or $stillExists -ne 'false') { throw 'Resource group still exists; stop all further incidents.' }
-        $remaining = @(az resource list --subscription $subscription -o json --only-show-errors | ConvertFrom-Json | Where-Object { $_.resourceGroup -eq $rg })
-        if ($LASTEXITCODE -ne 0 -or $remaining.Count -ne 0) { throw 'Residual resources remain or inventory is incomplete; stop all further incidents.' }
-    }
-
-The runbook’s execution block is not run now. Enforce the 45-minute maximum while it runs, stop on any mismatch or unexpected resource, and do not continue to another incident if recovery, teardown, residual checks or the cost gate fail. The account-specific invoice remains NOT_VERIFIED unless a later billing query succeeds.
-
-The three deployment commands are not run by this package builder. It makes no Azure request. Azure provisioning/deployment remains NOT_RUN until the owner approves the exact batch. After recovery, delete only the app, plan and dedicated resource group created by the run, then query the explicit resource group and subscription inventory for zero residual resources.
+If the primary process exits unexpectedly, the watchdog remains independent. Its config and sanitized logs stay under ignored `work/`. If the current tenant/subscription, ownership tags, deletion, or residual inventory cannot be verified, the run is not complete and no further incident should start. The runbook has not been run against Azure; all live incident statuses remain `NOT_RUN` pending owner approval.
