@@ -99,7 +99,7 @@
 ## Final Stage 3 handoff refresh
 
 - The final Windows Python run passed 515 tests across 24 directories, including the new IR-11 ZIP layout and same-probe 200/500/200 tests. Repository verification passed 23 curriculum/source/PDF mappings, 154 local Markdown references and 13 complete E9 cards. Package build and byte verification passed for 23 PDFs and 424 source/evidence files; the PDF ZIP hash is unchanged. `git diff --check` passed.
-- The report, L0 evidence and proposed IR-11 implementation are included in the source package. This handoff refresh made no Azure resource changes; the two billing queries remained throttled and actual Azure billing is NOT_VERIFIED. Exact-revision hosted CI for the publication commit remains the final repository gate.
+- The report, L0 evidence and proposed IR-11 implementation are included in the source package. This handoff refresh made no Azure resource changes; the two billing queries remained throttled and actual Azure billing is NOT_VERIFIED. Exact-revision GitHub Actions run [45970519897](https://github.com/miku-wwl/azure-cloudops/actions/runs/45970519897) passed all five jobs on commit `de1e44972b876cf201e34748df814fb5f11ed4d6`; this progress-record/source-archive update will receive its own exact-revision run.
 
 ## Next gate
 
