@@ -1,20 +1,21 @@
 # Project progress
 
-- Last updated: 2026-11-27 (Pacific/Auckland)
+- Last updated: 2026-11-28 (Pacific/Auckland)
 - Repository: D:/workshop/nov/azure-cloudops
 - Branch: main
 - Starting and approved V3 baseline: 853ba6cbaa4ee67e448550fbe192c6c89b24fd2f
 
 ## Current gate
 
-- Overall stage: Stage 3 — L0 read-only preflight is recorded with an evidence correction; one specifically scoped live batch is prepared for owner authorization.
-- Current phase: Stage 1 B0–B9 and Stage 2 E0–E10 are accepted. Exact-revision hosted CI, security scan and package verification passed. Stage 3 incident mutations remain NOT_RUN pending approval of LAB-IR-11; the Node package candidate passed its local same-probe 200/500/200 checks.
+- Overall stage: Stage 3 — L0 read-only evidence is recorded with dated subscription-policy and local CLI-extension findings; one specifically scoped live batch is prepared for owner authorization.
+- Current phase: Stage 1 B0–B9 and Stage 2 E0–E10 are accepted. Exact-revision hosted CI, security scan and package verification passed. Stage 3 incident mutations remain NOT_RUN pending exact approval of LAB-IR-11 and run-time gates; the Node package candidate passed its local same-probe 200/500/200 checks.
 - B0 status: COMPLETE. Read-only AWS source, toolchain, two reference PDFs and package consistency reviewed; Azure publisher adaptation built an Azure chapter and passed the recorded checks.
 - Completed lectures: 23/23 — AZ00-01, AZ01-01, AZ02-01 through AZ02-04, AZ03-01 through AZ03-03, AZ04-01 through AZ04-04, AZ05-01 through AZ05-03, AZ06-01 through AZ06-02, AZ07-01 through AZ07-03, AZ08-01, and FIN-01.
 - Implementation is being tracked on main from the approved baseline; see repository history for the current checkpoint.
 - Azure resource mutations: none performed by this project. Stage 3 L0 used read-only inventory, RBAC, provider, location, SKU, name-availability and cost-data checks.
-- Azure context: existing Azure CLI session was Enabled in AzureCloud and remained the default context. Two assignment records for the current principal showed Owner at subscription scope; group-derived effective access was not evaluated. The proposed project resource group did not exist when checked. The 2026-11-27 subscription inventory showed 0 visible F1/Free plans in Australia East; account offer entitlement and regional capacity remain NOT_VERIFIED. Microsoft's regional usage API reports core usage, not F1 plan count.
+- Azure context: the existing Azure CLI session remained Enabled in AzureCloud. A read-only subscription GET returned `quotaId=AzureForStudents_2018-01-01` and `spendingLimit=On`; the latter is an account credit limit, not the project USD 1.00 ceiling. F1 was listed for Australia East and the current inventory returned 0 visible F1 plans there; F1 entitlement and deployment capacity remain NOT_VERIFIED. Resource Graph is registered, but installing its CLI extension failed locally because the bundled Python pip process could not load `pyexpat`; no Resource Graph query ran. See `L0_READ_ONLY_PREFLIGHT.md`.
 - Actual Azure billing: NOT_VERIFIED. Two read-only Cost Management Usage queries returned HTTP 429; no billing amount was retained or inferred.
+- 2026-11-28 documentation refresh: repository verification passed (23 curriculum/source/PDF mappings, 155 local Markdown references, 13 complete catalogue cards); the rebuilt PDF ZIP remained 23 byte-identical PDFs with SHA-256 `575F22B9958B68752B54539534E020902135B04BFF22C0BAF0924C8AA0C65608`, and the 427-file source ZIP matched the current source tree byte-for-byte. No Azure resource operation occurred.
 - Current local runtime: Docker Engine 29.9.3, kind 0.33.0, kubectl 1.36.1, and Terraform 1.15.5 are available. The pre-existing `argo-canary-local` cluster was not changed. Podman is absent. See `LAB_ENVIRONMENT.md` for the checked state and limits.
 
 ## Stage sequence
