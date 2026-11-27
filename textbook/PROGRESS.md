@@ -95,7 +95,7 @@
 - E10 passed a second complete clean local execution cycle: all 8/8 mandatory scenarios recorded; independent replay exercised a network, identity/permission, and data-recovery incident. The verifier confirms distinct execution contexts and cleanup. This is replay evidence, not independent human review. See `E10_INDEPENDENT_REPLAY.md`.
 - At the E10 acceptance checkpoint, Python 3.13.9 ran 513 tests in 24 directories; Terraform 1.15.5 passed recursive fmt, backend-free init/validate, and 13 plan/mock test runs in 3 roots; Pester 5.7.1 passed both PowerShell contract tests. The repository verifier passed all 23 curriculum/source/PDF mappings, 150 local Markdown references, and 13 E9 cards.
 - At the E10 checkpoint, the publication packages contained 23 PDFs and 414 source files; the PDF payloads were unchanged by that Stage 2 source refresh. The final Stage 3 handoff refresh below updates the source package count.
-- Exact-revision GitHub Actions run 45960683857 passed all five jobs at code SHA 82d7865cc0b4df9ea4ea4eae595a2eaca726441d: Windows and Ubuntu repository/Python checks, Terraform formatting and backend-free mock checks, PowerShell/Pester, package/reference verification, and full-history Gitleaks scan. Final acceptance report and source package record the refreshed evidence.
+- Exact-revision GitHub Actions run 45960683857 passed all five jobs at code SHA 82d7865cc0b4df9ea4ea4eae595a2eaca726441d: Windows and Ubuntu repository/Python checks, Terraform formatting and backend-free mock checks, PowerShell/Pester, package/reference verification, and the Gitleaks revision scan. Final acceptance report and source package record the refreshed evidence.
 
 ## Final Stage 3 handoff refresh
 

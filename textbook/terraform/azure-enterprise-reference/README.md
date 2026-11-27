@@ -28,7 +28,7 @@ Provider installation accesses the Terraform Registry. That is an internet downl
 - Log Analytics has a 1 GB/day ingestion quota and 30-day retention. Internet ingestion and query remain enabled because this reference does not yet include a Private Link Scope; local authentication is disabled, so Entra authentication is required. Gross ingestion, retention, and other dependent costs still require a current region-specific estimate.
 - The local preconditions are accidental-change controls, not a substitute for Azure RBAC, owner authorization, a protected approval system, or independent cost verification. Do not change the guards to make a live deployment fit the USD 1 limit.
 
-The mock provider tests prove Terraform graph and input behavior only. They do not validate Azure API acceptance, regional/SKU availability, DNS resolution, RBAC propagation, or cost. `LIVE_VERIFIED` is not claimed.
+The mock provider tests verify Terraform graph and input behavior. Azure deployment, regional SKU availability, DNS resolution, RBAC propagation and costs require separate live evidence.
 
 ## Source references
 

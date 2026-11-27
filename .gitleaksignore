@@ -1,0 +1,14 @@
+# The ten historical matches below were recomputed as SHA-256 digests of release ZIP members.
+# Manifest format 2 uses separate path and hash fields. The ignore entries cover only the original commit and lines.
+79a7dc3448e87e377a928643b488f6be8c6dab41:textbook/dist/publication-manifest.json:generic-api-key:11
+79a7dc3448e87e377a928643b488f6be8c6dab41:textbook/dist/publication-manifest.json:generic-api-key:110
+79a7dc3448e87e377a928643b488f6be8c6dab41:textbook/dist/publication-manifest.json:generic-api-key:139
+79a7dc3448e87e377a928643b488f6be8c6dab41:textbook/dist/publication-manifest.json:generic-api-key:141
+79a7dc3448e87e377a928643b488f6be8c6dab41:textbook/dist/publication-manifest.json:generic-api-key:144
+79a7dc3448e87e377a928643b488f6be8c6dab41:textbook/dist/publication-manifest.json:generic-api-key:145
+79a7dc3448e87e377a928643b488f6be8c6dab41:textbook/dist/publication-manifest.json:generic-api-key:146
+79a7dc3448e87e377a928643b488f6be8c6dab41:textbook/dist/publication-manifest.json:generic-api-key:196
+79a7dc3448e87e377a928643b488f6be8c6dab41:textbook/dist/publication-manifest.json:generic-api-key:459
+79a7dc3448e87e377a928643b488f6be8c6dab41:textbook/dist/publication-manifest.json:generic-api-key:460
+# Historical prose: the rule matched regional/SKU next to “API acceptance”.
+b469059247977f9554c1cabeb09f362e47d4e585:textbook/terraform/azure-enterprise-reference/README.md:generic-api-key:30

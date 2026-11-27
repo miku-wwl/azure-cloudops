@@ -89,9 +89,9 @@ def publication_manifest(pdfs: dict[str, str], sources: dict[str, str]) -> dict:
             "size_bytes": path.stat().st_size,
             "sha256": sha256(path.read_bytes()),
             "entry_count": len(entries),
-            "entries_sha256": entries,
+            "entries": [{"path": name, "sha256": digest} for name, digest in sorted(entries.items())],
         }
-    return {"format_version": 1, "source_text_normalization": "LF", "archives": archives}
+    return {"format_version": 2, "source_text_normalization": "LF", "archives": archives}
 
 
 def build() -> None:
