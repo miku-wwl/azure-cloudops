@@ -84,4 +84,16 @@ Describe 'LAB-IR-11 Azure runbook contract' {
         $source | Should -Not -Match "(?i)Invoke-AzChecked\s+@\('account',\s*'set'"
         $source | Should -Not -Match "(?i)&\s*az\s+(login|account\s+set)"
     }
+
+    It 'passes the Windows name-check JSON through a BOM-free temporary @file and removes it' {
+        $source = Get-Content -LiteralPath $script:ir11Runner -Raw
+        $writeBody = $source.IndexOf('[System.IO.File]::WriteAllText($nameBodyFile, $nameBody, [System.Text.UTF8Encoding]::new($false))', [StringComparison]::Ordinal)
+        $bodyArgument = $source.IndexOf("'--body', `$nameBodyArgument", [StringComparison]::Ordinal)
+        $cleanup = $source.IndexOf('Remove-Item -LiteralPath $nameBodyFile -Force -ErrorAction SilentlyContinue', [StringComparison]::Ordinal)
+
+        $writeBody | Should -BeGreaterOrEqual 0
+        $bodyArgument | Should -BeGreaterThan $writeBody
+        $cleanup | Should -BeGreaterThan $bodyArgument
+        $source | Should -Match '\$nameBodyArgument\s*=\s*"@\$nameBodyFile"'
+    }
 }

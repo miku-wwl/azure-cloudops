@@ -108,10 +108,19 @@ if (($locations | Out-String).Trim() -ne 'Australia East') {
 
 $nameUri = "https://management.azure.com/subscriptions/$SubscriptionId/providers/Microsoft.Web/checknameavailability?api-version=2025-03-01"
 $nameBody = @{ name = $siteName; type = 'Microsoft.Web/sites' } | ConvertTo-Json -Compress
-$available = Invoke-AzChecked @(
-    'rest', '--method', 'post', '--url', $nameUri, '--headers', 'Content-Type=application/json',
-    '--body', $nameBody, '--query', 'nameAvailable', '--output', 'tsv', '--subscription', $SubscriptionId
-)
+$preflightWorkPath = Join-Path (Get-Location).Path 'work'
+$null = New-Item -ItemType Directory -Force -Path $preflightWorkPath
+$nameBodyFile = Join-Path $preflightWorkPath "ir11-name-check-$([guid]::NewGuid().ToString('N')).json"
+$nameBodyArgument = "@$nameBodyFile"
+try {
+    [System.IO.File]::WriteAllText($nameBodyFile, $nameBody, [System.Text.UTF8Encoding]::new($false))
+    $available = Invoke-AzChecked @(
+        'rest', '--method', 'post', '--url', $nameUri, '--headers', 'Content-Type=application/json',
+        '--body', $nameBodyArgument, '--query', 'nameAvailable', '--output', 'tsv', '--subscription', $SubscriptionId
+    )
+} finally {
+    Remove-Item -LiteralPath $nameBodyFile -Force -ErrorAction SilentlyContinue
+}
 if (($available | Out-String).Trim() -ne 'true') {
     throw 'App name is unavailable; obtain a new approval before changing it.'
 }

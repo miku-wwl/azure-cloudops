@@ -18,20 +18,31 @@ The subscription location list included Australia East. The read-only App Servic
 
 ## Billing and cost
 
-No Cost Management or Consumption CLI extension was installed. The Azure CLI quota extension was not installed. The Microsoft.Web regional usage REST API was queried read-only, but it reports core usage and cannot establish the F1 plan count. Two read-only Cost Management Usage API queries at subscription scope returned HTTP 429. No numeric usage result was obtained or retained. Therefore actual Azure billing, actual cumulative spend, F1 plan count and F1 entitlement remain NOT_VERIFIED. A missing or throttled cost view is not evidence of a zero bill.
+No Cost Management or Consumption CLI extension was installed. The Azure CLI quota extension was not installed. The Microsoft.Web regional usage REST API was queried read-only, but it reports core usage and cannot establish the F1 plan count. Two read-only Cost Management Usage API queries at subscription scope returned HTTP 429. No numeric usage result was obtained or retained. Therefore actual Azure billing and cumulative spend remain NOT_VERIFIED. The initial F1 inventory was not sufficient; a later subscription-wide inventory is recorded in the 2026-11-27 recheck below. Account offer entitlement and regional deployment capacity remain NOT_VERIFIED. A missing or throttled cost view is not evidence of a zero bill.
 
 The project has made no Azure resource changes. This preflight used list/read operations and a resource-name availability check; it did not run Network Watcher diagnostics, Connection Troubleshoot, packet capture, monitoring ingestion, or an application probe.
 
+## Stage 3 read-only recheck — 2026-11-27
+
+The existing Azure CLI context was still Enabled in AzureCloud and remained the default. No sign-in, context switch, extension installation, provider registration or resource mutation occurred. Read-only checks returned:
+
+- The subscription-wide App Service plan inventory contained **0 visible F1 / Free plans in Australia East** at the time queried. The runbook repeats this inventory and stops if the documented limit of 10 per region has been reached. This count does not establish account offer entitlement or deployment capacity.
+- `NODE:24-lts` remained in the Linux runtime list, and the Linux F1 location list still included Australia East.
+- `rg-azure-cloudops-ir11-aue` was absent (`az group exists` returned `false`).
+- The candidate site name `azcoir11aue261126` was available. The first PowerShell inline-JSON `az rest` attempt returned HTTP 400 because the request body was empty; the check succeeded when the same JSON was supplied through Azure CLI's documented `@file` convention. The temporary file was removed. The runbook now uses a uniquely named, BOM-free `work/` file and deletes it in `finally`.
+
+These are time-bound observations, not provisioning approval. Recheck every condition immediately before a write. Account entitlement, current deployment capacity and actual Azure billing remain **NOT_VERIFIED**. The HTTP 429 cost-query result remains the latest billing evidence.
+
 ## Candidate LAB-IR-11 pricing and scope
 
-Microsoft’s current public pricing page lists Linux App Service F1 at USD 0, with shared compute limited to 60 CPU minutes/day, 1 GB RAM and 1 GB storage; the plan is intended for experimentation and learning and has no SLA. The Azure bandwidth pricing page lists the first 100 GB/month of internet egress as free. These public prices support only a conditional USD 0.00 gross estimate for one 45-minute F1 app with tiny request/response bodies, if the account offer includes F1 and no paid dependency is required. Actual billing was not queried successfully; F1 plan count, offer entitlement and regional capacity are not established. Reconfirm current pricing, account offer, the documented regional Free-plan limit and app-name availability before any write; stop if the estimate is not reliable, any paid dependency is required, or cumulative estimate exceeds USD 0.70.
+Microsoft’s current public pricing page lists Linux App Service F1 at USD 0, with shared compute limited to 60 CPU minutes/day, 1 GB RAM and 1 GB storage; the plan is intended for experimentation and learning and has no SLA. The Azure bandwidth pricing page lists the first 100 GB/month of internet egress as free. These public prices support only a conditional USD 0.00 gross estimate for one 45-minute F1 app with tiny request/response bodies, if the account offer includes F1 and no paid dependency is required. The 2026-11-27 subscription inventory showed 0 visible F1/Free plans in Australia East, but does not establish account offer entitlement or regional capacity. Actual billing was not queried successfully. Reconfirm current pricing, account offer, the documented regional Free-plan limit and app-name availability before any write; stop if the estimate is not reliable, any paid dependency is required, or cumulative estimate exceeds USD 0.70.
 
 Proposed resources, subject to separate owner approval:
 
 | Resource type | Proposed name | Region/SKU | L0 result |
 |---|---|---|---|
 | Resource group | rg-azure-cloudops-ir11-aue | Australia East scope | Not present when checked |
-| Microsoft.Web/serverfarms | asp-azure-cloudops-ir11-aue | Australia East, Linux F1 | F1 plan count, entitlement and regional capacity NOT_VERIFIED; the prior 0/2 interpretation is invalid as F1 plan evidence |
+| Microsoft.Web/serverfarms | asp-azure-cloudops-ir11-aue | Australia East, Linux F1 | 0 visible F1/Free plans in the 2026-11-27 subscription inventory; account offer entitlement and regional capacity remain NOT_VERIFIED. The prior 0/2 interpretation is invalid as F1 plan evidence. |
 | Microsoft.Web/sites | azcoir11aue261126 | Australia East, Linux F1 app | Name availability returned true when checked; repeat before write |
 
 The proposed run has a 45-minute maximum including diagnosis, recovery, teardown and residual checks. Its two no-dependency release packages and local probe test are in incidents/live_ir11; the local test ran with Node v26.5.0, while the current Azure CLI runtime list includes the selected Node 24 LTS stack. It deploys a known-good package, a deterministic HTTP 500 package and the same known-good package to the same disposable app endpoint. It uses the same probe for baseline/fault/recovery, no slots or production traffic, no paid telemetry, no Storage account, no private endpoint, no other Azure resource, and deletes only the approved app, plan and dedicated group. Any unapproved dependency or cost changes stop the run.
