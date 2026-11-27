@@ -23,7 +23,7 @@ Subscription-scoped reads returned 996 role definitions, 3,760 policy definition
 
 ## L0 subscription and CLI recheck — 2026-11-28
 
-A direct read-only subscription GET returned `AzureForStudents_2018-01-01` with `spendingLimit=On`; that credit control is not the project's USD 1.00 ceiling and does not prove F1 eligibility. The current plan inventory showed 0 visible F1 plans in Australia East, while the F1 location list still included Australia East. Resource Graph extension installation failed locally because pip could not load Azure CLI's bundled Python `pyexpat`; no Resource Graph query or Azure resource mutation occurred. Actual billing, F1 eligibility and deployment capacity remain NOT_VERIFIED. See L0_READ_ONLY_PREFLIGHT.md.
+A direct read-only subscription GET returned `AzureForStudents_2018-01-01` with `spendingLimit=On`; that credit control is not the project's USD 1.00 ceiling and does not prove F1 eligibility. The current plan inventory showed 0 visible F1 plans in Australia East, while the F1 location list still included Australia East. Resource Graph extension installation failed locally because pip could not load Azure CLI's bundled Python `pyexpat`; the explicit-subscription REST fallback returned 3 `microsoft.network/networkwatchers` records without truncation. No Azure resource mutation occurred. Actual billing, F1 eligibility and deployment capacity remain NOT_VERIFIED. The owner also directed that the interactive KQL demo sign-in be skipped; its seven templates remain NOT_RUN. See L0_READ_ONLY_PREFLIGHT.md.
 
 ## LAB-L0-01 — Read-only account and scope preflight
 
