@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="560" viewBox="0 0 1100 560">
+<defs>
+<marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#688091"/></marker>
+<marker id="teal" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#167e83"/></marker>
+<marker id="red" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#b76464"/></marker>
+</defs><style>
+text{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;fill:#18334a}
+.title{font-size:25px;font-weight:700}.label{font-size:18px;font-weight:700}.body{font-size:16px}.small{font-size:14px;fill:#52697a}.tiny{font-size:12px;fill:#52697a}
+.box{stroke:#91a6b1;stroke-width:2;rx:15}.safe{fill:#e1f1ef;stroke:#167e83}.cloud{fill:#dcebf2;stroke:#477c9b}.warn{fill:#f6e7cc;stroke:#c18a3a}.bad{fill:#f6dddd;stroke:#b76464}.neutral{fill:#fff;stroke:#91a6b1}.line{stroke:#688091;stroke-width:3;fill:none}.dash{stroke-dasharray:8 7}
+</style><rect width="1100" height="560" rx="20" fill="white"/>
+<text x="38" y="42" class="title">从 workload 结构推导费用，再用账单记录校正假设</text>
+<rect x="38" y="105" width="230" height="205" class="box neutral"/>
+<text x="61" y="145" class="label">1 · 架构与用量</text><text x="61" y="185" class="body">SKU · 区域 · 时长</text><text x="61" y="216" class="body">GiB · 请求 · 流量</text><text x="61" y="263" class="small">盘点依赖资源与保留</text>
+<rect x="313" y="105" width="230" height="205" class="box cloud"/>
+<text x="336" y="145" class="label">2 · Meter 与价格</text><text x="336" y="185" class="body">计费单位 × 单价</text><text x="336" y="216" class="body">价格日期 · 币种</text><text x="336" y="263" class="small">零售价 ≠ 合同价</text>
+<rect x="588" y="105" width="230" height="205" class="box warn"/>
+<text x="611" y="145" class="label">3 · 预测/实际用量</text><text x="611" y="185" class="body">数量 × 费率</text><text x="611" y="216" class="body">依赖费用求和</text><text x="611" y="263" class="small">估算不是账单事实</text>
+<rect x="863" y="105" width="200" height="205" class="box safe"/>
+<text x="886" y="145" class="label">4 · 对账</text><text x="886" y="185" class="body">Cost Management</text><text x="886" y="216" class="body">Export / 发票</text><text x="886" y="263" class="small">同一 scope 与期间</text>
+<path d="M269 207H302" class="line" marker-end="url(#arrow)"/><path d="M544 207H577" class="line" marker-end="url(#arrow)"/><path d="M819 207H852" class="line" marker-end="url(#arrow)"/>
+<rect x="127" y="378" width="846" height="99" class="box neutral"/>
+<text x="160" y="419" class="label">随估价保存可复核输入</text><text x="160" y="453" class="body">resource list · unit · quantity · rate source/date · discounts · forecast window · currency · owner</text>
+<text x="127" y="525" class="small">遗漏网关、磁盘、备份、日志保留或出口流量，会让 workload 总额偏离单项计算。</text>
+</svg>

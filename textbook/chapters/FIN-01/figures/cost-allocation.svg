@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="560" viewBox="0 0 1100 560">
+<defs>
+<marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#688091"/></marker>
+<marker id="teal" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#167e83"/></marker>
+<marker id="red" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#b76464"/></marker>
+</defs><style>
+text{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;fill:#18334a}
+.title{font-size:25px;font-weight:700}.label{font-size:18px;font-weight:700}.body{font-size:16px}.small{font-size:14px;fill:#52697a}.tiny{font-size:12px;fill:#52697a}
+.box{stroke:#91a6b1;stroke-width:2;rx:15}.safe{fill:#e1f1ef;stroke:#167e83}.cloud{fill:#dcebf2;stroke:#477c9b}.warn{fill:#f6e7cc;stroke:#c18a3a}.bad{fill:#f6dddd;stroke:#b76464}.neutral{fill:#fff;stroke:#91a6b1}.line{stroke:#688091;stroke-width:3;fill:none}.dash{stroke-dasharray:8 7}
+</style><rect width="1100" height="560" rx="20" fill="white"/>
+<text x="38" y="42" class="title">直接归属、共享分摊与未知费用都要留在账本里</text>
+<rect x="45" y="107" width="292" height="287" class="box cloud"/>
+<text x="72" y="149" class="label">Azure usage records</text>
+<rect x="72" y="181" width="238" height="72" rx="10" class="box neutral"/><text x="95" y="211" class="body">resource + meter + amount</text><text x="95" y="237" class="small">direct / inherited tags</text>
+<rect x="72" y="276" width="238" height="75" rx="10" class="box warn"/><text x="95" y="306" class="body">shared service pool</text><text x="95" y="334" class="small">explicit period + driver</text>
+<rect x="408" y="93" width="305" height="126" class="box safe"/><text x="435" y="137" class="label">Payments cost center</text><text x="435" y="175" class="body">direct charge + shared 70%</text>
+<rect x="408" y="258" width="305" height="126" class="box safe"/><text x="435" y="302" class="label">Analytics cost center</text><text x="435" y="340" class="body">direct charge + shared 30%</text>
+<rect x="783" y="162" width="270" height="150" class="box bad"/><text x="810" y="205" class="label">Unallocated queue</text><text x="810" y="242" class="body">missing owner / driver</text><text x="810" y="277" class="small">留待调查，不要丢弃</text>
+<path d="M338 218H390V157H399" class="line" marker-end="url(#teal)"/><path d="M338 218H379V321H399" class="line" marker-end="url(#teal)"/>
+<path d="M338 313H390V157H399" class="line dash" marker-end="url(#arrow)"/><path d="M338 313H399" class="line dash" marker-end="url(#arrow)"/>
+<path d="M337 181H772V235" class="line dash" marker-end="url(#red)"/><path d="M337 315H772" class="line dash" marker-end="url(#red)"/>
+<text x="435" y="448" class="small">记录分母、权重、来源和规则版本；分配额应与 shared pool 对平。</text>
+<text x="73" y="497" class="tiny">Tag inheritance 影响成本记录；不能据此推断 Azure resource 本身已继承或被治理。</text>
+</svg>

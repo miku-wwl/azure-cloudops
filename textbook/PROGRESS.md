@@ -7,10 +7,10 @@
 
 ## Current gate
 
-- Overall stage: Stage 1 — Technical Textbook Engineering & Publication
-- Current phase: B8 — Lectures 22–23, 1/2 accepted. B7 — Lectures 19–21 is complete; AZ07-01 through AZ07-03 have passed their offline lecture gates.
+- Overall stage: Stage 2 — Enterprise Engineering & Live-Lab Readiness
+- Current phase: E0 — independent audit. Stage 1 B0–B9 is complete and `TEXTBOOK_V1_RELEASE_READY` has been accepted.
 - B0 status: COMPLETE. Read-only AWS source, toolchain, two reference PDFs and package consistency reviewed; Azure publisher adaptation built an Azure chapter and passed the recorded checks.
-- Completed lectures: 22/23 — AZ00-01, AZ01-01, AZ02-01 through AZ02-04, AZ03-01 through AZ03-03, AZ04-01 through AZ04-04, AZ05-01 through AZ05-03, AZ06-01 through AZ06-02, AZ07-01 through AZ07-03, and AZ08-01.
+- Completed lectures: 23/23 — AZ00-01, AZ01-01, AZ02-01 through AZ02-04, AZ03-01 through AZ03-03, AZ04-01 through AZ04-04, AZ05-01 through AZ05-03, AZ06-01 through AZ06-02, AZ07-01 through AZ07-03, AZ08-01, and FIN-01.
 - Implementation is being tracked on main from the approved baseline; see repository history for the current checkpoint.
 - Cloud resource operations: none performed for this project.
 - Azure authorization and subscription scope: NOT_CHECKED; Stage 3 read-only preflight is later.
@@ -60,7 +60,9 @@
 - AZ07-03 passed its lecture gate: current Microsoft Learn and HashiCorp Azure Pipelines/WIF research; five editable mechanism figures; a seven-page PDF reviewed at 88 and 140 DPI; 17 offline YAML and exact-plan contract tests passed, including 11 fail-closed negative cases. The pipeline is intentionally offline and no Azure DevOps organization, pipeline, Service Connection, WIF identity or Azure role was created or queried. See chapters/AZ07-03/ACCEPTANCE.md.
 - After adding AZ07-03, the full offline Python suite passed on Windows and WSL: 353 tests across 20 lab directories. Windows Terraform checks remain as recorded for AZ07-01 and AZ07-02; WSL has no Terraform CLI.
 - AZ08-01 passed its offline lecture gate: current Microsoft Learn/Azure Architecture Center research for hub-spoke and Virtual WAN, gateway transit, BGP, ExpressRoute/VPN coexistence, Route Server and Private Resolver; five editable mechanism figures; a 7-page PDF visually reviewed at 88 and 140 DPI; a synthetic hybrid connectivity contract with 22 unit tests and 13 baseline checks; and full Windows/WSL suites each passing 375 tests across 21 lab directories. The future Azure read-only runbook is documented but NOT_RUN. No Azure authentication, resource/query operation, DNS lookup, route/BGP action, connectivity probe or billing query occurred. Actual cumulative Azure spend remains NOT_VERIFIED. See `chapters/AZ08-01/ACCEPTANCE.md`.
+- FIN-01 passed its offline lecture gate: current Microsoft Learn research for pricing, Cost Management query/data freshness, budgets, allocation/tag inheritance, reservations/Savings Plans, VM billing states and retained resources; five editable mechanism figures; a nine-page PDF visually reviewed at 88 and 140 DPI; a fictional cost ledger with 27 unit tests; and full Windows/WSL suites each passing 402 tests across 22 lab directories. The future read-only Cost Management runbook is documented but NOT_RUN. No Azure authentication, subscription/account enumeration, billing/API query, resource inventory or mutation occurred. Actual cumulative Azure spend remains NOT_VERIFIED. See `chapters/FIN-01/ACCEPTANCE.md`.
+- B9 passed: all 23 chapter sources, per-chapter acceptance records and matching PDFs are present; `SOURCE_MAP.md` has 23 lecture sections; Windows and WSL package verification each confirmed the 23-PDF ZIP and 289-file source ZIP byte-for-byte. Windows and WSL Python suites passed 402 tests across 22 directories; Windows Terraform 1.15.5 passed recursive fmt, backend-free init/validate in 3 roots, and 5 Terraform test cases. The PDF ZIP SHA-256 is `265DA32EE3CFAE05E14A16C9D3B2F80A0D5EC8294FD0B71731CBDD42F456B8FF`. See `RELEASE_ACCEPTANCE.md`. The optional local sensitive-pattern scan was not configured; no hosted CI or PDF/UA result is claimed.
 
 ## First next action
 
-Research current Microsoft primary documentation for FIN-01 cloud cost planning, Cost Management, budgets, tagging and resource teardown; then continue offline lecture acceptance. Do not authenticate to Azure, query a subscription or mutate cloud resources before Stage 3 gates.
+Perform E0's independent audit across all chapter claims, local experiments, Terraform, tests, permissions and cleanup instructions; preserve prior decisions and correct any verified defect before building Stage 2's shared lab substrate. Do not authenticate to Azure, query a subscription or mutate cloud resources before Stage 3 gates.

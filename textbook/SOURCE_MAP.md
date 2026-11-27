@@ -1,5 +1,7 @@
 # Source-to-section map
 
+## AZ00-01 — Azure landing zones and ARM control plane
+
 Research date for AZ00-01: 2026-11-26. Azure claims are based on Microsoft Learn primary documentation. The local scope program is a deliberately limited fixture, not a cloud emulator.
 
 | Chapter section / figure | Claim or teaching point | Source anchor | Classification and limit |
@@ -691,3 +693,40 @@ Research date: 2026-11-27. Azure DevOps and Microsoft Entra service behavior is 
 - https://developer.hashicorp.com/terraform/cli/commands/plan
 - https://developer.hashicorp.com/terraform/language/state/locking
 - https://learn.microsoft.com/en-us/azure/role-based-access-control/scope-overview
+
+## FIN-01 — Azure FinOps and resource cost recovery
+
+Research date: 2026-11-27. Current Microsoft Learn material was reviewed for pricing estimates, Cost Management data and Query API, budgets, tag inheritance and allocation, reservations and savings plans, VM billing state, retained VM dependencies, and Advisor cost recommendations. All sample charges and resource states are explicitly fictional.
+
+| Chapter section / figure | Claim or teaching point | Source anchor | Classification and limit |
+|---|---|---|---|
+| FIN-01 §01, Fig 23-1 | Estimate requires meter, unit, region/SKU and workload quantity assumptions; the Pricing Calculator uses selected retail rates, and negotiated pricing is billing-account-specific; a retail rate is not an invoice | [Pricing Calculator](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/pricing-calculator); [Retail Prices API](https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices) | SOURCE-ANALYSED; displayed rates and offers must be rechecked for the customer's agreement and query date |
+| FIN-01 §02, Fig 23-2 | Cost Management data may arrive late or be revised; budgets notify on actual/forecast thresholds but do not stop consumption; Query API selects a scope and dataset; use only one actual or amortized view for a given reconciliation | [Budgets](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/tutorial-acm-create-budgets); [data updates](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/understand-cost-mgt-data); [Query API](https://learn.microsoft.com/en-us/rest/api/cost-management/query/usage); [amortized costs](https://learn.microsoft.com/en-us/azure/cost-management-billing/reservations/view-amortized-costs) | SOURCE-ANALYSED; delay and view support depend on billing agreement, scope, dataset and current service behavior |
+| FIN-01 §03, Fig 23-3 | Direct tags, supported inherited usage-record tags, shared cost allocation and internal showback have different scope and data requirements; unallocated cost must remain visible | [Tag data](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/understand-cost-mgt-data); [tag inheritance](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/enable-tag-inheritance); [allocation](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/allocate-costs); [scopes](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/understand-work-scopes) | SOURCE-ANALYSED; feature availability depends on agreement type and billing scope; local allocation is not a Microsoft allocation rule |
+| FIN-01 §04 | Reservations fit stable eligible configurations while Savings Plans use hourly commitments; idle hourly Savings Plan commitment does not roll forward; a dated note flags the published 2027 exchange-policy change | [choose a reservation or plan](https://learn.microsoft.com/en-us/azure/cost-management-billing/savings-plan/decide-between-savings-plan-reservation); [FAQ](https://learn.microsoft.com/en-us/azure/cost-management-billing/reservations-savings-plan-faq); [reservation use](https://learn.microsoft.com/en-us/azure/cost-management-billing/reservations/manage-reserved-vm-instance); [exchange rules](https://learn.microsoft.com/en-us/azure/cost-management-billing/reservations/exchange-and-refund-azure-reservations) | SOURCE-ANALYSED 2026-11-27; terms, discounts and eligibility change and must be rechecked before purchase |
+| FIN-01 §05, Fig 23-4 | Stopped (allocated), deallocated and deleted are distinct billing/resource states; VM deletion may leave detached disks and backup recovery points; Advisor recommendations require owner and retention review | [VM states and billing](https://learn.microsoft.com/en-us/azure/virtual-machines/states-billing); [delete VMs and attached resources](https://learn.microsoft.com/en-us/azure/virtual-machines/delete); [Advisor cost recommendations](https://learn.microsoft.com/en-us/azure/advisor/advisor-reference-cost-recommendations) | SOURCE-ANALYSED; no resource state, backup policy or Advisor recommendation was queried |
+| FIN-01 §05, Fig 23-5 | Cost recovery is a sequence of evidence reconciliation, owner/retention review, scoped approved action, residual inspection and same-scope/time-window cost refresh | Microsoft Cost Management, VM billing/deletion and Advisor references above | DESIGN_GUIDANCE; no live change or cost decrease was verified |
+| FIN-01 §06, labs/cost-recovery | `finops_contract.py` and the fictional ledger test gross/credit/net separation, single-view selection, tag precedence/inheritance, weight reconciliation, budget alerts, hourly commitment use and non-executing recovery decisions | `synthetic-ledger.json`, `finops_contract.py`, `tests/test_finops_contract.py` | LOCAL_VERIFIED 2026-11-27; 27 tests; deterministic fixture only, not an Azure bill parser, pricing engine, reservation matcher, or delete mechanism |
+| FIN-01 future read-only procedure | Query body and subscription scope follow the Cost Management Query REST API; the optional ARM list is restricted to an explicitly approved resource group | [Query API](https://learn.microsoft.com/en-us/rest/api/cost-management/query/usage); [RBAC operations](https://learn.microsoft.com/en-us/azure/role-based-access-control/permissions/management-and-governance) | DOCUMENTED / NOT_RUN; API version `2026-06-01` reviewed 2026-11-27; L0 scope and separate authorization required; no login, query, resource inventory or role check occurred |
+| FIN-01 PDF and full local suite | Nine-page PDF, five editable SVGs and 27 local tests; all pages visually inspected at 88/140 DPI; Windows and WSL suites passed 402 tests across 22 directories | `textbook/dist/pdf/FIN-01_azure-finops-resource-cost-recovery.pdf`; `chapters/FIN-01/ACCEPTANCE.md`; `textbook/tools/test_all.sh --python` | LOCAL_VERIFIED 2026-11-27; offline only; actual cumulative Azure spend remains NOT_VERIFIED |
+
+### FIN-01 primary references
+
+- https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/pricing-calculator
+- https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices
+- https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/tutorial-acm-create-budgets
+- https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/understand-cost-mgt-data
+- https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/ingest-azure-usage-at-scale
+- https://learn.microsoft.com/en-us/rest/api/cost-management/query/usage
+- https://learn.microsoft.com/en-us/azure/cost-management-billing/reservations/view-amortized-costs
+- https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/enable-tag-inheritance
+- https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/allocate-costs
+- https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/understand-work-scopes
+- https://learn.microsoft.com/en-us/azure/cost-management-billing/savings-plan/decide-between-savings-plan-reservation
+- https://learn.microsoft.com/en-us/azure/cost-management-billing/reservations-savings-plan-faq
+- https://learn.microsoft.com/en-us/azure/cost-management-billing/reservations/manage-reserved-vm-instance
+- https://learn.microsoft.com/en-us/azure/cost-management-billing/reservations/exchange-and-refund-azure-reservations
+- https://learn.microsoft.com/en-us/azure/virtual-machines/states-billing
+- https://learn.microsoft.com/en-us/azure/virtual-machines/delete
+- https://learn.microsoft.com/en-us/azure/advisor/advisor-reference-cost-recommendations
+- https://learn.microsoft.com/en-us/azure/role-based-access-control/permissions/management-and-governance

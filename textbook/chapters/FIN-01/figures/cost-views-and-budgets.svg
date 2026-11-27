@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="560" viewBox="0 0 1100 560">
+<defs>
+<marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#688091"/></marker>
+<marker id="teal" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#167e83"/></marker>
+<marker id="red" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#b76464"/></marker>
+</defs><style>
+text{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;fill:#18334a}
+.title{font-size:25px;font-weight:700}.label{font-size:18px;font-weight:700}.body{font-size:16px}.small{font-size:14px;fill:#52697a}.tiny{font-size:12px;fill:#52697a}
+.box{stroke:#91a6b1;stroke-width:2;rx:15}.safe{fill:#e1f1ef;stroke:#167e83}.cloud{fill:#dcebf2;stroke:#477c9b}.warn{fill:#f6e7cc;stroke:#c18a3a}.bad{fill:#f6dddd;stroke:#b76464}.neutral{fill:#fff;stroke:#91a6b1}.line{stroke:#688091;stroke-width:3;fill:none}.dash{stroke-dasharray:8 7}
+</style><rect width="1100" height="560" rx="20" fill="white"/>
+<text x="38" y="42" class="title">Actual 与 amortized 看同一承诺的两种时间表达</text>
+<rect x="48" y="92" width="565" height="370" class="box neutral"/>
+<text x="76" y="132" class="label">承诺购买：总费用 USD 300，期限三个月（演示值）</text>
+<text x="77" y="188" class="body">Actual cost</text><rect x="245" y="157" width="295" height="53" rx="8" fill="#b76464"/><text x="266" y="191" class="label" fill="white">第 1 月记录 USD 300</text>
+<text x="77" y="266" class="body">Amortized</text><rect x="245" y="233" width="95" height="53" rx="8" fill="#167e83"/><rect x="350" y="233" width="95" height="53" rx="8" fill="#167e83"/><rect x="455" y="233" width="95" height="53" rx="8" fill="#167e83"/><text x="263" y="267" class="small" fill="white">USD 100</text><text x="368" y="267" class="small" fill="white">USD 100</text><text x="473" y="267" class="small" fill="white">USD 100</text>
+<text x="79" y="339" class="small">Actual：对账采购发生在哪天</text><text x="79" y="370" class="small">Amortized：观察承诺期间的资源归属</text>
+<rect x="79" y="398" width="500" height="43" rx="9" class="box warn"/><text x="99" y="426" class="body">两者不可相加：是同一项 USD 300 承诺</text>
+<rect x="655" y="92" width="400" height="370" class="box cloud"/>
+<text x="684" y="132" class="label">预算是告警阈值</text><text x="684" y="178" class="body">阈值：USD 100</text>
+<rect x="684" y="203" width="330" height="34" rx="8" fill="#d9e2e7"/><rect x="684" y="203" width="270" height="34" rx="8" fill="#c18a3a"/>
+<text x="684" y="277" class="body">实际成本：USD 82</text><text x="684" y="311" class="body">预测成本：USD 125</text>
+<path d="M742 346V390" class="line" marker-end="url(#red)"/><rect x="729" y="390" width="243" height="48" rx="9" class="box bad"/><text x="755" y="421" class="label">通知 owner</text>
+<text x="684" y="487" class="small">阈值不会自动停止资源消费</text>
+</svg>

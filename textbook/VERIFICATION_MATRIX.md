@@ -62,6 +62,6 @@ Every lecture and incident will receive its own evidence and limitations before 
 | AZ07-02 | ACCEPTED; 7-page PDF, 5 figures; actual local State lock contention, provider-specific drift and State recovery; 2 Terraform plan tests; Windows + WSL suites each 336 tests across 19 directories | Windows local backend/file locking and hashicorp/local v2.9.1 only; no Azure Blob lease, AzureRM drift, remote backend or billing check; WSL Terraform CLI unavailable |
 | AZ07-03 | ACCEPTED; 7-page PDF, 5 figures; 17 offline YAML/plan-contract tests including 11 negative cases; full Windows + WSL suites each passed 353 tests across 20 lab directories | Generic PyYAML parsing and synthetic plan bytes only; no Azure DevOps server compile/run, WIF, Environment approval, Azure request or billing query |
 | AZ08-01 | ACCEPTED; 7-page PDF, 5 figures; 22 local tests; full Windows + WSL suites each passed 375 tests across 21 lab directories | Narrow synthetic contract only; future Azure read-only runbook is NOT_RUN; no Azure request, DNS query, route operation, resource mutation or billing query |
-| FIN-01 | PLANNED | Not yet authored or run |
+| FIN-01 | ACCEPTED; 9-page PDF, 5 figures; 27 local tests; full Windows and WSL suites each passed 402 tests across 22 lab directories | Fictional cost ledger and narrow decision contract only; future Cost Management runbook is NOT_RUN; no Azure authentication/query, resource inventory, mutation or billing check |
 
-All twenty-two accepted lecture PDFs are independent outputs in textbook/dist/pdf/. Package verification awaits all 23 chapters.
+All twenty-three accepted lecture PDFs are independent outputs in textbook/dist/pdf/. B9 package verification and release acceptance remain pending.

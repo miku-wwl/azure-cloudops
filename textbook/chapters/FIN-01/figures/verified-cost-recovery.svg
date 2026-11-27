@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="560" viewBox="0 0 1100 560">
+<defs>
+<marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#688091"/></marker>
+<marker id="teal" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#167e83"/></marker>
+<marker id="red" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#b76464"/></marker>
+</defs><style>
+text{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;fill:#18334a}
+.title{font-size:25px;font-weight:700}.label{font-size:18px;font-weight:700}.body{font-size:16px}.small{font-size:14px;fill:#52697a}.tiny{font-size:12px;fill:#52697a}
+.box{stroke:#91a6b1;stroke-width:2;rx:15}.safe{fill:#e1f1ef;stroke:#167e83}.cloud{fill:#dcebf2;stroke:#477c9b}.warn{fill:#f6e7cc;stroke:#c18a3a}.bad{fill:#f6dddd;stroke:#b76464}.neutral{fill:#fff;stroke:#91a6b1}.line{stroke:#688091;stroke-width:3;fill:none}.dash{stroke-dasharray:8 7}
+</style><rect width="1100" height="560" rx="20" fill="white"/>
+<text x="38" y="42" class="title">成本回收需要批准、依赖核查、残留审计和账单复核</text>
+<rect x="52" y="106" width="288" height="133" class="box cloud"/>
+<text x="78" y="148" class="label">1 · 找到成本来源</text><text x="78" y="184" class="body">scope · meter · resource</text><text x="78" y="215" class="small">等待数据刷新再对账</text>
+<rect x="407" y="106" width="288" height="133" class="box warn"/>
+<text x="433" y="148" class="label">2 · Owner / retention gate</text><text x="433" y="184" class="body">依赖 · 备份 · 到期日</text><text x="433" y="215" class="small">没有批准则停止</text>
+<rect x="762" y="106" width="288" height="133" class="box safe"/>
+<text x="788" y="148" class="label">3 · 最小获批动作</text><text x="788" y="184" class="body">resize · deallocate · delete</text><text x="788" y="215" class="small">记录前后状态与时间</text>
+<path d="M341 172H396" class="line" marker-end="url(#arrow)"/><path d="M696 172H751" class="line" marker-end="url(#teal)"/>
+<rect x="762" y="321" width="288" height="133" class="box neutral"/>
+<text x="788" y="363" class="label">4 · 检查残留资源</text><text x="788" y="399" class="body">disk · IP · backup</text><text x="788" y="430" class="small">每项标明 owner/retention</text>
+<rect x="407" y="321" width="288" height="133" class="box cloud"/>
+<text x="433" y="363" class="label">5 · 等待成本更新</text><text x="433" y="399" class="body">同 scope / meter / period</text><text x="433" y="430" class="small">必要时等账期收敛</text>
+<rect x="52" y="321" width="288" height="133" class="box bad"/>
+<text x="78" y="363" class="label">6 · 记录回收结论</text><text x="78" y="399" class="body">节省 / 保留 / 未核实</text><text x="78" y="430" class="small">不把删除等同于省钱</text>
+<path d="M906 240V281H906V311" class="line" marker-end="url(#arrow)"/><path d="M761 387H705" class="line" marker-end="url(#arrow)"/><path d="M406 387H349" class="line" marker-end="url(#arrow)"/>
+<path d="M52 387H22V173H43" class="line dash" marker-end="url(#red)"/><text x="74" y="510" class="small">若数据未下降或出现新 meter，保留差异并重开调查，不要自动删除更多资源。</text>
+</svg>
