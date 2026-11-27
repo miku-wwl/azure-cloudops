@@ -52,6 +52,10 @@ The L0 results and subsequent evidence correction are recorded in L0_READ_ONLY_P
 
 No resource, provider registration, diagnostic probe, app deployment or other Azure mutation was performed. Two Cost Management Usage queries returned HTTP 429, with no amount obtained. Actual cumulative Azure billing is NOT_VERIFIED; no USD 0.00 actual-spend claim is made.
 
+## KQL demo verification state
+
+The official Log Analytics demo and Azure Data Explorer help-cluster UI were opened as possible no-subscription validation paths. Both redirected this browser session to Microsoft sign-in. No credentials were entered, no authentication completed and no KQL query was sent. The seven AZ05-02 templates remain source-reviewed and NOT_RUN. Microsoft Learn says the Log Analytics demo needs a Microsoft or Entra identity but no Azure subscription; sign in with an owner-held identity, confirm the Demo scope and AppRequests schema, then record sanitized query success before changing any template's status. Details are in `chapters/AZ05-02/labs/telemetry-triage/README.md`.
+
 ## Proposed Stage 3 batch — approval required
 
 The only current candidate is LAB-IR-11, an isolated App Service release-regression and rollback drill. This is a proposal, not authorization.

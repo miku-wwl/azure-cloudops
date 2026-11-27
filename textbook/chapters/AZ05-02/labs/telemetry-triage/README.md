@@ -11,4 +11,8 @@ python textbook/chapters/AZ05-02/labs/telemetry-triage/telemetry_model.py
 
 Seven KQL templates are in `queries/`. The five E6 additions cover failed Azure Activity operations, Heartbeat freshness, request failures, dependency failures, and exception groups. Each file names its table/column assumptions and is checked against the current Microsoft table reference. All seven are source-reviewed templates and **NOT_RUN** against a workspace; workspace schema, permissions and actual syntax execution remain unverified. Treat identifiers, targets and any query output as sensitive operational data.
 
+## No-subscription demo execution gate
+
+On 2026-11-27, the official Log Analytics demo and Azure Data Explorer help-cluster UI were opened to find a no-subscription KQL validation path. Both redirected this browser session to Microsoft sign-in. No credentials were entered, no authentication completed and no query was sent. All seven templates therefore remain **SOURCE_REVIEWED / NOT_RUN**. Microsoft documents the Log Analytics demo as requiring a Microsoft or Entra identity but no Azure subscription; the ADX samples gallery also requires sign-in. To close this gate, sign in with an owner-held identity, select the Log Analytics **Demo** scope, inspect `AppRequests` schema, run `AppRequests | take 5`, then execute only templates supported by that schema. Record query success and sanitized schema/count evidence; do not export or copy event rows.
+
 The Python model does not parse or execute KQL, reproduce Azure sampling/export/ingestion, infer a real root cause, or prove that absent telemetry means no request occurred. `time_minute`, local event IDs, and fixture records are synthetic abstractions, not Azure logs.
