@@ -20,8 +20,19 @@ class AzureTerraformSafetyTests(unittest.TestCase):
 
     def test_provider_configuration_disables_interactive_cli_identity_paths(self) -> None:
         providers = (TERRAFORM_ROOT / "versions.tf").read_text(encoding="utf-8")
-        for setting in ("use_cli", "use_msi", "use_oidc", "use_aks_workload_identity"):
+        for setting in ("use_cli", "use_msi", "use_aks_workload_identity"):
             self.assertRegex(providers, rf"{setting}\s*=\s*false")
+        self.assertRegex(providers, r"use_oidc\s*=\s*var\.use_workload_identity")
+        variables = (TERRAFORM_ROOT / "variables.tf").read_text(encoding="utf-8")
+        self.assertRegex(variables, r'variable\s+"use_workload_identity"\s*\{[^}]*default\s*=\s*false')
+
+    def test_reference_root_remote_backend_requires_oidc_and_disables_credential_fallback(self) -> None:
+        source = (TERRAFORM_ROOT / "versions.tf").read_text(encoding="utf-8")
+        self.assertRegex(source, r'backend\s+"azurerm"\s*\{')
+        self.assertRegex(source, r"use_azuread_auth\s*=\s*true")
+        self.assertRegex(source, r"use_oidc\s*=\s*true")
+        self.assertRegex(source, r"use_cli\s*=\s*false")
+        self.assertRegex(source, r"use_msi\s*=\s*false")
 
     def test_provider_versions_are_locked_to_verified_selections(self) -> None:
         requirements = (TERRAFORM_ROOT / "versions.tf").read_text(encoding="utf-8")

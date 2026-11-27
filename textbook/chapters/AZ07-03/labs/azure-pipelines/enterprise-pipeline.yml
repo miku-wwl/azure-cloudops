@@ -1,0 +1,75 @@
+# Representative only: cloud delivery is compile-time excluded by default.
+# This YAML has not been uploaded, compiled or run in Azure DevOps.
+trigger: none
+
+# Azure Repos PR validation belongs in a target-branch Build validation policy.
+parameters:
+  - name: enableCloudDelivery
+    type: boolean
+    default: false
+  - name: planServiceConnection
+    type: string
+    default: CloudOps-Plan-WIF
+  - name: applyServiceConnection
+    type: string
+    default: CloudOps-Apply-WIF
+  - name: planVariableGroup
+    type: string
+    default: CloudOps-Plan-Target
+  - name: applyVariableGroup
+    type: string
+    default: CloudOps-Apply-Target
+  - name: planEnvironment
+    type: string
+    default: CloudOps-Plan-Review
+  - name: applyEnvironment
+    type: string
+    default: CloudOps-Production-Apply
+  - name: planAgentPool
+    type: string
+    default: CloudOps-Plan-WIF
+  - name: reviewAgentPool
+    type: string
+    default: CloudOps-Plan-Review
+  - name: applyAgentPool
+    type: string
+    default: CloudOps-Apply-WIF
+  - name: backendConfigSecureFile
+    type: string
+    default: cloudops-production.tfbackend
+  - name: targetTfvarsSecureFile
+    type: string
+    default: cloudops-production.tfvars
+  - name: trustStoreSecureFile
+    type: string
+    default: cloudops-approval-trust.json
+
+pool:
+  name: CloudOps-Offline
+
+stages:
+  - stage: Validate
+    displayName: Offline YAML and plan-contract validation
+    jobs:
+      - job: OfflineContracts
+        steps:
+          - checkout: self
+            clean: true
+            persistCredentials: false
+          - template: templates/offline-checks.yml
+
+  - ${{ if eq(parameters.enableCloudDelivery, true) }}:
+      - template: templates/enterprise-delivery.yml
+        parameters:
+          planServiceConnection: ${{ parameters.planServiceConnection }}
+          applyServiceConnection: ${{ parameters.applyServiceConnection }}
+          planVariableGroup: ${{ parameters.planVariableGroup }}
+          applyVariableGroup: ${{ parameters.applyVariableGroup }}
+          planEnvironment: ${{ parameters.planEnvironment }}
+          applyEnvironment: ${{ parameters.applyEnvironment }}
+          planAgentPool: ${{ parameters.planAgentPool }}
+          reviewAgentPool: ${{ parameters.reviewAgentPool }}
+          applyAgentPool: ${{ parameters.applyAgentPool }}
+          backendConfigSecureFile: ${{ parameters.backendConfigSecureFile }}
+          targetTfvarsSecureFile: ${{ parameters.targetTfvarsSecureFile }}
+          trustStoreSecureFile: ${{ parameters.trustStoreSecureFile }}

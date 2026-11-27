@@ -8,7 +8,7 @@
 ## Current gate
 
 - Overall stage: Stage 2 — Enterprise Engineering & Live-Lab Readiness
-- Current phase: E5 — Azure DevOps delivery. Stage 1 B0–B9 and Stage 2 E0–E4 are complete for their documented offline gates; `TEXTBOOK_V1_RELEASE_READY` remains a historical Stage 1 acceptance, while the master-prompt CI/security gate and refreshed Stage 2 packages remain open.
+- Current phase: E6 — diagnostics and automation. Stage 1 B0–B9 and Stage 2 E0–E5 are complete for their documented offline gates; `TEXTBOOK_V1_RELEASE_READY` remains a historical Stage 1 acceptance, while the master-prompt CI/security gate and refreshed Stage 2 packages remain open.
 - B0 status: COMPLETE. Read-only AWS source, toolchain, two reference PDFs and package consistency reviewed; Azure publisher adaptation built an Azure chapter and passed the recorded checks.
 - Completed lectures: 23/23 — AZ00-01, AZ01-01, AZ02-01 through AZ02-04, AZ03-01 through AZ03-03, AZ04-01 through AZ04-04, AZ05-01 through AZ05-03, AZ06-01 through AZ06-02, AZ07-01 through AZ07-03, AZ08-01, and FIN-01.
 - Implementation is being tracked on main from the approved baseline; see repository history for the current checkpoint.
@@ -72,6 +72,13 @@
 
 - E4 completed: `controlled_apply.py` verifies an externally signed, exact saved-plan envelope bound to commit, environment, subscription/resource group, provider lockfile, operation, approver/time, run/approval IDs and one-use nonce. It rejects unsafe plans and Azure credential fallbacks, isolates the executable plan, and enforces local scope locks/replay control. An OIDC AzureRM backend example is present but only backend-free init/validate ran; no production signer, protected trust root, Azure DevOps server checks or distributed lock is configured. AZ07-02 is now a 9-page, six-figure PDF; its local-only lab verified lock refusal, `terraform_data` state-only import, drift, HCL rollback, State recovery and destroy. Full Windows and WSL Python suites each passed 458 tests across 23 directories; Windows Terraform 1.15.5 passed 13 plan-only tests across three roots, recursive formatting and backend-free init/validate. All nine pages were visually reviewed at 88 DPI and updated pages 7–8 at 140 DPI. No Azure API, remote backend, resource mutation, pricing or billing query occurred. See `E4_STATE_CONTROLLED_DELIVERY.md`.
 
+## E5 completed evidence
+
+- E5 delivered an offline-only pipeline plus an opt-in illustrative Plan → PlanReview → Apply template. Cloud stages are compile-time excluded by default. A redacted plan bundle binds exact plan bytes to source, target, backend configuration, provider lock and run; local tests cover target mismatch, tampering, unsupported actions, output-value redaction and duplicate JSON properties. The AzureRM backend block requires OIDC/Entra auth, while provider WIF remains opt-in false by default. The full record is `E5_AZURE_DEVOPS_DELIVERY.md`.
+- E5 suite passed 29 local tests (9 YAML structure, 8 plan bundle, 12 plan gate). Windows and WSL full suites each passed 471 tests across 23 directories. Terraform 1.15.5 passed recursive fmt, backend-free init/validate across three roots, and 13 plan-only/mock runs.
+- AZ07-03 now has an 8-page PDF, 14,067 extracted characters and five original figures; all pages were visually reviewed at 88 DPI, and updated pages 6–8 at 140 DPI. SHA-256: `07ed61f35fd4b0d7d74c1ea18f26a4272a7d15db9d0a2f89621b2c0f6789b0a9`.
+- No Azure DevOps organization/pipeline, Entra token, Azure identity, remote backend, cloud plan, Azure request, resource operation or billing query was used. Broker, signer, protected trust, actual WIF, server checks, protected external template and distributed replay controls remain prerequisites. Cumulative actual Azure spend remains `NOT_VERIFIED`.
+
 ## First next action
 
-Complete E5 by reviewing Azure Pipelines stages, templates, service connections, Workload Identity Federation and server-side Environment approvals/checks. Keep all pipeline validation offline; Stage 2 remains free of Azure resource creation or modification.
+Begin E6 diagnostics and automation, preserving the offline boundary. Stage 2 remains free of Azure resource creation or modification; Azure DevOps and Azure validation stay NOT_RUN until their authorized gates.

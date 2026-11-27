@@ -1,3 +1,9 @@
+variable "use_workload_identity" {
+  description = "Opt into Azure DevOps/Entra OIDC only for a separately approved protected pipeline run."
+  type        = bool
+  default     = false
+}
+
 variable "target_subscription_id" {
   description = "Exact target subscription ID. Empty until a separately authorized live run is prepared."
   type        = string

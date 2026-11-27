@@ -73,7 +73,7 @@ Terraform Plan 是一次读取和计算的结果，不是持续有效的批准�
 
 Plan Artifact 可能暴露配置值或敏感数据。只发布必要文件，限定有权下载的人员与 Pipeline，设定 Project 级 retention，并在过期时清理。不要把 `.tfplan`、State、backend 初始化文件或含秘密的计划 JSON 提交到 Git，也不要将计划日志贴到公开 PR。Apply 必须下载同一次 Pipeline run 的 artifact；跨 run 复用需重新绑定并审核 run、SHA、目标与时间。[10]
 
-本地实验中的 `plan_gate.py` 检查 plan 与 lock file 的摘要、来源 SHA、目标、run ID、审批对象和有效期；负例一律失败关闭。它收到的 approval JSON 是测试夹具，程序不能自行证明该对象是某位真实审批人产生的。真实系统还要用受保护的 Environment/Service Connection checks、分支策略、所需模板及 Azure DevOps 审计记录确认 approver 和 run。YAML 及本地脚本不能冒充这些服务端证据。[8]
+本地实验中的 `plan_gate.py` 检查合成 plan bytes 与 lock file 的摘要、来源 SHA、目标、run ID、审批对象和有效期；负例一律失败关闭。它收到的 approval JSON 是测试夹具，程序不能自行证明该对象是某位真实审批人产生的。Stage 2 E5 再增加 `plan_bundle.py`：它用 `terraform show -json` 在内存中读取真实 saved plan，校验计划中的订阅与资源组变量，生成只列资源地址、输出名称和动作的摘要；资源值、output 值和计划 JSON 不写入摘要。二进制 `.tfplan` 仍然敏感，整个 Pipeline Artifact 必须受限访问并设置保留期。[8]
 
 ## 审批、Variable Group 与失败路径
 
@@ -94,11 +94,23 @@ Plan Artifact 可能暴露配置值或敏感数据。只发布必要文件，限
 
 回退也依赖资源语义。对于可替换配置，恢复 Git 版本后重新 Plan；应用服务可能切回已知版本；数据则按备份恢复路径处理。Terraform 没有跨资源的通用 undo；不能因 Apply 部分成功就盲目 `destroy`。对失败 stage 重试前，检查是否有部分云端结果、State 更新、锁残留和新 Plan 需求。
 
+## 企业交付模板：Plan、Review、Apply
+
+[`enterprise-pipeline.yml`](labs/azure-pipelines/enterprise-pipeline.yml) 是代表性 Stage 2 设计，`enableCloudDelivery` 默认为 `false`。Azure Pipelines 在编译期只把离线 `Validate` 阶段保留在 Pipeline 图中；只有显式改变参数后，才会插入 [`enterprise-delivery.yml`](labs/azure-pipelines/templates/enterprise-delivery.yml) 的 `Plan → PlanReview → Apply` 模板。现有 [`azure-pipelines.yml`](labs/azure-pipelines/azure-pipelines.yml) 仍是独立的离线示例，不引用企业模板，也没有 Azure task。两个文件均未上传、编译或排队运行在 Azure DevOps。完整资源准备清单见该实验的 [README](labs/azure-pipelines/README.md)。
+
+`Plan` 使用 Plan 专用 WIF Service Connection、受限 agent pool、只含目标 metadata 的 Variable Group，以及由 owner 管理的 backend/tfvars Secure Files。YAML 把连接名作为 compile-time 字符串参数；Service Connection 不能通过运行时变量替换。Backend 文件在仓库外，哈希进入 manifest。根模块 [`versions.tf`](../../terraform/azure-enterprise-reference/versions.tf) 的 AzureRM backend 明确要求 Entra/OIDC，禁用 CLI/MSI fallback；Provider 的 `use_workload_identity` 默认 `false`，只有受保护 tfvars 在专门获批的运行中才可开启。Plan 产物绑定当前 SHA、run ID、环境、订阅、资源组、backend 配置摘要、provider lock 摘要、精确 plan 摘要和动作摘要。计划命令的详细日志留在受保护 agent 诊断路径，不输出到 Pipeline 日志。
+
+`PlanReview` 是 deployment job，并关联由 owner 配置检查的 Review Environment。Azure DevOps 会在 job 启动前执行 Environment checks，因此审阅人先在前一 Plan stage 查看 action summary 与同 run artifact；stage 通过后，review job 再下载并校验精确 artifact。该 job 用 `terraform init -backend=false` 加载锁定 Provider schema，再重新计算 plan 与 backend 摘要，不读取 Azure State。`Apply` 再绑定独立的 Apply Environment 与 Apply WIF Service Connection，使用 `download: current` 获取同一 run 产物，重验 backend、lock、源、目标、摘要与计划后调用 E4 `controlled_apply.py`。YAML 本身不直接执行 `terraform apply`。
+
+签名 approval envelope 由外部集成 `cloudops-approval-broker` 在 Apply checks 通过后提供；broker、密钥、受保护 trust store 和 Azure DevOps 审批验证接口尚未实现。它必须核验真实 run/check 与审批人，签名绑定 plan hash、source、scope、run，并对 delete/replacement 另行授权。E4 重放记录写入 Apply agent 的 `CONTROL_ROOT` 持久目录。仅当单一专用 agent 且所有部署共用 Environment Exclusive lock 时，才可沿用本地原子锁；多 agent/外部工具须改用经验证的分布式锁/重放服务。YAML `lockBehavior: sequential` 只选队列方式；owner 仍需在服务端启用 Exclusive lock check。
+
+部署前，资源 owner 应为 Azure Repos 目标分支设置 Build Validation 并保护模板源；生产强制模板迁入独立仓库，以 `extends`/Required template check 固定，同仓库 include 不是防篡改策略；分别创建 Plan/Apply WIF 连接，只授权该 Pipeline；Variable Groups、Secure Files、agent pools、Environments 也只授权必要 Pipeline 并配置 checks。PR 不得取得生产凭据；Plan/Apply 使用不同且最小的 Azure 和 Blob 权限；限制 artifact/log 读者与保留期；两类 agent 固定到同一 Terraform 1.15.5/provider lock 工具链。Plan identity 读取 State 与刷新/数据源所需对象；Apply identity 只获同一 State 访问和计划动作所需写权限。角色按资源操作审查，不预设订阅 Contributor。
+
 ## 本地实验：验证 YAML 与审批合同
 
-本讲附带一个刻意离线的 Azure Pipelines：[azure-pipelines.yml](labs/azure-pipelines/azure-pipelines.yml) 只运行 [offline-checks.yml](labs/azure-pipelines/templates/offline-checks.yml)。它关闭自动触发，只 checkout `self`，不配置 Azure task、Service Connection 或 Apply。PyYAML 做普通 YAML 解析，再由 unittest 检查少量结构约束；这不是 Azure Pipelines schema compiler，也没有向 Azure DevOps 上传或排队。
+本讲保留刻意离线的 Azure Pipelines：[azure-pipelines.yml](labs/azure-pipelines/azure-pipelines.yml) 只运行 [offline-checks.yml](labs/azure-pipelines/templates/offline-checks.yml)。它关闭自动触发，只 checkout `self`，不配置 Azure task、Service Connection 或 Apply。PyYAML 做普通 YAML 解析，再由 unittest 检查离线文件和企业模板的静态结构；这不是 Azure Pipelines schema compiler，也没有向 Azure DevOps 上传或排队。
 
-[plan_gate.py](labs/azure-pipelines/scripts/plan_gate.py) 真实地检查临时合成的 Plan bytes 与批准合同；11 个负例验证篡改、错提交、错 scope、锁文件变化、审批错 run、自我审批、过期、时区缺失、超长有效期和未来审批都会被拒绝。测试不生成 Terraform binary Plan、不访问 Azure，也不验证 Azure DevOps approver 身份。作为 Stage 2 E5 的工程起点，需要再把受保护资源、实际 WIF、完整交付 artifact 和服务端审计接进同一受控流程。
+[plan_gate.py](labs/azure-pipelines/scripts/plan_gate.py) 真实地检查临时合成的 Plan bytes 与批准合同；11 个负例验证篡改、错提交、错 scope、锁文件变化、审批错 run、自我审批、过期、时区缺失、超长有效期和未来审批都会被拒绝。新增 [plan_bundle.py](labs/azure-pipelines/scripts/plan_bundle.py) 用合成 Terraform JSON 夹具验证 artifact 创建和回读、source/run/scope/backend/lock/plan 摘要绑定、敏感值省略、output 动作、replacement 分类和 fail-closed 行为。两组离线脚本都不访问 Azure；测试不证明 Azure DevOps approver、WIF、Environment check 或 broker 的身份。当前企业模板是条件关闭的设计，并不证明 server-side resource 已配置。
 
 从仓库根目录运行：
 

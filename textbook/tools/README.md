@@ -56,7 +56,7 @@ Every test block in the Azure reference uses `command = plan`, mock providers, a
 
 Install its Python dependency with `python -m pip install -r textbook/tools/requirements-controlled-apply.txt`. Unit tests use temporary generated keys and a synthetic plan-JSON fixture. They do not invoke Terraform apply or Azure. Terraform `show -json` can expose sensitive State/Plan values, so the production verifier parses it in memory and must not print it. For a distributed Azure DevOps deployment, configure the Environment approval and exclusive-lock checks server-side and use durable shared replay protection; the local directory lock is not distributed.
 
-The separate `../terraform/azure-remote-state-backend/` root contains conditional Azure Storage backend HCL using Entra ID/OIDC and Blob-key locking. The sample expects an existing state account/container and has not been initialized. Do not run `terraform init` against it without a separately authorized Stage 3 scope.
+`../terraform/azure-enterprise-reference/` now declares an empty AzureRM backend for the optional Azure Pipelines template; an owner-managed `.tfbackend` secure file supplies the existing account/container/key, and `use_workload_identity` remains `false` unless the protected tfvars file opts in. `../terraform/azure-remote-state-backend/` remains a minimal teaching sample. Both require an existing state account/container and have not been initialized against Azure. Do not run remote `terraform init` without a separately authorized Stage 3 scope.
 
 ## Azure Portal captures
 

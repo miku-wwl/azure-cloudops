@@ -1,0 +1,295 @@
+# Stage template for Azure DevOps Services. Resource names are compile-time
+# parameters because Azure Pipelines cannot substitute service connections from variables.
+parameters:
+  - name: planServiceConnection
+    type: string
+  - name: applyServiceConnection
+    type: string
+  - name: planVariableGroup
+    type: string
+  - name: applyVariableGroup
+    type: string
+  - name: planEnvironment
+    type: string
+  - name: applyEnvironment
+    type: string
+  - name: planAgentPool
+    type: string
+  - name: reviewAgentPool
+    type: string
+  - name: applyAgentPool
+    type: string
+  - name: backendConfigSecureFile
+    type: string
+  - name: targetTfvarsSecureFile
+    type: string
+  - name: trustStoreSecureFile
+    type: string
+
+stages:
+  - stage: Plan
+    displayName: WIF plan and restricted artifact
+    dependsOn: Validate
+    condition: succeeded()
+    variables:
+      - group: ${{ parameters.planVariableGroup }}
+    jobs:
+      - job: TerraformPlan
+        pool:
+          name: ${{ parameters.planAgentPool }}
+        steps:
+          - checkout: self
+            clean: true
+            persistCredentials: false
+          - task: DownloadSecureFile@1
+            name: backendConfig
+            displayName: Download owner-managed backend configuration
+            inputs:
+              secureFile: ${{ parameters.backendConfigSecureFile }}
+          - task: DownloadSecureFile@1
+            name: targetVariables
+            displayName: Download owner-managed target variables
+            inputs:
+              secureFile: ${{ parameters.targetTfvarsSecureFile }}
+          - task: AzureCLI@2
+            displayName: Create exact saved plan using Plan WIF identity
+            inputs:
+              azureSubscription: ${{ parameters.planServiceConnection }}
+              scriptType: bash
+              scriptLocation: inlineScript
+              addSpnToEnvironment: true
+              inlineScript: |
+                set -euo pipefail
+                set +x
+                REPOSITORY="$(Build.SourcesDirectory)"
+                TERRAFORM_ROOT="$REPOSITORY/textbook/terraform/azure-enterprise-reference"
+                PLAN_DIRECTORY="$(Pipeline.Workspace)/terraform-plan-$(Build.BuildId)"
+                PLAN_FILE="$PLAN_DIRECTORY/approved.tfplan"
+                BACKEND_LOG="$(Agent.TempDirectory)/terraform-init-plan.log"
+                PLAN_LOG="$(Agent.TempDirectory)/terraform-plan.log"
+                mkdir -p "$PLAN_DIRECTORY"
+
+                python -c 'import json,subprocess,sys; v=json.loads(subprocess.check_output(["terraform","version","-json"]))["terraform_version"]; print("Terraform",v); sys.exit(v != "1.15.5")'
+                export ARM_USE_CLI=false ARM_USE_MSI=false ARM_USE_OIDC=true ARM_USE_AZUREAD=true
+                export ARM_CLIENT_ID="${servicePrincipalId:?AzureCLI did not provide the WIF client ID}"
+                export ARM_TENANT_ID="${tenantId:?AzureCLI did not provide the WIF tenant ID}"
+                export ARM_SUBSCRIPTION_ID="$TARGET_SUBSCRIPTION_ID"
+                export ARM_OIDC_AZURE_SERVICE_CONNECTION_ID="${AZURESUBSCRIPTION_SERVICE_CONNECTION_ID:?AzureCLI did not provide its Service Connection ID}"
+                export ARM_ADO_PIPELINE_SERVICE_CONNECTION_ID="$ARM_OIDC_AZURE_SERVICE_CONNECTION_ID"
+                export TF_IN_AUTOMATION=1 TF_INPUT=0
+
+                if ! terraform -chdir="$TERRAFORM_ROOT" init -input=false -lockfile=readonly -reconfigure \
+                  -backend-config="$BACKEND_CONFIG_PATH" >"$BACKEND_LOG" 2>&1; then
+                  echo "Terraform init failed; detailed output remains in the restricted agent log."
+                  exit 1
+                fi
+                set +e
+                terraform -chdir="$TERRAFORM_ROOT" plan -input=false -no-color -lock-timeout=5m -detailed-exitcode \
+                  -var-file="$TARGET_TFVARS_PATH" -out="$PLAN_FILE" >"$PLAN_LOG" 2>&1
+                plan_status=$?
+                set -e
+                if [[ "$plan_status" -ne 0 && "$plan_status" -ne 2 ]]; then
+                  echo "Terraform plan failed; detailed output remains in the restricted agent log."
+                  exit "$plan_status"
+                fi
+
+                python "$REPOSITORY/textbook/chapters/AZ07-03/labs/azure-pipelines/scripts/plan_bundle.py" create \
+                  --repository "$REPOSITORY" --terraform-root "$TERRAFORM_ROOT" \
+                  --lock-file "$TERRAFORM_ROOT/.terraform.lock.hcl" --backend-config "$BACKEND_CONFIG_PATH" \
+                  --plan "$PLAN_FILE" --output-dir "$PLAN_DIRECTORY" \
+                  --source-git-sha "$(Build.SourceVersion)" --run-id "$(Build.BuildId)" \
+                  --target-environment "$TARGET_ENVIRONMENT" --subscription-id "$TARGET_SUBSCRIPTION_ID" \
+                  --resource-group "$TARGET_RESOURCE_GROUP"
+                python -c 'import json,pathlib,sys; d=pathlib.Path(sys.argv[1]); m=json.loads((d/"manifest.json").read_text()); s=json.loads((d/"review-summary.json").read_text()); print(json.dumps({"run_id":m["run_id"],"source_git_sha":m["source_git_sha"],"created_at_utc":m["created_at_utc"],"target_environment":m["target_environment"],"subscription_id":m["subscription_id"],"resource_group":m["resource_group"],"backend_config_sha256":m["backend_config_sha256"],"provider_lock_sha256":m["provider_lock_sha256"],"plan_sha256":m["plan_sha256"],"operation":m["operation"],"counts":s["counts"],"changes":s["changes"],"output_changes":s["output_changes"]},indent=2))' "$PLAN_DIRECTORY"
+            env:
+              BACKEND_CONFIG_PATH: $(backendConfig.secureFilePath)
+              TARGET_TFVARS_PATH: $(targetVariables.secureFilePath)
+              TARGET_ENVIRONMENT: production
+              TARGET_SUBSCRIPTION_ID: $(TARGET_SUBSCRIPTION_ID)
+              TARGET_RESOURCE_GROUP: $(TARGET_RESOURCE_GROUP)
+              SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+              SYSTEM_OIDCREQUESTURI: $(System.OidcRequestUri)
+          - task: PublishPipelineArtifact@1
+            displayName: Publish the same-run sensitive plan bundle
+            inputs:
+              targetPath: $(Pipeline.Workspace)/terraform-plan-$(Build.BuildId)
+              artifact: terraform-plan
+              publishLocation: pipeline
+
+  - stage: PlanReview
+    displayName: Review exact source, scope and redacted action list
+    dependsOn: Plan
+    condition: succeeded()
+    variables:
+      - group: ${{ parameters.planVariableGroup }}
+    jobs:
+      - deployment: ReviewPlan
+        pool:
+          name: ${{ parameters.reviewAgentPool }}
+        environment: ${{ parameters.planEnvironment }}
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: none
+                - checkout: self
+                  clean: true
+                  persistCredentials: false
+                - task: DownloadSecureFile@1
+                  name: backendConfig
+                  displayName: Download owner-managed backend configuration for hash check
+                  inputs:
+                    secureFile: ${{ parameters.backendConfigSecureFile }}
+                - download: current
+                  artifact: terraform-plan
+                - bash: |
+                    set -euo pipefail
+                    set +x
+                    REPOSITORY="$(Build.SourcesDirectory)"
+                    TERRAFORM_ROOT="$REPOSITORY/textbook/terraform/azure-enterprise-reference"
+                    PLAN_DIRECTORY="$(Pipeline.Workspace)/terraform-plan"
+                    INIT_LOG="$(Agent.TempDirectory)/terraform-init-review.log"
+                    python -c 'import json,subprocess,sys; v=json.loads(subprocess.check_output(["terraform","version","-json"]))["terraform_version"]; print("Terraform",v); sys.exit(v != "1.15.5")'
+                    if ! terraform -chdir="$TERRAFORM_ROOT" init -backend=false -input=false -lockfile=readonly \
+                      >"$INIT_LOG" 2>&1; then
+                      echo "Provider schema initialization failed; detailed output remains in the restricted agent log."
+                      exit 1
+                    fi
+                    python "$REPOSITORY/textbook/chapters/AZ07-03/labs/azure-pipelines/scripts/plan_bundle.py" verify \
+                      --repository "$REPOSITORY" --terraform-root "$TERRAFORM_ROOT" \
+                      --lock-file "$TERRAFORM_ROOT/.terraform.lock.hcl" --backend-config "$(backendConfig.secureFilePath)" \
+                      --bundle-dir "$PLAN_DIRECTORY" --expected-source-git-sha "$(Build.SourceVersion)" \
+                      --expected-run-id "$(Build.BuildId)" --expected-target-environment "$TARGET_ENVIRONMENT" \
+                      --expected-subscription-id "$TARGET_SUBSCRIPTION_ID" --expected-resource-group "$TARGET_RESOURCE_GROUP"
+                    python -c 'import json,pathlib,sys; d=pathlib.Path(sys.argv[1]); m=json.loads((d/"manifest.json").read_text()); s=json.loads((d/"review-summary.json").read_text()); print(json.dumps({"run_id":m["run_id"],"source_git_sha":m["source_git_sha"],"created_at_utc":m["created_at_utc"],"target_environment":m["target_environment"],"subscription_id":m["subscription_id"],"resource_group":m["resource_group"],"backend_config_sha256":m["backend_config_sha256"],"provider_lock_sha256":m["provider_lock_sha256"],"plan_sha256":m["plan_sha256"],"operation":m["operation"],"counts":s["counts"],"changes":s["changes"],"output_changes":s["output_changes"]},indent=2))' "$PLAN_DIRECTORY"
+                  displayName: Verify and print the non-value plan review summary
+                  env:
+                    TARGET_ENVIRONMENT: production
+                    TARGET_SUBSCRIPTION_ID: $(TARGET_SUBSCRIPTION_ID)
+                    TARGET_RESOURCE_GROUP: $(TARGET_RESOURCE_GROUP)
+
+  - stage: Apply
+    displayName: Apply the reviewed plan through signed controlled delivery
+    dependsOn: PlanReview
+    condition: succeeded()
+    lockBehavior: sequential
+    variables:
+      - group: ${{ parameters.applyVariableGroup }}
+    jobs:
+      - deployment: ControlledApply
+        pool:
+          name: ${{ parameters.applyAgentPool }}
+        environment: ${{ parameters.applyEnvironment }}
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: none
+                - checkout: self
+                  clean: true
+                  persistCredentials: false
+                - task: DownloadSecureFile@1
+                  name: backendConfig
+                  displayName: Download the same owner-managed backend configuration
+                  inputs:
+                    secureFile: ${{ parameters.backendConfigSecureFile }}
+                - task: DownloadSecureFile@1
+                  name: trustStore
+                  displayName: Download protected approval trust keys
+                  inputs:
+                    secureFile: ${{ parameters.trustStoreSecureFile }}
+                - download: current
+                  artifact: terraform-plan
+                - bash: |
+                    set -euo pipefail
+                    set +x
+                    REPOSITORY="$(Build.SourcesDirectory)"
+                    TERRAFORM_ROOT="$REPOSITORY/textbook/terraform/azure-enterprise-reference"
+                    PLAN_DIRECTORY="$(Pipeline.Workspace)/terraform-plan"
+                    INIT_LOG="$(Agent.TempDirectory)/terraform-init-apply-preflight.log"
+                    python -c 'import json,subprocess,sys; v=json.loads(subprocess.check_output(["terraform","version","-json"]))["terraform_version"]; print("Terraform",v); sys.exit(v != "1.15.5")'
+                    if ! terraform -chdir="$TERRAFORM_ROOT" init -backend=false -input=false -lockfile=readonly \
+                      >"$INIT_LOG" 2>&1; then
+                      echo "Provider schema initialization failed; detailed output remains in the restricted agent log."
+                      exit 1
+                    fi
+                    python "$REPOSITORY/textbook/chapters/AZ07-03/labs/azure-pipelines/scripts/plan_bundle.py" verify \
+                      --repository "$REPOSITORY" --terraform-root "$TERRAFORM_ROOT" \
+                      --lock-file "$TERRAFORM_ROOT/.terraform.lock.hcl" --backend-config "$(backendConfig.secureFilePath)" \
+                      --bundle-dir "$PLAN_DIRECTORY" --expected-source-git-sha "$(Build.SourceVersion)" \
+                      --expected-run-id "$(Build.BuildId)" --expected-target-environment "$TARGET_ENVIRONMENT" \
+                      --expected-subscription-id "$TARGET_SUBSCRIPTION_ID" --expected-resource-group "$TARGET_RESOURCE_GROUP"
+                  displayName: Verify the artifact and scope before requesting an Azure identity
+                  env:
+                    TARGET_ENVIRONMENT: production
+                    TARGET_SUBSCRIPTION_ID: $(TARGET_SUBSCRIPTION_ID)
+                    TARGET_RESOURCE_GROUP: $(TARGET_RESOURCE_GROUP)
+                - task: AzureCLI@2
+                  displayName: Verify authorization and execute controlled apply with Apply WIF identity
+                  inputs:
+                    azureSubscription: ${{ parameters.applyServiceConnection }}
+                    scriptType: bash
+                    scriptLocation: inlineScript
+                    addSpnToEnvironment: true
+                    inlineScript: |
+                      set -euo pipefail
+                      set +x
+                      REPOSITORY="$(Build.SourcesDirectory)"
+                      TERRAFORM_ROOT="$REPOSITORY/textbook/terraform/azure-enterprise-reference"
+                      PLAN_DIRECTORY="$(Pipeline.Workspace)/terraform-plan"
+                      BACKEND_LOG="$(Agent.TempDirectory)/terraform-init-apply.log"
+                      APPLY_LOG="$(Agent.TempDirectory)/controlled-apply.log"
+
+                      python -c 'import json,subprocess,sys; v=json.loads(subprocess.check_output(["terraform","version","-json"]))["terraform_version"]; print("Terraform",v); sys.exit(v != "1.15.5")'
+                      python -c 'import cryptography; print("Approval verifier crypto dependency",cryptography.__version__)'
+                      export ARM_USE_CLI=false ARM_USE_MSI=false ARM_USE_OIDC=true ARM_USE_AZUREAD=true
+                      export ARM_CLIENT_ID="${servicePrincipalId:?AzureCLI did not provide the WIF client ID}"
+                      export ARM_TENANT_ID="${tenantId:?AzureCLI did not provide the WIF tenant ID}"
+                      export ARM_SUBSCRIPTION_ID="$TARGET_SUBSCRIPTION_ID"
+                      export ARM_OIDC_AZURE_SERVICE_CONNECTION_ID="${AZURESUBSCRIPTION_SERVICE_CONNECTION_ID:?AzureCLI did not provide its Service Connection ID}"
+                      export ARM_ADO_PIPELINE_SERVICE_CONNECTION_ID="$ARM_OIDC_AZURE_SERVICE_CONNECTION_ID"
+                      export TF_IN_AUTOMATION=1 TF_INPUT=0
+
+                      if ! terraform -chdir="$TERRAFORM_ROOT" init -input=false -lockfile=readonly -reconfigure \
+                        -backend-config="$BACKEND_CONFIG_PATH" >"$BACKEND_LOG" 2>&1; then
+                        echo "Terraform init failed; detailed output remains in the restricted agent log."
+                        exit 1
+                      fi
+                      python "$REPOSITORY/textbook/chapters/AZ07-03/labs/azure-pipelines/scripts/plan_bundle.py" verify \
+                        --repository "$REPOSITORY" --terraform-root "$TERRAFORM_ROOT" \
+                        --lock-file "$TERRAFORM_ROOT/.terraform.lock.hcl" --backend-config "$BACKEND_CONFIG_PATH" \
+                        --bundle-dir "$PLAN_DIRECTORY" --expected-source-git-sha "$(Build.SourceVersion)" \
+                        --expected-run-id "$(Build.BuildId)" --expected-target-environment "$TARGET_ENVIRONMENT" \
+                        --expected-subscription-id "$TARGET_SUBSCRIPTION_ID" --expected-resource-group "$TARGET_RESOURCE_GROUP"
+
+                      # This owner-operated broker is a documented external prerequisite. It must
+                      # release a signed envelope only after checking the approved run/Environment,
+                      # exact manifest and human decision; it must enforce stronger policy on deletes.
+                      if ! cloudops-approval-broker fetch --run-id "$(Build.BuildId)" \
+                        --manifest "$PLAN_DIRECTORY/manifest.json" --approval-out "$(Agent.TempDirectory)/approval.json" \
+                        >"$(Agent.TempDirectory)/approval-broker.log" 2>&1; then
+                        echo "The trusted approval broker did not issue a signed envelope."
+                        exit 1
+                      fi
+                      if ! python "$REPOSITORY/textbook/tools/controlled_apply.py" \
+                        --repository "$REPOSITORY" --terraform-root "$TERRAFORM_ROOT" \
+                        --plan "$PLAN_DIRECTORY/approved.tfplan" --approval "$(Agent.TempDirectory)/approval.json" \
+                        --trust-store "$TRUST_STORE_PATH" --trust-store-sha256 "$TRUST_STORE_SHA256" \
+                        --lock-file "$TERRAFORM_ROOT/.terraform.lock.hcl" --control-root "$CONTROL_ROOT" \
+                        --environment "$TARGET_ENVIRONMENT" --subscription-id "$TARGET_SUBSCRIPTION_ID" \
+                        --resource-group "$TARGET_RESOURCE_GROUP" --run-id "$(Build.BuildId)" \
+                        >"$APPLY_LOG" 2>&1; then
+                        echo "Controlled apply rejected or failed; detailed output remains in the restricted agent log."
+                        exit 1
+                      fi
+                      echo "Controlled apply completed. Review its run ID and protected agent log."
+                  env:
+                    BACKEND_CONFIG_PATH: $(backendConfig.secureFilePath)
+                    TRUST_STORE_PATH: $(trustStore.secureFilePath)
+                    TRUST_STORE_SHA256: $(TRUST_STORE_SHA256)
+                    CONTROL_ROOT: $(CONTROL_ROOT)
+                    TARGET_ENVIRONMENT: production
+                    TARGET_SUBSCRIPTION_ID: $(TARGET_SUBSCRIPTION_ID)
+                    TARGET_RESOURCE_GROUP: $(TARGET_RESOURCE_GROUP)
+                    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+                    SYSTEM_OIDCREQUESTURI: $(System.OidcRequestUri)
