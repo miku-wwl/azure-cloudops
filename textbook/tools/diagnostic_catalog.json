@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "status": "DOCUMENTED_NOT_RUN",
+  "scope_contract": "Every Azure CLI query must include the explicitly authorized subscription and/or exact resource ID. Do not change the default subscription, acquire credentials, or run mutation commands as part of diagnosis.",
+  "diagnostics": [
+    {
+      "id": "dns",
+      "purpose": "Separate client resolver results from Azure Private DNS zone, link, and record configuration.",
+      "required_inputs": ["fqdn", "subscription_id", "resource_group", "private_dns_zone"],
+      "commands": ["Resolve-DnsName <fqdn> -DnsOnly", "az network private-dns record-set a list --resource-group <resource_group> --zone-name <private_dns_zone> --subscription <subscription_id> --output json"],
+      "interpretation": "Compare the client answer with the intended private record and verify the client VNet uses a resolver that can reach the linked zone. DNS success does not prove TCP reachability.",
+      "verification": "Local tool has DNS probe tests; no Azure DNS query was run."
+    },
+    {
+      "id": "routes",
+      "purpose": "Inspect the NIC's effective routes for the target prefix and next hop.",
+      "required_inputs": ["nic_resource_id", "subscription_id"],
+      "commands": ["az network nic show-effective-route-table --ids <nic_resource_id> --subscription <subscription_id> --output json"],
+      "interpretation": "Compare the longest matching prefix, next-hop type, and next-hop address against the intended path; an effective route is not an end-to-end connectivity test.",
+      "verification": "Source-documented only; Azure route query not run."
+    },
+    {
+      "id": "tcp_tls",
+      "purpose": "Resolve a target and test direct TCP connectivity plus an optional certificate-verified TLS handshake.",
+      "required_inputs": ["host", "port", "timeout", "optional_server_name"],
+      "commands": ["python textbook/tools/network_probe.py tcp-tls --host <host> --port <port> --timeout 5", "python textbook/tools/network_probe.py tcp-tls --host <host> --port 443 --tls --timeout 5"],
+      "interpretation": "The probe reports DNS, TCP, certificate validation, negotiated TLS version, and certificate fingerprint; it sends no application payload.",
+      "verification": "Local loopback tests only; no external network probe was run."
+    },
+    {
+      "id": "nsg",
+      "purpose": "Read the effective NSG set attached to a specific NIC.",
+      "required_inputs": ["nic_resource_id", "subscription_id"],
+      "commands": ["az network nic list-effective-nsg --ids <nic_resource_id> --subscription <subscription_id> --output json"],
+      "interpretation": "Evaluate priority, direction, protocol, source/destination prefix, and port against the actual five-tuple. Effective rules do not prove a remote service is listening.",
+      "verification": "Source-documented only; Azure NSG query not run."
+    },
+    {
+      "id": "private_endpoint",
+      "purpose": "Inspect the exact Private Endpoint and its DNS zone-group association.",
+      "required_inputs": ["private_endpoint_resource_id", "subscription_id", "resource_group", "private_endpoint_name"],
+      "commands": ["az network private-endpoint show --ids <private_endpoint_resource_id> --subscription <subscription_id> --output json", "az network private-endpoint dns-zone-group list --resource-group <resource_group> --endpoint-name <private_endpoint_name> --subscription <subscription_id> --output json"],
+      "interpretation": "Check provisioning/connection state, target resource, NIC private IP, zone group and client-side DNS answer separately. A healthy endpoint does not prove client DNS or route reachability.",
+      "verification": "Source-documented only; Azure Private Endpoint query not run."
+    },
+    {
+      "id": "identity",
+      "purpose": "Inspect only the identity attachment on one explicitly named Azure resource.",
+      "required_inputs": ["resource_id", "subscription_id"],
+      "commands": ["az resource show --ids <resource_id> --subscription <subscription_id> --query '{id:id, identity:identity}' --output json"],
+      "interpretation": "Compare principal/client/tenant identifiers and identity type with the workload's expected identity. An attached identity does not prove token acquisition or target authorization.",
+      "verification": "Source-documented only; Azure identity query not run."
+    },
+    {
+      "id": "token_audience",
+      "purpose": "Inspect only allowlisted JWT claims locally without printing the token.",
+      "required_inputs": ["existing_access_token_from_an_authorized_source", "expected_audience"],
+      "commands": ["python textbook/tools/token_audience.py --expected-audience <expected_audience>"],
+      "interpretation": "The tool reports aud, selected issuer/tenant and lifetime claims but does not verify the signature, issuer, tenant, token type or authorization. Supply the token through hidden interactive input; never put it in argv or logs.",
+      "verification": "Synthetic JWT claim tests only; no token acquired or inspected."
+    },
+    {
+      "id": "rbac",
+      "purpose": "List direct and inherited role assignments for one exact resource scope.",
+      "required_inputs": ["scope_resource_id", "subscription_id"],
+      "commands": ["az role assignment list --scope <scope_resource_id> --include-inherited --all --fill-principal-name false --fill-role-definition-name false --subscription <subscription_id> --output json"],
+      "interpretation": "Compare the caller principal, role definition, assignment scope, condition and inheritance with the required operation. A role assignment listing may be incomplete if the operator lacks read access.",
+      "verification": "Source-documented only; Azure RBAC query not run."
+    },
+    {
+      "id": "key_vault",
+      "purpose": "Inspect one vault's RBAC/network configuration and, only when explicitly approved, test metadata-list access without reading secret values.",
+      "required_inputs": ["vault_name", "resource_group", "subscription_id", "optional_approved_probe_vault"],
+      "commands": ["az keyvault show --name <vault_name> --resource-group <resource_group> --subscription <subscription_id> --query '{id:id, rbac:properties.enableRbacAuthorization, networkDefaultAction:properties.networkAcls.defaultAction}' --output json", "az keyvault secret list --vault-name <approved_probe_vault> --subscription <subscription_id> --maxresults 1 --query '[].{id:id, enabled:attributes.enabled}' --output json"],
+      "interpretation": "Separate control-plane configuration from data-plane authorization and network reachability. The optional list operation returns metadata only, but still requires explicit owner approval because secret names are sensitive metadata.",
+      "verification": "Source-documented only; no vault was queried and no secret was accessed."
+    },
+    {
+      "id": "azure_policy",
+      "purpose": "Read the latest Policy compliance state for one resource and its scoped assignments.",
+      "required_inputs": ["resource_id", "resource_group_scope_id", "subscription_id"],
+      "commands": ["az policy state list --resource <resource_id> --top 100 --select 'timestamp,resourceId,policyAssignmentId,policyDefinitionId,complianceState' --subscription <subscription_id> --output json", "az policy assignment list --scope <resource_group_scope_id> --subscription <subscription_id> --output json"],
+      "interpretation": "Check assignment scope/exclusions, definition/effect, evaluation timestamp and resource state; compliance state can lag a recent change and is not itself a deployment error payload.",
+      "verification": "Source-documented only; Azure Policy query not run."
+    },
+    {
+      "id": "kubernetes_image_pull",
+      "purpose": "Inspect pod waiting states and warning events in an explicitly selected Kubernetes context and namespace.",
+      "required_inputs": ["kubectl_context", "namespace"],
+      "commands": ["kubectl --context <kubectl_context> get pods --namespace <namespace> --output json", "kubectl --context <kubectl_context> get events --namespace <namespace> --field-selector type=Warning --sort-by=.metadata.creationTimestamp --output json"],
+      "interpretation": "Look for ErrImagePull/ImagePullBackOff, event reason/message, image reference, service account and registry authorization path. Do not query Secret objects or print pull credentials.",
+      "verification": "Documented only; no Kubernetes context/cluster was available for this check."
+    },
+    {
+      "id": "application_health",
+      "purpose": "Probe a specific unauthenticated HTTP(S) health endpoint using HEAD without reading a response body or following redirects.",
+      "required_inputs": ["approved_health_url", "timeout"],
+      "commands": ["python textbook/tools/network_probe.py http-head --url <approved_health_url> --timeout 10"],
+      "interpretation": "Record status and latency; confirm the service's health endpoint supports HEAD and compare with the service's own availability contract. This is not a business transaction test.",
+      "verification": "Local loopback HTTP test only; no application endpoint was contacted."
+    },
+    {
+      "id": "monitoring",
+      "purpose": "Read a named platform metric for one resource and use the prepared KQL files only in a workspace with confirmed schema and query permission.",
+      "required_inputs": ["resource_id", "metric_name", "subscription_id", "workspace_id_for_kql"],
+      "commands": ["az monitor metrics list --resource <resource_id> --metrics <metric_name> --interval PT5M --aggregation Average --subscription <subscription_id> --output json"],
+      "interpretation": "Preserve metric namespace, aggregation, interval, time range, dimensions, and absence of data separately. KQL files are workspace-schema dependent and have not been executed.",
+      "verification": "Source-documented only; no metric or Log Analytics query was run."
+    }
+  ],
+  "global_limits": [
+    "Read-only diagnostic commands can still reveal resource names, network topology, principal IDs, or secret names; store outputs as sensitive operational evidence.",
+    "Never treat an empty response as proof that an object does not exist until scope, permission, query time range, and data source are confirmed.",
+    "No catalog entry authenticates, changes the default subscription, registers a provider, changes Azure resources, or authorizes a live experiment."
+  ]
+}

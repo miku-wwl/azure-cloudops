@@ -1,0 +1,31 @@
+# E6 — Read-only diagnostics and operational automation
+
+**Completed:** 2026-11-27. **Scope:** local implementation, source review, and synthetic/loopback tests only. No Azure, Azure DevOps, Kubernetes, external-host, Log Analytics, or billing query was run.
+
+## Delivered
+
+- `tools/azure_inventory.py` performs explicitly scoped, read-only Azure Resource Graph inventory. It requires a subscription UUID, optionally filters one strictly validated resource-group name, projects only `id`, `name`, `type`, `resourceGroup`, `subscriptionId`, and `location`, and orders by resource ID. By default, each resource ID/name is represented by a stable SHA-256 reference; tags and dynamic properties are neither queried nor returned.
+- The inventory checks locally that the Resource Graph CLI extension already exists; it will not install the extension, log in, enumerate accounts, select a default subscription, or change CLI configuration. Each page supplies the same explicit subscription. Page size is 1–1000, page count is capped at 100, each CLI process has a 1–300 second timeout, retries are capped at five with bounded exponential delay, and repeated continuation tokens, duplicate IDs, count mismatches, changing totals, and incomplete pagination fail closed. Resource Graph is not a point-in-time snapshot, so concurrent inventory changes remain a documented limitation.
+- Structured outcomes distinguish complete, empty, usage, authentication, permission, timeout, incomplete, query, and missing-extension states. Exit codes are `0` complete, `2` empty, `3` usage, `4` authentication, `5` permission, `6` timeout, `7` incomplete, `8` query failure, and `9` local dependency/extension failure. Raw Azure CLI error text is suppressed.
+- `tools/diagnostic_catalog.json` defines all thirteen requested diagnosis areas: DNS, routes, TCP/TLS, effective NSG, Private Endpoint/DNS, identity, token audience, RBAC, Key Vault, Azure Policy, Kubernetes image pull, application health, and monitoring. The catalog and every cloud example remain `DOCUMENTED_NOT_RUN`; Key Vault secret-list metadata requires explicit owner approval because names can be sensitive.
+- `tools/network_probe.py` performs direct DNS/TCP/TLS and unauthenticated HTTP HEAD probes. It races resolved addresses within the connection deadline, verifies HTTPS with the system trust store, does not inherit proxies, follow redirects, send credentials, or read a body, and redacts resolved IPs by default. The configured DNS wait is bounded, but Python cannot cancel an OS `getaddrinfo`; such lookup runs in a daemon thread until the resolver returns.
+- `tools/token_audience.py` accepts an existing JWT through hidden terminal input or standard input and reports an allowlist of claims without echoing the token. It does not obtain a token or validate the signature, issuer, tenant, token type, or authorization; claim values remain untrusted.
+- Five supplemental KQL templates were added to the AZ05-02 telemetry lab. They cover failed Azure Activity operations, Heartbeat freshness, sampled request failures, dependency failures, and exception groups. Each query states its schema assumptions, bounded lookback, purpose, and `NOT_RUN` status. Their schema was checked against Microsoft Learn table references, but syntax was not compiled and no workspace was queried.
+
+## Local verification
+
+- Targeted E6 suite: 36 tests across inventory, catalog, KQL assets, loopback network probes, and synthetic token claims.
+- Full Python suite: Windows Python 3.13.9 and WSL Python 3.12.3 each passed 507 tests across 23 directories.
+- Loopback-only HTTP/TCP tests verified the HEAD method, no redirect following, no response-body read, default address redaction, and DNS wait timeout behavior. Synthetic CLI responses verified explicit scope, continuation tokens, retries, sanitized errors, redaction, and incomplete/empty handling. No external host was contacted.
+- No PDF was rebuilt: E6 added supplemental operational tooling/query files and lab documentation without changing lecture manuscript text or figures.
+
+## Source references
+
+- [Resource Graph pagination](https://learn.microsoft.com/en-us/azure/governance/resource-graph/concepts/paging-results) and [Azure CLI `az graph`](https://learn.microsoft.com/en-us/cli/azure/graph)
+- [Azure CLI network NIC commands](https://learn.microsoft.com/en-us/cli/azure/network/nic?view=azure-cli-latest), [Private Endpoint commands](https://learn.microsoft.com/en-us/cli/azure/network/private-endpoint?view=azure-cli-latest), [identity](https://learn.microsoft.com/en-us/cli/azure/identity?view=azure-cli-latest), [role assignments](https://learn.microsoft.com/en-us/cli/azure/role/assignment?view=azure-cli-latest), [Key Vault secrets](https://learn.microsoft.com/en-us/cli/azure/keyvault/secret?view=azure-cli-lts), [Policy state](https://learn.microsoft.com/en-us/cli/azure/policy/state?view=azure-cli-latest), [Azure Resource](https://learn.microsoft.com/en-us/cli/azure/resource?view=azure-cli-latest), and [Azure Monitor metrics](https://learn.microsoft.com/cli/azure/monitor/metrics)
+- [AKS image-pull troubleshooting](https://learn.microsoft.com/troubleshoot/azure/azure-kubernetes/connectivity/cannot-pull-image-from-acr-to-aks-cluster)
+- KQL schemas: [AzureActivity](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/azureactivity), [Heartbeat](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/heartbeat), [AppRequests](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/apprequests), [AppDependencies](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/appdependencies), and [AppExceptions](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/appexceptions)
+
+## Limits and next gate
+
+This E6 package is not evidence of current Azure permissions, live data/schema, network reachability, monitor availability, cluster state, account scope, or cloud spend. Recheck current CLI/service behavior before using any catalog command, and use only owner-approved exact scopes. Stage 2 E7 incident contracts and later work remain outstanding. Stage 3 L0 read-only preflight has not started; actual cumulative Azure spend remains `NOT_VERIFIED` against the USD 1.00 project ceiling.

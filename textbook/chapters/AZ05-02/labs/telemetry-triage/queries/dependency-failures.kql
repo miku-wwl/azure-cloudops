@@ -1,0 +1,15 @@
+// Purpose: find failed dependency calls and their observed latency by target.
+// Schema assumptions: AppDependencies has TimeGenerated, DependencyType, Name,
+// Target, Success, ResultCode, DurationMs, ItemCount, and _ResourceId.
+// Target and Name can expose internal endpoint metadata; treat output as sensitive.
+// Verification: source-reviewed; NOT_RUN against any Log Analytics workspace.
+let lookback = 1h;
+AppDependencies
+| where TimeGenerated >= ago(lookback)
+| where Success == false
+| summarize ObservedRows = count(),
+            EstimatedCalls = sum(ItemCount),
+            P95ObservedRowDurationMs = percentile(DurationMs, 95)
+  by DependencyType, Name, Target, ResultCode, _ResourceId
+| order by EstimatedCalls desc
+| take 100

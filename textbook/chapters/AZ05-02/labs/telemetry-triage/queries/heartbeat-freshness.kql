@@ -1,0 +1,12 @@
+// Purpose: identify machines that have emitted Heartbeat rows recently and
+// compare their latest observation times; this cannot discover silent machines.
+// Schema assumptions: Heartbeat has TimeGenerated, Computer, _ResourceId, OSType.
+// Verification: source-reviewed; NOT_RUN against any Log Analytics workspace.
+let lookback = 24h;
+Heartbeat
+| where TimeGenerated >= ago(lookback)
+| summarize LastHeartbeat = max(TimeGenerated), ObservedRows = count()
+  by Computer, _ResourceId, OSType
+| extend MinutesSinceLastHeartbeat = datetime_diff("minute", now(), LastHeartbeat)
+| order by LastHeartbeat asc
+| take 200

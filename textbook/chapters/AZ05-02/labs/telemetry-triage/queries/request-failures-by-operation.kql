@@ -1,0 +1,15 @@
+// Purpose: rank failed request groups while retaining sampling-aware estimates.
+// Schema assumptions: AppRequests has TimeGenerated, OperationName, Name,
+// Success, ResultCode, DurationMs, ItemCount, and _ResourceId.
+// ItemCount weights represented request volume; percentiles describe stored rows.
+// Verification: source-reviewed; NOT_RUN against any Log Analytics workspace.
+let lookback = 1h;
+AppRequests
+| where TimeGenerated >= ago(lookback)
+| summarize ObservedRows = count(),
+            EstimatedRequests = sum(ItemCount),
+            EstimatedFailures = sumif(ItemCount, Success == false),
+            P95ObservedRowDurationMs = percentile(DurationMs, 95)
+  by OperationName, Name, ResultCode, _ResourceId
+| order by EstimatedFailures desc
+| take 100

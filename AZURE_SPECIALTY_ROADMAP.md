@@ -1,7 +1,7 @@
 # Azure CloudOps & Enterprise Infrastructure — V3 工程实施与学习路线图
 
 > **版本：** V3.1 implementation contract / 2026-11-26；承接 V3.0，增加已批准的三阶段交付顺序与 USD 1.00 累计 Azure 费用边界。
-> **当前状态（2026-11-27）：** Stage 1 B0–B9、Stage 2 E0–E5 离线门槛已完成；当前进入 E6 诊断与自动化。Master prompt 的 GitHub Actions/secret-scan 验收和 Stage 2 最终发布包仍未完成。Stage 3 Azure 只读预检尚未开始。
+> **当前状态（2026-11-27）：** Stage 1 B0–B9、Stage 2 E0–E6 离线门槛已完成；当前进入 E7 事件合同。Master prompt 的 GitHub Actions/secret-scan 验收和 Stage 2 最终发布包仍未完成。Stage 3 Azure 只读预检尚未开始。
 > **原始 V3 基线：** miku-wwl/azure-cloudops main，提交 853ba6cbaa4ee67e448550fbe192c6c89b24fd2f；该提交已与 origin/main 同步。
 > **目标：** Azure Cloud / Senior Infrastructure / Platform / SRE / DevOps Engineer，尤其适合金融等重视安全、治理、变更与恢复的企业环境。  
 > **学习原则：** 不重复 AZ-104、AZ-305、Terraform 认证备考；以技术机制、工程实施、独立排障和可复验结果为主。
@@ -29,7 +29,8 @@ V2 的 M0–M9 全部保留其核心学习目标，但不再以十个孤立知�
 - E3 已完成：`textbook/terraform/azure-enterprise-reference/` 锁定 AzureRM 5.15.0 与 AzAPI 2.14.0，覆盖网络、VM、AKS/ACR、身份、Key Vault、Storage、监控、Recovery Services 与 audit-only Policy；所有资源旗标默认关闭，存在准确范围/成本/运行时前置条件，并关闭自动 Provider 注册。Windows Terraform 1.15.5 通过 chapter/terraform 递归 fmt、3 roots 的 backend-free init/validate 和 13 个 plan-only 测试运行；Azure root 8 个 mock-provider 场景全过。Windows 和 WSL Python suites 各 429 tests/23 directories；静态合同检查强制所有 Terraform test 为 plan-only，并实测环境凭据移除。AZ07-01 的 9 页新版在 88/140 DPI 逐页检查。Stage 2 禁止创建或修改 Azure 资源；Stage 3 L0 尚未开始。详见 `textbook/E3_TERRAFORM_ENGINEERING.md`。
 - E4 已完成：精确 Plan 签名包验证器绑定 Git SHA、环境和订阅/RG、Provider lock、Plan hash、操作、审批身份/时间、run/approval ID 与一次性 nonce；隔离 sealed Plan，破坏性操作独立授权，并在本地拒绝重放、并发及不安全 Azure 凭据回退。外部 trust store 和 trust digest 需受保护平台注入；未实现 signer、Azure DevOps 服务端 Environment checks 或分布式锁。AzureRM OIDC backend 仅通过 `init -backend=false`/validate，远端 init 未运行。AZ07-02 的 9 页/6 图教材完成复排；本地 Terraform 锁竞争、state-only import、drift、HCL rollback、State 恢复和 destroy 通过。Windows/WSL 各通过 458 tests/23 directories；无 Azure API、远端状态、资源操作或账单查询。详见 `textbook/E4_STATE_CONTROLLED_DELIVERY.md`。
 - E5 已完成离线门槛：AZ07-03 的企业模板将 Plan、PlanReview、Apply 分开，并默认在编译期排除云阶段；`plan_bundle.py` 将精确 Plan 字节绑定到 source、scope、backend、provider lock 和 run，输出不含敏感值。29 个 E5 本地测试通过；Windows/WSL 各通过 471 tests/23 directories；Terraform 1.15.5 递归 fmt、3 roots backend-free init/validate 与 13 个 plan-only/mock runs 通过。8 页 PDF 完成 88 DPI 逐页检查，更新页 6–8 另以 140 DPI 检查。Broker、signer、受保护外部模板、实际 WIF、Environment checks 与分布式 replay lock 是未配置前置条件；无 Azure DevOps/Azure 访问。详见 `textbook/E5_AZURE_DEVOPS_DELIVERY.md`。
-- 当前阶段为 E6；之后依次 E7–E10。Stage 3 尚未执行 Azure 登录、订阅查询、账单查询或资源操作。
+- E6 已完成离线门槛：新增显式订阅范围的 Azure Resource Graph 分页库存脚本、13 类只读诊断目录、DNS/TCP/TLS 与 HTTP HEAD 本地探针、隐藏输入 JWT claim 检查器，以及 5 个 AzureActivity/Heartbeat/AppRequests/AppDependencies/AppExceptions KQL 模板。定向测试 36 项通过；Windows 与 WSL 各通过 507 tests/23 directories。测试使用合成 CLI 响应、合成 token 和 loopback；KQL 仅做表结构源审阅，未编译或执行；无 Azure/ADO/Kubernetes/外部主机/账单查询。DNS 的 OS `getaddrinfo` 无法取消，只能限制调用者等待且后台线程可能继续到解析完成；详见 `textbook/E6_DIAGNOSTICS_AUTOMATION.md`。
+- 当前阶段为 E7；之后依次 E8–E10。Stage 3 尚未执行 Azure 登录、订阅查询、账单查询或资源操作。
 - Docker Desktop Linux Engine 在之前的 host 检查中不可用；开始 E2 时重新检查。Azure CLI 命令存在不代表登录、scope 或授权可用。
 - 实际累计 Azure 支出：`NOT_VERIFIED`。USD 1.00 总上限、USD 0.70 计划线和 USD 0.30 清理/未知费用余量继续适用；不得声明 actual spend 为 USD 0.00。
 

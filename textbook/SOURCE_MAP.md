@@ -464,6 +464,7 @@ Research date: 2026-11-27. Microsoft Learn is the primary source. The lab evalua
 | AZ05-02 §05, Fig 15-5 | Sampled telemetry rows can represent multiple events; `ItemCount` should be included in request-count aggregation; sampling is not proof that all dependencies/spans were collected | Application Insights metrics and sampling; AppRequests sample queries | SOURCE-ANALYSED; synthetic weighting only, no SDK sampling or data loss was observed |
 | AZ05-02 §05 | Current language recommendations differ between Microsoft OpenTelemetry Distro for .NET/Node.js/Python and Azure Monitor OpenTelemetry Distro for Java; do not initialize both in one application | Enable OpenTelemetry; OpenTelemetry sampling | SOURCE-ANALYSED 2026-11-27; recheck language and SDK guidance before live implementation |
 | AZ05-02 §06–07 | Five synthetic cases and 11 tests cover weighted request counts, time filtering, operation grouping, direct parent links, and missing visible parent records | `chapters/AZ05-02/labs/telemetry-triage` | LOCAL_VERIFIED 2026-11-27; Windows and WSL suites each passed 251 tests across 15 directories; no KQL/service emulation |
+| AZ05-02 E6 query library | Five additional operational query templates use documented `AzureActivity`, `Heartbeat`, `AppRequests`, `AppDependencies` and `AppExceptions` columns for failed ARM operations, agent freshness, request/dependency failures and exception groups | `labs/telemetry-triage/queries/*.kql`; Microsoft table/official query references listed below | SOURCE-ANALYSED 2026-11-27; explicit schema assumptions in each file; NOT_RUN against a workspace and not KQL-compiled |
 | AZ05-02 cost / authorization | No Azure authentication, workspace/resource query, telemetry export, resource mutation or billing request was performed | Session and command execution record | LIVE_NOT_RUN; actual cumulative spend remains NOT_VERIFIED |
 
 ### AZ05-02 primary references
@@ -473,6 +474,11 @@ Research date: 2026-11-27. Microsoft Learn is the primary source. The lab evalua
 - https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/apprequests
 - https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/appdependencies
 - https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/appexceptions
+- https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/azureactivity
+- https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/heartbeat
+- https://learn.microsoft.com/en-us/azure/azure-monitor/reference/queries/azureactivity
+- https://learn.microsoft.com/en-us/azure/azure-monitor/reference/queries/apprequests
+- https://learn.microsoft.com/en-us/azure/azure-monitor/reference/queries/heartbeat
 - https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization
 - https://learn.microsoft.com/en-us/kusto/query/summarize-operator?view=azure-data-explorer
 - https://learn.microsoft.com/en-us/azure/azure-monitor/app/metrics-overview

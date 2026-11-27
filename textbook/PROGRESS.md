@@ -8,7 +8,7 @@
 ## Current gate
 
 - Overall stage: Stage 2 — Enterprise Engineering & Live-Lab Readiness
-- Current phase: E6 — diagnostics and automation. Stage 1 B0–B9 and Stage 2 E0–E5 are complete for their documented offline gates; `TEXTBOOK_V1_RELEASE_READY` remains a historical Stage 1 acceptance, while the master-prompt CI/security gate and refreshed Stage 2 packages remain open.
+- Current phase: E7 — twelve incident contracts. Stage 1 B0–B9 and Stage 2 E0–E6 are complete for their documented offline gates; `TEXTBOOK_V1_RELEASE_READY` remains a historical Stage 1 acceptance, while the master-prompt CI/security gate and refreshed Stage 2 packages remain open.
 - B0 status: COMPLETE. Read-only AWS source, toolchain, two reference PDFs and package consistency reviewed; Azure publisher adaptation built an Azure chapter and passed the recorded checks.
 - Completed lectures: 23/23 — AZ00-01, AZ01-01, AZ02-01 through AZ02-04, AZ03-01 through AZ03-03, AZ04-01 through AZ04-04, AZ05-01 through AZ05-03, AZ06-01 through AZ06-02, AZ07-01 through AZ07-03, AZ08-01, and FIN-01.
 - Implementation is being tracked on main from the approved baseline; see repository history for the current checkpoint.
@@ -79,6 +79,12 @@
 - AZ07-03 now has an 8-page PDF, 14,067 extracted characters and five original figures; all pages were visually reviewed at 88 DPI, and updated pages 6–8 at 140 DPI. SHA-256: `07ed61f35fd4b0d7d74c1ea18f26a4272a7d15db9d0a2f89621b2c0f6789b0a9`.
 - No Azure DevOps organization/pipeline, Entra token, Azure identity, remote backend, cloud plan, Azure request, resource operation or billing query was used. Broker, signer, protected trust, actual WIF, server checks, protected external template and distributed replay controls remain prerequisites. Cumulative actual Azure spend remains `NOT_VERIFIED`.
 
+## E6 completed evidence
+
+- E6 added a bounded, explicit-subscription Azure Resource Graph inventory, a thirteen-category read-only diagnostics catalog, local direct DNS/TCP/TLS and HTTP HEAD probes, a hidden-input JWT claim inspector, and five source-reviewed/not-run KQL templates for AzureActivity, Heartbeat, AppRequests, AppDependencies and AppExceptions. The inventory suppresses raw errors, redacts resource identifiers by default, refuses to install the Resource Graph extension, and fails closed on incomplete pagination.
+- Targeted E6 verification passed 36 tests. Full Windows Python 3.13.9 and WSL Python 3.12.3 suites each passed 507 tests across 23 directories. Network tests were loopback-only; CLI responses and tokens were synthetic. No Azure CLI, Azure DevOps, Kubernetes, external host, KQL workspace, token acquisition, resource operation or billing query was run. OS `getaddrinfo` cannot be cancelled; the probe bounds caller wait while the resolver call may finish in a daemon thread. See `E6_DIAGNOSTICS_AUTOMATION.md`.
+- No lecture PDF rebuild was needed because E6 changed only supplemental tooling, KQL assets, and lab documentation. The final Stage 2 PDF/source ZIP refresh remains open.
+
 ## First next action
 
-Begin E6 diagnostics and automation, preserving the offline boundary. Stage 2 remains free of Azure resource creation or modification; Azure DevOps and Azure validation stay NOT_RUN until their authorized gates.
+Begin E7 incident contracts and preserve the offline boundary. Stage 2 remains free of Azure resource creation or modification; Azure DevOps and Azure validation stay NOT_RUN until their authorized gates.

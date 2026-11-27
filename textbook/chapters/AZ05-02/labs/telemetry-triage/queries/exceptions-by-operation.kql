@@ -1,0 +1,15 @@
+// Purpose: rank exception groups and identify operation IDs for follow-up joins.
+// Schema assumptions: AppExceptions has TimeGenerated, ExceptionType, ProblemId,
+// OperationName, OperationId, SeverityLevel, ItemCount, and _ResourceId.
+// This query does not project Message, Details, Properties, or user identifiers.
+// Verification: source-reviewed; NOT_RUN against any Log Analytics workspace.
+let lookback = 1h;
+AppExceptions
+| where TimeGenerated >= ago(lookback)
+| summarize ObservedRows = count(),
+            EstimatedExceptions = sum(ItemCount),
+            HighestObservedSeverity = max(SeverityLevel),
+            OperationIds = make_set(OperationId, 25)
+  by ExceptionType, ProblemId, OperationName, _ResourceId
+| order by EstimatedExceptions desc
+| take 100

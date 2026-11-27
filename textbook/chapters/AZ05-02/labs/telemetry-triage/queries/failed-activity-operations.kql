@@ -1,0 +1,13 @@
+// Purpose: find failed ARM management operations for recent incident triage.
+// Schema assumptions: AzureActivity has TimeGenerated, ActivityStatusValue,
+// SubscriptionId, ResourceGroup, ResourceProviderValue, OperationNameValue,
+// CorrelationId, ActivitySubstatusValue, and Caller.
+// Verification: source-reviewed; NOT_RUN against any Log Analytics workspace.
+let lookback = 24h;
+AzureActivity
+| where TimeGenerated >= ago(lookback)
+| where ActivityStatusValue =~ "Failed"
+| project TimeGenerated, SubscriptionId, ResourceGroup, ResourceProviderValue,
+          OperationNameValue, ActivitySubstatusValue, CorrelationId, Caller
+| order by TimeGenerated desc
+| take 200

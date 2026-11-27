@@ -91,6 +91,18 @@ All twenty-three accepted lecture PDFs are independent outputs in `textbook/dist
 | AZ07-02 lab and publication | LOCAL_VERIFIED | Actual Windows local lock refusal, state-only import, local drift, config rollback, State backup/restore/destroy; 9-page/6-figure PDF, 12,082 extracted characters, no markers/overflow, 88-DPI review of all pages and 140-DPI review of pages 7–9. SHA-256: `6D26AC6269F2BE33097FE20FCBEC007D283D33A8DC6559739186FEB15D027783`. |
 | Azure API, spend and billing | NOT_RUN / NOT_VERIFIED | No Azure auth/query, remote State initialization, resource mutation, network probe, pricing or billing query. Actual cumulative spend remains `NOT_VERIFIED`. |
 
+## Stage 2 E6 diagnostics and automation (2026-11-27)
+
+| Check | Result | Evidence / limit |
+|---|---|---|
+| Resource Graph inventory implementation | LOCAL_VERIFIED | Explicit subscription UUID and optional constrained RG; minimal projection; continuation-token pagination, page/request/retry limits, duplicate/count drift detection, redacted identifiers and distinct exit outcomes; mocked CLI only; no Azure extension/query/login operation. |
+| Diagnostic catalog | SOURCE_ANALYSED + LOCAL_VERIFIED | All 13 required categories include purpose, inputs, command examples, interpretation and verification state. All live entries remain `DOCUMENTED_NOT_RUN`; Azure CLI and kubectl were not invoked. |
+| Network and token probes | LOCAL_VERIFIED | Six tests exercise bounded DNS waiting, loopback TCP, TLS failure classification, HTTP HEAD, redirect refusal, no body read, and synthetic JWT claim handling. A timed-out OS resolver call may continue in a daemon thread; no external host or token was contacted. |
+| Operational KQL library | SOURCE_ANALYSED | Five queries map to published Azure Monitor table schemas and state assumptions/status. No KQL parser, workspace query, or telemetry source was used; all remain `NOT_RUN`. |
+| Python regression | LOCAL_VERIFIED | Targeted E6 set passed 36 tests; Windows Python 3.13.9 and WSL Python 3.12.3 each passed 507 tests across 23 directories. |
+| PDF synchronization | NOT_REQUIRED | E6 added supplemental tools/query files and lab README/acceptance/source-map entries but did not edit lecture prose or figures; final Stage 2 package refresh remains open. |
+| Azure, Kubernetes, DevOps and billing | NOT_RUN / NOT_VERIFIED | No Azure CLI/API/auth, kubectl, ADO, KQL, external endpoint or billing request. Actual cumulative Azure spend remains `NOT_VERIFIED`. |
+
 ## Stage 2 E0 independent audit addendum (2026-11-27)
 
 | Area | Evidence | Limit / next gate |
