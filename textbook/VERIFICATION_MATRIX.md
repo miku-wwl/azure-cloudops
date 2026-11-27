@@ -91,6 +91,15 @@ All twenty-three accepted lecture PDFs are independent outputs in `textbook/dist
 | AZ07-02 lab and publication | LOCAL_VERIFIED | Actual Windows local lock refusal, state-only import, local drift, config rollback, State backup/restore/destroy; 9-page/6-figure PDF, 12,082 extracted characters, no markers/overflow, 88-DPI review of all pages and 140-DPI review of pages 7–9. SHA-256: `6D26AC6269F2BE33097FE20FCBEC007D283D33A8DC6559739186FEB15D027783`. |
 | Azure API, spend and billing | NOT_RUN / NOT_VERIFIED | No Azure auth/query, remote State initialization, resource mutation, network probe, pricing or billing query. Actual cumulative spend remains `NOT_VERIFIED`. |
 
+## Stage 2 E7 incident contracts (2026-11-27)
+
+| Check | Result | Evidence / limit |
+|---|---|---|
+| Twelve mapped incident contracts | STATIC_CHECK_PASS + LOCAL_VERIFIED | Contract tests verify all 12 IDs, required evidence fields, lecture mapping, explicit live-not-run status and the exact 8 mandatory local IDs. E7 documents contracts only; no incident execution is claimed. |
+| Mandatory vs design-only scope | STATIC_CHECK_PASS | IR-01/02/05/07/08/10/11/12 are mandatory for E8; IR-03/04/06/09 remain design-only. E4's local Terraform lab is prior evidence and is not an E8 IR-08 closure. |
+| Regression | LOCAL_VERIFIED | Contract suite passed 3 tests; Windows Python 3.13.9 and WSL Python 3.12.3 each passed 510 tests across 24 directories. |
+| Cloud, cluster and billing | NOT_RUN / NOT_VERIFIED | No Azure incident/resource mutation, ADO, K8s event query, external target or billing query. Current Docker socket read-only ping did not return; actual spend remains `NOT_VERIFIED`. |
+
 ## Stage 2 E6 diagnostics and automation (2026-11-27)
 
 | Check | Result | Evidence / limit |
