@@ -24,6 +24,50 @@ Research date for AZ00-01: 2026-11-26. Azure claims are based on Microsoft Learn
 - https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/design-area/resource-org-management-groups
 - https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/design-area/resource-org-subscriptions
 - https://learn.microsoft.com/en-us/azure/role-based-access-control/scope-overview
+
+## AZ08-01 — Azure hybrid routing and enterprise DNS
+
+Research date: 2026-11-27. The chapter uses current Microsoft Learn/Azure Architecture Center documentation for classical VNet peering, VPN/ExpressRoute/BGP, Route Server, Virtual WAN and Azure DNS Private Resolver. The lab reads only a fictional, committed JSON fixture and makes no Azure request.
+
+| Chapter section / figure | Claim or teaching point | Source anchor | Classification and limit |
+|---|---|---|---|
+| AZ08-01 §01, Fig 22-1 | Classic VNet peering is nontransitive; gateway transit uses paired hub `allowGatewayTransit` and spoke `useRemoteGateways`; forwarded traffic, UDR/NVA routing and gateway transit are distinct controls | [Hub-spoke](https://learn.microsoft.com/en-us/azure/networking/design-guide/hub-spoke); [peering](https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-manage-peering); [gateway transit](https://learn.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-peering-gateway-transit) | SOURCE-ANALYSED; no Azure peering was read or changed |
+| AZ08-01 §01, §04 | Standard Virtual WAN provides managed hub transit and hub-to-hub architecture; Basic and Standard differ in supported connectivity; route tables and routing intent remain architectural controls | [Virtual WAN overview](https://learn.microsoft.com/en-us/azure/virtual-wan/virtual-wan-about); [hub routing](https://learn.microsoft.com/en-us/azure/virtual-wan/about-virtual-hub-routing); [Virtual WAN hub-spoke architecture](https://learn.microsoft.com/en-us/azure/architecture/networking/architecture/hub-spoke-virtual-wan-architecture) | SOURCE-ANALYSED; no Virtual WAN topology or pricing was queried |
+| AZ08-01 §02, Fig 22-2 | VPN Gateway BGP exchanges prefixes and can propagate learned routes; ExpressRoute uses paired BGP sessions for redundancy and is not a general transit router | [VPN Gateway BGP](https://learn.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-bgp-overview); [ExpressRoute routing](https://learn.microsoft.com/en-us/azure/expressroute/expressroute-routing); [ExpressRoute peering](https://learn.microsoft.com/en-us/azure/expressroute/expressroute-circuit-peerings) | SOURCE-ANALYSED; no BGP peer, prefix or packet path was queried |
+| AZ08-01 §02 | In the documented ExpressRoute + S2S VPN failover scenario, ER is primary for a matching prefix; on-premises higher local preference helps avoid asymmetric routing; LPM remains relevant | [ER and VPN coexistence](https://learn.microsoft.com/en-us/azure/expressroute/expressroute-howto-coexist-resource-manager) | SOURCE-ANALYSED; local preference is an enterprise-router policy, not a change made in Azure |
+| AZ08-01 §02, Fig 22-5 | Route Server exchanges routes as a BGP route reflector; preference applies to matching-route selection; Route Server does not forward NVA-to-VM data packets | [Route Server overview](https://learn.microsoft.com/en-us/azure/route-server/overview); [ER/VPN exchange](https://learn.microsoft.com/en-us/azure/route-server/expressroute-vpn-support); [route preference](https://learn.microsoft.com/en-us/azure/route-server/hub-routing-preference); [FAQ](https://learn.microsoft.com/en-us/azure/route-server/route-server-faq) | SOURCE-ANALYSED; no Route Server was queried or configured |
+| AZ08-01 §03, Figs 22-3/22-4 | Resolver inbound accepts external DNS queries; outbound plus a linked ruleset forwards Azure queries; rules choose longest suffix; resolver VNet private-zone link, endpoint subnet, routes and UDP/TCP 53 are separate requirements; a ruleset linked to its inbound endpoint VNet may loop | [Resolver overview](https://learn.microsoft.com/en-us/azure/dns/dns-private-resolver-overview); [endpoints and rulesets](https://learn.microsoft.com/en-us/azure/dns/private-resolver-endpoints-rulesets); [architecture](https://learn.microsoft.com/en-us/azure/architecture/networking/architecture/azure-dns-private-resolver); [hybrid DNS](https://learn.microsoft.com/en-us/azure/architecture/hybrid/hybrid-dns-infra) | SOURCE-ANALYSED; no Azure DNS query, endpoint or zone link was inspected |
+| AZ08-01 §05, labs/hybrid-connectivity | `hybrid_contract.py` checks paired gateway-transit flags, BGP/propagation predicates, LPM in two directions, longest DNS suffix, resolver/ruleset links, loop condition and UDP/TCP 53 path flags against a synthetic fixture | `topology.json`, `hybrid_contract.py`, `tests/test_hybrid_contract.py` | LOCAL_VERIFIED; a narrow teaching contract, not an Azure emulator, resolver, route controller or connectivity proof |
+| AZ08-01 future read-only runbook | Future command syntax and control-plane permission names are mapped from official Azure CLI and Azure RBAC operation references | [VNet peering CLI](https://learn.microsoft.com/en-us/cli/azure/network/vnet/peering?view=azure-cli-latest); [VNet Gateway CLI](https://learn.microsoft.com/en-us/cli/azure/network/vnet-gateway?view=azure-cli-latest); [NIC CLI](https://learn.microsoft.com/en-us/cli/azure/network/nic?view=azure-cli-latest); [DNS Resolver CLI extension](https://learn.microsoft.com/en-us/cli/azure/dns-resolver?view=azure-cli-latest); [Private DNS zone VNet links](https://learn.microsoft.com/en-us/cli/azure/network/private-dns/link/vnet?view=azure-cli-latest); [network permissions](https://learn.microsoft.com/en-us/azure/role-based-access-control/permissions/networking) | DESIGN_GUIDANCE; runbook has not executed, account scope and action permissions are not checked, no role is granted |
+| AZ08-01 PDF and full local suite | Seven-page PDF built with five original SVG figures; all pages visually reviewed at 88/140 DPI; full Python suite passed 375 tests across 21 directories on Windows and WSL | `textbook/dist/pdf/AZ08-01_azure-hybrid-routing-enterprise-dns.pdf`; `textbook/chapters/AZ08-01/ACCEPTANCE.md`; `textbook/tools/test_all.sh --python` | LOCAL_VERIFIED 2026-11-27; no Azure call, live network test, or billing evidence |
+
+### AZ08-01 primary references
+
+- https://learn.microsoft.com/en-us/azure/networking/design-guide/hub-spoke
+- https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-manage-peering
+- https://learn.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-peering-gateway-transit
+- https://learn.microsoft.com/en-us/azure/virtual-wan/virtual-wan-about
+- https://learn.microsoft.com/en-us/azure/virtual-wan/about-virtual-hub-routing
+- https://learn.microsoft.com/en-us/azure/architecture/networking/architecture/hub-spoke-virtual-wan-architecture
+- https://learn.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-bgp-overview
+- https://learn.microsoft.com/en-us/azure/vpn-gateway/configure-bgp
+- https://learn.microsoft.com/en-us/azure/expressroute/expressroute-routing
+- https://learn.microsoft.com/en-us/azure/expressroute/expressroute-circuit-peerings
+- https://learn.microsoft.com/en-us/azure/expressroute/expressroute-howto-coexist-resource-manager
+- https://learn.microsoft.com/en-us/azure/route-server/overview
+- https://learn.microsoft.com/en-us/azure/route-server/expressroute-vpn-support
+- https://learn.microsoft.com/en-us/azure/route-server/hub-routing-preference
+- https://learn.microsoft.com/en-us/azure/route-server/route-server-faq
+- https://learn.microsoft.com/en-us/azure/dns/dns-private-resolver-overview
+- https://learn.microsoft.com/en-us/azure/dns/private-resolver-endpoints-rulesets
+- https://learn.microsoft.com/en-us/azure/architecture/networking/architecture/azure-dns-private-resolver
+- https://learn.microsoft.com/en-us/azure/architecture/hybrid/hybrid-dns-infra
+- https://learn.microsoft.com/en-us/cli/azure/network/vnet/peering?view=azure-cli-latest
+- https://learn.microsoft.com/en-us/cli/azure/network/vnet-gateway?view=azure-cli-latest
+- https://learn.microsoft.com/en-us/cli/azure/network/nic?view=azure-cli-latest
+- https://learn.microsoft.com/en-us/cli/azure/network/private-dns/link/vnet?view=azure-cli-latest
+- https://learn.microsoft.com/en-us/cli/azure/dns-resolver?view=azure-cli-latest
+- https://learn.microsoft.com/en-us/azure/role-based-access-control/permissions/networking
 - https://learn.microsoft.com/en-us/azure/governance/policy/concepts/scope
 
 ## AZ01-01 — Well-Architected reliability

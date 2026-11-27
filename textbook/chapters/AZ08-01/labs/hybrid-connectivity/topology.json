@@ -1,0 +1,53 @@
+{
+  "label": "fictional bank hybrid connectivity contract; no Azure data",
+  "network": {
+    "gateway_transit": {
+      "hub_gateway_present": true,
+      "hub_allow_gateway_transit": true,
+      "spoke_use_remote_gateway": true,
+      "spoke_gateway_present": false,
+      "hub_allow_forwarded_traffic": true,
+      "spoke_allow_forwarded_traffic": true
+    },
+    "routes": {
+      "bgp_session_up": true,
+      "spoke_route_propagation_enabled": true,
+      "spoke_route_table": [
+        {"prefix": "172.22.10.0/24", "next_hop": "hub-gateway", "source": "BGP"},
+        {"prefix": "172.22.0.0/16", "next_hop": "hub-gateway", "source": "BGP"},
+        {"prefix": "0.0.0.0/0", "next_hop": "internet", "source": "system"}
+      ],
+      "onprem_route_table": [
+        {"prefix": "10.41.0.0/16", "next_hop": "expressroute", "source": "BGP"},
+        {"prefix": "10.0.0.0/8", "next_hop": "corporate-core", "source": "static-summary"}
+      ],
+      "probe": {"spoke_ip": "10.41.2.15", "onprem_ip": "172.22.10.27"},
+      "expected_spoke_next_hop": "hub-gateway",
+      "expected_onprem_next_hop": "expressroute"
+    }
+  },
+  "dns": {
+    "resolver": {"inbound_vnet": "hub", "private_zone_linked_to_inbound_vnet": true},
+    "onprem_query": {
+      "name": "orders.privatelink.database.windows.net",
+      "conditional_forwarders": [
+        {"suffix": "database.windows.net", "target": "10.40.5.4", "target_type": "resolver-inbound"},
+        {"suffix": "privatelink.database.windows.net", "target": "10.40.5.4", "target_type": "resolver-inbound"}
+      ],
+      "resolver_reachable": true,
+      "udp53_allowed": true,
+      "tcp53_allowed": true
+    },
+    "azure_query": {
+      "name": "ledger.corp.example",
+      "source_vnet": "payments-spoke",
+      "dns_mode": "azure-provided",
+      "outbound_endpoint_associated": true,
+      "ruleset_linked_vnets": ["payments-spoke"],
+      "rules": [
+        {"suffix": "example", "target": "10.1.0.53", "target_type": "onprem-dns", "reachable": true, "udp53_allowed": true, "tcp53_allowed": true},
+        {"suffix": "corp.example", "target": "10.1.0.53", "target_type": "onprem-dns", "reachable": true, "udp53_allowed": true, "tcp53_allowed": true}
+      ]
+    }
+  }
+}

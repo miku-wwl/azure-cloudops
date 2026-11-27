@@ -8,9 +8,9 @@
 ## Current gate
 
 - Overall stage: Stage 1 — Technical Textbook Engineering & Publication
-- Current phase: B8 — Lectures 22–23, 0/2 accepted. B7 — Lectures 19–21 is complete; AZ07-01 through AZ07-03 have passed their offline lecture gates.
+- Current phase: B8 — Lectures 22–23, 1/2 accepted. B7 — Lectures 19–21 is complete; AZ07-01 through AZ07-03 have passed their offline lecture gates.
 - B0 status: COMPLETE. Read-only AWS source, toolchain, two reference PDFs and package consistency reviewed; Azure publisher adaptation built an Azure chapter and passed the recorded checks.
-- Completed lectures: 21/23 — AZ00-01, AZ01-01, AZ02-01 through AZ02-04, AZ03-01 through AZ03-03, AZ04-01 through AZ04-04, AZ05-01 through AZ05-03, AZ06-01 through AZ06-02, and AZ07-01 through AZ07-03.
+- Completed lectures: 22/23 — AZ00-01, AZ01-01, AZ02-01 through AZ02-04, AZ03-01 through AZ03-03, AZ04-01 through AZ04-04, AZ05-01 through AZ05-03, AZ06-01 through AZ06-02, AZ07-01 through AZ07-03, and AZ08-01.
 - Implementation is being tracked on main from the approved baseline; see repository history for the current checkpoint.
 - Cloud resource operations: none performed for this project.
 - Azure authorization and subscription scope: NOT_CHECKED; Stage 3 read-only preflight is later.
@@ -59,7 +59,8 @@
 - AZ07-02 passed its lecture gate: current HashiCorp/Azure Storage documentation; five editable figures; a seven-page PDF reviewed at 88/140 DPI; Windows Terraform 1.15.5 verified actual local lock contention, provider-specific file drift/correction and State backup/restore; two plan tests passed; full Windows/WSL Python suites each passed 336 tests across 19 directories. No Azure authentication, Azure backend/provider initialization, Storage request, resource operation, network probe or billing query occurred. Actual cumulative spend remains NOT_VERIFIED; WSL still lacks Terraform CLI. See chapters/AZ07-02/ACCEPTANCE.md.
 - AZ07-03 passed its lecture gate: current Microsoft Learn and HashiCorp Azure Pipelines/WIF research; five editable mechanism figures; a seven-page PDF reviewed at 88 and 140 DPI; 17 offline YAML and exact-plan contract tests passed, including 11 fail-closed negative cases. The pipeline is intentionally offline and no Azure DevOps organization, pipeline, Service Connection, WIF identity or Azure role was created or queried. See chapters/AZ07-03/ACCEPTANCE.md.
 - After adding AZ07-03, the full offline Python suite passed on Windows and WSL: 353 tests across 20 lab directories. Windows Terraform checks remain as recorded for AZ07-01 and AZ07-02; WSL has no Terraform CLI.
+- AZ08-01 passed its offline lecture gate: current Microsoft Learn/Azure Architecture Center research for hub-spoke and Virtual WAN, gateway transit, BGP, ExpressRoute/VPN coexistence, Route Server and Private Resolver; five editable mechanism figures; a 7-page PDF visually reviewed at 88 and 140 DPI; a synthetic hybrid connectivity contract with 22 unit tests and 13 baseline checks; and full Windows/WSL suites each passing 375 tests across 21 lab directories. The future Azure read-only runbook is documented but NOT_RUN. No Azure authentication, resource/query operation, DNS lookup, route/BGP action, connectivity probe or billing query occurred. Actual cumulative Azure spend remains NOT_VERIFIED. See `chapters/AZ08-01/ACCEPTANCE.md`.
 
 ## First next action
 
-Research current Microsoft primary documentation for AZ08-01 hybrid routing, gateways, BGP and enterprise DNS; then continue offline lecture acceptance. Do not authenticate to Azure, query a subscription or mutate cloud resources before Stage 3 gates.
+Research current Microsoft primary documentation for FIN-01 cloud cost planning, Cost Management, budgets, tagging and resource teardown; then continue offline lecture acceptance. Do not authenticate to Azure, query a subscription or mutate cloud resources before Stage 3 gates.

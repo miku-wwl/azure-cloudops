@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="560" viewBox="0 0 1100 560">
+<defs>
+<marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#688091"/></marker>
+<marker id="teal" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#167e83"/></marker>
+<marker id="red" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#b76464"/></marker>
+</defs><style>
+text{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;fill:#18334a}
+.title{font-size:25px;font-weight:700}.label{font-size:19px;font-weight:700}.body{font-size:16px}.small{font-size:14px;fill:#52697a}.tiny{font-size:12px;fill:#52697a}
+.box{stroke:#91a6b1;stroke-width:2;rx:15}.safe{fill:#e1f1ef;stroke:#167e83}.cloud{fill:#dcebf2;stroke:#477c9b}.warn{fill:#f6e7cc;stroke:#c18a3a}.bad{fill:#f6dddd;stroke:#b76464}.neutral{fill:#fff;stroke:#91a6b1}.line{stroke:#688091;stroke-width:3;fill:none}.dash{stroke-dasharray:8 7}
+</style><rect width="1100" height="560" rx="20" fill="white"/>
+<text x="38" y="42" class="title">分别验证路由控制、数据路径与名称解析</text>
+<rect x="58" y="99" width="296" height="120" class="box cloud"/><text x="86" y="140" class="label">1 · Control / route exchange</text><text x="86" y="177" class="body">BGP peer · prefixes · propagation</text>
+<rect x="402" y="99" width="296" height="120" class="box safe"/><text x="430" y="140" class="label">2 · Packet forwarding</text><text x="430" y="177" class="body">双向 route · gateway · NSG/NVA</text>
+<rect x="746" y="99" width="296" height="120" class="box warn"/><text x="774" y="140" class="label">3 · DNS resolution</text><text x="774" y="177" class="body">zone/ruleset · suffix · UDP/TCP 53</text>
+<path d="M355 159H393" class="line" marker-end="url(#arrow)"/><path d="M699 159H737" class="line" marker-end="url(#arrow)"/>
+<rect x="120" y="294" width="384" height="132" class="box bad"/><text x="148" y="336" class="label">Route Server 交换路由</text><text x="148" y="374" class="body">BGP route reflector</text><text x="148" y="404" class="small">它不承载 NVA ↔ VM 数据包</text>
+<rect x="598" y="294" width="384" height="132" class="box neutral"/><text x="626" y="336" class="label">排障的判别顺序</text><text x="626" y="374" class="body">有路由 ≠ 双向可达 ≠ DNS 可解析</text><text x="626" y="404" class="small">用目标 IP 探测与查询名分别定位</text>
+<path d="M506 359H589" class="line dash" marker-end="url(#teal)"/>
+<text x="177" y="491" class="small">保留来源 VNet / prefix / 方向 / 查询名 / 目标 resolver / 失败层；不要从单次 ping 推断全部链路。</text>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="560" viewBox="0 0 1100 560">
+<defs>
+<marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#688091"/></marker>
+<marker id="teal" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#167e83"/></marker>
+<marker id="red" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#b76464"/></marker>
+</defs><style>
+text{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;fill:#18334a}
+.title{font-size:25px;font-weight:700}.label{font-size:19px;font-weight:700}.body{font-size:16px}.small{font-size:14px;fill:#52697a}.tiny{font-size:12px;fill:#52697a}
+.box{stroke:#91a6b1;stroke-width:2;rx:15}.safe{fill:#e1f1ef;stroke:#167e83}.cloud{fill:#dcebf2;stroke:#477c9b}.warn{fill:#f6e7cc;stroke:#c18a3a}.bad{fill:#f6dddd;stroke:#b76464}.neutral{fill:#fff;stroke:#91a6b1}.line{stroke:#688091;stroke-width:3;fill:none}.dash{stroke-dasharray:8 7}
+</style><rect width="1100" height="560" rx="20" fill="white"/>
+<text x="38" y="42" class="title">BGP 交换可达性，数据包仍按实际路由逐跳转发</text>
+<rect x="54" y="112" width="220" height="143" class="box neutral"/><text x="78" y="151" class="label">企业边界路由器</text><text x="78" y="186" class="body">分支前缀</text><text x="78" y="220" class="small">本地策略 / BGP</text>
+<rect x="410" y="92" width="253" height="80" class="box cloud"/><text x="438" y="127" class="label">ExpressRoute private peering</text><text x="438" y="153" class="small">Azure VNet 私有连通</text>
+<rect x="410" y="205" width="253" height="80" class="box warn"/><text x="438" y="240" class="label">Route-based S2S VPN</text><text x="438" y="266" class="small">IPsec 隧道 · 可选 BGP</text>
+<rect x="802" y="133" width="239" height="135" class="box safe"/><text x="830" y="172" class="label">Hub VNet gateway</text><text x="830" y="207" class="body">路由传播 → Spoke</text><text x="830" y="239" class="small">gateway transit 成对配置</text>
+<path d="M281 153H400" class="line" marker-end="url(#arrow)"/><path d="M281 215H400" class="line" marker-end="url(#arrow)"/>
+<path d="M673 132H792" class="line" marker-end="url(#teal)"/><path d="M673 245H792" class="line" marker-end="url(#arrow)"/>
+<rect x="802" y="353" width="239" height="91" class="box neutral"/><text x="830" y="390" class="label">Workload Spoke</text><text x="830" y="421" class="small">只收到可传播路由</text>
+<path d="M922 270V343" class="line" marker-end="url(#teal)"/><path d="M802 398H676V314H280V265" class="line dash" marker-end="url(#arrow)"/>
+<text x="353" y="335" class="small">回程是另一条独立路由决策；核对实际前缀与路径</text>
+<rect x="118" y="405" width="548" height="76" class="box bad"/><text x="147" y="438" class="label">ExpressRoute 不是 transit router</text><text x="147" y="465" class="small">跨站点转发要由网络服务商或明确的 Azure 路由架构承接</text>
+<text x="55" y="525" class="tiny">ER 与 VPN 同前缀选择有方向与组件边界；不要把 Azure Route Server preference 和 on-premises local preference 混为一谈。</text>
+</svg>

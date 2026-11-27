@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="560" viewBox="0 0 1100 560">
+<defs>
+<marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#688091"/></marker>
+<marker id="teal" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#167e83"/></marker>
+<marker id="red" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#b76464"/></marker>
+</defs><style>
+text{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;fill:#18334a}
+.title{font-size:25px;font-weight:700}.label{font-size:19px;font-weight:700}.body{font-size:16px}.small{font-size:14px;fill:#52697a}.tiny{font-size:12px;fill:#52697a}
+.box{stroke:#91a6b1;stroke-width:2;rx:15}.safe{fill:#e1f1ef;stroke:#167e83}.cloud{fill:#dcebf2;stroke:#477c9b}.warn{fill:#f6e7cc;stroke:#c18a3a}.bad{fill:#f6dddd;stroke:#b76464}.neutral{fill:#fff;stroke:#91a6b1}.line{stroke:#688091;stroke-width:3;fill:none}.dash{stroke-dasharray:8 7}
+</style><rect width="1100" height="560" rx="20" fill="white"/>
+<text x="38" y="42" class="title">两种 Hub-Spoke 拓扑的 transit 语义不同</text>
+<rect x="42" y="78" width="480" height="382" class="box neutral"/><text x="66" y="115" class="label">经典 VNet peering</text>
+<rect x="190" y="148" width="190" height="86" class="box cloud"/><text x="214" y="182" class="label">Hub VNet</text><text x="214" y="211" class="small">ER / VPN gateway</text>
+<rect x="67" y="315" width="176" height="74" class="box safe"/><text x="91" y="359" class="label">Spoke A</text><rect x="317" y="315" width="176" height="74" class="box safe"/><text x="341" y="359" class="label">Spoke B</text>
+<path d="M220 239V279H155V306" class="line" marker-end="url(#arrow)"/><path d="M340 239V279H405V306" class="line" marker-end="url(#arrow)"/>
+<path d="M243 350H317" class="line dash" marker-end="url(#red)"/><text x="119" y="428" class="small">Peering 本身非传递；spoke 间需另配路由/连接</text>
+<rect x="578" y="78" width="480" height="382" class="box cloud"/><text x="602" y="115" class="label">Standard Virtual WAN</text>
+<rect x="720" y="148" width="196" height="86" class="box warn"/><text x="746" y="182" class="label">Virtual hub</text><text x="746" y="211" class="small">hub router + route tables</text>
+<rect x="603" y="315" width="176" height="74" class="box safe"/><text x="625" y="359" class="label">VNet / branch</text><rect x="856" y="315" width="176" height="74" class="box safe"/><text x="878" y="359" class="label">VNet / branch</text>
+<path d="M752 239V279H690V306" class="line" marker-end="url(#teal)"/><path d="M884 239V279H944V306" class="line" marker-end="url(#teal)"/>
+<path d="M779 350H856" class="line" marker-end="url(#teal)"/><text x="645" y="428" class="small">Standard 提供 hub 管理的传递路由，需设计 route tables</text>
+<text x="74" y="505" class="tiny">选择依据：peer 数量、跨区/transit 需求、路由控制方式、运维与成本，而非“hub”这个名称。</text>
+</svg>
