@@ -1,11 +1,17 @@
 # E9 live-lab catalogue
 
 - **Prepared:** 2026-11-26 (Pacific/Auckland)
-- **Stage:** E9 preparation only. All Azure incident execution remains `NOT_RUN`.
+- **Stage:** L0 read-only preflight complete; all Azure incident execution remains NOT_RUN. No mutation is authorized by this catalogue.
 - **Cumulative Azure ceiling:** USD 1.00 gross; plan below USD 0.70 and retain USD 0.30 for delayed charges and cleanup. No estimate below is deployment approval.
-- **Scope rule:** No existing subscription, tenant, region, SKU, endpoint, workload, permission, or free-tier entitlement is assumed. Use only a dedicated, explicitly authorized lab scope. Stage 2 made no Azure resource changes.
+- **Scope rule:** Use only a dedicated, specifically authorized lab scope. L0 findings and limits are recorded below. Stage 2 and Stage 3 L0 made no Azure resource changes.
 
-Each card contains the E9 required fields. “Not established” is a deliberate stop condition: L0 must confirm the exact account, region, SKU, resource dependencies, current prices, runtime and teardown before any live mutation. Maximum lifetime includes diagnosis, recovery, teardown and a residual-resource check.
+Each card contains the required E9 fields. “Not established” marks a stop condition: any remaining account, quota, SKU, dependency, price, runtime or teardown gap must be resolved before mutation. Maximum lifetime includes diagnosis, recovery, teardown and a residual-resource check.
+
+## L0 observed outcome — 2026-11-26 (read-only)
+
+The existing Azure CLI context was Enabled in AzureCloud and remained the default. The current-principal assignment query returned two subscription-scope records with Owner as the unique role; this does not evaluate group-derived access or grant this project approval. One resource group and three listable resources were visible, all Microsoft.Network/networkWatchers; all three Network Watchers reported Succeeded. No project lab network or App Service was present in the listable inventory. Microsoft.Web and Microsoft.Insights were Registered; no provider was registered during this preflight. Australia East is supported by the subscription; the Linux F1 location query returned Australia East; the Microsoft.Web regional usage API reported F1 usage 0 of 2 instances; and the Linux runtime list included NODE:24-lts. The proposed resource-group name was absent; the candidate App Service site name was available when checked. These checks do not guarantee later availability or capacity.
+
+Two Cost Management Usage queries returned HTTP 429. No actual billing value was obtained; actual spend remains NOT_VERIFIED. Raw subscription, tenant, principal and resource identifiers were redacted and not retained. See [L0_READ_ONLY_PREFLIGHT.md](L0_READ_ONLY_PREFLIGHT.md) for the exact evidence and limitations.
 
 ## LAB-L0-01 — Read-only account and scope preflight
 
@@ -267,22 +273,22 @@ Each card contains the E9 required fields. “Not established” is a deliberate
 | Lab ID | `LAB-IR-11` |
 | Associated lecture | AZ04-02, AZ07-03; integrated diagnosis AZ06-02 |
 | Associated incident IDs | IR-11 |
-| Deployment architecture | Candidate only: one disposable Linux App Service Free (F1) app on the same app instance; deploy a known-good package, a deterministic failing package, then redeploy the known-good package. No deployment slot or production traffic. |
-| Required permissions | App/config/deployment read; exact app write for package deployment under explicit approval. No subscription-level role. |
-| Region and SKU | `F1` only if the exact region/account currently offers it and its quota/limits fit the probe; otherwise stop. Confirm current plan limitations and pricing first. |
-| Terraform root module | No App Service/Web App/plan root exists. |
-| Resource list | One F1 Linux plan/app, three small packages/logs, and public test endpoint; no paid Application Insights or private endpoint. |
-| Estimated cost | **Potentially zero-cost only if F1 eligibility and quotas are confirmed.** Region/offer, shared plan, daily CPU/storage limits and any telemetry can change the result; not yet verified. |
+| Deployment architecture | Candidate only: one disposable Linux App Service F1 plan and app in the dedicated scope below; built-in NODE:24-lts with no third-party dependencies; deploy a known-good ZIP, a deterministic HTTP 500 ZIP, then redeploy the exact same known-good ZIP. No deployment slot or production traffic. |
+| Required permissions | Subscription-scope resourceGroups/write to create the approved dedicated group, plus Microsoft.Web/serverfarms/write and Microsoft.Web/sites read/write/deploy within that group. Current-principal Owner assignment was observed, but its conditions/effective access were not fully evaluated and it is not this project’s approval. Do not create role assignments or retain extra access. |
+| Region and SKU | Australia East (australiaeast), Linux F1 only; runtime NODE:24-lts is in the current Linux runtime list. F1 quota read 0/2; stop if current offer, runtime, capacity or quota is unavailable. |
+| Candidate exact scope (not approved) | Australia East; Linux F1 plan asp-azure-cloudops-ir11-aue; site azcoir11aue261126; dedicated resource group rg-azure-cloudops-ir11-aue. The group was absent and site name was available at L0; repeat both checks immediately before provisioning. |
+| Terraform root module | No App Service/Web App/plan root exists; use only the reviewed, explicit Azure CLI runbook in incidents/live_ir11/ after approval. |
+| Resource list | Proposed dedicated resource group rg-azure-cloudops-ir11-aue; one Linux F1 plan asp-azure-cloudops-ir11-aue; one site azcoir11aue261126; three small ZIP deployments to the same test endpoint. No log workspace, Application Insights, Storage account, private endpoint, slot or production traffic. |
+| Estimated cost | Expected gross USD 0.00 for the 45-minute candidate: Microsoft lists Linux App Service F1 at USD 0, and Azure lists the first 100 GB/month of Internet egress as free. This assumes the observed F1 subscription quota remains available, no more than 60 CPU minutes/day and 1 GB storage, small probes within the free egress allowance, and no paid dependency. Reconfirm quota, offer and current terms at execution; stop if the estimate is unreliable or exceeds USD 0.70 cumulative. |
 | Maximum lifetime | 45 minutes and within documented free-tier quotas; delete immediately after recovery. |
 | Baseline probes | Known-good version returns the expected status/body from the same HTTPS path. |
 | Fault injection | Publish a deterministic test package that returns HTTP 500 to the isolated app; never route real users to it. |
-| Diagnostics | Deployment ID/version, app logs, HTTP status/body, health state and deployment history. |
+| Diagnostics | Deployment ID/version, HTTP probe status/body and deployment history. Do not enable App Service log streaming, diagnostic settings or a log workspace. |
 | Recovery | Redeploy the previous known-good package to the same app and repeat the identical HTTPS probe. |
-| Teardown | Delete the test app and plan only if created by this run; no shared plan or slot changes. |
+| Teardown | Run synchronously in a finally block: delete only the site, plan and dedicated resource group created by this run. Then verify az group exists is false and a subscription-wide resource query finds no objects in that group. Any failed cleanup blocks all further incidents. |
 | Residual-resource checks | Check app, plan, hostnames, storage/deployment artifacts, diagnostic settings and resource-group contents. |
 | Delayed billing checks | Reconcile app-plan time, storage, log and network meters after billing delay; stop at any unexpected billable dependency. |
 | Classification | **Potentially zero-cost live mutation** |
-
 ## LAB-IR-12 — Blob version restore
 
 | Field | Plan |
@@ -308,8 +314,8 @@ Each card contains the E9 required fields. “Not established” is a deliberate
 
 ## Selection and source notes
 
-- Current preferred read-only gate is `LAB-L0-01`; it does not authorize any write.
-- The only potential zero-cost mutation candidates are `LAB-IR-02`, `LAB-IR-03`, and `LAB-IR-11`, and only under the exact prerequisites stated in their cards. “Potentially zero-cost” is not a cost estimate or authorization.
+- LAB-L0-01 was completed read-only; see L0_READ_ONLY_PREFLIGHT.md. No App Service, VNet, NSG, NIC or route table appeared in the listable inventory, so IR-02 and IR-03 have no observed existing lab target. LAB-IR-11 is the only current new-resource candidate with an identified F1 region, F1 quota 0/2, Node 24 LTS runtime and published $0 compute tier; capacity and name must be revalidated, and the batch still needs exact owner approval.
+- The exact proposed candidate is LAB-IR-11 under the scope and constraints above. Potentially zero-cost does not mean approved or executed.
 - The free Azure Resource Graph service is documented at [Microsoft Learn](https://learn.microsoft.com/en-us/azure/governance/resource-graph/overview). Candidate billing dependencies must be rechecked against the official [Private Link](https://azure.microsoft.com/en-us/pricing/details/private-link/), [DNS](https://azure.microsoft.com/en-us/pricing/details/dns/), [Virtual Network](https://azure.microsoft.com/en-us/pricing/details/virtual-network/), [Blob Storage](https://azure.microsoft.com/en-us/pricing/details/storage/blobs/), [Key Vault](https://azure.microsoft.com/en-us/pricing/details/key-vault/), [Azure Monitor](https://azure.microsoft.com/en-us/pricing/details/monitor/), [AKS](https://azure.microsoft.com/en-us/pricing/details/kubernetes-service/), [ACR](https://azure.microsoft.com/en-us/pricing/details/container-registry/), and [App Service Linux](https://azure.microsoft.com/en-us/pricing/details/app-service/linux/) pricing pages for the chosen region and offer.
 - Expensive or structurally incompatible services remain outside the USD 1 shortlist: Azure Firewall, Virtual WAN, ExpressRoute, VPN Gateway, DNS Private Resolver endpoints, Application Gateway, Bastion, Front Door Premium, persistent AKS, paid ACR, persistent SQL, premium App Service, paid Defender plans, retained protected backup items, cross-region DR and full landing zones.
 - Before any live mutation, add a lab-specific cost-ledger row with exact resource allowlist, current official pricing evidence, region/SKU, maximum runtime, dependencies, teardown/retention costs, gross cumulative estimate, USD 0.30 contingency and a separately approved batch scope. Stop if a reliable gross estimate cannot remain at or below USD 0.70.

@@ -7,14 +7,14 @@
 
 ## Current gate
 
-- Overall stage: Stage 2 — Enterprise Engineering & Live-Lab Readiness
-- Current phase: E9/E10 complete; final Stage 2 acceptance is being closed by the new hosted CI, security scan, and refreshed publication packages. Stage 1 B0–B9 and Stage 2 E0–E8 are complete for their documented offline gates; `TEXTBOOK_V1_RELEASE_READY` remains a historical Stage 1 acceptance.
+- Overall stage: Stage 3 — L0 read-only preflight complete; one specifically scoped live batch is prepared for owner authorization.
+- Current phase: Stage 1 B0–B9 and Stage 2 E0–E10 are accepted. Exact-revision hosted CI, security scan, package verification and the Stage 3 L0 preflight passed. Stage 3 incident mutations remain NOT_RUN pending approval of LAB-IR-11; the Node package candidate passed its local same-probe 200/500/200 checks.
 - B0 status: COMPLETE. Read-only AWS source, toolchain, two reference PDFs and package consistency reviewed; Azure publisher adaptation built an Azure chapter and passed the recorded checks.
 - Completed lectures: 23/23 — AZ00-01, AZ01-01, AZ02-01 through AZ02-04, AZ03-01 through AZ03-03, AZ04-01 through AZ04-04, AZ05-01 through AZ05-03, AZ06-01 through AZ06-02, AZ07-01 through AZ07-03, AZ08-01, and FIN-01.
 - Implementation is being tracked on main from the approved baseline; see repository history for the current checkpoint.
-- Cloud resource operations: none performed for this project.
-- Azure authorization and subscription scope: NOT_CHECKED; Stage 3 read-only preflight is later.
-- Actual Azure billing: NOT_VERIFIED; billing source not queried. Do not report USD 0 actual spend.
+- Azure resource mutations: none performed by this project. Stage 3 L0 used read-only inventory, RBAC, provider, location, SKU, name-availability and cost-data checks.
+- Azure context: existing Azure CLI session is Enabled in AzureCloud and remained the default context. Two assignment records for the current principal showed Owner at subscription scope; group-derived effective access was not evaluated. The proposed project resource group does not exist. Microsoft.Web regional usage showed F1 current 0, limit 2 in Australia East; recheck capacity before a write.
+- Actual Azure billing: NOT_VERIFIED. Two read-only Cost Management Usage queries returned HTTP 429; no billing amount was retained or inferred.
 - Current local runtime: Docker Engine 29.9.3, kind 0.33.0, kubectl 1.36.1, and Terraform 1.15.5 are available. The pre-existing `argo-canary-local` cluster was not changed. Podman is absent. See `LAB_ENVIRONMENT.md` for the checked state and limits.
 
 ## Stage sequence
@@ -92,10 +92,17 @@
 - E8 completed all eight mandatory local incident experiments with bounded local mechanisms and evidence; no Azure API, resource or billing request was used. Docker Desktop's Linux Engine was available during E8. IR-07 used a new, run-owned kind cluster and local registry fixture; the unrelated `argo-canary-local` cluster was not changed. See `E8_LOCAL_INCIDENTS.md` and `incidents/evidence/`.
 - E9 added `LIVE_LAB_CATALOGUE.md` with 13 cards (L0 plus 12 incidents), all 18 required fields, Terraform readiness gaps, cost classes, teardown and delayed billing checks. Numeric live estimates remain unestablished until account/region/SKU preflight; no mutation is authorized by the catalogue.
 - E10 passed a second complete clean local execution cycle: all 8/8 mandatory scenarios recorded; independent replay exercised a network, identity/permission, and data-recovery incident. The verifier confirms distinct execution contexts and cleanup. This is replay evidence, not independent human review. See `E10_INDEPENDENT_REPLAY.md`.
-- Local Stage 2 gates passed: Python 3.13.9 ran 513 tests in 24 directories; Terraform 1.15.5 passed recursive fmt, backend-free init/validate, and 13 plan/mock test runs in 3 roots; Pester 5.7.1 passed both PowerShell contract tests. The repository verifier passed all 23 curriculum/source/PDF mappings, 150 local Markdown references, and 13 E9 cards.
-- Both final publication packages have been rebuilt and byte-verified: PDF ZIP has 23 PDFs (SHA-256 `575F22B9958B68752B54539534E020902135B04BFF22C0BAF0924C8AA0C65608`); source ZIP has 414 files. The PDF payloads are unchanged; this Stage 2 source update did not require a new PDF render or visual inspection.
-- The cross-stage GitHub Actions workflow uses pinned actions and Python/Pester dependencies, least-privilege read-only tokens, and repository-history secret scanning with comments/artifact uploads disabled. Hosted CI/secret scan and final Stage 2 acceptance remain open until the exact published revision runs successfully.
+- At the E10 acceptance checkpoint, Python 3.13.9 ran 513 tests in 24 directories; Terraform 1.15.5 passed recursive fmt, backend-free init/validate, and 13 plan/mock test runs in 3 roots; Pester 5.7.1 passed both PowerShell contract tests. The repository verifier passed all 23 curriculum/source/PDF mappings, 150 local Markdown references, and 13 E9 cards.
+- At the E10 checkpoint, the publication packages contained 23 PDFs and 414 source files; the PDF payloads were unchanged by that Stage 2 source refresh. The final Stage 3 handoff refresh below updates the source package count.
+- Exact-revision GitHub Actions run 45960683857 passed all five jobs at code SHA 82d7865cc0b4df9ea4ea4eae595a2eaca726441d: Windows and Ubuntu repository/Python checks, Terraform formatting and backend-free mock checks, PowerShell/Pester, package/reference verification, and full-history Gitleaks scan. Final acceptance report and source package record the refreshed evidence.
+
+## Final Stage 3 handoff refresh
+
+- The final Windows Python run passed 515 tests across 24 directories, including the new IR-11 ZIP layout and same-probe 200/500/200 tests. Repository verification passed 23 curriculum/source/PDF mappings, 154 local Markdown references and 13 complete E9 cards. Package build and byte verification passed for 23 PDFs and 424 source/evidence files; the PDF ZIP hash is unchanged. `git diff --check` passed.
+- The report, L0 evidence and proposed IR-11 implementation are included in the source package. This handoff refresh made no Azure resource changes; the two billing queries remained throttled and actual Azure billing is NOT_VERIFIED. Exact-revision hosted CI for the publication commit remains the final repository gate.
 
 ## Next gate
 
-Review the final diff, publish it to main, and verify the exact revision's real GitHub Actions results and secret scan. If Stage 2 then passes, perform only the master-prompt's read-only L0 Azure preflight using the existing CLI session. Stage 3 mutations remain NOT_RUN until a specific live batch passes authorization, scope, pricing, contingency and cleanup gates.
+Stage 3 L0 is complete; see L0_READ_ONLY_PREFLIGHT.md. All twelve Azure incident scenarios remain NOT_RUN. The only concrete candidate is LAB-IR-11, a disposable Linux App Service F1 rollback drill in Australia East. Its proposed resource allowlist, estimate, runtime, probes and teardown are in LIVE_LAB_CATALOGUE.md and FINAL_ACCEPTANCE_REPORT.md.
+
+No Azure write is authorized yet. Before provisioning, obtain owner approval for the exact dedicated resource group, F1 plan, app name, 45-minute maximum lifetime and USD 0.00 expected gross estimate. Recheck the account offer, F1 entitlement/capacity, pricing and app-name availability at execution time; stop if any check fails or a billable dependency is required. Keep the USD 0.30 contingency and the USD 1.00 cumulative ceiling. Never infer actual invoice spend from the estimate.

@@ -1,0 +1,7 @@
+{
+  "name": "azure-cloudops-ir11-fault",
+  "version": "2.0.0",
+  "private": true,
+  "engines": { "node": "24.x" },
+  "scripts": { "start": "node server.js" }
+}

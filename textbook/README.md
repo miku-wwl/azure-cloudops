@@ -6,6 +6,9 @@ This directory is the single authoritative home for the 23 lecture sources, edit
 
 - CURRICULUM.md — approved 23-lecture sequence and core questions.
 - PROGRESS.md — current project gate and restart point.
+- FINAL_ACCEPTANCE_REPORT.md — Stage 1/2 acceptance evidence, publication metrics, exact CI result, Stage 3 L0 findings and the proposed live-batch approval boundary.
+- L0_READ_ONLY_PREFLIGHT.md — redacted Stage 3 Azure read-only results and the concrete LAB-IR-11 candidate.
+- incidents/live_ir11/ — no-dependency good/fault ZIP sources, local package builder and probe runbook for the proposed IR-11 batch.
 - LIVE_LAB_INDEX.md — twelve incident contracts and their evidence status.
 - COST_LEDGER.md — cumulative Azure estimate, actual-billing status and budget controls.
 - VERIFICATION_MATRIX.md — independent evidence-state definitions.
