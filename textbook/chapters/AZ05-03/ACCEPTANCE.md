@@ -14,3 +14,10 @@
 - **Limits:** The local model is not KQL, ARM, RBAC, Azure Resource Graph, a snapshot, an inventory collector or a completeness proof. The synthetic permission flags and deletion scenario do not establish live Azure visibility, indexing freshness, continuation-token behavior, tenant coverage or billing.
 
 The lecture passes current primary-source mapping, original editable mechanism figures, deterministic offline experiment, full Windows and WSL suites, reproducible PDF build and final visual review.
+
+## V1 closure addendum (2026-11-28)
+
+- Observed one complete REST-fallback page with three Network Watcher resources, scoped to the existing approved Azure for Students subscription. The ARM inventory agreed.
+- [Final PDF](../../dist/pdf/AZ05-03_azure-cli-powershell-resource-graph.pdf) has 7 pages and 1,617,398 bytes. SHA-256 is `E41C61FD331595B082B4AC0BF14B2B068DF8B4EF214E8CDAAAEA23038C0A1A0F`.
+- Visually inspected all 7 pages at 88 DPI and page 4 at 140 DPI. The final page proof was compared with the prior reviewed render and every changed page was rechecked. Publisher QA, PDF outline and extracted text checks passed.
+- Scope and observed evidence are linked from the [V1 source map](../../SOURCE_MAP.md#v1-closure-source-map--2026-11-28).

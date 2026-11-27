@@ -23,7 +23,10 @@ from typing import Callable, Sequence
 
 
 RESOURCE_GROUP = "rg-azure-cloudops-ir11-aue"
+PLAN_NAME = "asp-azure-cloudops-ir11-aue"
+SITE_NAME = "azcoir11aue261126"
 PROJECT_TAG = "azure-cloudops-ir11"
+CONFIRMED_MARKER = "CLEANED_UP_NO_PENDING_GROUP_CREATE"
 RUN_ID_RE = re.compile(r"^[0-9a-f]{32}$")
 
 
@@ -84,9 +87,16 @@ def _resolve_command(command: Sequence[str], *, is_windows: bool | None = None) 
         wrapper = shutil.which("az")
         if wrapper is None:
             raise WatchdogError("Azure CLI command is unavailable")
-        # On Windows the CLI is commonly exposed as az.cmd. Resolve its path
-        # so CreateProcess can launch the wrapper when the watchdog uses pipes.
-        resolved[0] = wrapper
+        launch_path = Path(wrapper)
+        if launch_path.suffix.casefold() in {".cmd", ".bat"}:
+            # Use the installed CLI's interpreter so the timeout owns the
+            # Azure CLI process itself, and no batch shell reparses arguments.
+            cli_python = launch_path.parent.parent / "python.exe"
+            if not cli_python.is_file():
+                raise WatchdogError("Azure CLI's bundled interpreter is unavailable")
+            resolved = [str(cli_python), "-IBm", "azure.cli", *resolved[1:]]
+        else:
+            resolved[0] = wrapper
     return resolved
 
 
@@ -114,7 +124,6 @@ class AzureCleanup:
         self.config = config
         self.runner = runner
         self.sleep = sleep
-        self.monotonic = monotonic
         self.monotonic = monotonic
 
     def _az(
@@ -185,9 +194,9 @@ class AzureCleanup:
 
     def _resource_ids(self, *, deadline: float | None = None) -> list[str]:
         raw = self._az(
-            "resource", "list", "--resource-group", self.config.resource_group,
+            "resource", "list",
             "--subscription", self.config.subscription_id,
-            "--query", "[].id", "--output", "json",
+            "--query", f"[?resourceGroup=='{self.config.resource_group}'].id", "--output", "json",
             deadline=deadline,
         )
         try:
@@ -207,6 +216,13 @@ class AzureCleanup:
             return False
         if not self._is_owned(deadline=deadline):
             raise WatchdogError("resource-group ownership marker does not match; refusing deletion")
+        owned_prefix = f"/subscriptions/{self.config.subscription_id}/resourceGroups/{RESOURCE_GROUP}/providers/Microsoft.Web"
+        allowed = {
+            f"{owned_prefix}/serverfarms/{PLAN_NAME}".casefold(),
+            f"{owned_prefix}/sites/{SITE_NAME}".casefold(),
+        }
+        if any(resource.casefold() not in allowed for resource in self._resource_ids(deadline=deadline)):
+            raise WatchdogError("resource group contains a resource outside the approved deletion scope")
         try:
             self._az(
                 "group", "delete", "--name", self.config.resource_group,
@@ -275,10 +291,21 @@ def watch_for_primary_or_cleanup(
     while monotonic() < final_check_start:
         now = monotonic()
         if done_file.is_file() or now >= cleanup_trigger:
-            # Keep watching through the full runtime even after primary cleanup
-            # is verified. A create request accepted by ARM just before a
-            # client timeout can still complete later.
-            cleanup.cleanup_if_present(deadline=hard_deadline)
+            try:
+                confirmed = done_file.is_file() and done_file.read_text(encoding="ascii").strip() == CONFIRMED_MARKER
+            except (OSError, UnicodeError):
+                confirmed = False
+            try:
+                if confirmed:
+                    # The synchronous group create completed before the parent
+                    # proved deletion. Independently verify before exiting.
+                    return cleanup.cleanup(deadline=hard_deadline)
+                # An ambiguous create can still finish after primary cleanup.
+                cleanup.cleanup_if_present(deadline=hard_deadline)
+            except WatchdogError:
+                # A transient read or delete error must not end the watchdog
+                # while there is time for another ownership-checked attempt.
+                pass
         remaining = final_check_start - monotonic()
         sleep(min(poll_seconds, max(0.0, remaining)))
     # Reserve the final window for a bounded cleanup and residual inventory

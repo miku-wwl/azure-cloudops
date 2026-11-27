@@ -14,7 +14,7 @@ The canonical contracts are in [`CONTRACTS.md`](CONTRACTS.md). The twelve IDs ar
 | IR-08 | Terraform State lock and drift | AZ07-02, AZ07-01 | Mandatory local | `LOCAL_VERIFIED`; competing state-changing apply, real lock refusal and drift repair | `NOT_RUN` |
 | IR-09 | Azure Policy deployment denial | AZ03-03, AZ07-01 | Design only | `CONTRACTED_NOT_RUN` | `NOT_RUN` |
 | IR-10 | Monitoring and alert failure | AZ05-01, AZ05-02 | Mandatory local | `LOCAL_VERIFIED`; real telemetry, broken-rule detection and recovery | `NOT_RUN` |
-| IR-11 | Deployment regression and rollback | AZ04-02, AZ07-03 | Mandatory local | `LOCAL_VERIFIED`; actual HTTP 500 and atomic rollback | `NOT_RUN` |
+| IR-11 | Deployment regression and rollback | AZ04-02, AZ07-03 | Mandatory local | `LOCAL_VERIFIED`; actual HTTP 500 and atomic rollback | `BLOCKED` at plan OS verification; `CLEANED_UP` |
 | IR-12 | Synthetic data loss and restoration | AZ06-01, AZ04-04 | Mandatory local | `LOCAL_VERIFIED`; pre-loss SHA-256 manifest and separate-path restore | `NOT_RUN` |
 
-E8 evidence closes the eight mandatory local scenarios only. It does not validate Azure DNS, NSG, AKS/ACR, managed identity, Azure Monitor, Terraform Blob locking, or Azure Backup behavior. IR-07 uses a local HTTP 404 fixture and is not evidence of ACR authentication or registry networking. Every Azure scenario remains `NOT_RUN` until Stage 3's authorized read-only preflight and any separately approved mutation gate.
+E8 evidence closes the eight mandatory local scenarios. IR-07 exercised kubelet events against a local HTTP 404 fixture. The authorized LAB-IR-11 Azure attempt provisioned a dedicated group and F1 plan, then stopped at plan verification and removed both. App release, fault and recovery in Azure remain `NOT_RUN`. Other live runs stayed deferred. [Azure evidence](evidence/IR-11_azure-2026-11-28.md) and [final lab index](../LIVE_LAB_INDEX.md).

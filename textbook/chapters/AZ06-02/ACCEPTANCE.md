@@ -42,3 +42,10 @@ python textbook/tools/build.py AZ06-02
 ```
 
 The full Windows and WSL suite commands and observed results are summarized in `textbook/PROGRESS.md` and `textbook/VERIFICATION_MATRIX.md`.
+
+## V1 closure addendum (2026-11-28)
+
+- Added the actual plan verification failure, evidence boundary and 125.9-second cleanup. The banking case retains its synthetic scope. The Blob data role reference was corrected.
+- [Final PDF](../../dist/pdf/AZ06-02_incident-response-rca-integrated-banking-case.pdf) has 7 pages and 1,920,386 bytes. SHA-256 is `74293071EE0D180C6A3AB71C3C0185585264A9CB8695856423A7F3464A28F451`.
+- Visually inspected all 7 pages at 88 DPI and page 6 at 140 DPI. The final page proof was compared with the prior reviewed render and every changed page was rechecked. Publisher QA, PDF outline and extracted text checks passed.
+- Scope and observed evidence are linked from the [V1 source map](../../SOURCE_MAP.md#v1-closure-source-map--2026-11-28).

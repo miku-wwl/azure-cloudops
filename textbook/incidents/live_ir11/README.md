@@ -1,6 +1,6 @@
-# LAB-IR-11 — App Service release rollback candidate
+# LAB-IR-11 — App Service release rollback
 
-This local, reviewable package prepares a proposed disposable Linux App Service F1 drill. The apps use only Node's built-in HTTP module; there are no third-party dependencies, telemetry SDKs, secrets, or external calls.
+This runbook prepares a disposable Linux App Service F1 drill. The apps use only Node's built-in HTTP module. The 2026-11-28 attempt provisioned the approved group and F1 plan and stopped before app creation at the plan OS verification gate. Both resources were removed and independently verified absent. [Sanitized run record](../evidence/IR-11_azure-2026-11-28.md).
 
 ## Local preparation and verification
 
@@ -12,15 +12,15 @@ From the repository root:
 
 The builder writes two ZIP files under the ignored `work/azure-cloudops-ir11-packages` directory. Each ZIP has `package.json` and `server.js` at its root. The local package test starts the packaged apps and sends the same `GET /health` probe through 200 → 500 → 200. Watchdog tests use mocked Azure CLI responses only; they never contact Azure.
 
-## Proposed Azure batch — exact owner approval required
+## Azure scope
 
-The only proposed batch creates a dedicated resource group `rg-azure-cloudops-ir11-aue`, one Linux F1 plan `asp-azure-cloudops-ir11-aue`, and one Node 24 LTS app `azcoir11aue261126` in Australia East (`australiaeast`). It deploys the known-good package, deterministic HTTP 500 package, then the identical known-good package to the same endpoint. The same cache-disabled HTTPS probe must observe 200 → 500 → 200 with matching release IDs.
+The 2026-11-28 approval covered one batch with a dedicated resource group `rg-azure-cloudops-ir11-aue`, one Linux F1 plan `asp-azure-cloudops-ir11-aue`, and one Node 24 LTS app `azcoir11aue261126` in Australia East (`australiaeast`). The application contract is three ZIP deployments to the same endpoint. The cache-disabled HTTPS probe requires 200 → 500 → 200, matching release IDs and the correct `healthy` value.
 
-No slots, production routes, Application Insights, Log Analytics, Storage, private networking, paid dependencies, or other Azure resources are in scope. The proposed maximum lifetime is 45 minutes from before the first write through teardown and residual checks. The currently approved gross estimate is USD 0.00; any nonzero estimate requires revised owner approval. Keep the USD 0.30 contingency and never exceed the USD 1.00 cumulative project ceiling. Actual account billing remains `NOT_VERIFIED` until a billing query succeeds.
+Scope includes only the group, plan and disposable app. The maximum lifetime is 45 minutes through teardown and residual checks. The budget is a conditional USD 0.00 gross estimate for this batch, a USD 0.30 contingency and a USD 1.00 cumulative ceiling. Both scoped billing queries returned HTTP 200 with no amount. Actual billing remains `BILLING_PENDING`.
 
 ## Fail-closed runbook — only after exact owner approval
 
-The executable runbook is [run_ir11.ps1](run_ir11.ps1). It requires `-ApprovedBatch LAB-IR-11`, the exact approved tenant and subscription IDs, the approved gross estimate, and explicit current-price/account-offer and service-limit confirmation switches. It does not sign in, change the default subscription, install extensions, or register providers. It rechecks the tenant/subscription, dedicated group absence, the documented regional F1 plan count, Linux runtime, regional SKU availability, and app-name availability before creating any resource. The name check sends a BOM-free temporary JSON file using Azure CLI's `@file` form for Windows PowerShell compatibility, then removes it in `finally`. A changed tenant, subscription, name, plan limit, region, runtime, price, or estimate stops the run. The regional Microsoft.Web usage endpoint reports core usage and is not treated as an F1 plan-count check.
+The [runbook](run_ir11.ps1) runs in PowerShell 7 on Windows. It requires `-ApprovedBatch LAB-IR-11`, the exact approved tenant and subscription IDs, the approved gross estimate, and current price, offer and service-limit attestations. It uses the existing CLI context and a pre-registered Microsoft.Web provider. Before creation it checks offer, group absence, F1 plan count, supported region/runtime and name availability. The name check uses a BOM-free temporary JSON body via Azure CLI's `@file` form and removes it in `finally`. It counts existing F1/Free plans directly because the Microsoft.Web regional usage endpoint reports core usage.
 
 After approval, set these local variables to the exact tenant/subscription covered by the approval. Keep their values out of the repository and logs:
 
@@ -34,6 +34,6 @@ Reopen the official F1 and bandwidth pricing pages linked in `L0_READ_ONLY_PREFL
     python -m unittest -v textbook.incidents.tests.test_ir11_packages textbook.incidents.tests.test_ir11_watchdog
     .\textbook\incidents\live_ir11\run_ir11.ps1 -ApprovedBatch LAB-IR-11 -SubscriptionId $subscription -TenantId $tenant -EstimatedGrossUsd 0.00 -PriceAndOfferRechecked -FreePlanLimitRechecked
 
-The script rejects estimates above USD 0.70 and rejects any nonzero estimate because this approval is specifically for USD 0.00. It tags the dedicated resource group with a unique run ID. Its `try/finally` path cleans up and checks for residual resources. Before the first write it also starts a separate hidden Python watchdog. The main operation window is 20 minutes; the watchdog begins cleanup after 25 minutes and continues checking for delayed resource-group creation through a final bounded cleanup window before the 45-minute hard limit. It deletes only a group bearing both the project tag and that run's exact ID, and verifies the group and residual inventory are empty. It remains active after the primary cleanup marker to catch an ARM create request that completes after the CLI call timed out. The primary process writes the watchdog completion marker only after it independently verifies cleanup.
+The script enforces a USD 0.00 estimate, a unique run tag, a 20-minute work window and bounded CLI and HTTPS calls. The final plan check reads `properties.reserved` from the [App Service Plans ARM response](https://learn.microsoft.com/en-us/rest/api/appservice/app-service-plans/get?view=rest-appservice-2025-03-01) and requires boolean `true`. It records and asserts the original ZIP's hash before each use. `try/finally` deletes the known resources and checks the subscription-wide inventory for residuals in the group. The watchdog verifies the primary result independently and uses run ownership and exact resource names before any deletion. If the group create result is ambiguous, the watchdog keeps monitoring for late completion through the bounded 45-minute window. It starts cleanup after 25 minutes if the primary process has failed.
 
-If the primary process exits unexpectedly, the watchdog remains independent. Its config and sanitized logs stay under ignored `work/`. If the current tenant/subscription, ownership tags, deletion, or residual inventory cannot be verified, the run is not complete and no further incident should start. The runbook has not been run against Azure; all live incident statuses remain `NOT_RUN` pending owner approval.
+The ARM projection correction and local probe/watchdog checks were verified offline after the run. Functional app deployment, HTTP failure and rollback in Azure remain `NOT_RUN`. The earlier approval covers the recorded run only.

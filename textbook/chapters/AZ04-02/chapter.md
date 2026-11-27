@@ -16,7 +16,7 @@ header: AZ04-02 · Application / release
 ::: cover-meta
 - **讲次**：11 / 23
 - **核心机制**：slot swap、revision scope、探针与流量切换
-- **证据边界**：Microsoft Learn + 本地合成发布模型
+- **证据边界**：离线发布模型、Azure F1 计划实测
 - **适用场景**：发布预热、灰度流量、身份与配置漂移、回滚
 :::
 
@@ -105,6 +105,12 @@ az webapp deployment slot list --resource-group <approved-rg> --name <approved-a
 az containerapp revision list --resource-group <approved-rg> --name <approved-container-app>
 ~~~
 
+### 实测：发布在计划核验阶段停止
+
+LAB-IR-11 获批在 Australia East 创建专用资源组和 Linux F1 计划，再计划向单一 Web App 依次发布原版、故障版和原版 ZIP。Azure Activity Log 记录了资源组和计划创建成功。计划详情中的 F1/Free 已通过检查，CLI 输出却省略了脚本读取的顶层 `reserved` 字段。脚本在创建 Web App 前停止，随后确认计划与资源组均已删除。[11]
+
+创建成功只解决了控制面的一部分。开始发布前还要从 ARM 计划详情核对 `properties.reserved` 和目标范围，再用同一 HTTPS 探针核对实际版本、HTTP 状态和响应体。本次云端流程停在第一道核验。`200 → 500 → 200` 来自两份 ZIP 在本机的运行，Azure 上的发布与回退仍待验证。
+
 ## 离线实验：模型版本、全局配置与路由要分开回退
 
 运行本地 `app-release-model`。固定 JSON fixture 输入模拟 slot swap 的预热状态、Container Apps change scope、single revision readiness gate 和 multiple revision traffic weights。它不运行 Azure CLI、容器、探针 endpoint、identity token 或网络请求；结果是用来检查假设的合成模型，不是 Azure 环境观测。[1][4][5][6][9][10]
@@ -159,4 +165,5 @@ release-b 因新 secret 的格式而失败；将 ingress weight 回到 release-a
 [3] [App Service managed identity](https://learn.microsoft.com/en-us/azure/app-service/overview-managed-identity) · [4] [Container Apps revisions](https://learn.microsoft.com/en-us/azure/container-apps/revisions)<br>
 [5] [Container Apps health probes](https://learn.microsoft.com/en-us/azure/container-apps/health-probes) · [6] [Traffic splitting](https://learn.microsoft.com/en-us/azure/container-apps/traffic-splitting)<br>
 [7] [Container Apps ingress](https://learn.microsoft.com/en-us/azure/container-apps/ingress-how-to) · [8] [Container Apps scaling](https://learn.microsoft.com/en-us/azure/container-apps/scale-app)<br>
-[9] [Container Apps managed identity](https://learn.microsoft.com/en-us/azure/container-apps/managed-identity) · [10] [Container Apps deployment troubleshooting](https://learn.microsoft.com/en-us/azure/container-apps/troubleshoot-deployment-errors)
+[9] [Container Apps managed identity](https://learn.microsoft.com/en-us/azure/container-apps/managed-identity) · [10] [Container Apps deployment troubleshooting](https://learn.microsoft.com/en-us/azure/container-apps/troubleshoot-deployment-errors)<br>
+[11] [App Service Plans ARM schema](https://learn.microsoft.com/en-us/rest/api/appservice/app-service-plans/get?view=rest-appservice-2025-03-01)

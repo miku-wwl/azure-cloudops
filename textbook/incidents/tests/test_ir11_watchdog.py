@@ -15,6 +15,7 @@ sys.path.insert(0, str(REPO_ROOT))
 from textbook.incidents.live_ir11.watchdog import (
     RESOURCE_GROUP,
     PROJECT_TAG,
+    CONFIRMED_MARKER,
     AzureCleanup,
     WatchdogConfig,
     WatchdogError,
@@ -84,10 +85,21 @@ class IR11WatchdogTests(unittest.TestCase):
             with self.assertRaises(WatchdogError):
                 WatchdogConfig.from_json(path)
 
-    def test_windows_runner_resolves_the_azure_cmd_wrapper(self) -> None:
-        with patch("textbook.incidents.live_ir11.watchdog.shutil.which", return_value=r"C:\Azure CLI\az.cmd"):
+    def test_windows_runner_uses_the_bundled_interpreter_without_a_shell(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            wrapper = Path(temp) / "wbin" / "az.cmd"
+            bundled = Path(temp) / "python.exe"
+            bundled.touch()
+            with patch("textbook.incidents.live_ir11.watchdog.shutil.which", return_value=str(wrapper)):
+                self.assertEqual(
+                    [str(bundled), "-IBm", "azure.cli", "account", "show"],
+                    _resolve_command(["az", "account", "show"], is_windows=True),
+                )
+
+    def test_windows_runner_uses_the_native_azure_executable_directly(self) -> None:
+        with patch("textbook.incidents.live_ir11.watchdog.shutil.which", return_value=r"C:\Azure CLI\az.exe"):
             self.assertEqual(
-                [r"C:\Azure CLI\az.cmd", "account", "show"],
+                [r"C:\Azure CLI\az.exe", "account", "show"],
                 _resolve_command(["az", "account", "show"], is_windows=True),
             )
 
@@ -101,6 +113,11 @@ class IR11WatchdogTests(unittest.TestCase):
         result = AzureCleanup(config(), runner=fake).cleanup()
         self.assertEqual("CLEANED_UP", result)
         self.assertFalse(any(command[1:3] == ["group", "delete"] for command in fake.commands))
+        resource_reads = [command for command in fake.commands if command[1:3] == ["resource", "list"]]
+        self.assertTrue(resource_reads)
+        for command in resource_reads:
+            self.assertNotIn("--resource-group", command)
+            self.assertIn(f"[?resourceGroup=='{RESOURCE_GROUP}'].id", command)
 
         fake_with_residue = FakeAzure(exists=False, resources=["redacted-resource-id"])
         with self.assertRaisesRegex(WatchdogError, "residual resources"):
@@ -109,6 +126,12 @@ class IR11WatchdogTests(unittest.TestCase):
     def test_unowned_group_is_never_deleted(self) -> None:
         fake = FakeAzure(exists=True, tags={"project": "other-project", "run-id": RUN_ID})
         with self.assertRaisesRegex(WatchdogError, "ownership marker"):
+            AzureCleanup(config(), runner=fake).cleanup()
+        self.assertFalse(any(command[1:3] == ["group", "delete"] for command in fake.commands))
+
+    def test_owned_group_with_unapproved_children_is_never_deleted(self) -> None:
+        fake = FakeAzure(exists=True, tags={"project": PROJECT_TAG, "run-id": RUN_ID}, resources=["unexpected-resource"])
+        with self.assertRaisesRegex(WatchdogError, "outside the approved deletion scope"):
             AzureCleanup(config(), runner=fake).cleanup()
         self.assertFalse(any(command[1:3] == ["group", "delete"] for command in fake.commands))
 
@@ -224,6 +247,18 @@ class IR11WatchdogTests(unittest.TestCase):
         self.assertEqual("CLEANED_UP", result)
         self.assertTrue(any(command[1:3] == ["group", "delete"] for command in fake.commands))
         self.assertFalse(fake.exists)
+
+    def test_confirmed_group_create_marker_still_requires_independent_verification(self) -> None:
+        fake = FakeAzure(exists=False)
+        with tempfile.TemporaryDirectory() as temp:
+            marker = Path(temp) / "verified.done"
+            marker.write_text(CONFIRMED_MARKER + "\n", encoding="ascii")
+            result = watch_for_primary_or_cleanup(
+                config(), marker, cleanup=AzureCleanup(config(), runner=fake),
+                sleep=lambda _: self.fail("watchdog waited despite confirmed absence"),
+            )
+        self.assertEqual("CLEANED_UP", result)
+        self.assertTrue(any(command[1:3] == ["resource", "list"] for command in fake.commands))
 
     def test_azure_calls_are_bounded_by_the_watchdog_hard_deadline(self) -> None:
         timeouts: list[float] = []

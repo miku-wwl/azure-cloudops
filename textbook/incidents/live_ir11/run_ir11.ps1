@@ -1,3 +1,4 @@
+#Requires -Version 7.0
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)]
@@ -25,20 +26,63 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-function Invoke-AzChecked {
-    param([Parameter(Mandatory = $true)][string[]]$Arguments)
+$azPath = (Get-Command az -CommandType Application -ErrorAction Stop | Select-Object -First 1).Source
+$azPrefix = @()
+if ([IO.Path]::GetExtension($azPath) -in @('.cmd', '.bat')) {
+    $azPath = Join-Path (Split-Path (Split-Path $azPath -Parent) -Parent) 'python.exe'
+    if (-not (Test-Path -LiteralPath $azPath -PathType Leaf)) { throw 'Azure CLI bundled interpreter is unavailable.' }
+    $azPrefix = @('-IBm', 'azure.cli')
+}
+$script:azDeadline = [DateTimeOffset]::UtcNow.AddMinutes(6)
 
-    $output = & az @Arguments --only-show-errors 2>$null
-    if ($LASTEXITCODE -ne 0) {
-        throw "Azure CLI operation failed with exit code $LASTEXITCODE; raw output suppressed."
+function Invoke-BoundedProcess {
+    param([string]$File, [string[]]$Arguments, [int]$Seconds, [string]$Operation)
+
+    if ($Seconds -lt 1) { throw "Deadline reached before $Operation." }
+    $start = [Diagnostics.ProcessStartInfo]::new($File)
+    $start.UseShellExecute = $false
+    $start.CreateNoWindow = $true
+    $start.RedirectStandardOutput = $true
+    $start.RedirectStandardError = $true
+    $start.StandardOutputEncoding = [Text.Encoding]::UTF8
+    $start.StandardErrorEncoding = [Text.Encoding]::UTF8
+    foreach ($argument in $Arguments) { $start.ArgumentList.Add($argument) }
+    $process = [Diagnostics.Process]::Start($start)
+    try {
+        $stdout = $process.StandardOutput.ReadToEndAsync()
+        $stderr = $process.StandardError.ReadToEndAsync()
+        if (-not $process.WaitForExit(1000 * $Seconds)) {
+            if (-not $process.HasExited) { $process.Kill($true) }
+            throw "$Operation exceeded its bounded timeout. Azure may still be processing the request."
+        }
+        return @{
+            ExitCode = $process.ExitCode
+            Output = $stdout.GetAwaiter().GetResult()
+            Error = $stderr.GetAwaiter().GetResult()
+        }
+    } finally {
+        $process.Dispose()
     }
-    return $output
+}
+
+function Invoke-AzChecked {
+    param([Parameter(Mandatory = $true)][string[]]$Arguments, [int]$TimeoutSeconds = 55)
+
+    $operation = 'az ' + ($Arguments[0..1] -join ' ')
+    $remaining = [Math]::Floor(($script:azDeadline - [DateTimeOffset]::UtcNow).TotalSeconds)
+    $result = Invoke-BoundedProcess $azPath ($azPrefix + $Arguments + '--only-show-errors') ([int][Math]::Min($TimeoutSeconds, $remaining)) $operation
+    if ($result.ExitCode -ne 0) {
+        $code = [regex]::Match($result.Error, '(?m)^(?:Code:\s*|ERROR:\s*\()([A-Za-z][A-Za-z0-9_.-]{0,79})').Groups[1].Value
+        $reason = if ($code) { $code } else { 'unclassified' }
+        throw "$operation failed (exit $($result.ExitCode), code $reason)."
+    }
+    return $result.Output.Trim()
 }
 
 function Assert-RunWorkWindow {
     param([Parameter(Mandatory = $true)][DateTimeOffset]$Deadline)
     if ([DateTimeOffset]::UtcNow -ge $Deadline) {
-        throw 'The 30-minute work window ended; stop deployment steps and clean up.'
+        throw 'The 20-minute work window ended; stop deployment steps and clean up.'
     }
 }
 
@@ -59,7 +103,7 @@ $context = Invoke-AzChecked @('account', 'show', '--output', 'json') | ConvertFr
 if (
     $context.id -ne $SubscriptionId -or
     $context.tenantId -ne $TenantId -or
-    $context.state -ne 'Enabled'
+    $context.state -ne 'Enabled' -or $context.environmentName -ne 'AzureCloud' -or -not $context.isDefault
 ) {
     throw 'The existing default Azure CLI context does not match the approved tenant and subscription.'
 }
@@ -70,6 +114,32 @@ $siteName = 'azcoir11aue261126'
 $location = 'australiaeast'
 $projectTag = 'azure-cloudops-ir11'
 $runtime = 'NODE:24-lts'
+$scope = "/subscriptions/$SubscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.Web"
+$planId = "$scope/serverfarms/$planName"
+$siteId = "$scope/sites/$siteName"
+
+$offer = Invoke-AzChecked @(
+    'rest', '--method', 'get', '--url', "https://management.azure.com/subscriptions/${SubscriptionId}?api-version=2022-12-01",
+    '--subscription', $SubscriptionId, '--output', 'json'
+) | ConvertFrom-Json
+if ($offer.state -ne 'Enabled' -or $offer.tenantId -ne $TenantId -or $offer.subscriptionPolicies.quotaId -ne 'AzureForStudents_2018-01-01') {
+    throw 'The approved Azure for Students offer could not be verified.'
+}
+$provider = Invoke-AzChecked @('provider', 'show', '--namespace', 'Microsoft.Web', '--subscription', $SubscriptionId, '--query', 'registrationState', '--output', 'tsv')
+if ($provider -ne 'Registered') { throw 'Microsoft.Web is not already registered.' }
+
+function Get-RunResourceIds {
+    $raw = Invoke-AzChecked @('resource', 'list', '--subscription', $SubscriptionId, '--query', "[?resourceGroup=='$resourceGroup'].id", '--output', 'json')
+    if (-not $raw.StartsWith('[')) { throw 'The residual inventory did not return a list.' }
+    $raw | ConvertFrom-Json
+}
+
+function Get-SubscriptionInventory {
+    $resources = Invoke-AzChecked @('resource', 'list', '--subscription', $SubscriptionId, '--query', 'sort_by([].{id:id,type:type,location:location,tags:tags}, &id)', '--output', 'json')
+    $groups = Invoke-AzChecked @('group', 'list', '--subscription', $SubscriptionId, '--query', 'sort_by([].{id:id,location:location,tags:tags}, &id)', '--output', 'json')
+    if (-not $resources.StartsWith('[') -or -not $groups.StartsWith('[')) { throw 'The subscription inventory did not return lists.' }
+    return @{ Resources = $resources; Groups = $groups }
+}
 
 $groupState = Invoke-AzChecked @('group', 'exists', '--name', $resourceGroup, '--subscription', $SubscriptionId, '--output', 'tsv')
 if (($groupState | Out-String).Trim() -ne 'false') {
@@ -94,13 +164,13 @@ if ($f1PlanCount -ge 10) {
     throw 'The documented limit of 10 Free App Service plans per region is already reached; stop.'
 }
 
-$runtimeText = Invoke-AzChecked @('webapp', 'list-runtimes', '--os', 'linux', '--output', 'tsv')
+$runtimeText = Invoke-AzChecked @('webapp', 'list-runtimes', '--os', 'linux', '--subscription', $SubscriptionId, '--output', 'tsv')
 if (-not (($runtimeText -split '\r?\n') -contains $runtime)) {
     throw 'NODE:24-lts is not listed; stop.'
 }
 $locations = Invoke-AzChecked @(
     'appservice', 'list-locations', '--sku', 'F1', '--linux-workers-enabled',
-    '--query', "[?name=='Australia East'].name", '--output', 'tsv'
+    '--subscription', $SubscriptionId, '--query', "[?name=='Australia East'].name", '--output', 'tsv'
 )
 if (($locations | Out-String).Trim() -ne 'Australia East') {
     throw 'Linux F1 is not listed in Australia East; stop.'
@@ -131,6 +201,18 @@ $doneFile = Join-Path $workPath "ir11-$runId.done"
 $watchdogConfig = Join-Path $workPath "ir11-$runId-watchdog.json"
 $watchdogOut = Join-Path $workPath "ir11-$runId-watchdog.out.log"
 $watchdogErr = Join-Path $workPath "ir11-$runId-watchdog.err.log"
+$packagePath = Join-Path $workPath "ir11-$runId-packages"
+$goodZip = Join-Path $packagePath 'good-v1.zip'
+$faultZip = Join-Path $packagePath 'fault-v2.zip'
+$repoRoot = (Get-Location).Path
+$python = (Get-Command python -CommandType Application -ErrorAction Stop | Select-Object -First 1).Source
+$prepared = Invoke-BoundedProcess $python @('textbook/incidents/live_ir11/prepare_packages.py', '--out', $packagePath) 30 'local package build'
+if ($prepared.ExitCode -ne 0) { throw 'Local package preparation failed.' }
+$goodHash = (Get-FileHash -LiteralPath $goodZip -Algorithm SHA256).Hash
+$faultHash = (Get-FileHash -LiteralPath $faultZip -Algorithm SHA256).Hash
+Write-Host "packages_verified good_sha256=$goodHash fault_sha256=$faultHash"
+$before = Get-SubscriptionInventory
+
 [ordered]@{
     subscription_id = $SubscriptionId
     tenant_id = $TenantId
@@ -141,10 +223,9 @@ $watchdogErr = Join-Path $workPath "ir11-$runId-watchdog.err.log"
     cleanup_timeout_seconds = 600
 } | ConvertTo-Json | Set-Content -LiteralPath $watchdogConfig -Encoding utf8
 
-$repoRoot = (Get-Location).Path
 $watchdogScript = Join-Path $repoRoot 'textbook/incidents/live_ir11/watchdog.py'
-$python = (Get-Command python -CommandType Application -ErrorAction Stop).Source
 $watchdogArgs = '"{0}" --config "{1}" --done-file "{2}"' -f $watchdogScript, $watchdogConfig, $doneFile
+$cleanupDeadline = [DateTimeOffset]::UtcNow.AddMinutes(45)
 $watchdogProcess = Start-Process -FilePath $python -ArgumentList $watchdogArgs -WorkingDirectory $repoRoot -WindowStyle Hidden -PassThru -RedirectStandardOutput $watchdogOut -RedirectStandardError $watchdogErr
 Start-Sleep -Seconds 1
 if ($watchdogProcess.HasExited) {
@@ -152,7 +233,42 @@ if ($watchdogProcess.HasExited) {
 }
 
 $workDeadline = [DateTimeOffset]::UtcNow.AddMinutes(20)
-$appUrl = "https://$siteName.azurewebsites.net/health"
+$script:azDeadline = $workDeadline
+$groupCreateAttempted = $false
+$groupCreateCompleted = $false
+$timer = [Diagnostics.Stopwatch]::StartNew()
+
+function Write-RunEvent {
+    param([string]$Event)
+    Write-Host ('{0} elapsed_s={1:F2} {2}' -f [DateTimeOffset]::UtcNow.ToString('o'), $timer.Elapsed.TotalSeconds, $Event)
+}
+
+function Invoke-ReleaseStep {
+    param([string]$Zip, [string]$Sha256, [int]$Status, [string]$Release)
+
+    Assert-RunWorkWindow $workDeadline
+    if ((Get-FileHash -LiteralPath $Zip -Algorithm SHA256).Hash -cne $Sha256) {
+        throw 'A deployment package no longer matches the preflight SHA-256.'
+    }
+    Write-RunEvent "deployment_start release=$Release sha256=$Sha256"
+    Invoke-AzChecked @(
+        'webapp', 'deploy', '--resource-group', $resourceGroup, '--name', $siteName, '--src-path', $Zip,
+        '--type', 'zip', '--clean', 'true', '--restart', 'true', '--async', 'false', '--track-status', 'false',
+        '--timeout', '150000', '--subscription', $SubscriptionId, '--output', 'none'
+    ) 160 | Out-Null
+    Write-RunEvent "deployment_completed release=$Release"
+    $probeBudget = [int][Math]::Min(90, [Math]::Floor(($workDeadline - [DateTimeOffset]::UtcNow).TotalSeconds) - 2)
+    if ($probeBudget -lt 1) { throw 'No time remains for the release probe.' }
+    $probe = Invoke-BoundedProcess $python @(
+        'textbook/incidents/live_ir11/probe.py', '--url', $appUrl, '--expected-status', "$Status",
+        '--expected-release', $Release, '--wait-seconds', "$probeBudget"
+    ) ($probeBudget + 2) 'HTTPS health probe'
+    if ($probe.ExitCode -ne 0) {
+        Write-RunEvent $probe.Error.Trim()
+        throw "The health probe did not verify release $Release."
+    }
+    Write-RunEvent $probe.Output.Trim()
+}
 
 try {
     Assert-RunWorkWindow $workDeadline
@@ -160,76 +276,119 @@ try {
     if (($groupState | Out-String).Trim() -ne 'false') {
         throw 'Resource group appeared after preflight; refusing to create or modify it.'
     }
+    $groupCreateAttempted = $true
+    Write-RunEvent 'group_create_started'
     Invoke-AzChecked @(
         'group', 'create', '--name', $resourceGroup, '--location', $location,
         '--subscription', $SubscriptionId, '--tags', "project=$projectTag", "run-id=$runId", '--output', 'none'
-    ) | Out-Null
+    ) 90 | Out-Null
+    $groupCreateCompleted = $true
+    Write-RunEvent 'group_created'
 
     $tags = Invoke-AzChecked @('group', 'show', '--name', $resourceGroup, '--subscription', $SubscriptionId, '--query', 'tags', '--output', 'json') | ConvertFrom-Json
     if ($tags.project -ne $projectTag -or $tags.'run-id' -ne $runId) {
         throw 'Run ownership tags were not applied; stop and do not deploy.'
     }
+    if (@(Get-RunResourceIds).Count -ne 0) { throw 'The dedicated group already contains an unexpected resource.' }
 
     Assert-RunWorkWindow $workDeadline
     Invoke-AzChecked @(
         'appservice', 'plan', 'create', '--name', $planName, '--resource-group', $resourceGroup,
         '--location', $location, '--sku', 'F1', '--is-linux', '--subscription', $SubscriptionId, '--output', 'none'
-    ) | Out-Null
-    $plan = Invoke-AzChecked @('appservice', 'plan', 'show', '--name', $planName, '--resource-group', $resourceGroup, '--subscription', $SubscriptionId, '--output', 'json') | ConvertFrom-Json
-    if ($plan.location -ne $location -or $plan.sku.name -ne 'F1' -or -not $plan.reserved) {
-        throw 'Created plan differs from the approved Linux F1 scope.'
+    ) 120 | Out-Null
+    Write-RunEvent 'plan_created requested_sku=F1 requested_os=Linux'
+    $plan = Invoke-AzChecked @(
+        'rest', '--method', 'get', '--url', "https://management.azure.com${planId}?api-version=2025-03-01",
+        '--subscription', $SubscriptionId, '--query', '{id:id,location:location,sku:sku.name,tier:sku.tier,linux:properties.reserved}', '--output', 'json'
+    ) | ConvertFrom-Json
+    if ($plan.id -ne $planId -or ($plan.location -replace '\s', '') -ne $location -or $plan.sku -ne 'F1' -or $plan.tier -ne 'Free') {
+        throw 'The App Service Plans REST response did not confirm the approved F1 scope.'
     }
+    if ($plan.linux -isnot [bool] -or -not $plan.linux) { throw 'The App Service Plans REST response did not confirm properties.reserved=true. Stop before creating the app.' }
+    Write-RunEvent 'plan_verified sku=F1 tier=Free os=Linux'
 
     Assert-RunWorkWindow $workDeadline
     Invoke-AzChecked @(
         'webapp', 'create', '--name', $siteName, '--resource-group', $resourceGroup,
-        '--plan', $planName, '--runtime', $runtime, '--subscription', $SubscriptionId, '--output', 'none'
-    ) | Out-Null
-    $site = Invoke-AzChecked @('webapp', 'show', '--name', $siteName, '--resource-group', $resourceGroup, '--subscription', $SubscriptionId, '--output', 'json') | ConvertFrom-Json
-    if ($site.location -ne $location -or $site.kind -notmatch 'linux') {
+        '--plan', $planId, '--runtime', $runtime, '--startup-file', 'node server.js', '--https-only', 'true',
+        '--subscription', $SubscriptionId, '--output', 'none'
+    ) 120 | Out-Null
+    $site = Invoke-AzChecked @(
+        'rest', '--method', 'get', '--url', "https://management.azure.com${siteId}?api-version=2025-03-01",
+        '--subscription', $SubscriptionId, '--query', '{id:id,location:location,kind:kind,serverFarmId:properties.serverFarmId,httpsOnly:properties.httpsOnly,defaultHostName:properties.defaultHostName}', '--output', 'json'
+    ) | ConvertFrom-Json
+    if ($site.id -ne $siteId -or ($site.location -replace '\s', '') -ne $location -or $site.kind -notmatch 'linux' -or $site.serverFarmId -ne $planId -or -not $site.httpsOnly) {
         throw 'Created web app differs from the approved Linux Australia East scope.'
     }
+    $effectiveRuntime = Invoke-AzChecked @(
+        'rest', '--method', 'get', '--url', "https://management.azure.com${siteId}/config/web?api-version=2025-03-01",
+        '--subscription', $SubscriptionId, '--query', 'properties.linuxFxVersion', '--output', 'tsv'
+    )
+    $children = @(Get-RunResourceIds)
+    if (($effectiveRuntime -replace '[^a-z0-9]', '') -ne 'NODE24lts' -or $children.Count -ne 2 -or $planId -notin $children -or $siteId -notin $children) {
+        throw 'The effective runtime or the dedicated resource inventory differs from the approved scope.'
+    }
+    if ($site.defaultHostName -cnotmatch ('^' + [regex]::Escape($siteName) + '(?:-[a-z0-9-]+)?(?:\.[a-z0-9-]+)*\.azurewebsites\.net$')) {
+        throw 'ARM did not report the expected default app hostname.'
+    }
+    $appUrl = "https://$($site.defaultHostName)/health"
+    Write-RunEvent 'app_verified runtime=NODE:24-lts https_only=true approved_resource_count=2'
 
-    python textbook/incidents/live_ir11/prepare_packages.py
-    if ($LASTEXITCODE -ne 0) { throw 'Package preparation failed.' }
-    Assert-RunWorkWindow $workDeadline
-    Invoke-AzChecked @('webapp', 'deploy', '--resource-group', $resourceGroup, '--name', $siteName, '--src-path', 'work/azure-cloudops-ir11-packages/good-v1.zip', '--type', 'zip', '--subscription', $SubscriptionId, '--output', 'none') | Out-Null
-    python textbook/incidents/live_ir11/probe.py --url $appUrl --expected-status 200 --expected-release known-good-v1
-    if ($LASTEXITCODE -ne 0) { throw 'Known-good baseline probe failed.' }
-
-    Assert-RunWorkWindow $workDeadline
-    Invoke-AzChecked @('webapp', 'deploy', '--resource-group', $resourceGroup, '--name', $siteName, '--src-path', 'work/azure-cloudops-ir11-packages/fault-v2.zip', '--type', 'zip', '--subscription', $SubscriptionId, '--output', 'none') | Out-Null
-    python textbook/incidents/live_ir11/probe.py --url $appUrl --expected-status 500 --expected-release intentional-failure-v2
-    if ($LASTEXITCODE -ne 0) { throw 'Intentional-failure probe did not match.' }
-
-    Assert-RunWorkWindow $workDeadline
-    Invoke-AzChecked @('webapp', 'deploy', '--resource-group', $resourceGroup, '--name', $siteName, '--src-path', 'work/azure-cloudops-ir11-packages/good-v1.zip', '--type', 'zip', '--subscription', $SubscriptionId, '--output', 'none') | Out-Null
-    python textbook/incidents/live_ir11/probe.py --url $appUrl --expected-status 200 --expected-release known-good-v1
-    if ($LASTEXITCODE -ne 0) { throw 'Recovery probe failed.' }
+    Invoke-ReleaseStep $goodZip $goodHash 200 'known-good-v1'
+    Invoke-ReleaseStep $faultZip $faultHash 500 'intentional-failure-v2'
+    Write-RunEvent 'regression_observed source=fault-v2.zip cause=release_health_handler_returns_500'
+    Invoke-ReleaseStep $goodZip $goodHash 200 'known-good-v1'
+} catch {
+    Write-RunEvent "experiment_stopped $($_.Exception.Message)"
+    throw
 }
 finally {
+    $script:azDeadline = $cleanupDeadline
     $stillExists = Invoke-AzChecked @('group', 'exists', '--name', $resourceGroup, '--subscription', $SubscriptionId, '--output', 'tsv')
     if (($stillExists | Out-String).Trim() -eq 'true') {
         $tags = Invoke-AzChecked @('group', 'show', '--name', $resourceGroup, '--subscription', $SubscriptionId, '--query', 'tags', '--output', 'json') | ConvertFrom-Json
         if ($tags.project -ne $projectTag -or $tags.'run-id' -ne $runId) {
             throw 'Ownership tags differ; refusing group deletion. Watchdog will also refuse and report the mismatch.'
         }
-        Invoke-AzChecked @('group', 'delete', '--name', $resourceGroup, '--subscription', $SubscriptionId, '--yes', '--output', 'none') | Out-Null
+        $children = @(Get-RunResourceIds)
+        if (@($children | Where-Object { $_ -notin @($siteId, $planId) }).Count -ne 0) {
+            throw 'Refusing cleanup of a group containing a resource outside the approved scope.'
+        }
+        try {
+            if ($siteId -in $children) {
+                Invoke-AzChecked @('webapp', 'delete', '--name', $siteName, '--resource-group', $resourceGroup, '--subscription', $SubscriptionId, '--keep-empty-plan', '--output', 'none') 120 | Out-Null
+                Write-RunEvent 'app_deleted'
+            }
+            if ($planId -in $children) {
+                Invoke-AzChecked @('appservice', 'plan', 'delete', '--name', $planName, '--resource-group', $resourceGroup, '--subscription', $SubscriptionId, '--yes', '--output', 'none') 120 | Out-Null
+                Write-RunEvent 'plan_deleted'
+            }
+        } catch {
+            Write-RunEvent "individual_delete_incomplete $($_.Exception.Message)"
+        }
+        Invoke-AzChecked @('group', 'delete', '--name', $resourceGroup, '--subscription', $SubscriptionId, '--yes', '--output', 'none') 420 | Out-Null
+        Write-RunEvent 'group_deleted'
     }
     $stillExists = Invoke-AzChecked @('group', 'exists', '--name', $resourceGroup, '--subscription', $SubscriptionId, '--output', 'tsv')
     if (($stillExists | Out-String).Trim() -ne 'false') {
         throw 'Resource group remains; cleanup is not verified. Independent watchdog remains active.'
     }
-    $remainingJson = Invoke-AzChecked @('resource', 'list', '--subscription', $SubscriptionId, '--query', "[?resourceGroup=='$resourceGroup'].id", '--output', 'json')
-    $remaining = @($remainingJson | ConvertFrom-Json)
+    $remaining = @(Get-RunResourceIds)
     if ($remaining.Count -ne 0) {
         throw 'Residual resources remain; cleanup is not verified. Independent watchdog remains active.'
     }
-    Set-Content -LiteralPath $doneFile -Value 'CLEANED_UP' -Encoding ascii
+    $marker = if ($groupCreateCompleted -or -not $groupCreateAttempted) { 'CLEANED_UP_NO_PENDING_GROUP_CREATE' } else { 'CLEANED_UP' }
+    Set-Content -LiteralPath $doneFile -Value $marker -Encoding ascii
+    Write-RunEvent 'cleanup_verified group_exists=false residual_count=0'
+    $after = Get-SubscriptionInventory
+    if ($before.Resources -cne $after.Resources -or $before.Groups -cne $after.Groups) {
+        throw 'The unrelated subscription inventory differs from the preflight snapshot.'
+    }
+    Write-RunEvent 'unrelated_subscription_inventory_unchanged=true'
 }
 
 try {
-    Wait-Process -Id $watchdogProcess.Id -Timeout 15 -ErrorAction Stop
+    Wait-Process -Id $watchdogProcess.Id -Timeout 60 -ErrorAction Stop
 } catch {
     # The watchdog process remains independent; keep its config and logs for inspection.
 }

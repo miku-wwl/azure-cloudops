@@ -1,7 +1,7 @@
 # E9 live-lab catalogue
 
 - **Prepared:** 2026-11-26 (Pacific/Auckland)
-- **Stage:** L0 read-only preflight complete; all Azure incident execution remains NOT_RUN. No mutation is authorized by this catalogue.
+- **Stage:** L0 read-only complete. LAB-IR-11 attempted and cleaned up; plan OS verification blocked the app sequence. Final evidence states are in [LIVE_LAB_INDEX.md](LIVE_LAB_INDEX.md).
 - **Cumulative Azure ceiling:** USD 1.00 gross; plan below USD 0.70 and retain USD 0.30 for delayed charges and cleanup. No estimate below is deployment approval.
 - **Scope rule:** Use only a dedicated, specifically authorized lab scope. L0 findings and limits are recorded below. Stage 2 and Stage 3 L0 made no Azure resource changes.
 
@@ -285,22 +285,25 @@ A direct read-only subscription GET returned `AzureForStudents_2018-01-01` with 
 | Lab ID | `LAB-IR-11` |
 | Associated lecture | AZ04-02, AZ07-03; integrated diagnosis AZ06-02 |
 | Associated incident IDs | IR-11 |
-| Deployment architecture | Candidate only: one disposable Linux App Service F1 plan and app in the dedicated scope below; built-in NODE:24-lts with no third-party dependencies; deploy a known-good ZIP, a deterministic HTTP 500 ZIP, then redeploy the exact same known-good ZIP. No deployment slot or production traffic. |
+| Deployment architecture | One disposable Linux App Service F1 plan and app in the approved scope below; built-in NODE:24-lts with no third-party dependencies. The planned same-app ZIP sequence uses known-good, deterministic HTTP 500 and the exact original known-good package. No deployment slot or production traffic. |
 | Required permissions | Subscription-scope resourceGroups/write to create the approved dedicated group, plus Microsoft.Web/serverfarms/write and Microsoft.Web/sites read/write/deploy within that group. Current-principal Owner assignment was observed, but its conditions/effective access were not fully evaluated and it is not this project’s approval. Do not create role assignments or retain extra access. |
 | Region and SKU | Australia East (australiaeast), Linux F1 only; runtime NODE:24-lts is listed. The 2026-11-28 read-only plan inventory returned 0 visible F1/Free plans in Australia East; Linux F1 and the candidate app name were available in the fresh read-only recheck. The Azure for Students public offer lists an always-free App Service allowance, but account-specific deployment eligibility and regional capacity remain NOT_VERIFIED. The runbook rechecks the documented regional Free-plan limit and stops at 10 existing plans; it also stops if the current offer, runtime, regional SKU or name is unavailable. |
-| Candidate exact scope (not approved) | Australia East; Linux F1 plan asp-azure-cloudops-ir11-aue; site azcoir11aue261126; dedicated resource group rg-azure-cloudops-ir11-aue. The group was absent and site name was available at L0; repeat both checks immediately before provisioning. |
+| Authorized execution scope | The 2026-11-28 approval covered one run in Australia East: Linux F1 plan `asp-azure-cloudops-ir11-aue`, site `azcoir11aue261126` and group `rg-azure-cloudops-ir11-aue`. Group absence and site-name availability were reconfirmed. |
 | Terraform root module | No App Service/Web App/plan root exists; use only the reviewed, explicit Azure CLI runbook in incidents/live_ir11/ after approval. |
-| Resource list | Proposed dedicated resource group rg-azure-cloudops-ir11-aue; one Linux F1 plan asp-azure-cloudops-ir11-aue; one site azcoir11aue261126; three small ZIP deployments to the same test endpoint. No log workspace, Application Insights, Storage account, private endpoint, slot or production traffic. |
+| Resource list | Approved dedicated group, one F1 plan and one Web App. Only the group and plan were created. The failed Linux verification stopped app creation and all three planned ZIP deployments. No separate paid dependencies were created. |
 | Estimated cost | Conditional gross USD 0.00 for the 45-minute candidate: Microsoft's Linux pricing page checked 2026-11-28 lists F1 under the Free plan, the Azure for Students public offer lists an always-free App Service allowance, and Azure lists the first 100 GB/month of Internet egress as free. This assumes account-specific F1 eligibility and regional capacity, usage within the published 60 CPU minutes/day and 1 GB storage, probes within the free egress allowance, and no paid dependency. Reconfirm current terms at execution; stop if the estimate is unreliable or exceeds USD 0.70 cumulative. Actual Azure billing remains NOT_VERIFIED. |
 | Maximum lifetime | 45 minutes from the first resource write. Main operation window: 20 minutes; independent cleanup starts after 25 minutes if the primary process has not verified teardown, monitors late resource creation, and reserves a final bounded verification window before the hard stop. |
 | Baseline probes | Known-good version returns the expected status/body from the same HTTPS path. |
 | Fault injection | Publish a deterministic test package that returns HTTP 500 to the isolated app; never route real users to it. |
 | Diagnostics | Deployment ID/version, HTTP probe status/body and deployment history. Do not enable App Service log streaming, diagnostic settings or a log workspace. |
 | Recovery | Redeploy the previous known-good package to the same app and repeat the identical HTTPS probe. |
-| Teardown | Primary process uses a finally block; an independent watchdog remains active after the primary cleanup marker. Both paths delete only the dedicated group carrying this run's project and run-ID tags, then verify az group exists is false and a subscription-wide resource query finds no objects in that group. Any failed cleanup blocks all further incidents. |
+| Teardown | Primary process uses a finally block. Independent watchdog verifies cleanup after synchronous group creation and monitors through the bounded cleanup window if creation was ambiguous or the primary process failed. It requires this run's tags and an inventory matching the approved names before scoped deletion. |
 | Residual-resource checks | Check app, plan, hostnames, storage/deployment artifacts, diagnostic settings and resource-group contents. |
 | Delayed billing checks | Reconcile app-plan time, storage, log and network meters after billing delay; stop at any unexpected billable dependency. |
 | Classification | **Potentially zero-cost live mutation** |
+
+**Actual outcome:** `BLOCKED` at OS verification and `CLEANED_UP`. `F1`/`Free` was read from the created plan. Azure confirmed the group and plan writes, but the CLI detail had no top-level `reserved` property. The app, HTTPS baseline, intentional fault and restored release stayed `NOT_RUN`. Cleanup was confirmed in 125.9 seconds with no lab residuals. The same group-scoped billing filter returned HTTP 200 and zero rows before and after the run. Billing is `BILLING_PENDING`. [Sanitized execution evidence](incidents/evidence/IR-11_azure-2026-11-28.md).
+
 ## LAB-IR-12 — Blob version restore
 
 | Field | Plan |

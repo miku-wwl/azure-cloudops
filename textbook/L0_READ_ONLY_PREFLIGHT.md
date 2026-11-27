@@ -65,7 +65,13 @@ The proposed run has a 45-minute maximum including diagnosis, recovery, teardown
 
 The existing Azure CLI context was Enabled in AzureCloud. A fresh read-only check confirmed the dedicated resource group was absent, 0 visible F1/Free plans existed in Australia East, the Linux F1 location list included Australia East, `NODE:24-lts` was listed, and the proposed app name was available. No Azure resource changed. The public Azure for Students offer lists App Service within its always-free allowance, and the current Linux F1 pricing page lists the plan as Free. The candidate's gross estimate remains conditionally USD 0.00 with the stated 45-minute window, tiny probes, and no paid dependencies; actual subscription billing remains NOT_VERIFIED because Cost Management returned HTTP 429 in the earlier queries. A current capacity/eligibility decision for provisioning cannot be established by these read-only checks. The batch still requires exact owner approval before any write.
 
-This is a concrete candidate, not authorization. Exact owner approval is still required for this resource allowlist and operation. All Azure incident statuses IR-01 through IR-12 remain NOT_RUN.
+The paragraphs above record pre-approval observations. The owner subsequently approved the one scoped LAB-IR-11 run.
+
+## Closure recheck and outcome — 2026-11-28
+
+The existing default CLI context was Enabled in AzureCloud. The ARM subscription GET matched the CLI tenant and returned the Azure for Students offer. Microsoft.Web was registered. A fresh inventory returned zero F1/Free plans in Australia East, and the group was absent. The Linux F1 and `NODE:24-lts` lists matched and the name check returned HTTP 200 with availability `true`. The bounded billing checks before and after the run returned HTTP 200, zero charge rows and no continuation for the dedicated group; actual charges are `BILLING_PENDING`.
+
+The authorized run recorded Azure creation of the dedicated group and F1 plan. The CLI plan response omitted the top-level Linux field expected by the script, and Web App creation stayed `NOT_RUN`. The script removed both resources, confirmed group absence and compared unrelated subscription inventory with preflight. Independent cleanup verification passed. [Sanitized LAB-IR-11 evidence](incidents/evidence/IR-11_azure-2026-11-28.md) and [cost ledger](COST_LEDGER.md).
 
 ## Primary sources
 

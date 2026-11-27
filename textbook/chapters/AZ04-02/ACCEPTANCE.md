@@ -28,3 +28,10 @@ Acceptance date: 2026-11-26 (Pacific/Auckland). Repository: `D:/workshop/nov/azu
 ## Gate result
 
 **PASS — current primary-source mapping, Chinese chapter, four editable mechanism figures, deterministic offline release model, targeted and full Windows/WSL tests, documented read-only diagnostic templates, reproducible PDF, and final visual review are complete.** No live Azure behavior or billing is claimed as verified.
+
+## V1 closure addendum (2026-11-28)
+
+- Observed F1 provisioning and cleanup. App creation, ZIP release and rollback remain NOT_RUN in Azure; the two Node packages passed the same local probe.
+- [Final PDF](../../dist/pdf/AZ04-02_appservice-container-apps-deployment.pdf) has 7 pages and 1,587,372 bytes. SHA-256 is `B376554C3F78F909B57F40665D614E73608C984AAA1AC8E98119A6B7D96269BB`.
+- Visually inspected all 7 pages at 88 DPI and page 6 at 140 DPI. The final page proof was compared with the prior reviewed render and every changed page was rechecked. Publisher QA, PDF outline and extracted text checks passed.
+- Scope and observed evidence are linked from the [V1 source map](../../SOURCE_MAP.md#v1-closure-source-map--2026-11-28).

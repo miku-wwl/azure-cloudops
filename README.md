@@ -1,6 +1,6 @@
 # Azure CloudOps & Enterprise Infrastructure
 
-**Status:** E8 incidents and E10 replay are complete; E9 catalogue is documented. Local regression and both refreshed publication ZIPs pass. Final Stage 2 acceptance is pending hosted CI/security runs. Stage 3 begins with a read-only L0 preflight only.
+**V1 status:** `TEXTBOOK_V1_RELEASE_READY`, `LIVE_LAB_READY` and `READ_ONLY_AZURE_VERIFIED`. LAB-IR-11 reached F1 plan provisioning and verified cleanup. The app release and rollback remain unverified in Azure. [Final acceptance report](textbook/FINAL_ACCEPTANCE_REPORT.md).
 **Repository:** miku-wwl/azure-cloudops, main
 **Approved implementation baseline:** 853ba6cbaa4ee67e448550fbe192c6c89b24fd2f
 **Roadmap:** AZURE_SPECIALTY_ROADMAP.md
@@ -12,9 +12,9 @@ This is an enterprise Azure engineering practice repository and a 23-lecture ill
 
 | Stage | Objective | Current status |
 |---|---|---|
-| 1 — Technical textbook | Research, author, illustrate, experiment and publish 23 independent PDFs with editable sources | `TEXTBOOK_V1_RELEASE_READY` for Stage 1 publication; current cross-stage CI/security acceptance remains separately tracked |
-| 2 — Engineering readiness | Harden local labs, Terraform, controlled delivery, automation and incident replay | E0–E10 implementation complete; hosted CI/security and final package acceptance pending |
-| 3 — Live Azure validation | Read-only preflight first; perform only specifically authorized, reliably costed experiments | L0 pending Stage 2 acceptance; no Azure resources created; spend remains `NOT_VERIFIED` |
+| 1 — Technical textbook | Publish 23 independent PDFs with editable sources | B0–B9 accepted. The V1 update includes the observed Azure results and checked publication packages. |
+| 2 — Engineering readiness | Validate local labs, Terraform, controlled delivery, diagnostics and replay | E0–E10 accepted. All eight mandatory local incidents and the independent replay passed. |
+| 3 — Live Azure validation | Verify the current subscription scope and run the one authorized batch | L0 passed. IR-11 stopped at the Linux plan verification gate and both temporary resources were removed. Billing is `BILLING_PENDING`. |
 
 The cumulative incremental Azure ceiling is USD 1.00 for the entire project. Plan against USD 0.70 and retain USD 0.30 for contingency. Actual billing is not verified until billing evidence is checked. A budget alert is not a hard spending cap. Expensive services remain design-only unless current pricing, account capability, narrow authorization and cleanup all pass the live gate.
 
@@ -46,4 +46,4 @@ The lab scenario uses synthetic data. No employer, customer, production, shared 
 - textbook/REFERENCE_ANALYSIS.md — source-grounded B0 AWS publisher review.
 - textbook/COST_LEDGER.md and textbook/VERIFICATION_MATRIX.md — cost and evidence state.
 - textbook/chapters/ — authoritative per-lecture source, diagrams and applicable experiments.
-- textbook/dist/ — generated PDFs and verified publication packages.
+- [PDF collection](textbook/dist/Azure-CloudOps-PDF.zip), [editable sources](textbook/dist/Azure-CloudOps-Sources.zip) and [publication manifest](textbook/dist/publication-manifest.json).

@@ -6,9 +6,9 @@ This directory is the single authoritative home for the 23 lecture sources, edit
 
 - CURRICULUM.md — approved 23-lecture sequence and core questions.
 - PROGRESS.md — current project gate and restart point.
-- FINAL_ACCEPTANCE_REPORT.md — Stage 1/2 acceptance evidence, publication metrics, exact CI result, Stage 3 L0 findings and the proposed live-batch approval boundary.
-- L0_READ_ONLY_PREFLIGHT.md — redacted Stage 3 Azure read-only results and the concrete LAB-IR-11 candidate.
-- incidents/live_ir11/ — no-dependency good/fault ZIP sources, local package builder and probe runbook for the proposed IR-11 batch.
+- FINAL_ACCEPTANCE_REPORT.md — final V1 milestones, local incident results and the actual LAB-IR-11 outcome.
+- L0_READ_ONLY_PREFLIGHT.md — sanitized Stage 3 Azure read-only observations and closure recheck.
+- incidents/live_ir11/ — no-dependency package builder, same-probe assertions and guarded runbook. The actual attempt and cleanup are in `incidents/evidence/IR-11_azure-2026-11-28.md`.
 - LIVE_LAB_INDEX.md — twelve incident contracts and their evidence status.
 - COST_LEDGER.md — cumulative Azure estimate, actual-billing status and budget controls.
 - VERIFICATION_MATRIX.md — independent evidence-state definitions.
@@ -23,6 +23,7 @@ This directory is the single authoritative home for the 23 lecture sources, edit
 - tools/ — adapted, reproducible publication and offline verification tools.
 - chapters/<lecture-id>/ — chapter.md, figures, screenshots and only the applicable lab sources.
 - dist/pdf/ — exactly one independent final PDF per completed lecture.
+- dist/publication-manifest.json — ZIP sizes and SHA-256, with per-entry hashes for the verified release.
 
 ## Publication and verification
 

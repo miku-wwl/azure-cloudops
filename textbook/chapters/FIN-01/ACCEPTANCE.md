@@ -35,3 +35,10 @@ The research-backed chapter, editable figures, local synthetic lab, documented r
 - Correction: use deterministic largest-remainder allocation in integer cents, with stable cost-center ordering for equal remainders. Add regression coverage for one-cent and two-cent pools; the suite now has 29 tests, all passing on Windows Python 3.13.9.
 - The historical Stage 1 PDF values remain unchanged because the fixture weights divide evenly. The chapter and lab text now state the cents-preserving rule. The updated nine-page PDF was rebuilt (10,913 extracted characters; no placeholder markers), rendered as five page-pair sheets, and every page was visually checked. Current artifact: 1,749,094 bytes; SHA-256 `C706F37752378D0D4A80463532CF76A8301D6BF75DB0A0BAC6E1F2E94AE3A880`.
 - The full Windows and WSL suites each pass 407 tests across 22 directories. No Azure pricing or billing query was made. Updated source and PDF ZIP consistency remain part of Stage 2 publication acceptance.
+
+## V1 closure addendum (2026-11-28)
+
+- Distinguished the conditional USD 0.00 gross estimate, two successful empty scoped query responses and pending billing. Improved figure 23-2 amount labels and confirmed the regenerated visual.
+- [Final PDF](../../dist/pdf/FIN-01_azure-finops-resource-cost-recovery.pdf) has 9 pages and 1,782,366 bytes. SHA-256 is `1238664BF40E43798AE9F67E8BF0DA17EA19C8F6A29E58CC7150D32ECCF57D01`.
+- Visually inspected all 9 pages at 88 DPI and page 4 at 140 DPI. The final page proof was compared with the prior reviewed render and every changed page was rechecked. Publisher QA, PDF outline and extracted text checks passed.
+- Scope and observed evidence are linked from the [V1 source map](../../SOURCE_MAP.md#v1-closure-source-map--2026-11-28).

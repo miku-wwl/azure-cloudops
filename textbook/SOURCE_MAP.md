@@ -749,3 +749,12 @@ Research date: 2026-11-27. Current Microsoft Learn material was reviewed for pri
 - https://learn.microsoft.com/en-us/azure/virtual-machines/delete
 - https://learn.microsoft.com/en-us/azure/advisor/advisor-reference-cost-recommendations
 - https://learn.microsoft.com/en-us/azure/role-based-access-control/permissions/management-and-governance
+
+## V1 closure source map — 2026-11-28
+
+| Lecture | Observation or claim | Evidence and limit |
+|---|---|---|
+| AZ04-02 | F1 plan provisioned and removed; release stayed at the plan OS gate. | VERIFIED control-plane create and cleanup, package health LOCAL_VERIFIED, app deployment NOT_RUN. [Azure run record](incidents/evidence/IR-11_azure-2026-11-28.md) and [plan REST schema](https://learn.microsoft.com/en-us/rest/api/appservice/app-service-plans/get?view=rest-appservice-2025-03-01). |
+| AZ05-03 | The inventory tool used ARG REST because the CLI extension was unavailable. One page returned three Network Watchers. | READ_ONLY_AZURE_VERIFIED for one explicit subscription and one time. [L0 preflight](L0_READ_ONLY_PREFLIGHT.md), [inventory source](tools/azure_inventory.py) and [ARG REST contract](https://learn.microsoft.com/en-us/azure/governance/resource-graph/first-query-rest-api). |
+| AZ06-02 | The observed stopping mechanism was a verification field missing from the CLI output. About 126 seconds elapsed before cleanup verified. | VERIFIED run timeline and SOURCE-ANALYSED corrected ARM projection. Azure application failure and recovery timings remain absent. [Azure run record](incidents/evidence/IR-11_azure-2026-11-28.md). |
+| FIN-01 | Conditional gross estimate USD 0.00, early queries 429, final scoped pre/post queries 200 with no cost rows. | Pricing SOURCE-ANALYSED, query outcome READ_ONLY_AZURE_VERIFIED, actual spend BILLING_PENDING. [Cost ledger](COST_LEDGER.md) and [query contract](https://learn.microsoft.com/en-us/rest/api/cost-management/query/usage). |

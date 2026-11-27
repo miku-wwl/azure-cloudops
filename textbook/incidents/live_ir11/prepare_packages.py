@@ -27,7 +27,8 @@ def build(out: Path) -> None:
         with zipfile.ZipFile(out / archive) as z:
             if set(z.namelist()) != {"package.json", "server.js"}:
                 raise SystemExit(f"unexpected entries in {archive}: {z.namelist()}")
-            z.testzip()
+            if bad_entry := z.testzip():
+                raise SystemExit(f"failed CRC check in {archive}: {bad_entry}")
         print(f"{archive}: {manifest['name']}; root entries verified")
 
 if __name__ == "__main__":

@@ -96,4 +96,15 @@ Describe 'LAB-IR-11 Azure runbook contract' {
         $cleanup | Should -BeGreaterThan $bodyArgument
         $source | Should -Match '\$nameBodyArgument\s*=\s*"@\$nameBodyFile"'
     }
+
+    It 'requires positive Linux evidence from the ARM plan schema before creating the app' {
+        $source = Get-Content -LiteralPath $script:ir11Runner -Raw
+        $read = $source.IndexOf('linux:properties.reserved', [StringComparison]::Ordinal)
+        $gate = $source.IndexOf('if ($plan.linux -isnot [bool] -or -not $plan.linux)', [StringComparison]::Ordinal)
+        $create = $source.IndexOf("'webapp', 'create'", [StringComparison]::Ordinal)
+        $read | Should -BeGreaterOrEqual 0
+        $gate | Should -BeGreaterThan $read
+        $create | Should -BeGreaterThan $gate
+        $source | Should -Not -Match '\$plan\.reserved\b'
+    }
 }

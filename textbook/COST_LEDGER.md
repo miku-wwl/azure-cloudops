@@ -4,9 +4,32 @@
 - Conservative planning threshold: USD 0.70.
 - Contingency retained for delayed charges and cleanup: USD 0.30.
 
+## LAB-IR-11 approved preflight
+
+The owner approved one batch on 2026-11-28 (Pacific/Auckland) in the final execution brief. The allowlist is resource group `rg-azure-cloudops-ir11-aue`, Linux F1 plan `asp-azure-cloudops-ir11-aue`, and Node 24 LTS app `azcoir11aue261126`, all in Australia East. Maximum lifetime is 45 minutes through residual verification. The two ZIP packages contain just the test application and manifest. No slots, telemetry workspace, separate storage, networking or other billed dependencies are permitted. Cleanup is scoped to this app, plan and newly created, run-tagged group.
+
+The [Linux App Service pricing](https://azure.microsoft.com/en-us/pricing/details/app-service/linux/), [Azure for Students offer](https://azure.microsoft.com/en-us/free/students), [Azure service limits](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits) and [Azure bandwidth pricing](https://azure.microsoft.com/en-us/pricing/details/bandwidth/) were checked on 2026-11-28. The enabled subscription GET returned the Azure for Students offer, Microsoft.Web was registered, and the live region/runtime/name and F1 plan inventory checks passed. Gross estimate is conditional USD 0.00 through teardown, assuming the exact Free plan and the published free egress allowance for the small probes. Regional placement is decided by Azure during provisioning. No paid substitution is authorized. The cumulative estimated total remains USD 0.00, with USD 0.30 reserved inside the USD 1.00 ceiling.
+
+The bounded month-to-date Cost Management query filtered to the dedicated resource group returned HTTP 200, zero rows and no continuation. No amount was returned. Actual billed expenditure remains `NOT_VERIFIED` pending reconciled billing. Earlier HTTP 429 observations remain historical evidence.
+
+## LAB-IR-11 actual resource and billing outcome
+
+| Item | Observed outcome |
+|---|---|
+| Resource group `rg-azure-cloudops-ir11-aue` | Created with run ownership tags; deleted; ARM group existence `false`. |
+| Plan `asp-azure-cloudops-ir11-aue` | Created with F1 and Linux requested; the CLI returned F1/Free, and the Linux response field was unavailable to the gate. Individual plan deletion succeeded. |
+| Web App `azcoir11aue261126` | Creation `NOT_RUN`. The plan verification failure stopped the run before deploying or sending HTTP probes. |
+| Maximum observed lifetime | 125.9 seconds from the first create request to verified absence, plus the unrelated inventory comparison at 142.1 seconds. Authorized maximum 45 minutes. |
+| Remaining resources | Zero LAB-IR-11 resources. The watchdog independently reported `CLEANED_UP`; the existing subscription inventory matched. |
+| Estimated gross cumulative expenditure | USD 0.00 under the published Free terms. No paid resource or upload was observed. |
+| Billing and unexpected charges | Pre/post HTTP 200, zero cost rows and no continuation scoped to the lab group. No unexpected charge was reported in the available data. Actual charges remain `BILLING_PENDING`. |
+| Remaining budget | USD 1.00 nominal. The planning threshold stays USD 0.70 with USD 0.30 contingency. Reconcile actual headroom after cost data is posted. |
+
+The full sanitized timeline and independent cleanup result are recorded in the [LAB-IR-11 evidence](incidents/evidence/IR-11_azure-2026-11-28.md). A delayed reconciliation should query the same subscription, group and month without any resource changes.
+
 | Ledger item | Estimate / status | Evidence |
 |---|---:|---|
-| Azure resource mutations by this project so far | None performed | Session execution record; no deployment command was run |
+| Azure resource mutations by this project | LAB-IR-11 group and F1 plan created and removed | Azure Activity Log, runbook cleanup, independent watchdog and filtered residual inventory |
 | Stage 2 E0 independent audit | No Azure resource or billing operation; gross estimate not applicable to offline checks | Windows and WSL Python suites (407 tests / 22 directories each), local Terraform checks, and PDF rebuilds only |
 | Stage 2 E2 local lab substrate | No Azure resource, billing or network operation; gross estimate not applicable to offline checks | Windows and WSL Python suites (418 tests / 23 directories each) and a bounded local synthetic lifecycle smoke |
 | Stage 2 E3 Terraform engineering | No Azure API, provider registration, resource mutation, live plan, or billing operation; no Azure cost estimate is applicable to the local checks | Registry downloads of AzureRM 5.15.0/AzAPI 2.14.0 only; sanitized runner; Windows Terraform mock tests and Windows/WSL Python suites (429 tests / 23 directories each) |
@@ -18,7 +41,7 @@
 | Stage 2 E10 independent replay | No Azure API/resource/billing request; no project Azure charge from either replay cycle | Cycle 2 passed 8/8; network, permission and data recovery cases used distinct run contexts; Terraform source/State hashes and cleanup passed the local verifier; this is not independent human review |
 | Stage 2 CI/security implementation | No Azure credentials or cloud provisioning; hosted usage charges, if any, belong to GitHub and are outside Azure spend | Exact-revision run 45960683857 passed at 82d7865cc0b4df9ea4ea4eae595a2eaca726441d; five jobs including Gitleaks and package verification. |
 | Stage 3 L0 read-only preflight | USD 0.00 incremental resource estimate for the read-only queries; actual billing NOT_VERIFIED | On 2026-11-28, a direct read-only subscription GET returned `quotaId=AzureForStudents_2018-01-01` and `spendingLimit=On`; the latter is not the project's USD 1.00 ceiling. Microsoft's Linux App Service pricing page lists F1 under Free, and the Azure for Students offer lists an always-free App Service allowance. A fresh candidate recheck returned 0 visible F1/Free plans in Australia East, listed Linux F1 in that region and `NODE:24-lts`, confirmed the dedicated group absent and candidate name available. Account-specific provisioning eligibility and regional capacity remain NOT_VERIFIED; the candidate's USD 0.00 estimate is conditional on those gates and no paid dependencies. Resource Graph CLI extension installation failed locally because its bundled Python pip child process could not load `pyexpat`; the documented REST query fallback and reusable inventory tool both returned three Network Watchers without truncation. No resource writes, diagnostic probes, context switches or provider registration. Cost Management Usage returned HTTP 429 twice; no numeric bill data obtained. See L0_READ_ONLY_PREFLIGHT.md. |
-| Unexecuted LAB-IR-11 candidate | Conditional gross estimate USD 0.00; NOT_APPROVED / NOT_RUN | One Linux F1 plan and site, 45-minute maximum, no paid telemetry; public pricing supports the estimate only if the account offer includes F1 and no paid dependency is needed. The 2026-11-27 inventory showed 0 visible F1/Free plans in Australia East, while entitlement and regional capacity remain NOT_VERIFIED. Local packages and probe passed; no Azure resource change occurred. |
+| Authorized LAB-IR-11 execution | Conditional gross estimate USD 0.00; `BLOCKED` and `CLEANED_UP` | Plan OS verification stopped application creation. The group and F1 plan were removed within scope. |
 | AZ02-03 local model | No Azure API, DNS query, probe or resource call; no project Azure charge from this local run | Windows + WSL offline tests only |
 | AZ02-04 local model | No Azure API, DNS query, probe, WAF request, resource call or live traffic; no project Azure charge from this local run | Windows + WSL offline tests only |
 | AZ03-01 local model | No Entra token, Azure/Graph API, role query, network call or resource operation; no project Azure charge from this local run | Windows + WSL offline tests only |
@@ -38,8 +61,8 @@
 | AZ07-03 Azure Pipelines/WIF engineering | Generic YAML parsing, synthetic plan bytes/JSON, offline pipeline contract tests and backend-free Terraform checks; no Azure DevOps organization/run, Azure identity/token, remote provider/backend initialization, subscription, network or billing request; no project Azure resource charge from this local run | 29 pipeline tests; full Windows + WSL suites each passed 471 tests/23 dirs; Terraform 1.15.5 recursive fmt, backend-free init/validate in 3 roots and 13 plan-only/mock runs |
 | AZ08-01 hybrid connectivity lesson | Synthetic offline lab and PDF only; no Azure authentication, control-plane request, DNS query, route/BGP operation, network probe, resource mutation or billing request; no project Azure charge from this local run | 22 local tests; full Windows and WSL suites each passed 375 tests/21 dirs; future read-only runbook is NOT_RUN and has no live-cost estimate |
 | FIN-01 FinOps and cost recovery lesson | Fictional ledger, offline unit tests and PDF only; no Azure authentication, Cost Management query, Advisor request, resource inventory, mutation or billing request | 27 local tests; full Windows and WSL suites each passed 402 tests/22 dirs; future read-only runbook is NOT_RUN and has no live-cost estimate |
-| Current cumulative actual Azure spend | NOT_VERIFIED | Two read-only billing queries were throttled (HTTP 429); no actual amount was obtained. Do not report USD 0.00 actual. |
-| Current cumulative gross estimate | USD 0.00 estimated project Azure resource usage to date; invoice amount NOT_VERIFIED | This project has made no Azure resource changes. Read-only inventory is not an invoice reconciliation. Candidate LAB-IR-11 is not deployed and is not booked as actual spend. |
-| Remaining ceiling | USD 1.00 nominal; actual invoice headroom NOT_VERIFIED | Keep the USD 0.70 planning threshold and USD 0.30 contingency; reconcile actual gross charges separately from credits and billing delays. |
+| Current cumulative actual Azure spend | `BILLING_PENDING` | The scoped successful queries returned no cost rows. An actual amount has not been established. |
+| Current cumulative gross estimate | USD 0.00 | Only the dedicated group and F1 plan were provisioned. No Web App probes, separate dependencies or paid SKU were recorded. |
+| Remaining ceiling | USD 1.00 nominal; actual invoice headroom `NOT_VERIFIED` | Reconcile actual gross charges separately from credits and billing delays. |
 
 Before any deployment, add an experiment-specific ledger entry with resource allowlist, official price source and access date, region/SKU, maximum runtime, dependencies, teardown cost, reserved contingency, approving scope, and post-run billing status. Stop if a reliable estimate cannot keep cumulative estimated gross charges at or below USD 0.70. Azure budget alerts are not a hard spending cap.

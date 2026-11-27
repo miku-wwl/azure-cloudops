@@ -18,9 +18,22 @@ Verification states are independent. A documented or local result does not estab
 | CLEANED_UP | Approved temporary resources were deleted and residuals inspected |
 | LIVE_NOT_RUN | No live execution occurred |
 | BILLING_PENDING | Billing evidence is delayed or unavailable |
-| BUDGET_DEFERRED | Reliable cost estimate exceeds the project planning threshold |
+| BUDGET_DEFERRED | The required scope exceeds the budget or its complete incremental cost could not be established within the budget |
 | PERMISSION_DEFERRED | Required narrow authorization is unavailable |
 | BLOCKED / FAIL / PARTIAL | Actual blocker, failed check or incomplete acceptance |
+
+## Final V1 closure — 2026-11-28
+
+| Check | Final result | Evidence |
+|---|---|---|
+| Stage 1 / Stage 2 | `TEXTBOOK_V1_RELEASE_READY` / `LIVE_LAB_READY` | 23 lecture PDFs, 95 original figures, final publication manifest, 12 incident contracts and 8/8 mandatory local outcomes. Recomputed E10 verification of both cycles matched the recorded evidence after LF normalization. |
+| Final offline regression | `LOCAL_VERIFIED` | Windows Python 3.13.9: 534 tests/24 directories and zero failed directories. Terraform 1.15.5: recursive fmt, backend-free init/validate and 13 mock/plan runs in 3 roots. Pester 5.7.1: 6/6. [Hosted workflow](https://github.com/miku-wwl/azure-cloudops/actions/workflows/ci.yml). |
+| L0 | `READ_ONLY_AZURE_VERIFIED` | Azure for Students default context, one explicit-subscription Resource Graph REST page with three Network Watchers, governance and provider reads, F1 and runtime listings and the name availability check. |
+| LAB-IR-11 scope verification | `DEPLOYED` (group and F1 plan) / `BLOCKED` | Azure Activity Log confirms both writes. The F1/Free checks passed; the CLI response omitted the top-level `reserved` field expected by the Linux gate. Web App, deployments, HTTP probes and recovery are `NOT_RUN` in Azure. |
+| LAB-IR-11 teardown | `CLEANED_UP` | Group and plan deleted. Group absence and zero residuals confirmed in 125.9 seconds; the watchdog confirmed independently; unrelated subscription inventory matched. [Run evidence](incidents/evidence/IR-11_azure-2026-11-28.md). |
+| Billing | `BILLING_PENDING` | Scoped month-to-date queries before and after the run both returned HTTP 200, zero rows and no continuation. Actual charges remain unknown. |
+| KQL demo | `NOT_RUN` | Interactive sign-in skipped per owner instruction. All seven templates and execution instructions remain. |
+| Live functional qualification | `LIVE_VALIDATED_SUBSET` and `PORTFOLIO_READY_LIVE` not attained | Web App functional and recovery gates remain open. Per-incident reasons are in the [live-lab index](LIVE_LAB_INDEX.md). |
 
 ## Historical starting state before implementation (approved baseline 853ba6c)
 
@@ -140,7 +153,7 @@ All twenty-three accepted lecture PDFs are independent outputs in `textbook/dist
 | Azure resource operations and billing | L0_READ_ONLY_COMPLETE / NOT_VERIFIED | No project Azure resource mutation. L0 observed one group and three Network Watcher resources; two Cost Management queries returned HTTP 429, so actual billing remains NOT_VERIFIED. |
 | Cross-stage hosted CI, security scan and final packages | LOCAL_VERIFIED / HOSTED_PASS | Exact run 45960683857 at 82d7865cc0b4df9ea4ea4eae595a2eaca726441d passed all five jobs. The final acceptance documentation refresh must have its own exact-revision run recorded after publication. |
 
-## Stage 3 L0 read-only Azure preflight (2026-11-26)
+## Historical Stage 3 L0 read-only milestones (2026-11-26 to 2026-11-28)
 
 | Check | Result | Evidence / limit |
 |---|---|---|

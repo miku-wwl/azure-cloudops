@@ -1,21 +1,22 @@
-# Azure CloudOps — final acceptance and handoff
+# Azure CloudOps V1 — final acceptance
 
-- As of: 2026-11-28 (Pacific/Auckland)
-- Repository: D:/workshop/nov/azure-cloudops
-- Branch: main
-- Status: Stages 1 and 2 accepted; Stage 3 L0 read-only evidence recorded with explicit unverified items; live Azure incident execution awaits one exact owner approval and run-time gates.
+- Closure date: 2026-11-28 (Pacific/Auckland).
+- Repository and branch: `miku-wwl/azure-cloudops`, `main`.
+- Scope: Stage 1 and Stage 2 delivery, Stage 3 read-only evidence and one authorized LAB-IR-11 attempt.
 
-## Acceptance summary
+## Milestones
 
-The repository contains all 23 approved Chinese technical textbooks, editable sources, 95 original SVG mechanism figures, offline experiments, Terraform and Azure Pipelines examples, 12 incident contracts, eight mandatory local incident scenarios with evidence, reproducible publishing tools and verified PDF/source ZIP packages. The work did not change Azure resources.
+| Milestone | Result | Evidence |
+|---|---|---|
+| `TEXTBOOK_V1_RELEASE_READY` | Achieved | 23 Chinese lectures with editable sources and experiments, per-lecture acceptance, 95 original SVG mechanism figures, PDF visual review, verified ZIPs and publication manifest. |
+| `LIVE_LAB_READY` | Achieved | E0–E10, three architecture views, six ADRs, Terraform and Azure Pipelines contracts, diagnostic tooling, 12 incident contracts, eight mandatory local closures and independent second-cycle replay. |
+| `READ_ONLY_AZURE_VERIFIED` | Achieved | Authorized subscription context, ARM and Resource Graph inventory, governance reads and candidate preflight. [L0 evidence](L0_READ_ONLY_PREFLIGHT.md). |
+| `LIVE_VALIDATED_SUBSET` | Outstanding | LAB-IR-11 reached F1 plan provisioning and verified cleanup. The Azure app's functional, failure and recovery steps remain open. |
+| `PORTFOLIO_READY_LIVE` | Outstanding | Mandatory live qualifications in the approved V3 roadmap remain open. |
 
-Stage 1 B0–B9 and Stage 2 E0–E10 passed their documented gates. Every final textbook PDF was rendered and visually reviewed as recorded in its chapter acceptance evidence. The final Stage 2 source refresh did not alter PDF payloads. There are zero genuine Azure Portal screenshots; no portal image was fabricated.
+## Publication
 
-Stage 3 L0 evidence was collected using the existing Azure CLI session. All Azure incident mutations remain NOT_RUN. The Cost Management Usage query was throttled twice, so actual subscription billing remains NOT_VERIFIED. A 2026-11-28 read-only subscription GET identified the Azure for Students quota and `spendingLimit=On`; this is not the project's USD 1.00 ceiling. See L0_READ_ONLY_PREFLIGHT.md.
-
-## Publication set
-
-The PDFs contain 183 pages in total. [Azure-CloudOps-PDF.zip](dist/Azure-CloudOps-PDF.zip) has SHA-256 `575F22B9958B68752B54539534E020902135B04BFF22C0BAF0924C8AA0C65608` (28,080,948 bytes). The verified [Azure-CloudOps-Sources.zip](dist/Azure-CloudOps-Sources.zip) contains 427 source and evidence files; the package verifier confirmed its contents match the current source tree. Its hash is intentionally not embedded in the archive contents because that would make the archive hash self-referential.
+The final collection contains 23 independent PDFs, 183 pages, 95 mechanism SVGs and 0 genuine Azure Portal screenshots. V1 rebuilds AZ04-02, AZ05-03, AZ06-02 and FIN-01 from observed evidence. All 30 pages of those four PDFs were rendered at 88 DPI and visually inspected, with the new observation pages also examined at 140 DPI. The other 19 PDFs are byte-identical to the previously reviewed publication at `41532cd`. Every PDF has an outline and readable extractable text. The independent reader or print proof and PDF/UA certification were outside this verification.
 
 | Lecture | Pages | Lecture | Pages | Lecture | Pages |
 |---|---:|---|---:|---|---:|
@@ -26,57 +27,56 @@ The PDFs contain 183 pages in total. [Azure-CloudOps-PDF.zip](dist/Azure-CloudOp
 | AZ04-04 | 8 | AZ05-01 | 6 | AZ05-02 | 7 |
 | AZ05-03 | 7 | AZ06-01 | 7 | AZ06-02 | 7 |
 | AZ07-01 | 9 | AZ07-02 | 7 | AZ07-03 | 8 |
-| AZ08-01 | 9 | FIN-01 | 9 | Total | 183 |
+| AZ08-01 | 9 | FIN-01 | 9 | **Total** | **183** |
 
-## Engineering and test evidence
+- [PDF ZIP](dist/Azure-CloudOps-PDF.zip) contains exactly 23 PDFs and matches the individual PDFs byte-for-byte.
+- [Source ZIP](dist/Azure-CloudOps-Sources.zip) contains 428 files and matches the repository source inventory with LF normalization for text.
+- [Publication manifest](dist/publication-manifest.json) records the exact byte sizes, SHA-256 hashes and per-entry SHA-256 hashes for both ZIPs. It is stored outside the ZIPs.
 
-- E8 executed all eight mandatory incidents locally using bounded mechanisms; each recorded a fault, diagnosis, same-probe recovery and cleanup. The LAB-IR-11 candidate packages were also built and locally verified: the same GET /health probe observed known-good 200, intentional 500 and restored 200 responses. E10 replayed all eight in a second clean cycle and replayed network, identity/permission and data-recovery cases in distinct contexts. This is local execution replay, not Azure validation or independent human review.
-- Final local Stage 2 gates: Python 3.13.9 passed 515 tests across 24 directories in the refreshed Windows run; Terraform 1.15.5 passed recursive formatting, backend-free init/validate and 13 plan/mock test runs across three roots; Pester 5.7.1 passed 2/2 tests.
-- Repository verification covers 23 curriculum/source/PDF mappings, 154 local Markdown references and 13 E9 cards with 18 required fields each. The IR-11 package test asserts root ZIP layout, response status and release body. The package verifier confirms all 23 PDF payloads and source archive contents match the source tree.
-- GitHub Actions run [45960683857](https://github.com/miku-wwl/azure-cloudops/actions/runs/45960683857) passed all five jobs at code revision 82d7865cc0b4df9ea4ea4eae595a2eaca726441d: Windows and Ubuntu repository/Python checks, Terraform format/validate/mock checks, Pester tooling checks, package/reference verification and a full-history Gitleaks scan. This report, the IR-11 package test and source archive are included in the published revision; its exact-revision result is tracked by the [GitHub Actions workflow](https://github.com/miku-wwl/azure-cloudops/actions/workflows/ci.yml) and linked in the delivery handoff.
-- The workflow uses pinned actions and test dependencies, read-only permissions and no artifacts or comments containing Azure data. Hosted GitHub usage is outside the Azure budget.
+## Final verification
 
-## Latest Stage 3 safety-gate refresh (2026-11-27)
+| Area | Observed result |
+|---|---|
+| Python | Windows Python 3.13.9 reported 534 tests in 24 directories and zero failed directories. Includes the 12-contract matrix, control and rejection cases, Resource Graph fallback, and 19 IR-11 package and watchdog tests. |
+| Terraform | Terraform 1.15.5 passed recursive format, backend-free init, validate and all 13 plan/mock runs across three test roots. The AzureRM/AzAPI root contributes eight mock runs. Real Azure deployment, remote state and cloud identity remain separate gates. |
+| PowerShell | Pester 5.7.1 passed 6/6 parser and tooling contract tests, including the positive ARM Linux evidence requirement before app creation. |
+| Replay | The E10 verifier regenerated the two-cycle result in a scratch copy. Its output matched the preserved evidence after LF normalization. Network, permission and data recovery replays used distinct run contexts. This was a verification of existing evidence. |
+| Publication | Curriculum, source map, local Markdown links, E9's 13 complete cards, PDF payloads and archive manifest verified. The four lecture acceptance addenda record the rebuilt artifacts. |
+| GitHub | [Offline engineering acceptance](https://github.com/miku-wwl/azure-cloudops/actions/workflows/ci.yml) checks exact revisions with Windows and Ubuntu Python/package jobs, Terraform, Pester and a full-history Gitleaks scan. The exact closure commit and its run are linked in the delivery report. The starting revision `41532cdb607051b058d6665f4afbc4f0af4418c2` passed [run 46071201359](https://github.com/miku-wwl/azure-cloudops/actions/runs/46071201359). |
 
-The LAB-IR-11 runbook now requires the exact approved batch, tenant/subscription, rechecked price/offer and service-limit attestations, and a gross estimate of USD 0.00. It checks the documented regional Free-plan count from the subscription inventory, starts an independent cleanup watchdog before the first write, and keeps that watchdog monitoring after the primary cleanup marker through a bounded final verification window. The watchdog deletes only the exact project/run-tagged dedicated resource group. The official Microsoft.Web usage endpoint was confirmed to report core usage, not an F1 plan count; the prior 0/2 interpretation was withdrawn. A 2026-11-27 subscription inventory showed 0 visible F1/Free plans in Australia East, while account entitlement, deployment capacity and actual billing remain NOT_VERIFIED. The Windows name-availability request now uses Azure CLI's documented `@file` body form after inline JSON was observed arriving empty.
+The architecture contracts and replay evidence are preserved in [E1 architecture](architecture/README.md), [E8 local execution](E8_LOCAL_INCIDENTS.md) and [E10 independent replay](E10_INDEPENDENT_REPLAY.md). Controlled-delivery negative cases preserve exact-plan scope and one-use approval boundaries. Azure DevOps server enforcement, WIF identity exchange, Azure Blob locking and enterprise live fidelity remain outside the observed runs.
 
-The 2026-11-27 follow-up passed 528 Python tests across 24 directories, the repository verifier (23 mappings, 155 Markdown references and 13 complete catalogue cards), Terraform formatting/backend-free validation and 13 plan/mock tests across three roots, the PowerShell parser, Pester 5.7.1 (5/5), and byte-for-byte package verification. The source ZIP contains 427 files; the 23-PDF ZIP hash is unchanged. The only Azure operations in this follow-up were the separately documented read-only preflight; no Azure resource mutation occurred. GitHub Actions runs exact-revision Windows, Ubuntu, Terraform, Pester and Gitleaks checks on each published commit; the current revision's run is linked from the commit.
+## Stage 3 outcome
 
-## Stage 3 read-only follow-up (2026-11-28)
+L0 used the existing default Azure for Students CLI context. The Resource Graph extension install failed locally and the inventory tool used the official REST query transport. It returned one complete page of three Network Watcher resources within the approved subscription. ARM inventory agreed. Azure governance and cost reads are recorded with separate evidence limits. The owner skipped the interactive KQL demo sign-in. All seven AZ05-02 templates retain their documented execution instructions and `NOT_RUN` state. [L0 preflight](L0_READ_ONLY_PREFLIGHT.md).
 
-The existing Azure CLI session remained Enabled and on its existing default subscription. A direct subscription GET returned `quotaId=AzureForStudents_2018-01-01` and `spendingLimit=On`; the Microsoft spending limit protects the subscription credit but is not the project's USD 1.00 cap. Microsoft's Linux pricing page still lists F1 under its Free plan, with shared CPU and storage limits; the current App Service plan inventory returned 0 visible F1 plans in Australia East, where the F1 location query succeeded. F1 eligibility, live deployment capacity and actual billing remain NOT_VERIFIED.
+The authorized scope was `rg-azure-cloudops-ir11-aue`, `asp-azure-cloudops-ir11-aue` (Linux F1 requested), and `azcoir11aue261126` (Node 24 LTS) in Australia East for up to 45 minutes including cleanup. Azure Activity Log confirmed the resource group and F1 plan writes. The runbook verified the plan name, region and F1/Free SKU before a missing top-level `reserved` field stopped effective Linux verification. The Web App, ZIP uploads, baseline, intentional HTTP 500 and recovery were `NOT_RUN` in Azure. [Sanitized run evidence](incidents/evidence/IR-11_azure-2026-11-28.md).
 
-The Microsoft.ResourceGraph provider is Registered, but installing the official Azure CLI extension failed locally because the embedded Python 3.13.13 pip process could not load `pyexpat`. The existing Azure CLI session then used the documented Resource Graph REST endpoint for an explicit-subscription aggregate query. It returned three `microsoft.network/networkwatchers` resources without truncation, confirming the earlier ARM list; resource names and IDs were not projected or retained. No Azure resource write or provider registration occurred. See L0_READ_ONLY_PREFLIGHT.md for exact evidence and command limits.
+The plan and group were deleted. Primary verification found zero residual resources in 125.9 seconds from the first write request. The independent watchdog reported `CLEANED_UP`, and the unrelated subscription inventory matched preflight. The runbook now reads `properties.reserved` through the documented ARM API and fails closed unless it is boolean true. The ARM projection change passed the local checks. The failure stop condition ended the authorized cloud run.
 
-The reusable `tools/azure_inventory.py` now automatically falls back to this REST transport when the extension is absent. Its focused 19-test suite and the complete Windows Python suite (530 tests across 24 directories) passed, and a live read-only run completed through the fallback in one page with the same three-resource result. The current Windows Azure CLI `.cmd` launcher is invoked through its bundled Python interpreter without a shell; REST request-body files are deleted after each call.
+Local validation of the two Node ZIPs observed 200 → 500 → 200, with the expected release and response body at each step. The recorded original ZIP SHA-256 is `55604247FAF289CF1AFDD5CE25EC4E3C865165D3E0B91A6E0B834CA02A135C38`.
 
-A fresh LAB-IR-11 read-only preflight confirmed the dedicated group was absent, no F1/Free plan was visible in Australia East, Linux F1 and `NODE:24-lts` were listed, and the candidate name was available. Microsoft's Azure for Students offer publicly includes an always-free App Service allocation, supporting the conditional USD 0.00 estimate for the 45-minute, no-dependency drill. These reads do not prove actual deployment capacity or invoice spend. The exact LAB-IR-11 resource batch remains unapproved, so no Azure write was made.
+## All incident results
 
-After recording this evidence, the repository verifier passed 23 curriculum/source/PDF mappings, 155 local Markdown references and 13 catalogue cards. Package verification confirmed 23 PDFs and a 427-file source archive byte-matched to the current source tree; the PDF ZIP SHA-256 remains `575F22B9958B68752B54539534E020902135B04BFF22C0BAF0924C8AA0C65608`. No Azure operation occurred during the documentation/package refresh.
+| ID | Local outcome | Azure outcome |
+|---|---|---|
+| IR-01 | `LOCAL_VERIFIED`. NXDOMAIN, then same DNS and HTTP 200 recovery. | `BUDGET_DEFERRED`. Private DNS, endpoint and traffic cost gate open. |
+| IR-02 | `LOCAL_VERIFIED`. Isolated filtering failure and same-probe HTTP recovery. | `PERMISSION_DEFERRED`. Approved lab network scope absent. |
+| IR-03 | `DESIGNED`. UDR and next-hop contract. | `PERMISSION_DEFERRED`. Approved existing route-table scope absent. |
+| IR-04 | `DESIGNED`. Peering connectivity contract. | `BUDGET_DEFERRED`. Peering, probes and traffic cost gate open. |
+| IR-05 | `LOCAL_VERIFIED`. Kernel permission denial, minimal grant and negative controls. | `PERMISSION_DEFERRED`. Narrow Azure identity and data scope required. |
+| IR-06 | `DESIGNED`. Key Vault access contract. | `BUDGET_DEFERRED`. Vault, transactions and network costs not established. |
+| IR-07 | `LOCAL_VERIFIED`. Actual kubelet pull failure against a local HTTP 404 registry fixture, then readiness and HTTP 200. | `BUDGET_DEFERRED`. AKS/ACR compute, registry and network cost gate open. |
+| IR-08 | `LOCAL_VERIFIED`. Real local state lock refusal, drift repair and a no-change plan. | `BUDGET_DEFERRED`. Storage transactions and retained state cost gate open. |
+| IR-09 | `DESIGNED`. Azure Policy deny contract. | `PERMISSION_DEFERRED`. Dedicated policy scope and authorization required. |
+| IR-10 | `LOCAL_VERIFIED`. Missed alert, rule correction and observed resolution. | `BUDGET_DEFERRED`. Telemetry, alert evaluation and retention cost gate open. |
+| IR-11 | `LOCAL_VERIFIED`. Actual 500 and atomic same-probe restoration to HTTP 200. | `BLOCKED` at effective Linux verification after F1 provisioning. `CLEANED_UP`. Web App and release path `NOT_RUN`. |
+| IR-12 | `LOCAL_VERIFIED`. Separate-path restore passed original SHA-256 and business value checks. | `BUDGET_DEFERRED`. Storage, retention and restore cost gate open. |
 
-## Incident state
+Both local cycles reported 8/8 mandatory scenarios verified and cleaned up. [Live-lab index](LIVE_LAB_INDEX.md) and [verification matrix](VERIFICATION_MATRIX.md).
 
-The eight mandatory local incidents are IR-01, IR-02, IR-05, IR-07, IR-08, IR-10, IR-11 and IR-12. Their real local mechanisms and results are documented in E8_LOCAL_INCIDENTS.md, incidents/evidence/ and E10_INDEPENDENT_REPLAY.md. Four other contracts remain design-only by the approved plan. Every Azure live status IR-01 through IR-12 is NOT_RUN. Local outcomes do not substitute for Azure behavior.
+## FinOps and closeout
 
-## Azure L0 evidence and limits
+Conditional gross project estimate is **USD 0.00** under the published F1 terms. Two historical Cost Management queries were throttled. The final pre- and post-run group-scoped month-to-date queries returned HTTP 200 with zero rows and no continuation. They returned no actual cost amount. Current billing is `BILLING_PENDING`. No unexpected charge was observed in the available data. The nominal balance is USD 1.00, with a USD 0.70 planning threshold and USD 0.30 contingency. Amount and effective headroom await delayed billing reconciliation. [Cost ledger](COST_LEDGER.md).
 
-The L0 results and subsequent evidence correction are recorded in L0_READ_ONLY_PREFLIGHT.md. In summary, the current CLI session remained enabled and default; two subscription-scope Owner assignment records were returned for the current principal, without an evaluation of group-derived permissions; one resource group and three Network Watcher resources were listable; Microsoft.Web and Microsoft.Insights were registered; Australia East was supported and the Linux F1 location was available. The 2026-11-27 governance reads returned 996 role definitions, 3,760 policy definitions, 2 subscription-scope policy assignments and a capped 10-event Administrative Activity Log sample. Management-group hierarchy was not established. Resource Graph was registered; its extension install failed locally, then a REST aggregate query returned three Network Watchers. A 2026-11-28 subscription GET returned the Azure for Students quota ID and `spendingLimit=On`, which does not equal the project USD 1.00 ceiling. The current plan inventory showed 0 visible F1 plans in Australia East; F1 eligibility and regional deployment capacity remain NOT_VERIFIED. No project lab VNet, NSG, route table, NIC or App Service appeared in the listable inventory. The proposed resource group was absent and candidate app name was available at the time checked.
-
-No resource, provider registration, diagnostic probe, app deployment or other Azure mutation was performed. Two Cost Management Usage queries returned HTTP 429, with no amount obtained. Actual cumulative Azure billing is NOT_VERIFIED; no USD 0.00 actual-spend claim is made.
-
-## KQL demo verification state
-
-The official Log Analytics demo and Azure Data Explorer help-cluster UI were opened as possible no-subscription validation paths. Both redirected this browser session to Microsoft sign-in. The owner instructed us to skip this interactive sign-in and continue. No credentials were entered, no authentication completed and no KQL query was sent. The seven AZ05-02 templates remain source-reviewed and NOT_RUN; the optional demo access check is recorded as skipped on 2026-11-28. Details and owner-run steps remain in `chapters/AZ05-02/labs/telemetry-triage/README.md`.
-
-## Proposed Stage 3 batch — approval required
-
-The only current candidate is LAB-IR-11, an isolated App Service release-regression and rollback drill. This is a proposal, not authorization.
-
-- Exact resource allowlist: create resource group rg-azure-cloudops-ir11-aue; within it create one Linux App Service plan asp-azure-cloudops-ir11-aue with SKU F1 and one web app azcoir11aue261126. Region: Australia East (australiaeast). The group was absent and site name was available when checked; repeat both checks immediately before any write.
-- Operation: deploy the no-dependency Node 24 LTS ZIP packages sequentially to the same app and HTTPS endpoint: known-good response, deterministic HTTP 500 fault, then the exact same known-good ZIP. Use the reviewable NODE:24-lts source in incidents/live_ir11 and capture baseline, fault and recovery status/body with the same GET /health probe. Do not create deployment slots, production routes, Application Insights, Log Analytics, Storage, private networking or extra resources.
-- Maximum lifetime: 45 minutes from creation through recovery, teardown and residual-resource check. Delete the app, plan and dedicated resource group in the same run; verify no residual resources.
-- Price basis: Microsoft lists Linux App Service F1 as USD 0 with shared CPU limited to 60 CPU minutes/day, 1 GB RAM and 1 GB storage; Azure bandwidth pricing lists the first 100 GB/month of internet egress as free. Sources: [App Service Linux pricing](https://azure.microsoft.com/en-us/pricing/details/app-service/linux/), [Azure bandwidth pricing](https://azure.microsoft.com/en-au/pricing/details/bandwidth/), and [App Service hosting plans](https://learn.microsoft.com/en-us/azure/app-service/overview-hosting-plans).
-- Estimate: conditional gross USD 0.00 for the proposed 45-minute run under the published terms, if the account offer permits F1 and no paid dependencies are needed. The 2026-11-28 inventory showed 0 visible F1/Free plans in Australia East; the subscription is Azure for Students, but F1 entitlement and regional capacity remain unverified, and the runtime list included NODE:24-lts. Microsoft's pricing page lists F1 under the Free plan but says actual prices can vary by offer. Recheck the documented regional Free-plan limit, account offer and current pricing immediately before creation. Stop if F1 is unavailable, a paid dependency is needed, an unexpected meter appears, or the reliable cumulative gross estimate exceeds USD 0.70. Keep USD 0.30 as contingency and never exceed the project USD 1.00 ceiling.
-- Authorization needed: explicit approval of this exact resource group, plan, app, region/SKU, operation, 45-minute limit, teardown and conditional cost gate. Approval would not authorize other Azure resource changes.
-
-The source, package builder, same probe, local package/watchdog tests and guarded Azure CLI sequence are reviewable in incidents/live_ir11/README.md. The full catalogue card is LAB-IR-11 in LIVE_LAB_CATALOGUE.md. The project proceeds to Azure writes only after this batch is specifically approved and every run-time gate passes. If the owner declines or cost/offer/plan-limit evidence cannot be confirmed, keep all Azure live incident states NOT_RUN.
+V1 is closed within the authorized scope. The unverified app exercise, deferred incidents, unexecuted KQL demo and pending billing remain on their own evidence lines.

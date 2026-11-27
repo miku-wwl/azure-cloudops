@@ -38,8 +38,8 @@ svg("cost-views-and-budgets.svg", '''
 <text x="38" y="42" class="title">Actual 与 amortized 看同一承诺的两种时间表达</text>
 <rect x="48" y="92" width="565" height="370" class="box neutral"/>
 <text x="76" y="132" class="label">承诺购买：总费用 USD 300，期限三个月（演示值）</text>
-<text x="77" y="188" class="body">Actual cost</text><rect x="245" y="157" width="295" height="53" rx="8" fill="#b76464"/><text x="266" y="191" class="label" fill="white">第 1 月记录 USD 300</text>
-<text x="77" y="266" class="body">Amortized</text><rect x="245" y="233" width="95" height="53" rx="8" fill="#167e83"/><rect x="350" y="233" width="95" height="53" rx="8" fill="#167e83"/><rect x="455" y="233" width="95" height="53" rx="8" fill="#167e83"/><text x="263" y="267" class="small" fill="white">USD 100</text><text x="368" y="267" class="small" fill="white">USD 100</text><text x="473" y="267" class="small" fill="white">USD 100</text>
+<text x="77" y="188" class="body">Actual cost</text><rect x="245" y="157" width="295" height="53" rx="8" fill="#9d5252"/><text x="266" y="191" class="label" style="fill:#fff">第 1 月记录 USD 300</text>
+<text x="77" y="266" class="body">Amortized</text><rect x="245" y="233" width="95" height="53" rx="8" fill="#167e83"/><rect x="350" y="233" width="95" height="53" rx="8" fill="#167e83"/><rect x="455" y="233" width="95" height="53" rx="8" fill="#167e83"/><text x="263" y="267" class="small" style="fill:#fff">USD 100</text><text x="368" y="267" class="small" style="fill:#fff">USD 100</text><text x="473" y="267" class="small" style="fill:#fff">USD 100</text>
 <text x="79" y="339" class="small">Actual：对账采购发生在哪天</text><text x="79" y="370" class="small">Amortized：观察承诺期间的资源归属</text>
 <rect x="79" y="398" width="500" height="43" rx="9" class="box warn"/><text x="99" y="426" class="body">两者不可相加：是同一项 USD 300 承诺</text>
 <rect x="655" y="92" width="400" height="370" class="box cloud"/>

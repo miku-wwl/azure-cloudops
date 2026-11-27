@@ -28,6 +28,13 @@ builder = load_module("ir11_prepare_packages", BUILDER)
 probe_module = load_module("ir11_probe", PROBE)
 
 class IR11PackageTests(unittest.TestCase):
+    def test_probe_requires_the_expected_status_release_and_boolean_health(self) -> None:
+        expected = {"release": "known-good-v1", "healthy": True}
+        self.assertTrue(probe_module.matches_expected(200, expected, "known-good-v1"))
+        self.assertFalse(probe_module.matches_expected(500, expected, "known-good-v1"))
+        self.assertFalse(probe_module.matches_expected(200, {**expected, "healthy": 1}, "known-good-v1"))
+        self.assertFalse(probe_module.matches_expected(200, {**expected, "extra": "unexpected"}, "known-good-v1"))
+
     def test_zips_have_app_files_at_the_archive_root(self) -> None:
         work = REPO / "work"
         work.mkdir(exist_ok=True)

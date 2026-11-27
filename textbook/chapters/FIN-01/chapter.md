@@ -16,7 +16,7 @@ header: FIN-01 · Cost Recovery
 ::: cover-meta
 - **讲次**：23 / 23
 - **核心机制**：meter 计费、成本可见性、分摊、承诺折扣、保留与清理
-- **证据边界**：Microsoft Learn 官方文档分析 + 本地合成成本账本
+- **证据边界**：合成账本、F1 估价与计费查询实测
 - **工程结果**：形成可追溯、保留业务数据且能核实残留的回收流程
 :::
 :::::
@@ -73,6 +73,12 @@ Cost Management 的 cost analysis 可以按 scope、时间、service、resource�
 不要把四个数字混成一个“本月费用”：估算、Cost Management actual cost、amortized 归属和发票/付款状态各自回答不同问题。对账时同时记录时间范围、scope、币种、数据新鲜度和是否含信用额；毛额与信用额要分别留存。
 :::
 
+### 实测：F1 的计划价与计费查询
+
+LAB-IR-11 只批准 Australia East 的一项 Linux F1 计划、一项 Web App 和专用资源组，45 分钟内完成清理。项目依据 F1 免费规格、学生订阅权益和少量探针流量，在公开免费出网额度内估算 **USD 0.00 毛额**。地区清单与账户权益可做事前核对，实际区域容量由 Azure 在创建时判定。[15]
+
+早期 Cost Management 查询返回 HTTP 429。实测前后，按实验资源组过滤的当月查询均返回 HTTP 200、零条记录。专用资源组和计划在约 126 秒内确认清空，Web App 未创建。资源清单给出了回收证据。计费空结果只说明此范围和时点没有可用的费用行，账单仍需等用量入账后核对。[4]
+
 ## 让每笔费用有明确归属
 
 直接成本优先归到拥有资源的团队、产品、环境和成本中心。标签是便于检索和报告的键值对，不是授权边界。并非每种资源或用量记录都支持标签，资源组标签也不一定默认进入成本记录；Cost Management 的 tag inheritance 可将支持的上层标签继承到 usage records，但它并不会修改资源本身。标签可能等数据刷新后才显示；不要将秘密、个人信息或敏感业务值写进标签。[6][7]
@@ -127,13 +133,11 @@ VM `Stopped` 与 `Deallocated` 不是同一个费用状态。guest OS 关机后�
 
 附带的 [cost-recovery lab](labs/cost-recovery/README.md) 读取纯合成账本，分别汇总 actual/amortized、gross charges/credits、标签归属、共享池分配、按小时的未用承诺、预算阈值和资源保留决策。修订 fixture 后，逐项模拟 `Stopped`、`Deallocated`、detached disk、未归属 shared cost、跨视图混加和超预算等情形。结果只证明测试输入符合明确的教学合同，不模拟 Azure 的定价引擎、账单、Tag inheritance、reservation matching 或资源删除行为。
 
-Windows 命令、样例输出、断言边界和复现实验见 lab README。以后如要观察获批订阅的 Cost Management、Advisor 和资源残留清单，需先通过 Stage 3 L0 的 scope、成本和只读授权门；命令、权限、预期证据、停止条件和后续对账流程见 [future read-only runbook](labs/cost-recovery/FUTURE-LIVE-READONLY.md)。本章验收期间没有查询 Azure。
+Windows 命令、样例输出与断言边界见 lab README。本地账本实验不访问 Azure。获批订阅的 Cost Management、Advisor 和残留清单查询步骤另见[只读手册](labs/cost-recovery/FUTURE-LIVE-READONLY.md)。上述 LAB-IR-11 实测使用按实验资源组过滤的成本查询。
 
 ### 演算：把账本对到成本中心
 
 从实验根目录运行 `python textbook/chapters/FIN-01/labs/cost-recovery/finops_contract.py`。该命令读取仓库中的 `synthetic-ledger.json`，调用实际文件里的 `analyze()` 和 `summarize()` 合同；它不读取云账单。Windows 与 WSL 的命令和完整输出均记录在实验 README。
-
-基线输出节选：
 
 ```json
 {
@@ -190,5 +194,6 @@ Payments 的 USD 101.00 = 直接费用 USD 80.00 + 共享网络 USD 30.00 × 70%
 12. Microsoft Learn, [VM states and billing](https://learn.microsoft.com/en-us/azure/virtual-machines/states-billing).
 13. Microsoft Learn, [Delete VMs and attached resources](https://learn.microsoft.com/en-us/azure/virtual-machines/delete).
 14. Microsoft Learn, [Azure Advisor cost recommendations](https://learn.microsoft.com/en-us/azure/advisor/advisor-reference-cost-recommendations).
+15. Microsoft Azure, [Linux App Service pricing](https://azure.microsoft.com/en-us/pricing/details/app-service/linux/), [Azure for Students](https://azure.microsoft.com/en-us/free/students) and [Bandwidth pricing](https://azure.microsoft.com/en-us/pricing/details/bandwidth/), checked 2026-11-28.
 
 **资料复核日期：2026-11-27（Pacific/Auckland）。** 价格、价格 API、协议资格、预算与成本数据更新、SKU 和 reservation exchange 条款应在具体决策时重新核对。

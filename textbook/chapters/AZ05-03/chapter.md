@@ -16,7 +16,7 @@ header: AZ05-03 · Inventory
 ::: cover-meta
 - **讲次**：16 / 23
 - **核心机制**：CLI 与 Az PowerShell 上下文、ARM 列表、Resource Graph、稳定分页
-- **证据边界**：Microsoft Learn + 合成资源和离线清单模型
+- **证据边界**：离线清单模型、Azure 只读盘点
 - **适用场景**：资产盘点、CMDB 对账、范围审计、分页结果复核
 :::
 
@@ -67,7 +67,7 @@ Resources
 | order by id asc
 ```
 
-下面的 CLI 和 PowerShell 片段是供未来经审批的只读盘点使用的参考模板，本文没有运行它们，也没有连接 Azure。把显式 subscription ID 换成经过范围审批的值；对于多订阅 scope，完整传入获批列表。Resource Graph 查询可一次覆盖这些订阅，而直接 ARM 列表则通常需逐一指定 subscription。[7][8]
+下面的 CLI 和 PowerShell 片段是获批只读盘点的参考模板。将显式 subscription ID 换成获批值。多订阅盘点时，Resource Graph 可一次接收获批列表，直接 ARM 列表通常逐一指定订阅。项目实际采集走下文的 REST 路径。[7][8]
 
 ```powershell
 # Reference only — not executed; use only after the separate Stage 3 gates.
@@ -83,6 +83,12 @@ Search-AzGraph -Query $kql -Subscription $subscriptionId -First 1000
 ![图 16-3：清单查询从显式 scope 开始，再投影稳定键和所需字段，最后排序并分页；过滤或截断的位置会改变“完整”的含义。](figures/query-pipeline.svg)
 
 排查差异时，先将查询范围固定为小而明确的 subscription ID 集合，导出 `id`、`type` 和 `subscriptionId` 等可比较字段。用 Resource Graph 回答跨范围的探索问题，再对关心的订阅用 ARM 资源列表检查差异；差异存在时标注“来源与读取时间”，不要仅靠 name 或 `count()` 做一对一对账。若涉及较大的租户范围，观察限流配额响应；将请求分组到 subscription 或 resource group 通常比并行轰炸查询更合适。[5][10]
+
+### 实测：Graph 扩展不可用时如何保留清单约束
+
+在 Azure for Students 的获批订阅中，Windows CLI 无法安装 Resource Graph 扩展。仓库的清单工具自动改走 `az rest`，在查询请求体中显式传入该订阅和 KQL，并继续核查截断与续页标记。Resource Graph 的这个 `POST` 执行查询；请求不创建或更新资源。[11]
+
+实测返回 **1 页、3 条 Network Watcher 资源**，与同一订阅可见的 ARM 清单对上。报告只保留资源类型和数量。这只能说明本次身份、范围和读取时刻的一致性。若响应声明结果被截断而没有续页 token，工具将这次清单标为不完整。
 
 ## 分页：把结果集完整取回来
 
@@ -158,4 +164,5 @@ python textbook/chapters/AZ05-03/labs/inventory-model/inventory_model.py
 8. [Search-AzGraph](https://learn.microsoft.com/en-us/powershell/module/az.resourcegraph/search-azgraph?view=azps-17.0.0) — Az PowerShell Resource Graph 查询及 scope、续页参数。
 9. [Azure CLI `az resource`](https://learn.microsoft.com/en-us/cli/azure/resource?view=azure-cli-latest) — ARM 资源列表与 CLI JMESPath 参数。
 10. [Troubleshoot common errors for Azure Resource Graph](https://learn.microsoft.com/en-us/azure/governance/resource-graph/troubleshoot/general) — 读取权限与查询结果缺失排查。
+11. [Query Azure Resource Graph with REST](https://learn.microsoft.com/en-us/azure/governance/resource-graph/first-query-rest-api) — 在请求体里指定订阅和查询，并读取查询结果。
 :::

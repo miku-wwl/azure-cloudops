@@ -1,7 +1,7 @@
 # Azure CloudOps & Enterprise Infrastructure — V3 工程实施与学习路线图
 
 > **版本：** V3.1 implementation contract / 2026-11-26；承接 V3.0，增加已批准的三阶段交付顺序与 USD 1.00 累计 Azure 费用边界。
-> **当前状态（2026-11-27）：** Stage 1 B0–B9、Stage 2 E0–E7 离线门槛已完成；当前进入 E8 mandatory local incidents。Master prompt 的 GitHub Actions/secret-scan 验收和 Stage 2 最终发布包仍未完成。Stage 3 Azure 只读预检尚未开始。
+> **V1 结项（2026-11-28）：** Stage 1 B0–B9、Stage 2 E0–E10 与 Stage 3 L0 已通过。LAB-IR-11 创建 F1 计划后卡在 Linux 字段核验，计划和资源组已清理。应用发布、故障和回退未获云端实证。当前验收见 [最终报告](textbook/FINAL_ACCEPTANCE_REPORT.md)。
 > **原始 V3 基线：** miku-wwl/azure-cloudops main，提交 853ba6cbaa4ee67e448550fbe192c6c89b24fd2f；该提交已与 origin/main 同步。
 > **目标：** Azure Cloud / Senior Infrastructure / Platform / SRE / DevOps Engineer，尤其适合金融等重视安全、治理、变更与恢复的企业环境。  
 > **学习原则：** 不重复 AZ-104、AZ-305、Terraform 认证备考；以技术机制、工程实施、独立排障和可复验结果为主。
@@ -19,7 +19,7 @@ V2 的 M0–M9 全部保留其核心学习目标，但不再以十个孤立知�
 
 本次切换时目标仓库 main 和 origin/main 均为批准基线 853ba6c。工作仅在 main 持续前进，不创建分支或 PR。AWS 参考仓库在 b44160ea0f864ce7edf40cc0edb402cb53687a63 上只读分析，不修改。
 
-#### 0.1.1 当前执行记录（更新至 2026-11-27）
+#### 0.1.1 实施历史（截至 2026-11-27 的 E7 检查点）
 
 - Stage 1 B0–B9 完成：23/23 讲、PDF、源稿与逐讲 acceptance 均已交付；历史 B9 验收详见 `textbook/RELEASE_ACCEPTANCE.md`。该较窄 B9 不代表 master prompt 的 hosted CI、secret scan 或 PDF/UA 验收已通过。
 - Stage 2 E0 完成：审计发现并修正 FIN-01 成本分摊分币错误、AZ02-01 路由模型接受无效 next-hop contract，以及 AZ07-02 本地 Terraform State verifier 对 checkout 状态和失败清理的安全问题。修复、测试和证据见 `textbook/E0_INDEPENDENT_AUDIT.md` 及对应 chapter acceptance addenda。
@@ -35,7 +35,14 @@ V2 的 M0–M9 全部保留其核心学习目标，但不再以十个孤立知�
 - Docker Desktop Linux Engine 在之前的 host 检查中不可用；开始 E2 时重新检查。Azure CLI 命令存在不代表登录、scope 或授权可用。
 - 实际累计 Azure 支出：`NOT_VERIFIED`。USD 1.00 总上限、USD 0.70 计划线和 USD 0.30 清理/未知费用余量继续适用；不得声明 actual spend 为 USD 0.00。
 
-#### 0.1.2 旧 P0–P8 与 E0–E10 的关系
+#### 0.1.2 V1 最终验收（2026-11-28）
+
+- `TEXTBOOK_V1_RELEASE_READY` 与 `LIVE_LAB_READY` 达成。23 讲出版，E8 八个本地故障、同探针恢复和清理闭环均通过。E10 两轮历史证据校验通过。
+- `READ_ONLY_AZURE_VERIFIED` 达成。明确订阅范围的 Resource Graph REST 清点返回三项 Network Watcher，见 [L0 记录](textbook/L0_READ_ONLY_PREFLIGHT.md)。
+- LAB-IR-11 获批并创建专用组和 F1 计划。CLI 结果缺少顶层 `reserved` 字段，阻止创建 Web App。约 126 秒确认清理，独立看门狗复核通过。最终运行手册使用 ARM `properties.reserved` 核验，修改已完成离线检查。[现场证据](textbook/incidents/evidence/IR-11_azure-2026-11-28.md)。
+- `LIVE_VALIDATED_SUBSET` 与 `PORTFOLIO_READY_LIVE` 保持未达成。按 USD 1.00 约束完成本轮结项。其余 incident 状态见 [实验索引](textbook/LIVE_LAB_INDEX.md)。费用查询前后均返回空结果，实际账单 `BILLING_PENDING`。
+
+#### 0.1.3 旧 P0–P8 与 E0–E10 的关系
 
 原 P0–P8 合同作为 Stage 2 的需求来源保留；原 L0–L3 是 Stage 3 的 live gate。B0–B9 是增加的出版和教材 gate，不替代架构、安全或实验验收。课程改为 23 个独立 lecture PDFs，索引见 textbook/CURRICULUM.md。阶段状态必须由实际证据更新，不得因为推进路线图而自动标 PASS.
 

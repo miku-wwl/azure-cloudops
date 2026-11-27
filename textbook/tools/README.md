@@ -20,6 +20,8 @@ The output path is textbook/dist/pdf/<id>_<slug>.pdf. A build and automated repo
 
 The collection package is accepted only with exactly 23 PDFs. The source package includes editable sources and Terraform dependency lock files, and excludes build directories, provider caches, local-only redaction maps, raw state and plans. Optional local secret-pattern scans use tools/sensitive.local.txt, which is ignored by Git.
 
+The publisher writes `textbook/dist/publication-manifest.json` alongside the ZIPs. `--verify` checks both archive sizes and SHA-256 values, unique members, and every entry against its on-disk payload. Source text uses LF for the comparison.
+
 ## Local lab lifecycle harness (E2)
 
 Run the local-only harness from the repository root:

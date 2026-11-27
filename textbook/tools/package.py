@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import json
 import re
 import subprocess
 import sys
@@ -27,6 +28,7 @@ ROOT = Path(__file__).resolve().parents[1]          # textbook/
 DIST = ROOT / "dist"
 PDF_ZIP = DIST / "Azure-CloudOps-PDF.zip"
 SRC_ZIP = DIST / "Azure-CloudOps-Sources.zip"
+MANIFEST = DIST / "publication-manifest.json"
 
 EXCLUDE_DIRS = {".terraform", "build", "work", "__pycache__", "dist", ".pytest_cache"}
 EXCLUDE_NAMES = {"plan.json", "tfplan", "crash.log"}
@@ -80,6 +82,18 @@ def source_bytes(path: Path) -> bytes:
     return data
 
 
+def publication_manifest(pdfs: dict[str, str], sources: dict[str, str]) -> dict:
+    archives = {}
+    for path, entries in ((PDF_ZIP, pdfs), (SRC_ZIP, sources)):
+        archives[path.name] = {
+            "size_bytes": path.stat().st_size,
+            "sha256": sha256(path.read_bytes()),
+            "entry_count": len(entries),
+            "entries_sha256": entries,
+        }
+    return {"format_version": 1, "source_text_normalization": "LF", "archives": archives}
+
+
 def build() -> None:
     pdfs = sorted((DIST / "pdf").glob("*.pdf"))
     if len(pdfs) != 23:
@@ -93,39 +107,53 @@ def build() -> None:
                 leaks.append(str(p.relative_to(ROOT)))
     if leaks:
         sys.exit("发现敏感字符串，停止打包：\n  " + "\n  ".join(leaks))
+    pdf_entries = {p.name: sha256(p.read_bytes()) for p in pdfs}
+    source_entries = {}
     with zipfile.ZipFile(PDF_ZIP, "w", zipfile.ZIP_DEFLATED) as z:
         for p in pdfs:
             z.write(p, f"Azure-CloudOps-PDF/{p.name}")
     with zipfile.ZipFile(SRC_ZIP, "w", zipfile.ZIP_DEFLATED) as z:
         for p in files:
-            arcname = "Azure-CloudOps-sources/" + p.relative_to(ROOT).as_posix()
+            relative_name = p.relative_to(ROOT).as_posix()
+            arcname = "Azure-CloudOps-sources/" + relative_name
             info = zipfile.ZipInfo.from_file(p, arcname)
             info.compress_type = zipfile.ZIP_DEFLATED
-            z.writestr(info, source_bytes(p))
+            data = source_bytes(p)
+            z.writestr(info, data)
+            source_entries[relative_name] = sha256(data)
+    manifest = publication_manifest(pdf_entries, source_entries)
+    MANIFEST.write_text(json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+                        encoding="utf-8", newline="\n")
     print(f"{PDF_ZIP.name}: {len(pdfs)} 个 PDF，{PDF_ZIP.stat().st_size / 1e6:.1f} MB")
     print(f"{SRC_ZIP.name}: {len(files)} 个文件，{SRC_ZIP.stat().st_size / 1e6:.1f} MB")
     print("敏感信息检查：" + ("通过" if deny else "跳过（没有 tools/sensitive.local.txt）"))
 
 
+def archive_entries(path: Path, prefix: str) -> dict[str, str]:
+    with zipfile.ZipFile(path) as z:
+        names = z.namelist()
+        if len(set(names)) != len(names) or any(not n.startswith(prefix) or n.endswith("/") for n in names):
+            raise ValueError(f"{path.name}: 归档路径异常或重名")
+        return {n.removeprefix(prefix): sha256(z.read(n)) for n in names}
+
+
 def verify() -> bool:
-    ok = True
-    with zipfile.ZipFile(PDF_ZIP) as z:
-        if z.testzip():
-            print("PDF ZIP 损坏"); ok = False
-        inzip = {Path(n).name: sha256(z.read(n)) for n in z.namelist()}
-    ondisk = {p.name: sha256(p.read_bytes()) for p in (DIST / "pdf").glob("*.pdf")}
-    diff = sorted(set(inzip.items()) ^ set(ondisk.items()))
-    print(f"PDF ZIP：{len(inzip)} 个文件，与 dist/pdf 逐字节{'一致' if not diff else '不一致：' + str(diff[:3])}")
-    ok &= not diff
-    with zipfile.ZipFile(SRC_ZIP) as z:
-        if z.testzip():
-            print("源稿 ZIP 损坏"); ok = False
-        inzip = {n.split("/", 1)[1]: sha256(z.read(n)) for n in z.namelist()}
-    ondisk = {p.relative_to(ROOT).as_posix(): sha256(source_bytes(p)) for p in source_files()}
-    diff = sorted(set(inzip.items()) ^ set(ondisk.items()))
-    print(f"源稿 ZIP：{len(inzip)} 个文件，与 textbook/ 源稿（文本统一 LF）逐字节{'一致' if not diff else '不一致：' + str([d[0] for d in diff[:5]])}")
-    ok &= not diff
-    return ok
+    try:
+        pdfs = archive_entries(PDF_ZIP, "Azure-CloudOps-PDF/")
+        sources = archive_entries(SRC_ZIP, "Azure-CloudOps-sources/")
+        pdfs_on_disk = {p.name: sha256(p.read_bytes()) for p in (DIST / "pdf").glob("*.pdf")}
+        sources_on_disk = {p.relative_to(ROOT).as_posix(): sha256(source_bytes(p)) for p in source_files()}
+        manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+        pdf_ok = len(pdfs) == 23 and pdfs == pdfs_on_disk
+        src_ok = sources == sources_on_disk
+        manifest_ok = manifest == publication_manifest(pdfs_on_disk, sources_on_disk)
+    except (OSError, ValueError, zipfile.BadZipFile) as exc:
+        print(f"出版校验失败：{exc}")
+        return False
+    print(f"PDF ZIP：{len(pdfs)} 个文件，与 dist/pdf 逐字节{'一致' if pdf_ok else '不一致'}")
+    print(f"源稿 ZIP：{len(sources)} 个文件，与教材源稿（文本统一 LF）逐字节{'一致' if src_ok else '不一致'}")
+    print(f"出版清单：归档大小、归档 SHA-256 和每个条目 SHA-256 {'一致' if manifest_ok else '不一致'}")
+    return pdf_ok and src_ok and manifest_ok
 
 
 if __name__ == "__main__":
