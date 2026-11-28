@@ -1,15 +1,17 @@
 # Project progress
 
+Historical commit references in this transferred log use 16-character prefixes; each prefix identifies the same Git commit object.
+
 ## V1.0.1 textbook refinement
 
-- Accepted publication baseline is `8cdad7fba8db8f821aaf013bd20637441e6c22dc`. The 23-lecture configuration, worked examples, learner procedures and baseline corrections are recorded in the [V1.0.1 review](../V1_0_1_TEXTBOOK_REVIEW.md).
+- Accepted publication baseline is [`8cdad7fba8db8f82`](https://github.com/miku-wwl/azure-cloudops/commit/8cdad7fba8db8f82). The 23-lecture configuration, worked examples, learner procedures and baseline corrections are recorded in the [V1.0.1 review](../V1_0_1_TEXTBOOK_REVIEW.md).
 - The current textbook task is Stage 1 refinement with USD 0.00 additional Azure budget. Azure verification states and billing evidence below retain their original scopes. The seven workspace KQL templates remain `NOT_RUN`.
 - See the [V1.0.1 publication section](FINAL_ACCEPTANCE_REPORT.md#v101-textbook-refinement) and [manifest](../../dist/publication-manifest.json) for package and gate details.
 
 - Last updated: 2026-11-28 (Pacific/Auckland)
 - Repository: D:/workshop/nov/azure-cloudops
 - Branch: main
-- Starting and approved V3 baseline: 853ba6cbaa4ee67e448550fbe192c6c89b24fd2f
+- Starting and approved V3 baseline: [`853ba6cbaa4ee67e`](https://github.com/miku-wwl/azure-cloudops/commit/853ba6cbaa4ee67e)
 
 ## Current gate
 
@@ -33,7 +35,7 @@
 ## Completed evidence
 
 - Target main and origin/main were synchronized at the approved V3 commit; no owner changes were present at start.
-- AWS reference checkout was exact commit b44160ea0f864ce7edf40cc0edb402cb53687a63 and clean. No AWS files were modified.
+- AWS reference checkout was exact commit [`b44160ea0f864ce7`](https://github.com/miku-wwl/aws-cloudops/commit/b44160ea0f864ce7) and clean. No AWS files were modified.
 - AWS PDF and source ZIP verifier passed read-only. See REFERENCE_ANALYSIS.md for scope and limits.
 - Representative AWS PDF pages were rendered and visually reviewed as recorded in REFERENCE_ANALYSIS.md.
 - Adapted Azure publisher built AZ00-01 into an 8-page PDF. The final build reported 13,443 extracted characters, no placeholder markers, no overflow warnings, and page fill 49–100% (cover 49%). All eight pages were rendered and visually inspected; confirmed code wrapping and reference-label breaks were corrected and the affected pages rebuilt and rechecked. Automated render report: `textbook/chapters/AZ00-01/build/qa/report.txt` (ignored local artifact).
@@ -101,12 +103,12 @@
 - E10 passed a second complete clean local execution cycle: all 8/8 mandatory scenarios recorded; independent replay exercised a network, identity/permission, and data-recovery incident. The verifier confirms distinct execution contexts and cleanup. This is replay evidence, not independent human review. See `E10_INDEPENDENT_REPLAY.md`.
 - At the E10 acceptance checkpoint, Python 3.13.9 ran 513 tests in 24 directories; Terraform 1.15.5 passed recursive fmt, backend-free init/validate, and 13 plan/mock test runs in 3 roots; Pester 5.7.1 passed both PowerShell contract tests. The repository verifier passed all 23 curriculum/source/PDF mappings, 150 local Markdown references, and 13 E9 cards.
 - At the E10 checkpoint, the publication packages contained 23 PDFs and 414 source files; the PDF payloads were unchanged by that Stage 2 source refresh. The final Stage 3 handoff refresh below updates the source package count.
-- Exact-revision GitHub Actions run 45960683857 passed all five jobs at code SHA 82d7865cc0b4df9ea4ea4eae595a2eaca726441d: Windows and Ubuntu repository/Python checks, Terraform formatting and backend-free mock checks, PowerShell/Pester, package/reference verification, and the Gitleaks revision scan. Final acceptance report and source package record the refreshed evidence.
+- Exact-revision GitHub Actions run 45960683857 passed all five jobs at code SHA [`82d7865cc0b4df9e`](https://github.com/miku-wwl/azure-cloudops/commit/82d7865cc0b4df9e): Windows and Ubuntu repository/Python checks, Terraform formatting and backend-free mock checks, PowerShell/Pester, package/reference verification, and the Gitleaks revision scan. Final acceptance report and source package record the refreshed evidence.
 
 ## Final Stage 3 handoff refresh
 
 - The final Windows Python run passed 515 tests across 24 directories, including the new IR-11 ZIP layout and same-probe 200/500/200 tests. Repository verification passed 23 curriculum/source/PDF mappings, 154 local Markdown references and 13 complete E9 cards. Package build and byte verification passed for 23 PDFs and 424 source/evidence files; the PDF ZIP hash is unchanged. `git diff --check` passed.
-- The report, L0 evidence and proposed IR-11 implementation are included in the source package. This handoff refresh made no Azure resource changes; the two billing queries remained throttled and actual Azure billing is NOT_VERIFIED. Exact-revision GitHub Actions run [45970519897](https://github.com/miku-wwl/azure-cloudops/actions/runs/45970519897) passed all five jobs on commit `de1e44972b876cf201e34748df814fb5f11ed4d6`; this progress-record/source-archive update will receive its own exact-revision run.
+- The report, L0 evidence and proposed IR-11 implementation are included in the source package. This handoff refresh made no Azure resource changes; the two billing queries remained throttled and actual Azure billing is NOT_VERIFIED. Exact-revision GitHub Actions run [45970519897](https://github.com/miku-wwl/azure-cloudops/actions/runs/45970519897) passed all five jobs on commit [`de1e44972b876cf2`](https://github.com/miku-wwl/azure-cloudops/commit/de1e44972b876cf2); this progress-record/source-archive update will receive its own exact-revision run.
 - A later source-contract review corrected the earlier 0/2 interpretation without making another Azure request. The IR-11 runbook now checks the documented regional Free-plan limit from the read-only subscription inventory, and its independent watchdog remains active after the primary cleanup marker, with a bounded final verification window before the 45-minute cap.
 - The 2026-11-27 safety-gate refresh passed 528 Python tests / 24 directories, repository verification (23 mappings, 155 Markdown references, 13 catalogue cards), Terraform formatting/backend-free validation and 13 plan/mock tests across 3 roots, PowerShell parsing, and package verification. The refreshed source ZIP contains 427 files; the 23-PDF ZIP hash remains `575F22B9958B68752B54539534E020902135B04BFF22C0BAF0924C8AA0C65608`. This refresh made no Azure request or mutation; exact-revision hosted Pester, package and Gitleaks checks run on the published commit.
 - The official Log Analytics demo and ADX help-cluster UI were checked for no-subscription KQL validation; both required Microsoft sign-in. No credentials were entered and no query was sent. The seven AZ05-02 templates remain `SOURCE_REVIEWED / NOT_RUN`; details and user-run steps are in the telemetry-triage README.
