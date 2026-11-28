@@ -62,18 +62,24 @@ def finish(parts: list[str], filename: str) -> None:
 
 
 def data_path() -> None:
-    p = start("先确认数据如何进入工作区，再决定从哪张表开始查",
-              "应用遥测与 Azure 资源诊断是不同采集路径；表 schema 与当前配置共同决定可查内容", 1200, 590)
+    p = start("三条采集路径进入同一 Log Analytics workspace",
+              "原创配置示意 · 先认采集配置归属，再用记录所在表和资源 ID 验证", 1200, 580)
     p.extend([
-        box(32, 148, 286, 122, "Application Insights", ["OpenTelemetry / SDK", "requests · dependencies · exceptions"], PURPLE, LAVENDER, 17),
-        box(32, 328, 286, 122, "Azure resource logs", ["Diagnostic settings / DCR", "类别 · destination · transform"], TEAL, PALE, 17),
-        box(388, 200, 286, 170, "Log Analytics workspace", ["tables + exact schema", "time · role · operation IDs", "table plan · retention"], NAVY, BLUE, 18),
-        box(746, 200, 190, 170, "KQL query", ["scope + time range", "filter + group", "correlate"], ORANGE, SAND),
-        box(1000, 200, 170, 170, "Triage", ["hotspot", "transaction", "failure cause"], GREEN, MINT, 17),
-        arrow(318, 209, 378, 255, PURPLE), arrow(318, 389, 378, 315, TEAL),
-        arrow(674, 285, 736, 285), arrow(936, 285, 990, 285),
-        text(600, 480, "空结果先检查采集、表/列、workspace/resource scope、时间和筛选条件。", 19, RED, 700),
-        text(600, 520, "有日志数据，只能证明当前可见范围中存在这些已收集记录。", 17, MUTED),
+        box(32, 108, 260, 105, "VM 的性能计数器", ["AMA 扩展采集"], TEAL, PALE),
+        box(32, 255, 260, 105, "Blob service 资源日志", ["平台产生操作记录"], ORANGE, SAND),
+        box(32, 402, 260, 105, "应用请求", ["OpenTelemetry 插桩与导出"], PURPLE, LAVENDER),
+        box(345, 108, 340, 105, "按 DCR 采集并路由", ["DCRA 把规则关联到 VM"], TEAL, PALE),
+        box(345, 255, 340, 105, "Diagnostic settings", ["选类别与 workspace 目标"], ORANGE, SAND),
+        box(345, 402, 340, 105, "Application Insights", ["应用资源链接日志工作区"], PURPLE, LAVENDER),
+        '<rect x="758" y="93" width="408" height="429" rx="20" fill="#f5f8fb" stroke="#17324d" stroke-width="2.5"/>',
+        text(962, 124, "Log Analytics workspace", 23, NAVY, 700),
+        box(790, 137, 344, 75, "Perf", ["读资源 ID、counter、时间"], TEAL, WHITE, 17),
+        box(790, 270, 344, 75, "StorageBlobLogs", ["示例：服务专用表模式"], ORANGE, WHITE, 17),
+        box(790, 417, 344, 75, "AppRequests 等", ["按角色、操作 ID 和时间筛选"], PURPLE, WHITE, 17),
+        arrow(292, 160, 335, 160, TEAL), arrow(685, 160, 782, 160, TEAL),
+        arrow(292, 307, 335, 307, ORANGE), arrow(685, 307, 782, 307, ORANGE),
+        arrow(292, 454, 335, 454, PURPLE), arrow(685, 454, 782, 454, PURPLE),
+        text(600, 554, "DCE 在相应数据源或私网场景提供配置访问或摄取端点；规则关联与目标表仍须单独验证。", 19, MUTED),
     ])
     finish(p, "telemetry-data-path.svg")
 

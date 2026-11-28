@@ -78,6 +78,12 @@ NSG 可以关联到 subnet、NIC，或两者。Azure 对入站流量先处理 su
 
 最小修复是确认临时维护规则是否仍需保留；若需保留，按意图收窄其 source 或 destination，而不是盲目把所有 Allow 改成更小数字。再通过 effective rules 查看两个 scope，使用一个新的 TCP 连接验证。优先级改动只影响新连接；现有连接可能继续维持。
 
+### 配置和复验 8443 的允许名单
+
+**未来 Azure 练习，未执行。** 在获批同一 VNet 的测试 NIC → Application security groups，将代理 IP configuration 加入 `asg-edge`，API 为 `ipConfigurations[].properties.applicationSecurityGroups`。对应用 NIC 类似绑定 `asg-pay-api`。进入实际关联的 NSG → Inbound security rules，选择 source/destination 为两组 ASG、TCP、目的 8443、Allow，保存时评估它与各自优先级的 Deny。规则字段是 `sourceApplicationSecurityGroups`、`destinationApplicationSecurityGroups`、`destinationPortRange`、`priority`、`direction`、`access`。
+
+从下方本地实验先预测：代理 Allow 命中 subnet 后，NIC priority 100 的 Deny 仍阻断。未来先读 NIC effective security rules，再为获批五元组验证 IP Flow Verify。只收窄或重新排列误命中的 NIC 规则。正例要用同一组成员创建**新连接**，负例从未授权源仍失败。读取和诊断需要各自权限，写入由 NSG 与 NIC owner 执行。记录原规则和成员，结束后撤掉演练规则并恢复关联；不用新建 VM 即可完成本地练习。
+
 ## Stateful flow：回包与规则修改的时间边界
 
 NSG 为已建立连接维护 flow record。若 VM 的 outbound TCP 443 请求已被允许，通常不需要另一条 inbound 规则专门放行该会话的响应包；入站允许的连接也具有对应的返回流语义。NSG 是 stateful filter。

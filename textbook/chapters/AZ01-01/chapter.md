@@ -91,6 +91,14 @@ Microsoft 的 Reliability checklist 把这套工作分成连续决策：保持�
 
 随后还要分别演练两种情况：**单 Zone 故障**应该由相应服务的机制和 workload 设计维持关键流；**Region 故障**需要另一个 recovery path，可能是可用的第二 Region，也可能是满足驻留要求的异地备份与恢复。跨区备份只能按真实复制延迟与恢复过程证明 RPO/RTO。部署命令返回成功、Azure resource health 显示恢复、探针重新 HTTP 200，三者各自都不足以证明支付数据完整且业务已经恢复。
 
+## 配置演练：用业务指标验收跨可用区设计
+
+**企业设计练习。** 假设支付 Web 层部署在同区域两个可用区，资料附件在支持的 Storage 帐户。Portal 中在 VM → Availability options 选 Availability zone，实际对照 VM 资源 `zones` 及后端池成员和探针；在 Storage account → Redundancy 查是否满足 ZRS（AZ04-04）；在数据库规格与网络依赖查各自的 zone HA 前提。容量设计要回答单区退出时剩余后端能否承担业务峰值。
+
+**预测与验证。** 两台 VM 位于不同可用区，却都使用同一单区数据库时，模拟数据库故障后 API 的浅层健康可能仍为 200，付款交易失败。对照下方 fixture，把 region/zone 失效和 database 单元失效分开，记录哪条依赖阻断用户路径。实际获批时在 Monitor 对同一交易 SLI 看成功数/有效请求数，结合已批准的恢复探针。最小修复是恢复共享关键依赖的冗余或可用路径，修复后重验同一交易。两个 Web 实例同时增加会放大成本，却不改变这条失效链。
+
+本地实验无云权限或计费。未来只读需资源与监控读取权限，主动失效测试或多区部署另行授权。估计各区实例及区间流量、冗余存储和数据库成本；仅从隔离副本撤销演练覆盖。
+
 ## 实验：用故障矩阵检查“冗余到哪里”
 
 本地实验执行一个小型确定性模型。每个关键流由入口、应用、账本和身份四个必需阶段组成；每个阶段可以有一个或多个替代实例。一个故障会把列出的实例标记为不可用。只有所有必需阶段至少有一条健康路径时，模型才输出 `AVAILABLE`。矩阵比较 Availability Set 的 FD 故障与共同 datacenter 故障、跨区应用但单区数据库、跨区关键组件以及共享身份中断。
@@ -206,7 +214,7 @@ SLI 衡量用户体验，SLO 是工作负载目标，error budget 是该目标�
 
 ## 参考资料与研究记录
 
-本讲于 2026-11-26 查阅 Microsoft Learn 官方资料。当前支持范围、SKU 与 region 行为会变化；设计具体 Azure 服务时应再次查看该服务的 reliability guide、zone support 表和 SLA 条款。
+资料复核采用 Microsoft Learn。区域与 SKU 支持查各服务的 reliability guide、可用区表和 SLA 条款。图示为原理图，故障矩阵是本地演算。
 
 ::: refs
 1. [Reliability principles](https://learn.microsoft.com/en-us/azure/well-architected/reliability/principles) · [Reliability checklist](https://learn.microsoft.com/en-us/azure/well-architected/resiliency/design-requirements)
@@ -217,5 +225,3 @@ SLI 衡量用户体验，SLO 是工作负载目标，error budget 是该目标�
 6. [SLO metrics](https://learn.microsoft.com/en-us/azure/well-architected/reliability/metrics) · [SLA terms](https://learn.microsoft.com/en-us/azure/reliability/concept-service-level-agreements)
 7. [Reliability testing](https://learn.microsoft.com/en-us/azure/well-architected/resiliency/reliability-test) · [Reliability tradeoffs](https://learn.microsoft.com/en-us/azure/well-architected/reliability/tradeoffs)
 :::
-
-本讲图示是机制解释图，不是 Azure Portal 实拍或真实部署拓扑。本地故障矩阵结果不证明 Azure 的资源摆放、availability、SLA 或 failover 行为。

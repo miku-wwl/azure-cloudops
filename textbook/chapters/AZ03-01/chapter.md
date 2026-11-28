@@ -120,6 +120,12 @@ az role definition list --name "<role-name-or-id>" --output json
 
 对 Blob 数据访问，Microsoft 文档说明角色变更不会立即生效：页面给出一般最多 30 分钟的说明，也列出数据权限变更通常可需最多 10 分钟、管理组 scope 或少见资源类型的 DataAction 可能更久（最高到 12 小时）。这些是文档描述的传播情况，不是所有角色变更都必须等待的固定 SLA；核对具体服务、scope 与变更时间，并保留复查证据。[3]
 
+## 配置演练：在容器范围授予只读
+
+**未来获批 Azure 练习，未执行。** 在 Azure Portal → Storage account → Containers → 目标容器 → Access control (IAM) → Add role assignment，Role 选 Storage Blob Data Reader，Members 选已批准的托管身份。记录 `roleDefinitionId`、实际 `principalId`（服务主体对象 ID）与容器资源 ID。写授权需要该范围的 `Microsoft.Authorization/roleAssignments/write`；查看仅需读取，验证 Blob 数据仍需相应 data action。用 AZ02-03 最小读取请求验证：同一获批主体能读该容器的目标 Blob，另外一个受限容器仍拒绝。
+
+若查看账户成功而读取 Blob 失败，检查 token 面向 Storage、实际请求的主体及容器的有效授权，保留失败码/UTC 时刻；角色变更后考虑传播延迟并用同样范围复验。订阅 Reader 只能说明有管理读取权限。撤除专用 assignment 后再验证原权限基线。下方模型无需账号或资源，未来验证按现有资源及 API 用量核算。
+
 ## 本地实验：token boundary 与 Azure RBAC 分成两阶段
 
 `labs/authorization-model` 使用 JSON fixture 构造虚构 token、role definition、assignment 与 scope 树。一次判断依序检查合成 trust assertion、issuer、tenant、audience、`nbf` / `exp`，再使用 `tid + oid` 查找适用 assignment，沿目标 scope 的父链匹配 action。它支持角色内 `NotActions` / `NotDataActions` 扣除和多个 assignment 的授权合并。

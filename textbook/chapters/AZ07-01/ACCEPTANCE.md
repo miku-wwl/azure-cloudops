@@ -1,5 +1,11 @@
 # AZ07-01 Acceptance — Terraform Core, Provider, Graph, State, Plan and Import
 
+## V1.0.1 教材修订
+
+- 用现有模块和 Provider 从依赖图导出可复核 Plan 审阅，完善练习分页。
+- 最终教材 [PDF](../../dist/pdf/AZ07-01_terraform-core-provider-graph-state-plan-import.pdf) 已用原出版工具重建。基线 9 页，修订 9 页。正文排入 4 个 SVG，保留 5 个可编辑图稿。最终页面已检查排版、图和代码，带入全套发布校验。
+- 现有本地回归通过。新增云端步骤按文档例处理，历史证据与操作权限见 [V1.0.1 逐讲审查](../../V1_0_1_TEXTBOOK_REVIEW.md)。
+
 - Status: ACCEPTED for the offline lecture gate.
 - Review date: 2026-11-27 (Pacific/Auckland).
 - Lecture: 19 / 23; B7 progress is 1/3.

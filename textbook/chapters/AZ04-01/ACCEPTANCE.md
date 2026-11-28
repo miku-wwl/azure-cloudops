@@ -1,5 +1,11 @@
 # AZ04-01 lecture acceptance record
 
+## V1.0.1 教材修订
+
+- 补 Update Manager 补丁环、任务与代理故障排查。Flexible VMSS 升级策略的官方冲突仍已注明。
+- 最终教材 [PDF](../../dist/pdf/AZ04-01_vm-vmss-managed-disk-operations.pdf) 已用原出版工具重建。基线 6 页，修订 8 页。正文排入 3 个 SVG，保留 3 个可编辑图稿。最终页面已检查排版、图和代码，带入全套发布校验。
+- 现有本地回归通过。新增云端步骤按文档例处理，历史证据与操作权限见 [V1.0.1 逐讲审查](../../V1_0_1_TEXTBOOK_REVIEW.md)。
+
 Acceptance date: 2026-11-26 (Pacific/Auckland). Repository: `D:/workshop/nov/azure-cloudops`, branch: `main`.
 
 ## Source and content review

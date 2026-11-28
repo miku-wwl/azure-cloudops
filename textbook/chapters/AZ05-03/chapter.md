@@ -114,6 +114,12 @@ Resource Graph 单页最多返回 1,000 个对象。CLI 的 `--first`、PowerShe
 
 ![图 16-5：完整性结论要分别检查 scope、RBAC、索引新鲜度、分页和结果变化；任一条件不明时要限定结论。](figures/completeness-checks.svg)
 
+## 操作演练：Resource Graph 少了一个资源
+
+**未来获批只读，未执行。** 在 Portal → Resource Graph Explorer 的 Scope 固定订阅集合，执行上面的按 ID 排序查询。记录目标只有哪些订阅、每页请求的 `$top` 和服务返回的 `$skipToken`。KQL 保留稳定且非动态类型的键。拿到下一页后用完整 ID 去重，并记录截断提示。若 token 缺失且仍有截断，按分区缩小范围或按官方文档调整查询，根据记录覆盖情况报告结果。
+
+假设 ARM 直接读到新建 VM，但 ARG 清单缺一条。用获批身份对照 `az resource show --ids $ApprovedResourceId` 与同 scope 的查询，先检查读权限、分页和筛选，再等待索引或记录时间差。反例是两边都查不到另一个未授权订阅，不能由此排除资源存在。管理员授权只读即可，不改 Graph/资源配置。完成后按数据要求清理下载的清单；下方模型无需 API、权限或计费。[5][7–11]
+
 ## 离线实验：审计合成资源清单
 
 实验目录：`labs/inventory-model/`。合成 fixture 包含三个 subscription 的资源、两条无读取权限的对象，以及一个明确的盘点 scope。模型只保留获批 scope 内且 fixture 标记可读取的资源；按资源 ID 排序分成固定页；再对合并页统计重复、缺少和意外 ID。另一个用例模拟 offset 两页之间删除了一项资源，使后续页漏掉一项，说明稳定排序不能冻结云端集合。

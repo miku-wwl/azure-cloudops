@@ -4,100 +4,100 @@
       "entries": [
         {
           "path": "AZ00-01_azure-landing-zone-arm-control-plane.pdf",
-          "sha256": "f4e81a62494f9f7c1dc8f75eed14263018a931da9758a546c8bb8b5ddc7d5324"
+          "sha256": "51d9b523680518b5721cff6a4929a6bb9ef47774b5ace97ba067c66c1dd50737"
         },
         {
           "path": "AZ01-01_azure-well-architected-reliability.pdf",
-          "sha256": "4dc252b73fa26d554cf911d891cfd1ed21212197cb97c4245d808b67cb77ab29"
+          "sha256": "f2e588d842137df9d08b1edf2d7560efb35cc546d3fe39ffa7655d36795a4c1a"
         },
         {
           "path": "AZ02-01_azure-vnet-udr-effective-routes.pdf",
-          "sha256": "0a783f06ff14484d635076874a9927cbc008e18d09fdd9a14188125e4a92b77a"
+          "sha256": "fcfea5a2ebb2f0fe8268b573032b73a9de38d02bccbb9379e4dab926dd8d3fbb"
         },
         {
           "path": "AZ02-02_azure-nsg-asg-network-diagnostics.pdf",
-          "sha256": "ee9eb6c328b1712b6d789b4881ef531ea04a772b4818f0b67f2e50a2cabba9e4"
+          "sha256": "ef038d94d7857634bdcb304e61449015e9da3429bf96cc9daa389fb9a0555bb3"
         },
         {
           "path": "AZ02-03_azure-private-dns-link-endpoint.pdf",
-          "sha256": "043e08939c171e92bb6ab090642a50a8f991fc227d46ca59a5460abc86179b18"
+          "sha256": "d1512750f5058d45fe2b31b9831c8995ba758bedd6a6ab6cbf631c732d16cb3d"
         },
         {
           "path": "AZ02-04_azure-load-balancer-application-gateway-front-door.pdf",
-          "sha256": "858d34bcf65574fc7cf5d55afa9faeda4a26c72f8f875dbcd2fba2e51caf393c"
+          "sha256": "890003763a0ad6d3e3f6bdc7db1209c1cdc9aa2747d73d152dc1f2fc7ff6ba09"
         },
         {
           "path": "AZ03-01_microsoft-entra-tokens-azure-rbac.pdf",
-          "sha256": "48b64a5986ef2d7c4475579d82ac312a762225035022042d560550887ac4226e"
+          "sha256": "9d24048113971779f3b4a27a8882a63a3adfa39f16a0106d9b70f089bd530893"
         },
         {
           "path": "AZ03-02_managed-identity-key-vault-federation.pdf",
-          "sha256": "093fb346d0325cd7adefbed5f711ce1ea23e1937bf4e841844f99b85878da813"
+          "sha256": "246e6351a80d23a192111519542e2733eeb692654c21793057c9536df3ec323c"
         },
         {
           "path": "AZ03-03_azure-policy-activity-log-defender-cloud.pdf",
-          "sha256": "5ed79075a8227194798fa1be54e18ac6c2c98dfc74561f6a6a76ec599a489a60"
+          "sha256": "998a8bd3c800c1b24efb85fba63b00aea0db93ba8c668ceb92b0deed88662d92"
         },
         {
           "path": "AZ04-01_vm-vmss-managed-disk-operations.pdf",
-          "sha256": "46e2c261981bc9c9f44c607d2e292f0be1e1020d62bfc86cf996d0b6da2b38d8"
+          "sha256": "a2f6050207e00e8f41bd46f950ae4528aea8b87aca64dc0b52536a238fd62180"
         },
         {
           "path": "AZ04-02_appservice-container-apps-deployment.pdf",
-          "sha256": "b376554c3f78f909b57f40665d614e73608c984aaa1ac8e98119a6b7d96269bb"
+          "sha256": "70d1a2a057cc7a9b72fdc946b016062d4ac52fa3893f3444d31b0260afcd2989"
         },
         {
           "path": "AZ04-03_aks-acr-readiness.pdf",
-          "sha256": "c98514ee695114e637b8cac9e57f390b4a9c2fb310beb02cf4bd6334d1e1909a"
+          "sha256": "7d592081a64130bc9eec169ed90a83c6f43a834b4fdbf6535467a9154145a048"
         },
         {
           "path": "AZ04-04_storage-sql-boundaries.pdf",
-          "sha256": "d51a0ea8c6767b08b06f8d41abd5544443eab7972d9520009c7708b362da6a42"
+          "sha256": "a5701f4166896ec829028c7fefab196f840400fcbb1b087ed780723dffa0c178"
         },
         {
           "path": "AZ05-01_monitor-metrics-alerts.pdf",
-          "sha256": "aa8c10a3ee771e45bd93c8c3e7909dbee1a53a8efc66df60474383da0e3f74e7"
+          "sha256": "e22e512958d4c3a507b7ed97a23ca3484f7f4209a737478a537866c9464a72bc"
         },
         {
           "path": "AZ05-02_log-analytics-kql-app-insights.pdf",
-          "sha256": "71f196c6611e4d13d50802d87dc45366b4ea719ca881edafbbcfc9d37cb0d035"
+          "sha256": "f04152eca1abaab1932f02c61db5bb84a424290dd50b729f2684ea47379ce4d1"
         },
         {
           "path": "AZ05-03_azure-cli-powershell-resource-graph.pdf",
-          "sha256": "e41c61fd331595b082b4ac0bf14b2b068df8b4ef214e8cdaaaea23038c0a1a0f"
+          "sha256": "cb037a2ccab1f6e681b43f522953ca8145f1be0e27241d538d8faecec2ef08cd"
         },
         {
           "path": "AZ06-01_azure-backup-restore-site-recovery.pdf",
-          "sha256": "366d9c0f715a8bd0041b5a9b2ad68f80004e0e71e949c2c75daa134e292cdbbc"
+          "sha256": "1c68f0857ab0ef84b44b00756c447bcdcac8353dc1986995a8e53502ea6b068f"
         },
         {
           "path": "AZ06-02_incident-response-rca-integrated-banking-case.pdf",
-          "sha256": "74293071ee0d180c6a3ab71c3c0185585264a9cb8695856423a7f3464a28f451"
+          "sha256": "5ff3544b7dfd3913e21d29ec0c18f75c457a4347756b36f826f253453db53ef9"
         },
         {
           "path": "AZ07-01_terraform-core-provider-graph-state-plan-import.pdf",
-          "sha256": "19c9c7a4bb23ff258214ec2954a016271c043b0d2b9236c1ee7931831c4674a5"
+          "sha256": "d3320171a648203b9b2a1a02a346fff895df8b184875d182aac23edf83ce15f0"
         },
         {
           "path": "AZ07-02_azure-remote-state-locking-drift.pdf",
-          "sha256": "6d26ac6269f2be33097fe20fcbec007d283d33a8dc6559739186feb15d027783"
+          "sha256": "3389730b7359defdc977fcfa960e5f81324a37f3fd3f5ff37414391c73a86c0b"
         },
         {
           "path": "AZ07-03_azure-devops-pipelines-workload-identity.pdf",
-          "sha256": "07ed61f35fd4b0d7d74c1ea18f26a4272a7d15db9d0a2f89621b2c0f6789b0a9"
+          "sha256": "2047ab9d40e6c68148aea3ed8b30a9b3e4af797bf565ea8a9a7a0f9ff963dc0e"
         },
         {
           "path": "AZ08-01_azure-hybrid-routing-enterprise-dns.pdf",
-          "sha256": "3c54f564979b827da8e436068ff1d827f51362abfb8252d80884e730f7117161"
+          "sha256": "0d90e353b8fd118d2c8e1a00b64aae2ab13780d179cd372c4156e7ba43bd5eac"
         },
         {
           "path": "FIN-01_azure-finops-resource-cost-recovery.pdf",
-          "sha256": "1238664bf40e43798ae9f67e8bf0da17ea19c8f6a29e58cc7150d32eccf57d01"
+          "sha256": "f2d3af711571fc6163adfb12d81c73b5af43963d6b103d972be6198bcc8a5ab7"
         }
       ],
       "entry_count": 23,
-      "sha256": "f33ce9bf54bc8b578a83f15034fdb319c750fb182e196985acd93bc9483aeb38",
-      "size_bytes": 28175388
+      "sha256": "07744df5d37101eb0bb4c50f3baf5963d467de1e0550d8bf7f91631d3a5244de",
+      "size_bytes": 29872678
     },
     "Azure-CloudOps-Sources.zip": {
       "entries": [
@@ -147,7 +147,7 @@
         },
         {
           "path": "FINAL_ACCEPTANCE_REPORT.md",
-          "sha256": "793c3a0910235df05d85f620cdeee57954fdae5812856b31d12f74eaa76ad1c5"
+          "sha256": "18811feb37909e2754826c80f2dba3da7a38519b35aab90f1c8e745b04d4e901"
         },
         {
           "path": "L0_READ_ONLY_PREFLIGHT.md",
@@ -167,7 +167,7 @@
         },
         {
           "path": "PROGRESS.md",
-          "sha256": "bf449995ed55355125a87edf48eb5fe6ce3f7665dcc737d0655f55b3cd3d80ad"
+          "sha256": "8eed7548acf889df0b7b80f672bad3a8bab8fc12ac4acfa1922529de45b4d114"
         },
         {
           "path": "README.md",
@@ -183,11 +183,15 @@
         },
         {
           "path": "SOURCE_MAP.md",
-          "sha256": "2d5efbeb1dbbd22e050c7a6375b6a347dd035bcbe2c1114fb5cf6020195a5d39"
+          "sha256": "6e385f1567a6377c53100dae0315a5f96ca2418df3091e71b53532576cc20164"
+        },
+        {
+          "path": "V1_0_1_TEXTBOOK_REVIEW.md",
+          "sha256": "52d9d575e7b4355bf101868fb4b44e3e3c05fc3725ada3a16fcf8648989f8611"
         },
         {
           "path": "VERIFICATION_MATRIX.md",
-          "sha256": "1cec3e1e3a0e67c96029c6dc4a536a1b59adb8ece7c85ff92183d16764793780"
+          "sha256": "4cf672a82c8e6d18649b90a61cfc02dff6be4778e5edf5be2955fba5c8be912a"
         },
         {
           "path": "architecture/README.md",
@@ -231,11 +235,11 @@
         },
         {
           "path": "chapters/AZ00-01/ACCEPTANCE.md",
-          "sha256": "f80768334324671bad3643301bb8cb826a8abb8eebac530a3b43176f7f3b7be8"
+          "sha256": "5af89413d0027c52b23842a2f0b93cc2de4c17d4ea6c038606c51759c22aff1f"
         },
         {
           "path": "chapters/AZ00-01/chapter.md",
-          "sha256": "b0fc56e36c30d74fd4b20436b66e964828331e2a143d4f4947dce1e46612013b"
+          "sha256": "a9ef9d45f7819e995e497060c30e29604931ef5a492d0ce916027fab57b95605"
         },
         {
           "path": "chapters/AZ00-01/figures/arm-request-lifecycle.svg",
@@ -271,11 +275,11 @@
         },
         {
           "path": "chapters/AZ01-01/ACCEPTANCE.md",
-          "sha256": "a241dfcbea8496f5838a1dc4c7dbe8ae2d7642c1596eb76731819573ff6c043d"
+          "sha256": "780baa4d36ce91c3e968061c06d0a7c4e8d7e102b7115661ac502290dffba097"
         },
         {
           "path": "chapters/AZ01-01/chapter.md",
-          "sha256": "a105a1dd5c5517eb811b262a2987091ce45b1b94dfc339d8bf731b772e93d9e2"
+          "sha256": "92dbf567d99a38baaca44dd12cebd6ee6fa23bbaaae3b09263414eafb9ce22d9"
         },
         {
           "path": "chapters/AZ01-01/figures/critical-flow.svg",
@@ -311,11 +315,11 @@
         },
         {
           "path": "chapters/AZ02-01/ACCEPTANCE.md",
-          "sha256": "948c636cce296d49b276f262cba9d880f1464ebf85e5add69618129d84f2cef6"
+          "sha256": "b2ddaa28a5ba7025c3d1cec80bb197313ce678b1546cfa4051f6f4019d59e709"
         },
         {
           "path": "chapters/AZ02-01/chapter.md",
-          "sha256": "c0e2ae5742a738ab28bdf70e12e34c46bf494faddc93192c7ffc2fb011eb6c34"
+          "sha256": "8eabca8e8117e048670cf1aaae07b36deca2ca3f16aef6eb12197b03704769d1"
         },
         {
           "path": "chapters/AZ02-01/figures/asymmetric-path.svg",
@@ -351,11 +355,11 @@
         },
         {
           "path": "chapters/AZ02-02/ACCEPTANCE.md",
-          "sha256": "41a5356e5535550a47d2b821b3b3e30f5055a8f99246a619f6c6acd0cf6e7e1a"
+          "sha256": "afc3f0752facea122ecacaa9feaa944506fd76335a85711d575a4d277c778a59"
         },
         {
           "path": "chapters/AZ02-02/chapter.md",
-          "sha256": "14b44809ca18a38f174153229ecca46d3c5907fa49cd95066a242ed9e34cdf33"
+          "sha256": "9b0406731c0d0851baa537cd18f29c27b12eeb04ccefa39f95889d82a7cc0623"
         },
         {
           "path": "chapters/AZ02-02/figures/figs.py",
@@ -391,11 +395,11 @@
         },
         {
           "path": "chapters/AZ02-03/ACCEPTANCE.md",
-          "sha256": "dbf84b04b6c10ce571351984fff15547da71198b75a69c9869ac926bab53ac90"
+          "sha256": "fb54fd3a9dc74890b15ae7bd786ae80ab75034f3b122ddd6829b75b2d10e2531"
         },
         {
           "path": "chapters/AZ02-03/chapter.md",
-          "sha256": "b2fa5a8240a279b5224ce9253b5c47a77e03556d7ac62a67feb9199e42464cfc"
+          "sha256": "646dbfd3f432bcf97e8aa840d81a867a62a34ddc5bdfd4d18ad587dbf9aaa111"
         },
         {
           "path": "chapters/AZ02-03/figures/dns-split-horizon.svg",
@@ -431,11 +435,11 @@
         },
         {
           "path": "chapters/AZ02-04/ACCEPTANCE.md",
-          "sha256": "95af41a5f42547342bdcc940afb5aec45cabf59f32f2d5dc32534c9140d027f9"
+          "sha256": "f550a4997fd85b6a23d6d3420be5d17e95fb8fe47d5aa6b62359881342b739d9"
         },
         {
           "path": "chapters/AZ02-04/chapter.md",
-          "sha256": "27485c2982e88fe106f50eb888770822ceebea72415e9772add282ded8356969"
+          "sha256": "ad80c76042d853bc2c99314410d69836332d5dbd252132a1f6f210af9bca26af"
         },
         {
           "path": "chapters/AZ02-04/figures/appgw-route-probe.svg",
@@ -471,11 +475,11 @@
         },
         {
           "path": "chapters/AZ03-01/ACCEPTANCE.md",
-          "sha256": "f5db92b02f635ec2610db9fc8d7e04b011c4058ff4063862e400a6b612d96fd3"
+          "sha256": "15e2f7b687a41d1bb94c1e68653055c87dc156fc387d50a16e84ae26640045d7"
         },
         {
           "path": "chapters/AZ03-01/chapter.md",
-          "sha256": "d7646c6d9a0504dbccebcea7a7542c8d33aaa6a9a92a4b4a6df49ebddbc066de"
+          "sha256": "329edac0bd7349f87f9a2c40008818f8e5f2110c3f11d53c57e8819db12f0539"
         },
         {
           "path": "chapters/AZ03-01/figures/figs.py",
@@ -511,11 +515,11 @@
         },
         {
           "path": "chapters/AZ03-02/ACCEPTANCE.md",
-          "sha256": "a96b5d0f0a752b67f8af10f9767594b7bcca7127b59bec4fa21026b53a301f26"
+          "sha256": "15d767b5b4ca80e39152dff59ff3f9dc9c58be32db5c32a7ab819f1101b4cab3"
         },
         {
           "path": "chapters/AZ03-02/chapter.md",
-          "sha256": "286dab64ba23accceb65319fac2193feb13df8bf3fb218db66efc67f7dccd93f"
+          "sha256": "4ffc339061b8c099405213cdc4761f786ff22188452edb7bcd7c0c5e61047c5d"
         },
         {
           "path": "chapters/AZ03-02/figures/federated-token-exchange.svg",
@@ -551,11 +555,11 @@
         },
         {
           "path": "chapters/AZ03-03/ACCEPTANCE.md",
-          "sha256": "5f0ed3fdc29d1d98ace671c284f2299c6e44b3010706893191a1f3b8e0787405"
+          "sha256": "2eb8e3430484dbcd2ef100b91d1f17810a569f6d0ec5b223676da1688b67d7d6"
         },
         {
           "path": "chapters/AZ03-03/chapter.md",
-          "sha256": "fbfa80f045a32356af4ec138f6f6cbf0a4e3e28c1fcc89c20b7cf72f13111cd8"
+          "sha256": "b9e5b10c305abc0dcd6156522ac45be921146c415a6f1ee185ade91870fcd020"
         },
         {
           "path": "chapters/AZ03-03/figures/activity-evidence.svg",
@@ -591,11 +595,11 @@
         },
         {
           "path": "chapters/AZ04-01/ACCEPTANCE.md",
-          "sha256": "65815ef7a0542bdbeb1c02e30a0c6ed221bac883566d403d84b8456549d7f8dc"
+          "sha256": "33704da0183ee36408567d0c69241d89e2c0851a2772a5ec8e08d724f8c2aad4"
         },
         {
           "path": "chapters/AZ04-01/chapter.md",
-          "sha256": "7a7d2ef5d85b4861f85fcf8dc9e1fc4318482285f9e35091e8e41fbefa943fdf"
+          "sha256": "2296c0eb7f6e9521264de422083146a03d152951a719eb6402ae75466fec9c21"
         },
         {
           "path": "chapters/AZ04-01/figures/figs.py",
@@ -631,11 +635,11 @@
         },
         {
           "path": "chapters/AZ04-02/ACCEPTANCE.md",
-          "sha256": "2d5b939c12ad9eef93408cad89d04d4c1307f1e4ccbbfd50149f051ece2246b3"
+          "sha256": "c78d0237965fa39e0e1873a94c06e635115a592881b77807f267ac2e1b79c449"
         },
         {
           "path": "chapters/AZ04-02/chapter.md",
-          "sha256": "60b4f72af4295ef0797ca078024af1a4e61ffc640729234f96540b123faf6690"
+          "sha256": "5369d405a1de01fb42689a1dbd3b65abd9bdf6985802fff09270c680ed05f49b"
         },
         {
           "path": "chapters/AZ04-02/figures/container-app-scopes.svg",
@@ -675,11 +679,11 @@
         },
         {
           "path": "chapters/AZ04-03/ACCEPTANCE.md",
-          "sha256": "216bf249efa449e9becdfb3a706fd327571745fe9a53cab3588822bd39c114aa"
+          "sha256": "2d5a03a222c9cbc11f4e013c73dfeb8f88419b6917a0fa800de8e9643b4a5800"
         },
         {
           "path": "chapters/AZ04-03/chapter.md",
-          "sha256": "a4448c98d677174a49c056a07c44bfa1e8abd1563db4cb42feffbbeca451d979"
+          "sha256": "b77eeb7a69bf41f218157682180d159f68227480c21fb799cb04616d30d9475a"
         },
         {
           "path": "chapters/AZ04-03/figures/figs.py",
@@ -723,11 +727,11 @@
         },
         {
           "path": "chapters/AZ04-04/ACCEPTANCE.md",
-          "sha256": "49e36ff602489a35cdfe857638e829d6206a69eb8f0ec525c2519be8ff2209d5"
+          "sha256": "788703c824fa42219f65933f40c8828556d8512d896394c741e606c98b14b874"
         },
         {
           "path": "chapters/AZ04-04/chapter.md",
-          "sha256": "7b50f531b0c728fca24c6e10a23b498f5066eb8b62b5795e7bf14681b9bf3e78"
+          "sha256": "710565f5d9877be03daa657fc9422213511dd7d27c89283581fd634ede9dff63"
         },
         {
           "path": "chapters/AZ04-04/figures/figs.py",
@@ -771,11 +775,11 @@
         },
         {
           "path": "chapters/AZ05-01/ACCEPTANCE.md",
-          "sha256": "93702bf1f2f6d2bd5cad7ec0981f318607583df61ae628674c8f5bb0c605c885"
+          "sha256": "9f341565a16699547bd24d0418d34d5a7f85630a0378f893515b3d1c8bcd35f8"
         },
         {
           "path": "chapters/AZ05-01/chapter.md",
-          "sha256": "0de2bf926d25a5fa70e0a1691934c5b39d8ffa9aec916832980d9ab4d1a7efb2"
+          "sha256": "3c1b5314392e943b30d77004f47f2cf3f14c2db777ab739a53cbbb1780a5a916"
         },
         {
           "path": "chapters/AZ05-01/figures/aggregation-dimensions.svg",
@@ -819,15 +823,15 @@
         },
         {
           "path": "chapters/AZ05-02/ACCEPTANCE.md",
-          "sha256": "fd84d00a097c365929c120da5988f2892019a6a28f74aaa39ded1888a9695a36"
+          "sha256": "4eed3879e146a306cdc13d8f14923f10286c1084616542f713a0a16ef9937b00"
         },
         {
           "path": "chapters/AZ05-02/chapter.md",
-          "sha256": "611ae60c0ba93e7b86cbe9c0ae66daa919a60f0045f2625dd8a8ff33967f4ae6"
+          "sha256": "c55ba57c27d2fcb7b9ca6d3d7d3564042c70a265b6674c5e18a64e4ac321854d"
         },
         {
           "path": "chapters/AZ05-02/figures/figs.py",
-          "sha256": "8377d943019d68ad802f536e36afd73525d182d136c0256f9ea158a1c122dd8e"
+          "sha256": "b33a8661523682ad5db2f0f684fc728f66cd3ee759087105fda1c5b924acc2d4"
         },
         {
           "path": "chapters/AZ05-02/figures/kql-query-pipeline.svg",
@@ -843,7 +847,7 @@
         },
         {
           "path": "chapters/AZ05-02/figures/telemetry-data-path.svg",
-          "sha256": "23a08c2f322d5e9e6fc004b2958c9a695ad81456213313adbe33ee6a6903180e"
+          "sha256": "2840ad655f052526c838cdb8a6ac283d481c83477cd1c89d816502d66fa24f59"
         },
         {
           "path": "chapters/AZ05-02/figures/transaction-timeline.svg",
@@ -895,11 +899,11 @@
         },
         {
           "path": "chapters/AZ05-03/ACCEPTANCE.md",
-          "sha256": "cd8292e4683bff9d0e5c8b4f53b5f02d72bd615d30439e8eed127e394635d8b4"
+          "sha256": "498bf12342205f3ebeccd77419d5997d30287113a9d0635d4ccfcf2c8191d116"
         },
         {
           "path": "chapters/AZ05-03/chapter.md",
-          "sha256": "46d23cd5180ecbf36b8bb7bb5415f9f42bd90ce1d2a0d23dd54def16f6303f8e"
+          "sha256": "8ae2d546317a8d58bacdb3a73ed6fd490c80016a5b95f1eca824e417eadfb643"
         },
         {
           "path": "chapters/AZ05-03/figures/completeness-checks.svg",
@@ -947,11 +951,11 @@
         },
         {
           "path": "chapters/AZ06-01/ACCEPTANCE.md",
-          "sha256": "5ab34e14d8f1368e4691468da614470f450196c1d70b295eb7460c21fdcc601e"
+          "sha256": "607ef3baf2a903763ce9be3ed2394fd5e2782ff303ee577c21e6697e40180d69"
         },
         {
           "path": "chapters/AZ06-01/chapter.md",
-          "sha256": "87da8a34e3688962dda83665f1c09252f0a357b0fc9b1e58cb97a66e4f2cca29"
+          "sha256": "72a68243d4eef4a4a8d96e45f2a8c7548f61e686f83ae127b6406eb524d01054"
         },
         {
           "path": "chapters/AZ06-01/figures/backup-vs-replication.svg",
@@ -995,11 +999,11 @@
         },
         {
           "path": "chapters/AZ06-02/ACCEPTANCE.md",
-          "sha256": "79cb0a6d22f1af584cb6b4d21e4bd254b0a3a5eea866cea5f5a0c344a9a29e2c"
+          "sha256": "be80615703431de77484d2a68a8cc4aff65b4f58ea72dfa5f44d99a6466991a7"
         },
         {
           "path": "chapters/AZ06-02/chapter.md",
-          "sha256": "c06cf416f02d9156c4ec5c286d1de473284801fdb4fa3d540780fcb200add886"
+          "sha256": "b82d6472e22c63f93b3ac6721a5a987b0ff7d3ee7f8e360c83308a6ff1c50bc3"
         },
         {
           "path": "chapters/AZ06-02/figures/bounded-repair.svg",
@@ -1043,11 +1047,11 @@
         },
         {
           "path": "chapters/AZ07-01/ACCEPTANCE.md",
-          "sha256": "e1d36326341bd6ae72bbfc29b48d32731f9dce7553f743641d119b3911b30d6d"
+          "sha256": "cec75513d882af7d2f1c2d5fe53b887bcdd41e2285da1f1ab2785e78ae09dfd8"
         },
         {
           "path": "chapters/AZ07-01/chapter.md",
-          "sha256": "7b3e453cca0fa4bb3a5085732d1367accff201b11bc178cad6887a0035b9c76b"
+          "sha256": "5df683b37629dde5b0dee5ea622d0e780d937a78f42605f840afde81f19976a5"
         },
         {
           "path": "chapters/AZ07-01/figures/core-provider-arm.svg",
@@ -1103,11 +1107,11 @@
         },
         {
           "path": "chapters/AZ07-02/ACCEPTANCE.md",
-          "sha256": "f0344db0a8d8485b5119131f569b58656820ec4efbf17ffcd781c435e243741d"
+          "sha256": "facba2befe2416a8381e4cdc6514814dbd8e079dc3c13422610938185c9a2c1a"
         },
         {
           "path": "chapters/AZ07-02/chapter.md",
-          "sha256": "daeb8097070ade77b783d23b9954d0014f0e4c206475e91f9e98949338fe9aa0"
+          "sha256": "08dfa19c47bacdbc6bf3087e789e4ad2b1d1fa5a8dbc1324f0142063094de8c5"
         },
         {
           "path": "chapters/AZ07-02/figures/backend-boundaries.svg",
@@ -1167,11 +1171,11 @@
         },
         {
           "path": "chapters/AZ07-03/ACCEPTANCE.md",
-          "sha256": "c7911e1537412316068280d5053ccbd47b93fa3bb0cfde5e60640cbbea34e724"
+          "sha256": "748d925d0a2a11ebd06d71b345d26c9f2cdc226617fb6fe015c5092bbefe5cf9"
         },
         {
           "path": "chapters/AZ07-03/chapter.md",
-          "sha256": "dd9f2f6315c8a7838d4f7210fa8d13fbac76132a05dddc2d6ea2adae3e03fe6c"
+          "sha256": "6b210ecfd925e5ddaec7c428a158e24afe776393baa449ca23e7930f888eb92a"
         },
         {
           "path": "chapters/AZ07-03/figures/approved-plan-flow.svg",
@@ -1243,11 +1247,11 @@
         },
         {
           "path": "chapters/AZ08-01/ACCEPTANCE.md",
-          "sha256": "db838ac6bd9cf6bd36a472bee3133a077466cb7adf99278cf4ef71e3578736f9"
+          "sha256": "70924d5c7e358f38dc1d2a0aa47586c7f65331f2711239616337ad7749efd69a"
         },
         {
           "path": "chapters/AZ08-01/chapter.md",
-          "sha256": "6476cd0f73c8146acc9ac6c7506111b0d560eb6a2262ff9bf43d4534d576bbe7"
+          "sha256": "1bb0e9d9c40c9bfef1e2242ba85673c3ea96c3c98c116a2c88c9c99ad575550c"
         },
         {
           "path": "chapters/AZ08-01/figures/diagnose-hybrid-planes.svg",
@@ -1295,11 +1299,11 @@
         },
         {
           "path": "chapters/FIN-01/ACCEPTANCE.md",
-          "sha256": "ffdd834ed5d56f8121295ce2b7abd9417fd538a859bf734ecebccc4b110ab016"
+          "sha256": "b8f07a9efe322da5f2a16ba254f54978ec1891190f0a551e1aba7b53ab6991c2"
         },
         {
           "path": "chapters/FIN-01/chapter.md",
-          "sha256": "21049aee9237689da798639232ce2719d6867cd0b77ebd9ddf4278bd4488cb71"
+          "sha256": "9d03bb00001efd2e4ec43568c617d75a87958ab1c0f88a99aa986ab0f99078c1"
         },
         {
           "path": "chapters/FIN-01/figures/cost-allocation.svg",
@@ -1814,9 +1818,9 @@
           "sha256": "cbf3fc6fc5d61f99cdffcc143e5ac5d39be2704077358ae25ba827d00ef80ba6"
         }
       ],
-      "entry_count": 428,
-      "sha256": "554d947986a0b672d29a07c01a30087763212b19d565a3426b532b50ca6fc085",
-      "size_bytes": 1019344
+      "entry_count": 429,
+      "sha256": "22ce2ec3ec07a0554b5c2ac65e87fec97f231906bef67f15ccb8fff88a292408",
+      "size_bytes": 1062518
     }
   },
   "format_version": 2,

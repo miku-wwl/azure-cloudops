@@ -1,5 +1,11 @@
 # AZ05-01 acceptance — Azure Monitor metrics and alerts
 
+## V1.0.1 教材修订
+
+- 修正 97.5% 和等权平均算例，补实用 Blob 指标规则和通知诊断。
+- 最终教材 [PDF](../../dist/pdf/AZ05-01_monitor-metrics-alerts.pdf) 已用原出版工具重建。基线 6 页，修订 7 页。正文排入 5 个 SVG，保留 5 个可编辑图稿。最终页面已检查排版、图和代码，带入全套发布校验。
+- 现有本地回归通过。新增云端步骤按文档例处理，历史证据与操作权限见 [V1.0.1 逐讲审查](../../V1_0_1_TEXTBOOK_REVIEW.md)。
+
 - **Gate:** ACCEPTED for Stage 1 lecture publication.
 - **Research date:** 2026-11-27; Microsoft Learn primary sources are mapped in `textbook/SOURCE_MAP.md` and linked as [1]–[8] in the chapter.
 - **Coverage:** metric time-series fields and provider-defined aggregation; Average/Sum/Count/Min/Max; dimension rollup and splitting; check frequency vs. aggregation/lookback period; static and dynamic thresholds; stateful/stateless conditions; alert response state vs. action and processing rules.

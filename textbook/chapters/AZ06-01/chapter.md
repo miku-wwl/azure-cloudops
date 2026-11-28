@@ -86,7 +86,7 @@ Recovery plan 按 VM 分组并设置启动顺序，让数据库、消息/中间�
 
 RTO 从业务中断开始计时，不是从工程师开始恢复操作时才计时。记录 `T_start` 可以拆分发现/决策/排队延迟和实际恢复作业时间，但它不会缩短 RTO。若只用 VM 启动时刻代替 `T_verified`，RTO 会忽略数据库恢复、DNS/身份依赖、业务校验和流量切换。损坏被发现的时间也可能晚于真正损坏发生的时间，因此要从最早可信故障时间或数据错误时间计算 RPO，不能自动用“宣布事故”的时刻替换。
 
-![图 17-5：RPO 测量故障时刻与恢复点的间隔；RTO 从恢复开始一直算到经数据和业务探针验证的服务恢复。](figures/rpo-rto-timeline.svg)
+![图 17-5：RPO 是恢复点与故障时刻的间隔；RTO 自业务中断起算，直到数据和业务探针验收完成。](figures/rpo-rto-timeline.svg)
 
 合成案例：目标是 RPO ≤ 15 分钟、RTO ≤ 60 分钟。若 Backup 恢复点为 09:52，损坏发生于 10:00，则 RPO 为 8 分钟；若恢复操作 10:05 开始，10:43 才通过账本校验和支付探针，则 RTO 从 10:00 的业务中断起算，为 43 分钟，样本满足目标。若同样的 VM 在 10:20 已启动，但交易记录数不匹配，服务尚未验证；不能把 20 分钟当成 RTO，也不能判定恢复成功。
 
@@ -99,6 +99,25 @@ RTO 从业务中断开始计时，不是从工程师开始恢复操作时才计�
 | 关闭与再保护 | Site Recovery test cleanup；正式 failover 后 reprotect/failback 路径 | 测试残留可能占资源；正式目标可能暂未被复制保护 |
 
 恢复证据应包括输入 recovery point 和最终选择理由、发起与完成时间、目标资源位置、job 错误、应用/数据验证输出、目标网络状态、失败和重试、cleanup 或 reprotect 结果，以及恢复后残留资源清单。Snapshot redundancy 或复制健康只描述特定服务路径，不替代最终恢复演练与业务验收。[5][8][9]
+
+## 配置演练：从 Azure VM 备份还原隔离服务
+
+**未来 Azure 练习，当前未执行。** 准备有非敏感校验文件和小型业务数据集的 VM、隔离 VNet 与目标 RG。Recovery Services vault 与源 VM 同区域，核对磁盘、加密、策略支持。分别取得 vault 备份操作权限和目标 RG、VNet 与磁盘所需的恢复权限。[2–6][12]
+
+| Portal 入口 | 操作与字段 | 验收证据 |
+|---|---|---|
+| Recovery Services vault → Backup | Workload 选 Azure VM；创建或选择 VM backup policy，设 schedule、时区、retention 与所需类型。纳入一台测试 VM | Backup items 中出现目标；Backup now 或等待调度。等首个成功且可用的恢复点 |
+| Backup Items → Azure Virtual Machine → Restore VM | 选最早损坏之前的 point，核对 App/File/Crash consistent 类型和储存层。选 Create new virtual machine，指定隔离 RG/VNet 和新名称 | 不接生产写入路径。若恢复目标或 VM 特性不支持，改 Restore disks 再组装。按模式核查 staging storage 及权限 |
+| Backup Jobs 与隔离客户端 | 记 point UTC、提交、完成和目标 ID。启动后检查磁盘与依赖，校验样例文件、数据库与业务 | 比对记录数、幂等键和受控读写事务。只有数据和应用都达标，才确认业务恢复 |
+| 清理与留存 | 删除专用恢复 VM、磁盘、NIC、临时模板或 staging 对象。检查仍受保护的备份及软删除、不可变性设置 | 目标资源消失时备份仍可能在保留。按各自期限与归属记账 |
+
+~~~{.powershell title="文档示例 · 在隔离恢复 VM 读取试验文件"}
+Get-FileHash -Algorithm SHA256 -LiteralPath $RestoredFixturePath
+~~~
+
+对照备份前同一文件的摘要。数据库按引擎检查一致性及交易不变量。例中 09:52 point → 10:00 故障 → 10:43 业务验收，RPO 8 分钟、RTO 43 分钟。若 job Completed 但摘要不合，查源 VM、恢复点、盘与一致性，延后接流，再选可验证的恢复点。源 VM 保留现状。
+
+**按工作负载选工具。** 常规 Azure VM 用 Recovery Services vault 的 VM backup。受支持的 Managed Disk 也可由 Backup vault 的 Azure Disk Backup 保护，恢复盘还需做应用验证。Azure SQL Database 由平台备份实现 PITR（AZ04-04）。ASR 是复制和故障转移，隔离 Test failover 后走专用 cleanup。核算受保护实例、留存、恢复算力与存储；停止保护和删除备份是不同操作。本轮只有下方离线模型。
 
 ## 离线实验：恢复结果不是一个布尔状态
 
@@ -148,6 +167,8 @@ RPO = 14:30 − 14:02 = 28 分钟，不满足 15 分钟目标。RTO 从业务中
 7. **关闭演练：** 清理 test failover 资源并核对残留；正式 failover 则确认 reprotect/failback、责任人、数据同步方向和费用复查。[3][8][10][11]
 
 ## 参考资料
+
+[12] [Azure VM backup support matrix](https://learn.microsoft.com/en-us/azure/backup/backup-support-matrix-iaas) · [Back up an Azure VM](https://learn.microsoft.com/en-us/azure/backup/quick-backup-vm-portal) · [Azure VM restore Portal choices](https://learn.microsoft.com/en-us/azure/backup/backup-azure-arm-restore-vms) · [Azure Disk Backup](https://learn.microsoft.com/en-us/azure/backup/disk-backup-overview)
 
 ::: refs
 1. [About Azure VM backup](https://learn.microsoft.com/en-us/azure/backup/backup-azure-vms-introduction) — VM 快照一致性与恢复预期。

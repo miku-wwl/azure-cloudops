@@ -84,9 +84,15 @@ Azure 先找覆盖目的 IP 的最长（最具体）前缀。若 route table 有
 | `172.20.0.0/16` | UDR | `VirtualAppliance 10.20.0.4` | 对相同汇总前缀强制经 NVA |
 | `172.20.40.0/24` | UDR | `VirtualAppliance 10.20.0.4` | 更具体的合作方业务网段 |
 
-对 `172.20.40.15`，`/24` 最具体，下一跳是 NVA `.4`。对 `172.20.8.15`，`/24` 不匹配，两个 `/16` 同长，UDR 胜 BGP，仍走 NVA `.4`。对 `203.0.113.10`，两个 `/0` 同长，UDR 胜 system，走 NVA `.4`。若从 `172.20.40.0/24` 删去 UDR，目的 `172.20.40.15` 就可能按 BGP `/16` 去 VPN gateway；这不是 `/0` 路由“优先级低”造成的，而是更具体的 `/16` 胜过 `/0`。
+对 `172.20.40.15`，`/24` 最具体，下一跳 NVA `.4`。对 `172.20.8.15`，两个 `/16` 同长，UDR 胜 BGP，也走 `.4`。对 `203.0.113.10`，`/0` UDR 胜系统默认路由。撤去 `172.20.40.0/24` 后，`172.20.40.15` 改匹配 `172.20.0.0/16` UDR，下一跳仍为 `.4`。只有这条 `/16` UDR 也撤去或不可用时，仍有效的 BGP `/16` 才接管。
 
 接下来不要停在“去程 next hop 是 `.4`”。要从响应所在的实际 subnet / NIC 路由上下文查询回到 `10.20.1.10` 的路由。如果回程选出另一台有状态 firewall `.8`，两边检查器的会话状态可能不一致。修复要遵循最小范围：统一能观察该流的路由，或使用确认支持非对称/同步状态的设备；每次变更后复查两个方向和真实连接结果。
+
+## 配置演练：把一条 UDR 变成可查的路由
+
+**未来获批 Azure 练习，未执行。** 用隔离的 `payments` subnet、源 NIC 和已具备转发能力的 NVA。在 Portal → Route tables → Routes，设 Destination type = IP Addresses、范围 `172.20.40.0/24`、Next hop type = Virtual appliance、地址 `10.20.0.4`。资源字段为 `routes[].addressPrefix`、`nextHopType`、`nextHopIpAddress`。在 Subnets 中关联支付 subnet（`subnet.properties.routeTable.id`），必要时从路由表 Configuration 核对 BGP 传播属性。若依赖 NVA，核对 Azure NIC 与设备内部的 IP forwarding，并找响应一侧的实际 route context。
+
+先读源 NIC 和回程的有效路由。若已建 route table 却见不到 `/24`，先查 subnet 是否关联正确 ID；若 Next Hop 对但 TCP 失败，查 NVA 转发、NSG 和回程。修复关联或单条路由后重跑同一 Next Hop 与业务请求。读取与主动探测分别授权，变更需 route table/subnet 写权限。恢复原关联并清理实验 NVA/路由表时保留共享路由。NVA 与主动诊断的成本取决于环境；下方模型只在本地运行。
 
 ## 观察证据：effective routes、Next Hop 与连接测试
 
@@ -184,7 +190,7 @@ return-via-same-nva:
 - **恢复验证**：从两端重新发起连接，观察同一会话在预期检查器上建立并完成，不以单向探测代替。
 ::::
 
-## Exercises：算路由，再選驗證方法
+## Exercises：算路由，再选验证方法
 
 :::: {.exercise title="练习 1｜重叠路由谁获胜？"}
 一个 subnet 的路由有 `0.0.0.0/0 system → Internet`、`0.0.0.0/0 UDR → NVA .4`、`172.20.0.0/16 BGP → VPN gateway`、`172.20.0.0/16 UDR → NVA .4` 和 `172.20.40.0/24 UDR → NVA .8`。分别计算目的 `172.20.40.15`、`172.20.8.15`、`203.0.113.10` 的路由。若目的 `172.20.40.15` 的 `/24` 改成 `None`，意味着什么？

@@ -1,5 +1,11 @@
 # AZ04-03 acceptance — AKS and ACR workload readiness
 
+## V1.0.1 教材修订
+
+- 补 Kubernetes 和 Azure 配置定位、ACR 身份、EndpointSlice 与 PDB 验证。
+- 最终教材 [PDF](../../dist/pdf/AZ04-03_aks-acr-readiness.pdf) 已用原出版工具重建。基线 9 页，修订 10 页。正文排入 5 个 SVG，保留 5 个可编辑图稿。最终页面已检查排版、图和代码，带入全套发布校验。
+- 现有本地回归通过。新增云端步骤按文档例处理，历史证据与操作权限见 [V1.0.1 逐讲审查](../../V1_0_1_TEXTBOOK_REVIEW.md)。
+
 - **Gate:** ACCEPTED for Stage 1 lecture publication.
 - **Research date:** 2026-11-26; current Microsoft Learn primary sources are listed in `textbook/SOURCE_MAP.md` and chapter references [1]–[14].
 - **Final build and review:** 2026-11-27 (Pacific/Auckland).

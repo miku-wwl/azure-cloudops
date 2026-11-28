@@ -104,11 +104,22 @@ Azure Well-Architected 的事故管理建议定义角色、升级路径、沟通
 
 **实测｜发布前停止。** LAB-IR-11 的 Activity Log 记录了 F1 计划创建成功。CLI 响应缺少核验脚本预期的 Linux 字段，脚本在创建应用前中止。修正后从 [ARM 计划详情](https://learn.microsoft.com/en-us/rest/api/appservice/app-service-plans/get?view=rest-appservice-2025-03-01) 核对 `properties.reserved=true`。首次创建请求到确认清理约 126 秒。应用尚未上线，应用故障和恢复时间留空。
 
+## 调查演练：拿 E03、E05、E06 做一张因果单
+
+**本地合成，已通过现有模型验证。** 从 fixture 读出 `10:03`（首笔失败）与 `10:21`（业务验证结束），算得恢复耗时 18 分钟，低于 30 分钟目标。`E03` 提供关联操作的 Storage 403，`E05` 说明请求用了新主体，`E06` 与该时刻的角色范围对应。若只看到后到的角色快照，优先确认事件时间和主体。用 `E07`/`E08` 缩小网络假设，用 `E09` 查 SQL 的反证。Activity Log 可定位部署或角色变更，应用真实失败需依赖 trace 与 request ID 证明。
+
+**批准最小修复。** 实际企业操作由资源 owner 在 Storage container → Access control (IAM) 为正确主体设置数据角色（AZ03-01），且必须对照审批 scope。用同一支付探针、幂等性与无关容器拒绝结果验证。未来调查可从 Monitor → Activity Log 用资源 ID 与 UTC 过滤，看 Logs 的关联 ID，并只给调查人批准的查询权限。真实日志获取、写权限和更改成本需分别评估；这里不做云端操作。
+
 ## 离线事故模型与运行记录
 
-实验目录：`labs/incident-model/`。fixture 定义合成的支付发布、身份切换、Activity Log/trace/网络/SQL 观测、角色边界和恢复断言。模型检查证据是否足以支持指定因果链、修复是否限于目标主体/容器、同探针是否复用、数据约束和负向权限是否通过，以及 RTO 是否在案例目标内。
+用 Python 3.11+ 在仓库根目录运行，下列输入只有合成 `fixtures/bank-incident.json`。先预测 scope 修复、探针、数据与 5 分钟稳定窗口的结论，再对照模型输出。若失败，先核对使用的 JSON 和 UTC 时间；复位测试副本即可，无需云清理或费用。
 
-运行结果只能说明这个合成对象通过本地规则。它不是 Azure Monitor/KQL、Activity Log、Resource Health、托管身份、RBAC 传播或 Storage 的仿真，也没有读取真实日志、部署应用或修改角色。Azure 日志需诊断设置且有摄取延迟；不得把本地 JSON 输出冒充云端证据。P7 要求的八个 mandatory local incident 必须在各自真实本地机制中单独闭环，本实验不会替 IR-01、02、05、07、08、10、11、12 领取 `PASS`。
+~~~{.powershell title="本地执行 · 现有事故模型"}
+python -m unittest discover -s textbook/chapters/AZ06-02/labs/incident-model -p "test_*.py" -v
+python textbook/chapters/AZ06-02/labs/incident-model/incident_model.py
+~~~
+
+运行结果只覆盖合成证据与本地验收规则。Azure Activity Log 由平台自动生成，导出到 workspace 才需诊断设置；具体资源日志和应用遥测走各自采集链，并可能有延迟（AZ03-03、AZ05-02）。原 P7 八项 mandatory local incident 的 `PASS` 依据是各自的本地实验证据。
 
 ## 对照 V3 的十二项 Incident 合同
 

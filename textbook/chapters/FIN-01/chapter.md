@@ -129,6 +129,14 @@ VM `Stopped` 与 `Deallocated` 不是同一个费用状态。guest OS 关机后�
 **最小处置：** 保留要求先由 owner 确认；只清理有明确批准的残留项，再于刷新后复查同一时间和 scope。
 :::
 
+## 操作演练：一个预算阈值和一个残留磁盘
+
+**未来获批只读与独立配置设计，未执行。** 课堂用下方 USD 160 合成预算。生产式流程先在 Cost Management → Cost analysis 锁定获批 billing/subscription scope、时间、币种和 Actual cost。用 Resource、Meter 分组，从磁盘 ID 对照 RG 列表和删除时刻。再切 Amortized cost 单独看承诺摊销，不能把两张视图相加。费用权限取决于 billing 类型，资源 Reader 不一定有账单读取权。
+
+如获批设置预算，在 Cost Management → Budgets → Add 选 scope、日期与金额，配置实际/预测通知阈值和目标联系人。可用 80%（USD 128）与 100%（USD 160）作为合成阈值。预算 owner 负责配置，练习不触发真实通知；budget 达阈值提供事件与响应机会，消费可能继续。发现 detached disk 时先查 `managedBy`、源 VM 的 `deleteOption` 与保留批准，必要时由 owner 处理单一磁盘。再查实际 ID/保留资源及同一时间段刷新后的 meter，区分延迟与持续费用。
+
+本轮额外 Azure 预算 USD 0.00。合成实验只读本地 JSON，不生成资源，练习副本可直接丢弃。未来验证按相同 scope 重审通知、单独撤掉实验预算；计费未刷新前保留待对账状态。
+
 ## 本地实验：成本账本不丢数，也不误删
 
 附带的 [cost-recovery lab](labs/cost-recovery/README.md) 读取纯合成账本，分别汇总 actual/amortized、gross charges/credits、标签归属、共享池分配、按小时的未用承诺、预算阈值和资源保留决策。修订 fixture 后，逐项模拟 `Stopped`、`Deallocated`、detached disk、未归属 shared cost、跨视图混加和超预算等情形。结果只证明测试输入符合明确的教学合同，不模拟 Azure 的定价引擎、账单、Tag inheritance、reservation matching 或资源删除行为。
@@ -137,7 +145,7 @@ Windows 命令、样例输出与断言边界见 lab README。本地账本实验�
 
 ### 演算：把账本对到成本中心
 
-从实验根目录运行 `python textbook/chapters/FIN-01/labs/cost-recovery/finops_contract.py`。该命令读取仓库中的 `synthetic-ledger.json`，调用实际文件里的 `analyze()` 和 `summarize()` 合同；它不读取云账单。Windows 与 WSL 的命令和完整输出均记录在实验 README。
+从仓库根目录用 Python 运行 `python textbook/chapters/FIN-01/labs/cost-recovery/finops_contract.py`。`synthetic-ledger.json` 是账本输入，脚本用 `analyze()` 和 `summarize()` 处理本地文件。Windows 与 WSL 的复验命令和完整输出见实验 README。
 
 ```json
 {
@@ -163,7 +171,7 @@ Payments 的 USD 101.00 = 直接费用 USD 80.00 + 共享网络 USD 30.00 × 70%
 1. 一项本月费用高于 Pricing Calculator 的估算。列出至少五类可能造成差异的输入或视图，并说明应从哪项证据区分它们。
 2. Actual cost 显示一次性 reservation 购买额，Amortized cost 显示多月资源归属。财务、产品团队各应选择哪个视图？为什么不得相加？
 3. 两支团队共同使用网关和监控平台。设计一个透明的分摊规则，并说明分母、未归属费用和标签缺失如何处理。
-4. 某 Savings Plan 平时每小时只使用承诺的 65%，周三晚间达到 110%。判断高峰是否能补偿低谷，并列出采购前要补查的证据。
+4. 某 Savings Plan 平时每小时只覆盖到承诺额的 65%。周三晚间可计入计划的用量金额达承诺额的 110%。判断高峰的超额能否使用其他小时的余额，并列出采购前要补查的证据。
 5. 一台 VM 已 deallocated 并且 VM resource 删除，但仍收到磁盘和备份账单。逐步说明如何核实、审批、保留或回收，并如何确认费用真的下降。
 
 ### 参考答案要点

@@ -1,5 +1,17 @@
 # Verification matrix
 
+## V1.0.1 textbook evidence
+
+| Activity | Verification | Scope |
+|---|---|---|
+| Azure configurations and worked walkthroughs | `DOCUMENTED` and `SOURCE-ANALYSED` | Chapter fields and prerequisites checked against linked primary documentation and the existing source. New command examples were not sent to Azure. |
+| Local practice | `LOCAL_VERIFIED` and `STATIC_CHECK_PASS` as applicable | The existing regression suite and local models; exact suite results are in the [refinement review](V1_0_1_TEXTBOOK_REVIEW.md). |
+| Application release and rollback | Existing local and partial Azure records | Local HTTP 200 → 500 → 200. Azure IR-11 reached the F1 plan gate and cleanup. Application deployment and rollback in Azure remain `NOT_RUN`. |
+| Seven AZ05-02 KQL workspace templates | `NOT_RUN` | Local Python tests consume fixtures. No login, workspace query or new execution. |
+| Azure access, lifecycle and billing | Existing historical classifications | No new evidence for `LIVE_VALIDATED_SUBSET` or `PORTFOLIO_READY_LIVE`. Prior `READ_ONLY_AZURE_VERIFIED` remains scoped. Billing remains `BILLING_PENDING`. |
+
+## Original acceptance evidence
+
 Verification states are independent. A documented or local result does not establish Azure behavior.
 
 | Evidence class | Meaning |

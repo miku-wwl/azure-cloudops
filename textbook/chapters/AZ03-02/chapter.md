@@ -122,6 +122,12 @@ CI 接着访问 Key Vault endpoint，最终 Entra access token 的 audience 应�
 
 若 exchange 成功但 Key Vault 回 403，应分别核对实际 principal、vault permission model、Secrets User assignment 和 network/firewall 证据。不要仅因为看到 403 就给 pipeline 添加 Contributor、扩大订阅 scope 或放开 public network。每次增加授权前，先确认目标 identity、具体操作和 vault scope。
 
+## 配置演练：确定谁能读取一个 Key Vault 密钥值
+
+**未来获批 Azure 练习，未执行。** 使用非生产 vault 和非敏感测试 Secret。在 App Service → Identity → User assigned 把选定 UAMI 加到资源（资源 `identity.userAssignedIdentities`）；程序按所用 SDK 显式选择其 client ID。外部 CI 则在 UAMI → Federated credentials 建好匹配的 `issuer`、`subject`、`audiences`，按该提供方的签发值核对精确匹配。工作负载主机挂身份与外部 federation 分属两个环境，分别需管理权限。Key Vault → Access configuration 先确认是否用 Azure RBAC；该模式下 IAM 给主体最小的 Key Vault Secrets User 等数据权限，资源与角色 owner 负责写入。
+
+计划验收：在批准的网络内让同一主体尝试读取测试 secret，仅记录成功与否。FIC 不匹配会在 exchange 阶段失败，DNS/403 核对 privatelink、防火墙与 vault 数据权限；先确定是否已拿到面向 vault 的 token，再修复单一边界。验证后撤下实验 RBAC/FIC/身份挂载，按 vault 保留策略处理 Secret。Key Vault 请求、PE、运行时等可能收费，下方离线模型不需要 Azure。
+
 ## 本地实验：identity、exchange、token、network、data role
 
 `labs/credential-flow` 对虚构输入执行五段式判断：选择附加在 host 上的 system-assigned/UAMI；对 WIF 请求精确匹配 FIC claims；比对合成 Entra token 的 Key Vault audience、tenant 与 principal；检查一个独立 network gate；最后根据 fixture 中的 permission model 检查符号化 secret 操作。输出不含 token 字符串或 secret value。

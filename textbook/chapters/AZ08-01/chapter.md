@@ -57,7 +57,7 @@ Azure Route Server 是另一个决策点。它在 Azure VNet 内充当 managed B
 
 ## DNS 与 IP 路由是两个平面
 
-Private Resolver 的 **inbound endpoint** 给企业 DNS 一个 Azure 内的目标 IP。企业解析器可把 Azure Private DNS 后缀配置为 conditional forwarder，查询经 VPN/ExpressRoute 网络到 inbound endpoint，再由 Azure DNS 在与该 resolver VNet 关联的 private zone 中查记录。若 zone 没有链接到 inbound endpoint 所在 VNet，查询路径即使到达 endpoint，也没有该链接可供解析。[6][7]
+Private Resolver 的 **inbound endpoint** 给企业 DNS 一个 Azure 内的目标 IP。访问 Private Endpoint 时，把服务的公用 DNS zone（如 `database.windows.net`）配置为 conditional forwarder。查询经 VPN/ExpressRoute 到 inbound endpoint，再沿 Azure 服务名称的 CNAME 找到关联的 private zone。该 zone 必须链接到 resolver 所在 VNet。应用连接始终使用原服务 FQDN。[6–8]
 
 反向方向从 Azure workload 开始。采用 Azure-provided DNS 的 VNet 查询不匹配的 private zone 后，会检查所链接 DNS forwarding ruleset；匹配规则后，Private Resolver 的 **outbound endpoint** 把查询转交给企业 DNS。规则集必须链接到发起查询的 VNet；链接不要求该 VNet 与 resolver VNet 做 peering。若 workload VNet 配置的是自定义 DNS，客户端首先把查询交给列出的 DNS IP，不能简单假定 Azure-provided DNS 的规则集路径会处理它。[7]
 
@@ -77,13 +77,46 @@ Virtual WAN 把 VNet、分支、VPN、ExpressRoute 与远程用户连接到 virt
 
 设计审查应明确谁控制转发、如何传播路由及如何隔离流量。小型或自管 UDR/NVA 网络适合经典 hub-spoke；Standard Virtual WAN 提供跨 hub、分支与 VNet transit，但 route table、连接传播和 routing intent 仍需设计。Basic 不含 Standard 的全部 ExpressRoute 与跨 hub 能力。Virtual hub 的控制方式不同于逐条 VNet peering。[5]
 
+## 企业设计演练：按两张路由表预测一次连接
+
+以下地址是虚构配置，沿用本地模型的关键前缀，新增了 DNS、端点和第二个 spoke。目标是在一张变更单中证明网关 transit、来回路由与原服务名称都成立。只做设计与后面的本地实验；真实只读需获批的两端路由与 DNS 证据，修改则由对应网络 owner 操作。[1–8]
+
+| 网段 | 地址及用途 |
+|---|---|
+| Azure hub | `10.40.0.0/16`，`GatewaySubnet 10.40.255.0/27`，inbound subnet `10.40.5.0/28`（VIP `10.40.5.4`），outbound subnet `10.40.6.0/28`。解析器使用各自委派子网 |
+| 支付、报表 spoke | 支付 `10.41.0.0/16`，VM `10.41.2.15`，SQL PE `10.41.20.4`；报表 `10.42.0.0/16`，另做隔离验收 |
+| 企业网 | `172.22.0.0/16`，交易网 `172.22.10.0/24` 的服务主机 `172.22.10.27`；企业 DNS `10.1.0.53`，其连通前缀为 `10.1.0.0/24` |
+
+### 配置与推导
+
+Hub VNet → Peerings 在 hub 侧允许网关转发（`allowGatewayTransit`），spoke 侧选择使用远端网关（`useRemoteGateways`），spoke 无自己的网关。验证两侧 Connected 和所需的 forwarded traffic 设置。企业边界经 ExpressRoute private peering 通告 `172.22.0.0/16`、`172.22.10.0/24`、`10.1.0.0/24`。在企业侧核对从 Azure 学到的 hub、已接入的 spoke 前缀；S2S VPN 作备选时对照两边发布相同前缀及边界 local preference。支付 subnet 的 Route table 查看 Propagate gateway routes；API `disableBgpRoutePropagation=false`。下面只列与样例有关的有效候选。
+
+| 查看位置与目的地 | 候选前缀、来源和下一跳 | 预计胜出及理由 |
+|---|---|---|
+| 支付 VM NIC → 企业交易 `172.22.10.27` | `172.22.10.0/24` BGP → Virtual network gateway；`172.22.0.0/16` BGP → 同网关；`0.0.0.0/0` 系统默认 | `/24` 最长匹配 |
+| 企业边界 → 返回 `10.41.2.15` 或 SQL PE `10.41.20.4` | `10.41.0.0/16` BGP → ExpressRoute；`10.0.0.0/8` 静态 → 企业核心 | `/16` 胜出；若边界过滤它，返回会改走企业核心 |
+| 企业 DNS → inbound `10.40.5.4` | `10.40.0.0/16` BGP → ExpressRoute；`10.0.0.0/8` 静态 → 企业核心 | 先证实 `/16` 存在，再查 UDP/TCP 53。DNS 不能解释缺失的 IP 路由 |
+
+**见证和最小修复。** 查看 NIC → Effective routes（也可用 `az network nic show-effective-route-table`），并从客户端运行获批的 Network Watcher Next hop（见 AZ02-01）。边界路由器查看 received/advertised prefixes，不能用 BGP Established 推论 `/24` 已在表中。若 `/24` 和 `/16` 同时在 NIC 缺失而企业侧已通告，先查传播和 gateway transit。若只丢银行回程 `/16`，修复企业侧前缀接收策略。对同一对源/目标重新记录两向下一跳和业务 TCP 成功。
+
+**DNS 双向。** 企业 DNS 把 `database.windows.net` 转给 `10.40.5.4`，hub VNet 链接 `privatelink.database.windows.net`，使客户查询原始 `<server>.database.windows.net` 得到 `10.41.20.4`。反向让 DNS forwarding ruleset 关联 outbound endpoint，并链接使用 Azure-provided DNS 的支付 spoke；把 `corp.example.` 发往 `10.1.0.53`。验证两种名称的实际 resolver、A 记录及 UDP/TCP 53。返回私有地址仍须验证 SQL TCP/TLS/权限（AZ04-04）。已连通却解析超时，优先查条件转发/VNet link 和端口。避免把同一后缀循环转回自身。
+
+**设计取舍。** 两个 spoke 可继续用 hub peering；spoke 互访要另外设计可转发路径。很多分支/多区则可评估 Standard Virtual WAN。连接 association 选择入流量查询哪张 hub route table，propagation 决定向哪几张表发布自己的前缀。把支付和报表的可达性逐项写出，并考虑各类分支都关联默认表等服务约束。Virtual WAN hub、网关、ER、电路和 DNS 组件独立计费。设计练习无需资源；未来测试只回收专用连接和 DNS 配置。
+
 ## 本地实验：让三个平面分别失败
 
 附带的 [hybrid-connectivity lab](labs/hybrid-connectivity/README.md) 读取完全合成的 JSON，检查四类合同：hub/spoke 的成对 gateway-transit 属性；BGP 与传播前提；spoke→分支及分支→spoke 两向的最长前缀匹配；以及 DNS inbound/outbound 的 zone link、ruleset link、最长后缀、转发目标与 UDP/TCP 53。合同把路由故障和 DNS 故障分别报告，避免由“IP 看起来可达”推断 DNS 已成功。
 
 运行基线后复制 JSON，每次只注入一个故障：移除 transit flag、关闭 BGP、删去回程路由、取消 ruleset link、阻断 TCP 53，或制造转发循环。合同应分别报告路由与 DNS 故障，按最长前缀/后缀选择目标，并拒绝猜测等长冲突。本地检查不会连接 Azure、解析 ARM、发送 DNS 封包或模拟 BGP 收敛；通过只证明输入满足这些教学合同。
 
-未来 Azure 只读实操的前置权限、命令、预期证据、故障分类、恢复边界与费用门槛见 [live-lab runbook](labs/hybrid-connectivity/FUTURE-LIVE-READONLY.md)。本阶段没有连接 Azure。
+从仓库根目录用 Python 运行。先预测 `topology.json` 的两个方向和两条 DNS 路径均满足。复制 JSON 到临时目录，改变单个传播开关，或关 TCP 53，再把副本路径传给同一脚本。应分别报告转发或 DNS 失败。丢弃副本即可恢复；不使用 Azure 身份、服务或费用。
+
+~~~{.powershell title="本地运行 · 两向路由与 DNS 模型"}
+python textbook/chapters/AZ08-01/labs/hybrid-connectivity/hybrid_contract.py
+python -m unittest discover -s textbook/chapters/AZ08-01/labs/hybrid-connectivity/tests -v
+~~~
+
+未来获批 Azure 只读的权限、输出和恢复边界见 [作业手册](labs/hybrid-connectivity/FUTURE-LIVE-READONLY.md)。本轮未连接 Azure；fixture 中的 `privatelink` 查询只是帮助验证模型的最长后缀，客户端使用原服务 FQDN。
 
 真实只读排障时，先固定一笔失败请求的源 VNet/subnet、源 IP、目标 IP、查询名与时间。路由侧查看 peer 状态、通告/接收的目标前缀、gateway transit 和两向 effective routes；DNS 侧同时确认客户端配置的 resolver、条件转发或 ruleset link、命中 suffix、目标 endpoint、Private DNS zone link 与 53 端口路径。不要用 `ping` 代替 DNS，也不要用一次成功的 DNS 响应证明业务 TCP 路径已通。
 
@@ -104,10 +137,19 @@ Virtual WAN 把 VNet、分支、VPN、ExpressRoute 与远程用户连接到 virt
 
 1. Hub 和两个 spoke 都显示 `Connected`，为什么 spoke A 仍不能访问 spoke B？列出经典 peering 与 Standard Virtual WAN 下各自要找的路由机制。
 2. On-premises 与 Azure 都能看见 `172.22.10.0/24`，但 TCP 建连间歇失败。哪些回程路径、前缀长度或有状态设备差异可能解释它？哪种证据能区分？
-3. `orders.privatelink.database.windows.net` 能解析，`ledger.corp.example` 超时。沿两条 DNS 路径分别找出查询起点、endpoint、zone/ruleset 归属、suffix 和网络端口。
+3. 企业客户端能解析原始 SQL FQDN，Azure spoke 中的 `ledger.corp.example` 却超时。沿两条 DNS 路径找出查询起点、endpoint、zone/ruleset 归属、suffix 和网络端口。
 4. 何时值得从经典 hub-spoke 转向 Virtual WAN？请用站点规模、路由控制权、隔离需求、WAN 服务和运维成本提出可检验的决策条件。
 
+### 参考答案
+
+1. 检查实际源和目标 NIC 的路由。Connected 只证明对等连接建立，经典 hub 的 peering 不自动跨两条连接传递 spoke 流量，需显式对等或可转发 NVA 路径。Standard Virtual WAN 要验证源连接所关联的表是否学到目标前缀，以及目标向哪张表传播。
+2. 对同一连接的真实 IP 查双方前缀来源与下一跳。上题回程要找的是 `10.41.0.0/16`，即使交易网 `/24` 在双方可见，缺失回程或 ER/VPN 分走两台有状态设备仍会失败。比较成功和失败的五元组，补查设备会话和两端探针；宽放 NSG 不会修复非对称路径。
+3. SQL 正向使用企业 DNS → `database.windows.net` forwarder → inbound VIP → hub 链接的 zone。企业内域走 spoke → 绑定 ruleset → outbound → `10.1.0.53`。先核对链接、命中规则和 UDP/TCP 53，修复后用同一客户端查询。增加 SQL zone link 并不会修复反向企业解析。
+4. 给每类分支列出所需目标前缀、隔离条件、故障切换耗时和成本上限。以多个站点的代表性路由演算比较自管 UDR/NVA 运维负担和 Standard Virtual WAN 的托管范围；任何方案先满足隔离和回程，再比较成本。
+
 ## 参考资料
+
+[8] [Private Endpoint DNS integration](https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-dns-integration) · [VPN gateway transit](https://learn.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-peering-gateway-transit) · [Virtual hub routing](https://learn.microsoft.com/en-us/azure/virtual-wan/about-virtual-hub-routing)
 
 1. Microsoft Learn, [Hub-and-spoke network topology](https://learn.microsoft.com/en-us/azure/networking/design-guide/hub-spoke), [VNet peering](https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-manage-peering) and [VPN gateway transit](https://learn.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-peering-gateway-transit).
 2. Microsoft Learn, [BGP with VPN Gateway](https://learn.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-bgp-overview) and [Configure BGP](https://learn.microsoft.com/en-us/azure/vpn-gateway/configure-bgp).

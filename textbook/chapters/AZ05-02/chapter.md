@@ -34,13 +34,38 @@ checkout API 的失败率升高，但应用日志只显示“请求失败”。�
 
 ## 先确认采集路径、工作区和表结构
 
-Log Analytics workspace 把日志存放在表中；表是列的集合，每一行是一条记录，schema 决定可查询的字段。Azure 资源日志通常通过 Diagnostic settings 发送到 destination；Application Insights 应用遥测由 SDK 或 OpenTelemetry instrumentation 收集后导出。数据到达 workspace 后，KQL 才能查询对应表。两条路径有不同的源配置、schema 和故障点。[1][2]
+Log Analytics workspace 保存有明确 schema 的表，控制查询范围、表计划和保留。主机计数器、平台资源日志、应用遥测三条采集路径分别配置。先确认是哪条路少了数据，再选择表及时间窗。[1][2][11–15]
 
 workspace 中的 Azure table 通常有服务定义的 schema；custom table 的 schema 由采集设计确定。不同表计划、保留期和数据来源会影响可查询的数据范围、查询能力、响应时间和费用。先确认当前连接的 workspace、目标资源/应用、表计划和列，再依靠 schema pane 或表参考页检查字段大小写。本文示例面向 workspace-based Application Insights 表 `AppRequests`、`AppDependencies` 与 `AppExceptions`；较早的经典 schema 名称不同，不能不看 schema 就复制表名。[1][3]
 
-![图 15-1：应用遥测与资源诊断通过不同来源进入工作区表，再由有明确 scope 的查询分析。](figures/telemetry-data-path.svg)
+![图 15-1：原创配置示意。VM 的 AMA、资源诊断设置和应用 OpenTelemetry 走不同路径，最终从各自目标表验证。](figures/telemetry-data-path.svg)
 
 日志查询需要对 workspace 具有查询数据权限；Log Analytics Reader 是文档中的一个内置角色示例。跨工作区查询会扩大范围和数据量，也会增加查询开销。对于本地练习或复盘，先选最小资源/workspace scope 和最短有用时间窗。KQL 执行会消耗查询资源；不要在 Stage 1 把查询模板连接到实际订阅或工作区。[2][4]
+
+## 配置演练：从 Windows VM 采一条性能计数器
+
+**未来 Azure 练习，当前未执行。** 目标是证明一台获批 VM 的 CPU 计数器进入指定 workspace 的 `Perf` 表。选受支持的 Windows VM、同意使用的 workspace 与管理身份。创建/修改 AMA 扩展、DCR 及关联需要对应写权限。查询 `Perf` 需在对应访问模式和范围授予日志查询权限。下述是单计数器最小配置，生产环境按数据成本与隐私要求裁剪。[12–14]
+
+| 对象 | 操作与关键字段 | 独立验证 |
+|---|---|---|
+| Azure Monitor Agent（AMA） | VM → Extensions + applications 查看 `AzureMonitorWindowsAgent`。配置数据收集时按 VM 类型满足受支持身份和网络前提 | 扩展 Provisioning succeeded 后仍查关联、guest agent 状态或 `Heartbeat` |
+| Data Collection Rule（DCR） | Monitor → Data Collection Rules → Create。选择 Windows 平台、Performance counters、自定义 `\Processor(_Total)\% Processor Time`，60 s。Destination 选 Azure Monitor Logs 及目标 workspace | JSON 的 `dataSources.performanceCounters` 应含 `samplingFrequencyInSeconds: 60`，stream 为 `Microsoft-Perf` |
+| Data Collection Rule Association（DCRA） | DCR → Resources 增加目标 VM，并核对该 VM 作用域下的 association 指向此 DCR 的 `dataCollectionRuleId` | AMA 有扩展却没关联此规则时，不会获得该计数器配置 |
+| Workspace 与流向 | `destinations.logAnalytics` 中的 `workspaceResourceId` 指向目标。`dataFlows` 将 `Microsoft-Perf` 送到该 destination 的逻辑名 | 从目标 workspace 查该 VM 资源 ID 的 `Perf` 行，确认 counter、时间和值 |
+| Data Collection Endpoint（DCE） | 本例公用 AMA 路径通常可用默认端点。使用 Azure Monitor Private Link，或数据源明确需要 DCE 时，按文档预置并关联。配置访问端点与 VM 同区域，日志摄取端点与目标 workspace 同区域 | 验证 AMA 的配置访问、摄取 FQDN、AMPLS 关联、私网 DNS 和 HTTPS；配置和数据可能走不同端点 |
+
+~~~{.text title="KQL 文档示例 · NOT_RUN"}
+Perf
+| where TimeGenerated > ago(30m)
+| where _ResourceId =~ "<approved-VM-resource-ID>"
+| where ObjectName == "Processor" and CounterName == "% Processor Time"
+| project TimeGenerated, Computer, InstanceName, CounterValue
+| order by TimeGenerated desc
+~~~
+
+**无数据时逐门查。** 同一 VM 的 `Heartbeat` 也缺失，先查扩展、身份、网络和目标 workspace；心跳存在而 `Perf` 缺失，先核对 DCRA、OS 匹配、计数器拼写、stream/dataFlow 和采样间隔。等待配置同步与采集后，再查确切资源 ID 和 UTC 窗口。练习后移除自己的关联，确认采集停止，再考虑删除独享规则或端点；共用摄取对象与保留数据应按管理策略处理。摄取、保留、查询与私网组件可能计费。
+
+**其他两条路。** Storage 的 Blob service 等平台资源，在相应资源 → Diagnostic settings 显式选日志类别与目标 workspace。选择 resource-specific 时按服务文档检查如 `StorageBlobLogs`；选 Azure diagnostics 模式且受支持时查 `AzureDiagnostics`。此配置不靠 VM 的 AMA 或其 DCRA。一个应用则在进程中配置受支持的 OpenTelemetry SDK/Distro 和 Application Insights 连接字符串，从该 Application Insights 资源确认所链接的 workspace。发送有唯一业务标记的请求，再查 `AppRequests` 及相关 trace。不要在配置样例、日志或截图里打印连接字符串。应用有日志而主机计数器没有时，检查 AMA 路径；心跳正常而 `AppRequests` 为空时，检查应用插桩、exporter、目标和采样。[11][12][15]
 
 ## KQL：先限定时间与表，再处理细节
 
@@ -135,7 +160,7 @@ python -m unittest discover -s textbook/chapters/AZ05-02/labs/telemetry-triage -
 python textbook/chapters/AZ05-02/labs/telemetry-triage/telemetry_model.py
 ```
 
-`queries/` 下的两条 KQL 模板用于练习表选择、时间过滤、聚合和关联。它们不会被 Python 模型解释或发送到 Azure。实验的 `time_minute`、合成 ID、表记录和采样数值只用于教学；通过测试只表示本地抽象符合 fixture，不证明某 workspace 的 schema、遥测收集、KQL 结果或事故根因。
+`queries/` 下的七条 KQL 模板均维持 `NOT_RUN`。先在本地判断时间过滤、加权样本和关联结果，再用 Python 输出对照。模型只解释 fixture 的 `time_minute`、ID 和样本，不连接 workspace 或运行 KQL。本轮也未执行上文的 `Perf` 文档查询。
 
 ## 练习与参考答案
 
@@ -177,4 +202,8 @@ python textbook/chapters/AZ05-02/labs/telemetry-triage/telemetry_model.py
 9. [Application map](https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-map), [Investigate failures and transactions](https://learn.microsoft.com/en-us/azure/azure-monitor/app/failures-performance-transactions) — 拓扑视图、错误和端到端事务诊断。
 10. [OpenTelemetry sampling in Application Insights](https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentelemetry-sampling) — trace sampling、关联与语言默认值。
 11. [Enable OpenTelemetry in Application Insights](https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentelemetry-enable) — 当前 SDK/Distro 收集和验证路径。
+12. [Azure Monitor Agent overview](https://learn.microsoft.com/en-us/azure/azure-monitor/agents/azure-monitor-agent-overview) 与 [DCR samples](https://learn.microsoft.com/en-us/azure/azure-monitor/data-collection/data-collection-rule-samples) — 主机代理与性能数据流。
+13. [Manage DCR associations](https://learn.microsoft.com/en-us/azure/azure-monitor/data-collection/data-collection-rule-associations) — 资源范围及绑定。
+14. [Data collection endpoints](https://learn.microsoft.com/en-us/azure/azure-monitor/data-collection/data-collection-endpoint-overview) — 私网、区域和端点用途。
+15. [Azure Monitor diagnostic settings](https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/diagnostic-settings) — 平台资源类别、目的地与表模式。
 :::

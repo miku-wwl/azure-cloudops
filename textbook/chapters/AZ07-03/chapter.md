@@ -106,6 +106,23 @@ Plan Artifact 可能暴露配置值或敏感数据。只发布必要文件，限
 
 部署前，资源 owner 应为 Azure Repos 目标分支设置 Build Validation 并保护模板源；生产强制模板迁入独立仓库，以 `extends`/Required template check 固定，同仓库 include 不是防篡改策略；分别创建 Plan/Apply WIF 连接，只授权该 Pipeline；Variable Groups、Secure Files、agent pools、Environments 也只授权必要 Pipeline 并配置 checks。PR 不得取得生产凭据；Plan/Apply 使用不同且最小的 Azure 和 Blob 权限；限制 artifact/log 读者与保留期；两类 agent 固定到同一 Terraform 1.15.5/provider lock 工具链。Plan identity 读取 State 与刷新/数据源所需对象；Apply identity 只获同一 State 访问和计划动作所需写权限。角色按资源操作审查，不预设订阅 Contributor。
 
+## 配置演练：从 Azure DevOps 项目到受控 Apply
+
+**企业设计练习。** 用获批的专用 Azure DevOps 项目、非生产订阅和独立 state key 演练。需要 Project 管理员、受保护资源 owner、Entra/Azure 授权管理员和独立审批人。生产入口还依赖上节尚未实现的签名 broker 和审批验证集成。以下是完成该设计需要的服务端配置，当前没有上传 YAML、排队、连接 Azure 或执行 Apply。
+
+| 在 Azure DevOps 哪里配置 | 管理员要设置什么 | 对应仓库文件 |
+|---|---|---|
+| Organization → New project → Repos → Files / Branches | 建 Private project，接入正确仓库；保护 main，给 PR 配 Build validation 并限制改模板的人 | 本地离线 `azure-pipelines.yml` 只用于合同；`enterprise-pipeline.yml` 默认 `enableCloudDelivery=false` |
+| Pipelines → New pipeline → Existing YAML | 选正确仓库、分支和路径。先查看仅 Validate 的运行图；保护可开启 cloud delivery 的入口和参数 | 触发条件、编译期分支、jobs、任务与传递参数定义在 YAML |
+| Project Settings → Agent pools | 建/选按 Plan、Review、Apply 分权的 pool，授权必要 pipeline；部署网络与 Terraform/provider 版本固定 | `planAgentPool`、`reviewAgentPool`、`applyAgentPool` 在 YAML 引用资源名 |
+| Project Settings → Service connections | 建两个 Azure Resource Manager → Workload identity federation 连接。核对 Entra FIC issuer/subject/audience；分别限定 Plan 的读和受控 Apply 的写，单独授予 state data plane | `planServiceConnection`、`applyServiceConnection` 为编译期引用。由 owner 在 Pipeline permissions 单项授权 |
+| Pipelines → Library | Variable groups 定义获批 subscription/scope 名或 ID 等目标元数据；Secure files 存受保护后端配置等。按资源配置权限，不把敏感值写进 Git | 模板绑定 Plan/Apply 变量组和 secure file；限制 artifact/log 读取与留存 |
+| Pipelines → Environments → Approvals and checks | 创建 Review、Apply 环境，设置批准者、禁自批、Branch control、适用的 Required template 和 Exclusive lock 等 checks。选择有保护的资源并给消费者授权 | `planEnvironment`、`applyEnvironment` 链接；`lockBehavior: sequential` 决定等待行为，锁需服务端启用 |
+
+**一次可审阅的候选变更。** Plan 阶段在本次 run 发布 `terraform-plan`，其中 `approved.tfplan` 和 manifest 绑定代码 SHA、目标、backend、lock 和计划摘要。审批人在 Plan 完成后从本次 Run 的 Artifacts 对照动作明细与目标，Apply 通过 checks 后只下载 `current` 同批 artifact。重新排队、换 plan 或改 source 会改变合同。服务端授权失败并不会证明 Azure RBAC 不足：先查 stage 的 resource check，再查 WIF exchange 与 Azure 操作结果。需要重计划则走同一审批链。
+
+**放行和撤场。** 在未来获批验证中，先以不得批准的人尝试推进，观察 Apply stage 是否仍被检查拦截；再用不同摘要或目标验证脚本拒绝。没有 broker 时保留 Validate-only。验证后撤除测试连接和资源授权，按留存策略清理 artifact。Agent、日志、state 和实际部署独立核价。以下本地测试仅证明 YAML 和摘要合同，不能证明服务端 approval、锁、身份或审批人实际生效。
+
 ## 本地实验：验证 YAML 与审批合同
 
 本讲保留刻意离线的 Azure Pipelines：[azure-pipelines.yml](labs/azure-pipelines/azure-pipelines.yml) 只运行 [offline-checks.yml](labs/azure-pipelines/templates/offline-checks.yml)。它关闭自动触发，只 checkout `self`，不配置 Azure task、Service Connection 或 Apply。PyYAML 做普通 YAML 解析，再由 unittest 检查离线文件和企业模板的静态结构；这不是 Azure Pipelines schema compiler，也没有向 Azure DevOps 上传或排队。
@@ -141,6 +158,8 @@ python -m unittest discover -s textbook/chapters/AZ07-03/labs/azure-pipelines/te
 
 ::: {.refs}
 ## 官方与实现参考
+
+[附] [Create your first pipeline](https://learn.microsoft.com/en-us/azure/devops/pipelines/create-first-pipeline?view=azure-devops) · [Agent pools](https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/pools-queues?view=azure-devops) · [Pipeline artifacts](https://learn.microsoft.com/en-us/azure/devops/pipelines/artifacts/pipeline-artifacts?view=azure-devops)
 
 1. [Stages in Azure Pipelines](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/stages?tabs=yaml&view=azure-devops)
 2. [YAML templates for reusable and secure pipelines](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/templates?view=azure-devops)

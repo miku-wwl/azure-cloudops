@@ -1,5 +1,7 @@
 # Azure CloudOps & Enterprise Infrastructure
 
+**V1.0.1 textbook refinement:** 23 lectures with field-level configuration, worked diagnosis and recovery exercises. [Review and acceptance](textbook/V1_0_1_TEXTBOOK_REVIEW.md) · [PDF collection](textbook/dist/Azure-CloudOps-PDF.zip) · [Editable sources](textbook/dist/Azure-CloudOps-Sources.zip) · [Manifest](textbook/dist/publication-manifest.json). The refinement uses the accepted V1 publication as its baseline and has an additional Azure budget of USD 0.00.
+
 **V1 status:** `TEXTBOOK_V1_RELEASE_READY`, `LIVE_LAB_READY` and `READ_ONLY_AZURE_VERIFIED`. LAB-IR-11 reached F1 plan provisioning and verified cleanup. The app release and rollback remain unverified in Azure. [Final acceptance report](textbook/FINAL_ACCEPTANCE_REPORT.md).
 **Repository:** miku-wwl/azure-cloudops, main
 **Approved implementation baseline:** 853ba6cbaa4ee67e448550fbe192c6c89b24fd2f

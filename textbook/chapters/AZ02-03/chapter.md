@@ -181,31 +181,55 @@ private-address-without-data-authorization: DNS=PRIVATE_ENDPOINT 10.60.4.7; data
 **保真边界：** 这是合成决策表，不是 Azure Private DNS emulator。它不发送真实 DNS 查询，不实现递归解析、CNAME 数据包、TTL/cache、NXDOMAIN SOA、Azure DNS、VNet link API、Private Resolver、Private DNS zone group、Storage firewall 规则、PE NIC、路由、NSG、TLS、证书、SAS、Managed Identity、RBAC 或 Storage API。`public_ip` 是 RFC 5737 文档测试地址，不可路由；`data_authorized` 是调用者输入，不是权限求值。测试只证明 fixture 下的算法结果。
 ::::
 
+## 配置演练：让支付应用只从私网读取 Blob
+
+**未来 Azure 练习，当前未执行。** 选已授权的 spoke、客户端和非生产数据。在同一帐户准备非敏感 Blob。配置权限分别落到 Storage、PE/subnet 和 Private DNS zone；不同 owner 要安排连接审批。读取 Blob 的身份单独授权。按 IaC 学习可阅读 `textbook/terraform/modules/storage/main.tf` 与同级的 `private_endpoint/main.tf`：模块把 Storage ID、`blob` 与 zone 名传给 PE。模块从禁用公用访问的帐户起步；现网迁移则需预验后关闭。[1–5]
+
+| 步骤 | 归属与配置 | 放行依据 |
+|---|---|---|
+| 1. 准备帐户 | Storage accounts → Create，选 `StorageV2`、获批区域和冗余，启用仅 HTTPS，关闭匿名 Blob 访问。在授权网络内准备实验容器与 Blob | 记录帐户 ID、原始 Blob service FQDN、Blob 名和读取主体 |
+| 2. 连接服务 | Storage → Networking → Private endpoint connections。PE 选 VNet/subnet、帐户 ID 和 Target sub-resource `blob`，API `groupIds` 为 `["blob"]` | 等连接为 `Approved`，记录 endpoint NIC 私有 IP。`file`、`dfs` 各有针对该服务的端点 |
+| 3. 链接 DNS 区域 | Private DNS zones → `privatelink.blob.core.windows.net` → Virtual network links。链到用 Azure DNS 的客户端 VNet 或解析器 VNet，`registrationEnabled=false` | 自定义 DNS 还要配置原服务后缀转发，见 AZ08-01 |
+| 4. 由 PE 维护记录 | PE → DNS configuration，配置 Private DNS zone group。Terraform 的 `private_dns_zone_ids` 引用 zone ID | A 记录应指向 endpoint IP；受管理记录跟随 PE 生命周期 |
+| 5. 关闭公网路径 | Storage → Networking → Public network access，选 `Disabled`。对于现网切换，先验证私网路径与业务请求 | 用批准的外部测试环境证实公网被拒。应用仍连接原始服务 FQDN |
+
+**预测与最小修复。** 在本地 fixture 的 linked spoke，原 FQDN 落到 `10.60.4.7`。已加 VNet link 却解析到公网地址，先查实际 resolver 与转发，再核对 A 记录和缓存。私网解析正确但返回 403 时，从 Storage 错误码区分公网路径限制和对象权限。修复具体失败门后用同一调用方重跑。结束后释放独占 PE 和关联，按留存要求处理帐户与数据，保留共用 zone/link。PE、DNS、存储和流量有独立计费。
+
 ## Read-only 诊断命令与未来 live lab
 
-以下命令是将来在 owner 已批准的非生产 scope 中使用的检查清单，**本讲没有运行这些 Azure 命令**。Stage 3 前仍需通过授权与成本门禁。先从能观察问题的实际客户端查询原始 FQDN：
+以下检查清单供未来获批的非生产 scope 使用。本轮未执行这些命令。先从观察到问题的客户端查询原始 FQDN。
 
 ~~~powershell
-$Fqdn = 'settlementarchive.blob.core.windows.net'
+# Set all variables to owner-approved names before running from the spoke.
+$Fqdn = "$StorageName.blob.core.windows.net"
 Resolve-DnsName $Fqdn
 Test-NetConnection $Fqdn -Port 443
+curl.exe -sS -o NUL -w '%{http_code}\n' "https://$Fqdn/"
+az storage blob show --account-name $StorageName `
+  --container-name $Container --name $Blob --auth-mode login `
+  --query '{name:name,bytes:properties.contentLength}'
 ~~~
 
-`Resolve-DnsName` 是本地客户端 DNS 查询；`Test-NetConnection` 会主动发送网络探测，只能对明确授权的 endpoint 执行。DNS 输出要连同 VM/VNet、DNS server、查询时间和缓存上下文记录。使用 custom resolver 时，检查其实际转发规则与目标，而不是只看 Private DNS zone link。
+按顺序记录四门：DNS 终点是 PE IP；TCP 443 可建立；HTTPS 默认校验证书，以原名称发出 SNI/Host（HTTP 状态说明已过相应 TLS 握手，403 仍可能成立）；最后以获批身份读取同一个 Blob 的元数据。容器级 Storage Blob Data Reader 为授权示例。命令会访问 Azure 或主动探测，必须有针对该范围的批准。记录客户端、实际 DNS server 和 UTC 时间，不输出令牌。
 
 确认资源配置时，以资源 read scope 执行只读查看：
 
 ~~~powershell
+$DnsZone = 'privatelink.blob.core.windows.net'
 az network private-endpoint show --resource-group $PeResourceGroup --name $PeName
-az network private-endpoint dns-zone-group list --resource-group $PeResourceGroup --endpoint-name $PeName
-az network private-dns link vnet list --resource-group $DnsResourceGroup --zone-name 'privatelink.blob.core.windows.net'
-az network private-dns record-set a list --resource-group $DnsResourceGroup --zone-name 'privatelink.blob.core.windows.net'
-az storage account show --resource-group $StorageResourceGroup --name $StorageName --query '{publicNetworkAccess:publicNetworkAccess}'
+az network private-endpoint dns-zone-group list `
+  --resource-group $PeResourceGroup --endpoint-name $PeName
+az network private-dns link vnet list `
+  --resource-group $DnsResourceGroup --zone-name $DnsZone
+az network private-dns record-set a list `
+  --resource-group $DnsResourceGroup --zone-name $DnsZone
+az storage account show --resource-group $StorageResourceGroup `
+  --name $StorageName --query publicNetworkAccess --output tsv
 ~~~
 
 先核对实际 PE connection state、FQDN/private IP、zone group、VNet links、A record 和 Storage public network setting。再比较来自 linked VNet、custom DNS 与授权 on-prem resolver 的解析。若网络层显示可达，才在获得明确数据访问授权后，用最小读取请求验证目标 Blob 操作；预先记录认证方式、容器/对象、request ID 和错误码。不要在学习笔记里贴出 storage key、SAS token、principal ID 或完整 account connection string。
 
-**未来 live lab 状态：** `LIVE_NOT_RUN`。该实验可能需要可计费的 Private Endpoint、Private DNS zone/queries、网络数据处理与已有运行资源；Azure DNS Private Resolver 本身也按 endpoint/ruleset 计价。Azure 官方 pricing 页面按选定区域、币种和账户 offer 报价；private endpoint 有 hourly resource 与 data-processing 项，Private DNS 有 zone/query 项。由于项目尚无授权 region、subscription offer 与资源所有者，不能从本地推断 live 成本。此讲不建议为了测试而部署 Private Resolver、VM、Storage account 或 PE；后续如要创建资源，先估算运行时长、数据量、所有依赖与删除后残留，并纳入全项目累计 USD 1.00 上限。[7][8]
+**未来 live lab 状态：** `LIVE_NOT_RUN`。费用要按选定区域、offer、运行时长及数据留存估算。计入 PE、Private DNS、Resolver endpoint/ruleset、客户端和存储等依赖。V1.0.1 授权预算 USD 0.00，课内仅运行本地模型。上述云端操作需另行获批。[7][8]
 
 ## Fault cards：定位失败发生在哪道门
 

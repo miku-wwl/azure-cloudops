@@ -112,6 +112,14 @@ Deny 与 Enforce 只适用于一部分 Azure recommendations。Deny 依 Azure Po
 
 另一个部署者若在 ARM 操作启动前因权限不足被拒绝，Activity Log 里没有该尝试是文档定义的行为。应用若读取 Key Vault secret，则那是 data-plane 操作，需要 Key Vault resource logs（已启用所需诊断类别时）或应用证据。Defender 的分数与 recommendation 不能补上这两类缺失的事件证据。
 
+## 配置演练：将公共 Blob 风险先纳入审计
+
+**未来获批 Azure 配置，未执行。** 在 Portal → Policy → Assignments → Assign policy，先选测试 RG、适用的 Storage 策略定义与参数。检查 assignment 的 `scope`、`policyDefinitionId`、`parameters`、`notScopes` 和 `enforcementMode`。若想评估 Deny 的影响，可用 `DoNotEnforce` 预览评估，也可另选支持的 Audit effect。前者是分配行为，后者来自策略定义或其参数。
+
+**先预测。** 已存在的帐户评估为 Non-compliant，且在 `DoNotEnforce` 下提交可成功，符合配置。去 Policy → Compliance 查看 assignment ID、资源 ID、评估时间与具体属性，再用 Activity Log 查同一资源操作与 UTC 时间、status 和 correlation ID。下方模型可先演算 Deny/Audit/数据面操作。先修测试帐户的单个属性并等待评估刷新，再看相同范围。Defender 建议与付费 plan 分开查；练习不需要开启收费计划。
+
+只读、分配和 remediation 分别授权。未来只撤销自己的试验 assignment 或恢复参数，核对最终配置和费用。
+
 ## 本地实验：分别预测 policy outcome、日志边界与 Defender effect
 
 labs/governance-evidence-model 使用虚构输入构造三个独立判定：
@@ -140,9 +148,9 @@ defender-deny-enabled: REQUEST_ENFORCEMENT_VIA_AZURE_POLICY_DENY
 
 这是教学用决策夹具，不是 Azure Policy evaluator、ARM、Azure Monitor、Defender API 或费用计算器。它不解析 policy JSON、alias、initiative、exemption、policy mode、资源 provider 行为、真实 compliance state、遥测延迟、日志 schema 变化、事件投递或计划计费。真实控制行为必须在获批环境中用精确 assignment 与事件证据单独验证。
 
-## 只读诊断模板：离线阅读，不要在 Stage 3 前执行
+## 只读诊断模板：在逐项获批的范围执行
 
-以下是 Azure CLI 只读查询的文档模板。它仍然会访问真实 subscription；本项目当前尚未通过 Stage 3 L0 scope/authorization gate，也没有授权执行 live query。只有未来的 L0 preflight 明确纳入该 subscription、命令和身份后，才可运行。参数必须换成已批准的最小 scope 与时间窗。
+历史 L0 已在限定范围完成只读验证，见 [L0 只读记录](../../L0_READ_ONLY_PREFLIGHT.md)。本轮只阅读记录；以下命令模板未执行。未来使用时仍需明确批准命令、主体、scope 和最短 UTC 时间窗。
 
 ~~~powershell
 # 观察一个资源最近的 Policy compliance state（仅在获批的 L0 scope 内执行）
@@ -205,6 +213,8 @@ Defender for Cloud 显示 MCSB recommendation；门户摘要分数下周变高�
 **本讲总结：** Policy effect 决定规则怎样作用于请求与现有资源；Activity Log 只覆盖它定义的管理事件边界；Defender recommendation 需与实际 enforcement 配置分开验证。用和问题匹配的日志源、assignment 与请求证据，避免从分数或日志缺项推出超出证据的结论。
 
 ## Primary references
+
+[附] [Policy assignment structure](https://learn.microsoft.com/en-us/azure/governance/policy/concepts/assignment-structure)
 
 1–2. [Azure Policy effect basics](https://learn.microsoft.com/en-us/azure/governance/policy/concepts/effect-basics)；[compliance states](https://learn.microsoft.com/en-us/azure/governance/policy/concepts/compliance-states)
 3. [deployIfNotExists effect](https://learn.microsoft.com/en-us/azure/governance/policy/concepts/effect-deploy-if-not-exists)；[remediate non-compliant resources](https://learn.microsoft.com/en-us/azure/governance/policy/how-to/remediate-resources)

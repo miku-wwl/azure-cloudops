@@ -128,6 +128,25 @@ Node upgrade 会增加临时容量或使用 maxUnavailable，逐步 cordon/drain
 
 图 12-4 与图 12-5 解释同一条 readiness 证据如何影响 Service 和节点维护。维护完成不能只凭 node 显示 Ready；还要检查工作负载重新调度、Pod Ready、EndpointSlice 和应用请求。升级成功也不代表目标版本适配所有已移除 API；先查 release notes、弃用 API 和 admission/webhook 依赖。[12][13]
 
+## 配置演练：为什么有 Pod 却没有可用 endpoint？
+
+**未来获批的私有 AKS 练习，未执行。** 使用隔离 namespace、获批 ACR 镜像和能访问 API server 的客户端。Azure 管理面核对 `networkProfile.networkPlugin`、`networkPluginMode`、kubelet identity 和 registry permission mode。仓库 `textbook/terraform/modules/aks/main.tf` 有实际的 `network_profile`、节点池和 OIDC 配置；用真实字段判断网络模式。ACR 按 RBAC-only/ABAC 模式授权 kubelet，应用的 workload identity 用于运行后的数据访问（AZ03-02）。
+
+| Kubernetes 配置 | 放什么 | 如何判定失败门 |
+|---|---|---|
+| Deployment `spec.template.spec` | `resources.requests`、`image`、`serviceAccountName`；readiness 使用实际接流路径及端口 | `Pending` 查 FailedScheduling；`ImagePullBackOff` 查镜像、ACR DNS/授权；`Running` 且 `Ready=False` 查探针 |
+| Service 与 EndpointSlice | 应用 label 进 `spec.selector`；`targetPort` 对照实际监听端口 | 查 EndpointSlice 地址、端口和 `conditions.ready`。没有匹配 Pod 时修 selector，Pod 不 ready 则修探针或依赖 |
+| PDB 与 Agent pool | PDB selector 对上 Pod，按可用副本要求设 `minAvailable` 或 `maxUnavailable`；节点池 `upgradeSettings.maxSurge` 需预留 IP 与计算容量 | 看 `disruptionsAllowed` 和 ready 副本。无额外健康副本时贸然放松 PDB 可能中断业务 |
+
+~~~{.powershell title="未来获批读取 · 使用指定 context"}
+kubectl --context $Context -n $Namespace describe pod $Pod
+kubectl --context $Context -n $Namespace get endpointslice `
+  -l "kubernetes.io/service-name=$Service" -o yaml
+kubectl --context $Context -n $Namespace get pdb
+~~~
+
+若 Pod 已 ready 且标签正确但 HTTP 仍超时，查 EndpointSlice 端口与容器实际监听，修复 `targetPort` 后复验同一 HTTP。Azure 资源权限与 Kubernetes RBAC 分开授予。结束后仅回收试验 namespace、镜像等独占对象。节点、registry、日志与网络可能持续计费；以下模型全部离线。
+
 ## 离线实验：逐层判定失败门
 
 运行固定 JSON fixture 的本地 `aks-readiness-model`。模型针对请求资源、taint/toleration、autoscaler 边界、ACR RBAC/ABAC pull、workload identity 信任、probe 状态、Service DNS 和 PDB drain 输出诊断类别及下一项检查。它不访问 Azure、Docker、AKS API、OIDC endpoint、DNS、registry 或任何网络；不读取用户凭据，也不创建 Kubernetes 对象。
@@ -150,7 +169,7 @@ kubectl get nodes -o wide
 az aks get-upgrades --resource-group <approved-rg> --name <approved-aks>
 ```
 
-AKS 节点与 ACR 都可能产生持续资源费用；本项目的 USD 1.00 是累计上限而非每讲额度。此处没有可靠的 region、SKU、持续时间或清理范围可供计价，所以不提出资源部署；阶段 3 仍须先通过 L0 和单独授权。
+V1.0.1 云端预算为 USD 0.00，只运行本地模型。将来若开展单独演练，需先核价并取得具体订阅、资源、操作与清理范围授权。
 
 ## Fault card：Pod 卡在 `Pending`
 

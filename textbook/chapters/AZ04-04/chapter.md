@@ -116,6 +116,27 @@ SQL Database 的这些恢复操作创建新的 database，不能覆盖现有目�
 
 ![图 13-5：Storage 与 SQL 的恢复机制按资源粒度、功能前提和备份位置分路。](figures/recovery-scope-map.svg)
 
+## 配置演练：Blob 只读与 SQL 隔离恢复
+
+**未来 Azure 练习，当前未执行。** 目标是让报表身份只读一个 Blob 和一个 SQL 视图，并在数据误删时从恢复点读取旧数据。准备获批的 StorageV2、SQL Database、私网客户端、资源 owner 和 DBA。正常和拒绝用例都使用合成数据。[2][4–13]
+
+| 配置归属 | 选项和字段 | 如何验证 |
+|---|---|---|
+| Storage account → Redundancy | 区域与类型支持时选 ZRS（`Standard_ZRS`）。本仓库 `textbook/terraform/modules/storage/main.tf` 用 LRS 并开启版本与软删除供读代码 | 核对冗余模式。LRS、ZRS 覆盖不同区域内故障域；GRS 异步复制到次区，需另定区域故障 RPO |
+| Storage account → Networking / Configuration | 私有访问按 AZ02-03 配 Blob PE，设 `publicNetworkAccess=Disabled`。如用 selected networks 要核对 `networkAcls.defaultAction` 与规则；独占实验帐户可关闭 `allowSharedKeyAccess` 和匿名 Blob | 网络放行、共享密钥、匿名是独立开关。测试授权网络与拒绝路径 |
+| Container → Access control (IAM) | 报表主体取容器级 Storage Blob Data Reader，验证命令见 AZ02-03。临时委托时可用 HTTPS、单对象、只读、短过期的 user delegation SAS | 委托者在帐户或上级作用域需 `generateUserDelegationKey/action`，并有相应对象数据权限。禁 Shared Key 后 Blob user delegation SAS 可用；帐户/服务 SAS 被拒。不要记录 SAS URL |
+| SQL logical server → Networking | Private endpoint 子资源 `sqlServer`，zone `privatelink.database.windows.net`。使用原始 FQDN，另禁公网访问。按实际客户端核查 Proxy/Redirect 所需端口和路径 | DNS、TCP/TLS、login、执行 SELECT 各有证据。开放防火墙无法授予数据库权限 |
+| SQL logical server → Microsoft Entra ID；目标 DB | 设置 Entra admin，在目标 DB 创建 contained user 并给对象最小权限。SQL authentication 使用独立凭据与 DB 授权；Entra-only 开启时拒绝 SQL authentication | Azure 控制面角色与数据库权限分别检查。以实际主体验证 SELECT 成功、非授权查询被拒 |
+
+~~~{.sql title="文档示例 · 在目标数据库执行 · 需要授权 DBA"}
+CREATE USER [app-pay-reader] FROM EXTERNAL PROVIDER;
+GRANT SELECT ON OBJECT::dbo.PaymentSummary TO [app-pay-reader];
+~~~
+
+此处假定主体和视图已存在且 Entra 主体可被解析。客户端验证 TLS，连接 `<server>.database.windows.net` 并指定目标 DB 与获批身份。TCP 成功而登录失败时查 token 目标和 DB 用户；已登录却 SELECT 被拒时查对象授予。检查对象授权比扩大管理员权限更精准。
+
+**恢复与验收。** Blob 在 Data protection 选支持的版本、软删除和保留周期。先用小对象验证版本找回，容器误删走容器恢复。SQL 在 Backups 查保留与最早时间，从数据库 Restore 选故障前的 UTC 时间并恢复到隔离的新数据库。比较记录数、金额与写入标记，再做受控读写；先保留生产连接串。结束时按保留要求移除自己的试验库、对象、端点及临时授权。算力、备份、Blob 版本、端点均可能计费。本轮只有下方本地模型。
+
 ## 离线实验：根据证据定位失败门
 
 实验用 JSON 案例输入模拟 Storage 读请求、SQL 连接、Blob 恢复和 SQL 恢复。模型对每个案例先返回一个分类与下一条建议证据：
@@ -167,7 +188,9 @@ Storage 账号禁用了 public network access。应用使用标准 Blob FQDN，E
 
 Storage 和 SQL 的请求都要通过 DNS/endpoint、网络、身份认证、数据授权及目标状态等多个门。Private Endpoint 依赖 DNS 把标准 FQDN 导向私有 IP；Storage data role 与 ARM 管理角色不同；SQL TCP 握手也不等于 Redirect、TLS、登录和数据库授权均已成功。恢复机制必须匹配 Blob、container、account 或数据库的资源范围，并基于真实存在且仍在保留期内的恢复点。新的恢复目标还要验证数据、权限、连通性和应用切换。只有现场访问、备份清单和受控恢复演练，才能提供超出离线模型的证据。
 
-## Primary references {.pagebreak}
+## Primary references
+
+[附] [Storage redundancy](https://learn.microsoft.com/en-us/azure/storage/common/storage-redundancy) · [Prevent Shared Key](https://learn.microsoft.com/en-us/azure/storage/common/shared-key-authorization-prevent) · [User delegation SAS](https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-user-delegation-sas-create-cli) · [Entra SQL authentication configuration](https://learn.microsoft.com/en-us/azure/azure-sql/database/authentication-aad-configure?view=azuresql)
 
 [1] [Azure Storage network security FAQ](https://learn.microsoft.com/en-us/troubleshoot/azure/azure-storage/blobs/networking/storage-network-security-faq) · [2] [Use private endpoints for Azure Storage](https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints) · [3] [DNS security and private name resolution](https://learn.microsoft.com/en-us/azure/networking/design-guide/dns-security)
 

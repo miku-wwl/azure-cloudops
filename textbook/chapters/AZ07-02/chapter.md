@@ -112,14 +112,21 @@ if sha256_file(sealed_plan).casefold() != authorization.plan_sha256:
 
 这段代码只证明签名与计划副本相符；可信签发身份仍依赖部署平台从仓库外注入、并保护摘要固定值和信任密钥文件。使用前必须在受保护服务端配置审批人、scope、独占锁、授权身份和持久防重放策略，并用受控的 workload identity 限定后端 Blob 数据面权限。不得把签名 JSON、公钥摘要配置或可编辑的 pipeline YAML 单独当作信任根。[16]
 
-## 本地实验：先看到真正的 lock refusal {.pagebreak}
+## 配置演练：从 key 和租约查到唯一的 writer
+
+**企业设计练习，当前未访问 Azure。** 给一套非生产 stack 指定唯一的 `resource_group_name`、`storage_account_name`、`container_name`、`key`。可在 Storage → Containers 核对容器及 Blob，在 Data protection 核对 versioning、软删除与保留；用已保护的 tfbackend 配置和 Entra/OIDC 读写身份控制该 key。Backend 身份的 Blob 数据权限与 AzureRM Provider 管理资源的权限单独设计。示例可读 `azure-enterprise-reference/versions.tf` 和 AZ07-03 的 Secure Files 配置。
+
+两个 runner 同 key 时，B 等 A 释放锁或报告 lock refusal。先确认 A 的 run、lease 所有者与执行状态；未证实 A 结束前不解除锁。两个 key 虽分开加锁，却不能阻止它们写同一个实际 NSG。若状态损坏，先停止 writer，保留当前状态与版本、查 `lineage`/`serial`，按审批恢复适当版本到隔离验证路径。用真实对象清单、普通 Plan 差异和业务验证确认恢复后才重新接入。旧备份按保留策略处理；版本/事务可能计费。下方本地两进程实验不需要 Azure 权限。
+
+## 本地实验：先看到真正的 lock refusal
 
 在 `labs/terraform-state/`，Terraform 本地 backend 与 `hashicorp/local` Provider 只管理实验目录中的 State 和文本文件；内建 `terraform_data` import 演练只写本地 State，不代表导入了外部对象。Registry 下载固定 Provider，不初始化 Azure Provider。完整手动步骤在同目录 `README.md`，自动复验入口如下。脚本将所需文件复制到新建的系统临时目录，限定每个命令和总运行时间，抑制原始 State 输出，并在成功或失败时删除临时 State；不会覆盖当前 checkout 中已有的 State、证据或 `work/` 文件：
 
-```powershell
-terraform init -input=false
+~~~{.powershell title="在仓库根目录启动 · 脚本初始化独立临时副本"}
+Push-Location textbook/chapters/AZ07-02/labs/terraform-state
 python scripts/verify_lab.py
-```
+Pop-Location
+~~~
 
 Windows Terraform 1.15.5 的实测中，Apply 正持有本地 State 时，第二个 Terraform `plan -lock-timeout=0s` 进程收到 `Error acquiring the state lock`。导入 `terraform_data.imported[0]` 后 Plan 为 0 差异，再用 `state rm` 移除该 state-only 地址。带外改文件触发 exit code 2 和 local provider 的 `+ create`；refresh-only 移除了 State 绑定而未改文件，普通 Apply 随后恢复声明内容。改写临时 HCL 中的期望内容后，Apply 更新文件；恢复原 HCL 并生成新 Plan，Apply 把文件恢复到旧声明。把 State 文件移开后，`state push` 从备份恢复了 `local_file.marker`，后续 Plan 为 0 差异；最后本地资源已 destroy。这里验证的是 Windows 本地文件锁、local Provider 行为和 Terraform State CLI，不是 Azure Blob lease 或 AzureRM drift 实测。
 
@@ -127,7 +134,11 @@ Windows Terraform 1.15.5 的实测中，Apply 正持有本地 State 时，第二
 **评审题**：两个独立 key 若同时声明管理同一个 NSG，为什么租约仍挡不住双重管理？如果事故期间的带外修改需要保留，应先改哪份配置，何时选择 refresh-only，最终用什么 Plan 和业务检查证明恢复？哪些结论必须等 Stage 3 才能用 Azure 证据确认？
 :::
 
-## 参考资料 {.pagebreak}
+::: solution
+**参考推理。** 双 key 的锁各管自己的 Blob，两个 state 都可能声称管理同一资源；审查资源 ID 与所有权，再选择唯一 writer。若获批保留带外改动，先协调声明与实际对象。refresh-only 适用于接受已确认的实况进入 State，不会修改资源或 HCL；正常 Plan 仍要检查是否有逆转动作。再用服务的实际业务探针核验。Azure Blob lease、远程身份和真实 AzureRM 刷新都需要另取证，下面参考资料给出机制依据。
+:::
+
+## 参考资料
 
 1. [AzureRM backend](https://developer.hashicorp.com/terraform/language/backend/azurerm) — Blob backend、租约锁、Entra/OIDC 参数与所需数据面/管理面权限。
 2. [Azure built-in roles for Storage](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles/storage) — Storage Blob Data Contributor 权限范围与 DataActions。

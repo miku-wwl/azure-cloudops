@@ -21,7 +21,7 @@ header: AZ05-01 · Observability
 :::
 
 ::: scenario
-一个服务把 40 台实例的响应时间合成一条 Average 曲线。99% 的实例表现良好，一台实例却达到 96 ms；团队将阈值设为 90 ms，图表显示平均值只有 68 ms，告警没有触发。另一个值班人员看到同一条告警在每次检查中重复通知，便把阈值调高。问题可能来自聚合、维度、窗口、状态或通知处理；在调整阈值前，先弄清每次评估究竟比较了哪些数据。
+在一个虚构采样时刻，40 台实例各报告一次响应时间。39 台报 68 ms，1 台报 96 ms。按 90 ms 阈值，健康占比为 39÷40＝97.5%，等权平均是 (39×68＋96)÷40＝68.7 ms。汇总平均低于阈值，最慢实例仍超限。下文的两点算例使用另一组数据。收到重复通知时，先查是序列拆分、重叠窗口、状态设置，还是动作处理；每种成因需要不同证据。
 :::
 
 ### 本讲目标
@@ -78,6 +78,25 @@ Azure 资源提供程序可能已在上报前对数据做过预聚合，时间�
 监控条件的 Fired / Resolved 与使用者对告警记录的 New / Acknowledged / Closed 是两套状态。Acknowledged 表示有人响应，不表示指标已回到阈值范围；Resolved 表示监控条件已恢复，也不表示事故已经复盘。Action group 定义告警触发后的响应目标；alert processing rule 可按过滤、日程或抑制策略影响动作处理，不会把检测条件改成正常。变更处理规则后，生效存在传播时间，更新后应验证实际通知路径。[6][8]
 
 ![图 14-5：监控状态的恢复序列与人工确认并行，动作处理规则位于检测之后。](figures/alert-and-response-state.svg)
+
+## 配置演练：识别变慢的 Blob GET
+
+**目标与边界。** 未来获批的隔离 Storage 帐户已有 Blob 请求。设一条只监测成功 GET 延迟的规则。在 Portal 打开 Monitor → Alerts → Create → Alert rule。以下为配置和预测，未写入 Azure。本地章节模型仅验证聚合与通知逻辑。[3][8–11]
+
+| Portal 步骤 | 配置归属与字段 | 本例设置与原因 |
+|---|---|---|
+| Scope | 指标告警资源的 `scopes` | 用 Blob service 的子资源 ID（帐户 ID 后接 `/blobServices/default`）。先在该资源的 Metrics 验证有样本 |
+| Condition：Signal | `criteria.allOf[].metricNamespace` 和 `metricName` | `Microsoft.Storage/storageAccounts/blobServices` 下的 `SuccessE2ELatency`，单位 ms。只覆盖成功请求；需另看失败率 |
+| Condition：维度 | `dimensions` 下的 `name`、`operator`、`values` | 选择 `ApiName Include GetBlob`。拆分全部 API 会产生多组序列，聚合全部 API 可以掩盖热路径 |
+| Condition：逻辑和时窗 | `timeAggregation`、`operator`、`threshold`、`evaluationFrequency`、`windowSize` | `Average`、`GreaterThan`、90、`PT1M`、`PT5M`。每分钟检查过去五分钟。图 14-3 单独示意三分钟窗口 |
+| Details 与 Actions | `enabled`、`autoMitigate`、`actions[].actionGroupId` | 启用，设为自动恢复的状态型，绑定独立的 Action Group。Action Group 内设授权收件人或接收器，适用时开启 common alert schema |
+| 计划维护 | 单独的 Alert Processing Rule | 选最小 target scope 和筛选，维护窗内 Suppress notifications。到期检查动作恢复，且告警历史可继续记录 Fired |
+
+**预测。** 刚好五个各有一个样本的 GET 分钟，延迟 88、92、100、90、95 ms，则平均 93 ms，满足阈值。在生产曲线中不要把各分钟的平均值再机械等权平均。比较同一资源、维度、聚合与窗口，确认实际采样权重。若相同窗口里 PUT 远低于阈值，选择全部 API 展示可能改变平均。没有成功请求时要先看样本与失败信号。
+
+**排障与验收。** 在 Metrics 复算后，看 Alerts → 规则详情和触发记录。先核对 scope、维度和 UTC 窗口，再看 Monitor condition（Fired/Resolved）和人的处理状态。Fired 无通知时核对 Action Group、接收器验证状态，以及命中时段的处理规则；计划维护屏蔽时调阈值无法恢复通知。测试 Action Group 会实际通知接收方，只能在获批练习执行。用同一流量、分别核对告警历史和接收方记录，状态型恢复还须等连续评估。
+
+创建规则、Action Group、处理规则需对应资源写权限；查看历史和指标用最小读取范围。练习后撤掉自己的处理规则、告警和测试接收器，不动共享组。指标序列与通知方式可能计费，先按目标区域和用量核价。现有离线实验不需要门户、权限或 Azure 资源。
 
 ## 排查告警时收集能区分假设的证据
 
@@ -142,4 +161,7 @@ python textbook/chapters/AZ05-01/labs/metric-alert-model/metric_alert_model.py
 6. [Azure Monitor alerts overview](https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-overview) — 告警状态与状态型/无状态处理。
 7. [Types of Azure Monitor alerts](https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-types) — 指标告警特点和默认状态。
 8. [Azure Monitor alert processing rules](https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-processing-rules) — 动作过滤、抑制与安排。
+9. [Azure Monitor metric alert REST schema](https://learn.microsoft.com/en-us/rest/api/monitor/metric-alerts/create-or-update) — 作用域、维度、评估与动作字段。
+10. [Supported Blob service metrics](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/supported-metrics/microsoft-storage-storageaccounts-blobservices-metrics) — 单位、API 维度与聚合。
+11. [Action Groups](https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/action-groups) — 接收器、测试和通用 schema。
 :::

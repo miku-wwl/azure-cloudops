@@ -164,9 +164,7 @@ python textbook/tools/verify_terraform.py
 
 该执行入口覆盖全仓 Terraform roots：recursive fmt check、`terraform init -backend=false`、validate 与 mock-provider tests。不要把 mock test 的费用输入样例当成价格资料；它只是验证本地 guard 的合成数值。
 
-::: {.pagebreak}
-
-::: lab
+::: {.lab .nobreak}
 **练习：审阅一个 Terraform 变更**
 
 1. 对照图 19-1，把 azapi_resource、AzureRM 资源类型和 Microsoft.* 命名空间分别放入正确层级。
@@ -178,7 +176,13 @@ python textbook/tools/verify_terraform.py
 **交付**：一页变更审阅记录；把每条判断标成 Terraform Core 语义、Provider 行为、Azure ARM 服务行为或业务验收。只接受能指出证据来源的结论。
 :::
 
-## 参考资料 {.pagebreak}
+## 计划审阅演练：从 module 地址追到真实接口
+
+**本地与企业设计。** 使用上面的 E3 离线命令和现有 root。`textbook/terraform/azure-enterprise-reference/versions.tf` 负责锁定 AzureRM/AzAPI Provider、禁用 CLI/MSI fallback 和自动 RP 注册；根调用把 network 的 subnet ID 传给 Storage 模块，模块将 Storage account ID 传给 PE。输入引用提供依赖；不要用额外的 `depends_on` 解决拼错的 resource ID。AzAPI 使用显式资源类型和 API schema，AzureRM 使用该版本的类型化资源，两者均应按实际目标和版本判断。
+
+**先预测再审阅。** 把同一只读设计场景画成 VNet → subnet → PE，以及 Storage → PE 两个前置边。若审批计划把一个合成的 Storage 替换动作当作预期的 DNS 修复，先核对资源地址、构成替换的字段、作用域以及原对象是否已被绑定。`terraform validate` 成功也无法替代计划审阅。用现有的 mock plan 检查配置差异，错误时修引用或提议值并生成新 plan。线上 import 需要资源读取与 State 管理权限，后续 Apply 另授权，见 AZ07-02/03。既有 E3 复验使用本地临时副本，无需 Azure，临时目录由命令清理。
+
+## 参考资料
 
 1. [Choose between AzureRM and AzAPI](https://learn.microsoft.com/en-us/azure/developer/terraform/azurerm/overview-azapi-provider) — 两类 Provider 的职责和并用场景；Microsoft Learn 页面含 AI 生成说明，和 Azure 官方 Registry 资料交叉核对。
 2. [AzAPI Provider overview](https://registry.terraform.io/providers/Azure/azapi/latest/docs) — AzAPI 是 ARM REST 的薄层、API 版本与请求体示例。

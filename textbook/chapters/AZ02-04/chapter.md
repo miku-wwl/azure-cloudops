@@ -99,6 +99,12 @@ az network application-gateway show-backend-health --resource-group <rg> --name 
 
 若用户报 5xx 而 probe 全绿，检查 probe 是否过浅或探测了错误路径。例如根路径仍然返回 200，而实际 /ready 或支付依赖返回 503。若 Front Door 健康样本抖动，先确认 probe method、path、响应码和 origin 当前负载，再调整样本窗口；增加 edge probe frequency 会带来更多 origin 请求，不是无成本的精度旋钮。
 
+## 配置演练：后端可以访问，入口仍然 502
+
+**未来获批 Azure 练习，未执行。** 在隔离 App Gateway v2 中，Health probes 添加 HTTPS 探针，Host 为后端证书与虚拟站点对应名称，Path 为 `/ready`，设置间隔、timeout、失败阈值。去 Backend settings 选择 HTTPS、端口 443，并绑定此探针（`probe.id`），再到 Rules 核对监听器、后端池和该 backend setting 的配对。若 Backend health 报名称、证书链或 404，先读详情再比对实际 Host/SNI 与路径，修改具体错项后验证 Backend health 和同一前端业务请求。前端路由与探针可能要求不同证据。
+
+相同设计换成 Load Balancer 时，将独立 TCP/HTTP probe 绑定 load-balancing rule（不是挂在应用 URL 上）；换成 Front Door 时从 Origin group 确认 origin health probe、主机头和证书。下方模型可先预测 TCP 成功而 HTTP 失败的组合。需要 Gateway/入口资源读权限、主动访问授权与独立写权限，结束时恢复原绑定并清理测试后端。网关、Front Door、请求与数据处理有各自费用。
+
 ## 本地实验：相同后端状态，不同 probe 判定
 
 模型读取 JSON fixture 中的虚构 backend 状态：TCP listener 是否开放、path 的状态码、Front Door 最近样本、priority 与一个简化的 TLS 校验布尔值。下面函数来自本讲实验源码；其输出是合成逻辑执行结果，不是 Azure 发出的 probe。
@@ -233,7 +239,7 @@ Application Gateway v2 的官方计费说明区分资源可用期间的固定成
 
 ## References 与研究记录
 
-本讲于 **2026-11-26** 查阅 Microsoft Learn 与 Azure 官方 pricing 页面。引用页面可能持续更新；任何云部署前都必须重新确认 SKU、接口、价格与资源限制。以下命令仅查证文档语法，未在 Azure 登录或订阅中执行。
+参考 Microsoft Learn 与 Azure 官方定价。新部署需复核规格、接口、费用和限制；本地实验使用合成探针样本。
 
 ::: refs
 1. [What is Azure Load Balancer?](https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-overview) — L4 TCP/UDP、public/internal scope、Standard 和已退休 Basic SKU；页更新 2026-08-21。
@@ -249,8 +255,6 @@ Application Gateway v2 的官方计费说明区分资源可用期间的固定成
 11. [Azure Front Door health probes](https://learn.microsoft.com/en-us/azure/frontdoor/health-probes) — 200 健康条件、HEAD/GET、样本阈值、edge probe 量与全 origin 失败行为；页更新 2026-11-06。
 12. [Traffic routing methods for Front Door origins](https://learn.microsoft.com/en-us/azure/frontdoor/routing-methods) — 健康过滤、优先级、latency sensitivity、weight 与 session affinity。
 13. [Application Gateway WAF policy overview](https://learn.microsoft.com/en-us/azure/web-application-firewall/ag/policy-overview) and [Secure your Front Door deployment](https://learn.microsoft.com/en-us/azure/frontdoor/secure-front-door) — WAF policy scope、tier capability 与 origin security。
-14. [Application Gateway pricing model](https://learn.microsoft.com/en-us/azure/application-gateway/understanding-pricing), [Front Door billing](https://learn.microsoft.com/en-us/azure/frontdoor/billing), [Load Balancer pricing](https://azure.microsoft.com/en-us/pricing/details/load-balancer/) — 官方价格维度；本讲未选择 Azure region 或 SKU 做估算。
-15. [Azure CLI: az network application-gateway show-backend-health](https://learn.microsoft.com/en-us/cli/azure/network/application-gateway?view=azure-cli-latest) — 只读 backend health 查询语法；没有 Azure login 或 query。
+14. 计费方式：[Application Gateway](https://learn.microsoft.com/en-us/azure/application-gateway/understanding-pricing) · [Front Door](https://learn.microsoft.com/en-us/azure/frontdoor/billing) · [Load Balancer](https://azure.microsoft.com/en-us/pricing/details/load-balancer/)。
+15. [Azure CLI show-backend-health](https://learn.microsoft.com/en-us/cli/azure/network/application-gateway?view=azure-cli-latest) — 诊断语法；未运行。
 :::
-
-本地实验与三幅 SVG 是可编辑的教学材料，不是 Azure Portal 实拍。本地状态码和样本仅用于展示探针契约间的差异；它们不验证 Azure networking、origin 分配、WAF、真实 TLS、应用可用性或任何 live billing。

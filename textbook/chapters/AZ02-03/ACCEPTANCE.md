@@ -1,5 +1,11 @@
 # AZ02-03 lecture acceptance record
 
+## V1.0.1 教材修订
+
+- 补 StorageV2、PE、Blob、VNet link、DNS zone group 和公网限制，分四步验收。
+- 最终教材 [PDF](../../dist/pdf/AZ02-03_azure-private-dns-link-endpoint.pdf) 已用原出版工具重建。基线 11 页，修订 12 页。正文排入 3 个 SVG，保留 3 个可编辑图稿。最终页面已检查排版、图和代码，带入全套发布校验。
+- 现有本地回归通过。新增云端步骤按文档例处理，历史证据与操作权限见 [V1.0.1 逐讲审查](../../V1_0_1_TEXTBOOK_REVIEW.md)。
+
 **Lecture:** Azure Private DNS, Private Link and Private Endpoint
 
 **Acceptance date:** 2026-11-26 (Pacific/Auckland)

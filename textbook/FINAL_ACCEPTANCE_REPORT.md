@@ -4,6 +4,16 @@
 - Repository and branch: `miku-wwl/azure-cloudops`, `main`.
 - Scope: Stage 1 and Stage 2 delivery, Stage 3 read-only evidence and one authorized LAB-IR-11 attempt.
 
+## V1.0.1 textbook refinement
+
+The refinement builds on accepted revision `8cdad7fba8db8f821aaf013bd20637441e6c22dc`. It covers the 23 Stage 1 textbooks. Publication now has 200 pages (183 in V1), 95 editable SVG assets (92 placed in the PDFs) and 0 genuine Azure Portal screenshots. The original 95 figure assets remain available; the telemetry architecture diagram was corrected. All 23 PDFs were rebuilt and their final renders and extracted text checked. The [review and R0–R8 matrix](V1_0_1_TEXTBOOK_REVIEW.md) records the per-lecture results, technical corrections and visual checks. The [publication manifest](dist/publication-manifest.json) is the source of truth for exact ZIP sizes, entry lists and SHA-256 digests.
+
+The local release checks passed 534 Python tests, 13 backend-free Terraform tests across three roots, and 6 Pester tests. The publication gate additionally requires the exact pushed revision to pass all five jobs in [GitHub Actions](https://github.com/miku-wwl/azure-cloudops/actions/workflows/ci.yml?query=branch%3Amain).
+
+V1.0.1 has USD 0.00 additional Azure budget and performed no Azure request or mutation. The seven KQL workspace templates are `NOT_RUN`. Azure LAB-IR-11 remains partial; local HTTP rollback has separate evidence. The historical labels below retain their original evidence scopes.
+
+## V1 acceptance history
+
 ## Milestones
 
 | Milestone | Result | Evidence |

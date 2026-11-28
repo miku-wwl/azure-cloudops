@@ -1,5 +1,11 @@
 # AZ06-01 Acceptance — Azure Backup, Recovery and Site Recovery
 
+## V1.0.1 教材修订
+
+- 更正 RTO 图注，补策略/point、隔离恢复、完整性及 retained 资源。
+- 最终教材 [PDF](../../dist/pdf/AZ06-01_azure-backup-restore-site-recovery.pdf) 已用原出版工具重建。基线 7 页，修订 8 页。正文排入 5 个 SVG，保留 5 个可编辑图稿。最终页面已检查排版、图和代码，带入全套发布校验。
+- 现有本地回归通过。新增云端步骤按文档例处理，历史证据与操作权限见 [V1.0.1 逐讲审查](../../V1_0_1_TEXTBOOK_REVIEW.md)。
+
 - Status: ACCEPTED for the offline lecture gate.
 - Review date: 2026-11-27 (Pacific/Auckland).
 - Lecture: 17 / 23; phase B6 is in progress.

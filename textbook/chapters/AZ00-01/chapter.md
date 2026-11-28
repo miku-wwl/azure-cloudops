@@ -133,6 +133,18 @@ az provider show --namespace Microsoft.Storage --query "{state:registrationState
 
 上面摘录对应本仓库真实源文件中的关键算法；完整实现和 fixture 可直接运行。allow-only 模型里没有“默认拒绝角色”这个 Azure API 结论：某次模型返回 false，只代表 fixture 中没有符合项。真实 Azure 的授权还要按 Azure RBAC、identity 和资源服务自己的行为核查。
 
+## 配置演练：在准入表里写清每项资源归属
+
+**练习边界。** 用本讲下方的合成管理组树规划一个支付开发环境，先为 `rg-pay-dev` 填管理单，再用本地模型核对继承。Portal 路径供未来获批查看，当前未操作 Azure。
+
+| 对象 | Portal 配置位置与字段 | 预期与故障证据 |
+|---|---|---|
+| Management Groups → 工程组 → Subscriptions | 记录父 Management Group ID 与最终 subscription ID；迁移所属组之前列出两棵树生效的策略和角色 | 改父节点后继承发生变化。RG 名字相同也不能证明订阅或治理边界相同 |
+| Resource groups → `rg-pay-dev` → Access control (IAM) | 记录 `principalId`、`roleDefinitionId` 和资源组 scope，只给指定部署主体所需控制面动作 | ARM 批准后方可继续。Storage/SQL 数据访问另由数据 owner 按 AZ03-01 设置 |
+| Policy → Assignments；Subscriptions → Resource providers | 记录策略 definition、分配 scope、参数；对实际用到的 namespace 校验 `registrationState` | 跨命名空间权限分别核对。`RequestDisallowedByPolicy` 查策略 ID；`MissingSubscriptionRegistration` 查 provider 注册 |
+
+如果创建请求收到 202，核对异步操作的终态和 correlation ID。查询上表只需范围内的 reader 或相关诊断权限；移动订阅、分配角色和注册 provider 分别由获批管理员操作。练习在本地只处理 fixture，无需资源或清理；未来仅在专用开发环境变更，按历史状态回收单独创建的配置与工作负载费用。
+
 ## 实验：画出可继承的权限，不连 Azure
 
 :::: {.lab title="实验 1-1｜范围继承与控制面/数据面分离"}
@@ -251,4 +263,4 @@ scope_model.py 是 allow-only 教学模型。它能让继承和兄弟 scope 边�
 4. [Azure landing zones](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/) · [Management groups](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/design-area/resource-org-management-groups) · [Subscription design](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/design-area/resource-org-subscriptions)
 5. [Azure RBAC scope](https://learn.microsoft.com/en-us/azure/role-based-access-control/scope-overview) · [Azure Policy scope](https://learn.microsoft.com/en-us/azure/governance/policy/concepts/scope)
 :::
-图示为本仓库编写的概念解释图，不是 Azure Portal 截图。实验运行结果会在 B1 接受前依据真实本地命令补记；Azure subscription 查询与 resource provider registration 均未运行。
+图为原创原理示意。本讲给出已验证的本地结果；其中的订阅查询和 provider 注册是文档示例。历史只读范围见 [L0 记录](../../L0_READ_ONLY_PREFLIGHT.md)。

@@ -101,6 +101,43 @@ Managed Disk 有自己的 IOPS 与吞吐配额；VM size 也有磁盘 I/O 配额
 az vm get-instance-view --resource-group <approved-rg> --name <approved-vm>
 ~~~
 
+## Azure Update Manager：评估、补丁环与业务恢复
+
+**目标与环境。** 为两个虚构的独立 Azure VM `pay-a`、`pay-b` 设计一次安全更新。在未来获批的非生产环境，先确认 OS、映像、区域和更新源受支持。两台机器承载同一健康探针，隔离一台后仍须满足容量要求。下面是 Portal 步骤和读取模板，未在 Azure 执行。本章的 Python 实验照常在本地运行，只模拟 VM 证据信号。[9–13]
+
+| 配置归属 | 在哪里查看或设置 | 如何证明生效 |
+|---|---|---|
+| VM · assessment | Update Manager → Machines → Update settings。按需评估用 Check for updates。周期评估开关对应 `assessmentMode` | 检查最近一次 assessment 的时间、主机和补丁分类 |
+| VM · orchestration | 客户管理排程选 Customer Managed Schedules，对应下方的 `patchMode` 与平台设置 | 对比实际 OS 设置、维护关联。周期评估只启动扫描 |
+| Maintenance configuration | Create maintenance configuration，选 Guest（`InGuestPatch`）。设置时区、开始、持续时间及周期，按 OS 选分类与重启策略 | 给补丁环分别关联 Machines，核对目标清单和时间 |
+| Guest 更新链 | VM Guest Agent 执行扩展。首次操作自动部署补丁扩展，Windows 使用 Windows Update 或 WSUS，Linux 使用获批包源 | 区分 agent 未就绪、扩展未启动、包源不可达与安装失败 |
+
+VM 的 OS 配置位于 `osProfile` 下。该 OS 的 `patchSettings` 可用 `assessmentMode=AutomaticByPlatform` 开启周期评估。客户排程设 `patchMode=AutomaticByPlatform`，在 `automaticByPlatformSettings` 下设 `bypassPlatformSafetyChecksOnUserSchedule=true`。维护窗口是独立的 `Microsoft.Maintenance/maintenanceConfigurations` 资源。
+
+### 先更新一台，再扩大范围
+
+1. **基准。** 记录应用版本、实例健康和业务合成探针。确认可用的恢复点或可替换映像。把 `pay-a` 作为 canary，预留完整窗口，退出条件包含业务健康和可用容量。
+2. **评估。** 在 Update Manager → Machines 选 `pay-a` → Check for updates，记录缺失补丁、分类和扫描时间。选择 One-time update 或等待已关联窗口。先选获批分类如 Security，并核对 Reboot if required 与 OS/补丁的重启行为。
+3. **放行。** 对照安装历史和实际重启记录，确认 Guest Agent 与应用就绪。重新 assessment，并重跑同一业务请求。达标才恢复接流并放行 `pay-b`。若安装成功但业务 503，暂停后续环并保留 `pay-b` 容量。
+4. **回退。** 区分启动、包源、应用依赖和包回归。只有 OS 支持且获批才回退包。其他情况可用已验证映像替换节点，或按 AZ06-01 在隔离目标恢复，验证业务后再切回。记录失败码并移除实验关联或临时恢复资源。
+
+~~~{.powershell title="未来获批只读示例 · 对齐 VM 与补丁扩展"}
+az vm get-instance-view --ids $ApprovedVmId `
+  --query "instanceView.{vm:statuses,agent:vmAgent.statuses,extensions:extensions}"
+az vm show --ids $ApprovedVmId `
+  --query "osProfile.{linux:linuxConfiguration.patchSettings,win:windowsConfiguration.patchSettings}"
+~~~
+
+查看 VM 和扩展需相应读取权限。评估与安装分别需 `Microsoft.Compute/virtualMachines/assessPatches/action` 和同前缀的 `installPatches/action`，维护配置、关联另按 Maintenance 权限授权。安装明细看 Update Manager → History。出现扩展错误先收集状态码和时间。获批进入 guest 后，Linux 对比 `/var/log/waagent.log` 与 `/var/log/azure/Microsoft.CPlat.Core.LinuxPatchExtension/`；Windows 查 `C:/WindowsAzure/Logs/Plugins/` 下 WindowsPatchExtension 版本日志，再查 WUA/WSUS。包源 DNS、代理、出站策略和磁盘空间各有独立证据。Azure VM 使用 Update Manager 无额外服务费，计算、存储、网络和恢复仍有各自计费，Arc 另查条件。[9–13]
+
+::: exercise
+**练习｜扫描成功，窗口结束却无安装记录。** `pay-a` 有两分钟前的成功 assessment。先重启，还是先核对哪些配置？
+:::
+
+::: solution
+先核对该 VM 的 Customer Managed Schedules、资源关联和维护时区，查有无安装尝试。扫描成功只证明 guest 能评估，重启也无法修复漏绑关联。确认有安装请求却报扩展错误时，再查扩展和包源。
+:::
+
 ## 离线实验：让每个信号只回答它能回答的问题
 
 运行本地 vm-operations-model。输入和输出全部来自固定 JSON fixture，不调用 Azure CLI、SDK、IMDS、subscription、monitoring endpoint 或网络。练习四个判断：
@@ -170,6 +207,9 @@ Boot diagnostics 有最新截图，但应用健康扩展为 Unknown。列出两�
 **本讲总结：** 分开读取 power、provisioning、guest、app 和 billing/resource 证据；VMSS desired model 不等于实例已推进，disk 与 VM 各有限额。遇到模式文档冲突时，保留未决项并按当前 API 矩阵复核。
 
 ## Primary references
+
+[9] [Update Manager prerequisites](https://learn.microsoft.com/en-us/azure/update-manager/prerequisites) · [10] [Scheduled patching](https://learn.microsoft.com/en-us/azure/update-manager/scheduled-patching)<br>
+[11] [Update Manager troubleshooting](https://learn.microsoft.com/en-us/azure/update-manager/troubleshoot) · [12] [Roles and permissions](https://learn.microsoft.com/en-us/azure/update-manager/roles-permissions) · [13] [Update Manager pricing](https://azure.microsoft.com/en-us/pricing/details/azure-update-management-center/)
 
 [1] [States and billing](https://learn.microsoft.com/en-us/azure/virtual-machines/states-billing) · [2] [VM monitoring](https://learn.microsoft.com/en-us/azure/virtual-machines/monitor-vm)<br>
 [3] [Boot diagnostics](https://learn.microsoft.com/en-us/azure/virtual-machines/boot-diagnostics) · [4] [VMSS orchestration](https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-orchestration-modes)<br>

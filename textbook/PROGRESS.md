@@ -1,5 +1,11 @@
 # Project progress
 
+## V1.0.1 textbook refinement
+
+- Accepted publication baseline is `8cdad7fba8db8f821aaf013bd20637441e6c22dc`. The 23-lecture configuration, worked examples, learner procedures and baseline corrections are recorded in the [V1.0.1 review](V1_0_1_TEXTBOOK_REVIEW.md).
+- The current textbook task is Stage 1 refinement with USD 0.00 additional Azure budget. Azure verification states and billing evidence below retain their original scopes. The seven workspace KQL templates remain `NOT_RUN`.
+- See the [V1.0.1 publication section](FINAL_ACCEPTANCE_REPORT.md#v101-textbook-refinement) and [manifest](dist/publication-manifest.json) for package and gate details.
+
 - Last updated: 2026-11-28 (Pacific/Auckland)
 - Repository: D:/workshop/nov/azure-cloudops
 - Branch: main

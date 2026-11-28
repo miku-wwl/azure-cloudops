@@ -84,6 +84,26 @@ single revision mode 下，新 revision 只有在 provisioning 成功、按新�
 
 Ingress 决定请求能否抵达 container app：确认环境的 internal/external 可见性、HTTP/TCP transport、对外入口和容器 `targetPort` 一致。对 HTTP ingress，应用入口暴露在 443，再由平台转发到容器监听端口。Scaling 则按 HTTP 并发、TCP 连接或事件规则增减 replicas；它改变容量，不证明业务健康。scale-to-zero、startup latency、每 revision 的 min/max 与 readiness gate 要共同纳入发布窗口。多条 scale rule 中任何一条触发都可能导致扩容。[7][8]
 
+## 配置演练：同一应用的两种发布路径
+
+这是未来获批的非生产练习，目标是完成可回退的版本切换。准备版本 A、B 和能返回 build ID 的业务探针。分别授予部署、切流和读取权限；依赖的访问权限仍按应用 identity 配置。两类服务有各自资源和授权，选择其中一种学习即可。[1–10]
+
+| App Service Portal 入口 | 字段和操作 | 核验 |
+|---|---|---|
+| App Service plans → Create | 区域、OS、实例 SKU。槽需要 Standard、Premium 或 Isolated，历史 F1 不支持本例 | 计划 SKU、Linux 的 `properties.reserved`，应用 `serverFarmId` 指向计划 |
+| Web App → Configuration 与 Environment variables | 选择运行栈（Linux 示例看 `linuxFxVersion`）、HTTPS only。设置依赖地址和非密钥标记；环境专属值标记 Deployment slot setting | 对照两槽身份、粘滞设置和环境变量；生产依赖留在目标槽 |
+| Deployment slots → Add Slot → Swap | `staging` 部署 B，`production` 用 A；设置 `WEBSITE_SWAP_WARMUP_PING_PATH` 与 `WEBSITE_SWAP_WARMUP_PING_STATUSES=200` | 先对 staging 验证。交换后重验生产 URL 和版本；确认数据兼容后可反向 swap |
+
+| Container Apps Portal 入口 | 字段和操作 | 核验 |
+|---|---|---|
+| Container Apps Environment；Create Container App | 选择获批 environment 与 registry identity、镜像。设 `configuration.ingress` 范围与 `targetPort=8080`，进程监听该端口 | 查看 revision provisioning、容器日志及入口。运行中的容器仍可能没有监听目标端口 |
+| Containers → Health probes；Revision management | `template.containers[].probes` 定义 Startup/Readiness/Liveness 的 `httpGet.path`、`port` 和相应时限；手控权重选 `activeRevisionsMode=Multiple` | Startup 给冷启动留时，Readiness 控制接流，Liveness 只检需要重启的异常 |
+| Revision management → Traffic | `configuration.ingress.traffic` 按具体 `revisionName` 配 A 90%、B 10%。用两版可识别请求证明路由和应用稳定后再推进 | B 故障且 A 仍 active 时恢复 A 100%、B 0%， 重验状态码与 build ID。应用级设置另行恢复 |
+
+**预测一道故障。** B 健康且已部署，生产仍全为 A。App Service 查 swap 历史和 source/target；Container Apps 看 multiple mode 权重与版本标签。0% 权重不会因重建镜像改变。A、B 同时返回 403，优先查共享依赖配置和生产 identity。同一业务输入应同时证明状态码、响应体和 build ID。
+
+只读命令见下节。练习结束清理自己的槽、计划或 ACA revision/环境前核对共用依赖。槽占用计划容量；容器副本、日志和网络按使用条件计费。本轮云端步骤未执行，本地模型无需 Azure。
+
 ## 用同一条 release contract 诊断和回退
 
 先记录当前线上 version 与配置，而不只记 build number：App Service 记录 source/target slot、sticky settings、identity、Health Check path 和 warm-up status filter；Container Apps 记录 active revision、revision mode、traffic weights/labels、ingress target port、probe 和 app-wide secret/identity。然后按顺序验证平台准备、replica/实例健康、业务 smoke test，最后切生产流量。路由切换前先确认数据库 schema 对新旧代码都兼容，避免应用 rollback 后仍无法读取已迁移的数据。
