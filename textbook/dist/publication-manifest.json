@@ -4,194 +4,114 @@
       "entries": [
         {
           "path": "AZ00-01_azure-landing-zone-arm-control-plane.pdf",
-          "sha256": "51d9b523680518b5721cff6a4929a6bb9ef47774b5ace97ba067c66c1dd50737"
+          "sha256": "153c494896477ef171afcb75c39f84f830ea5e88eb9582e7837ffc495544559e"
         },
         {
           "path": "AZ01-01_azure-well-architected-reliability.pdf",
-          "sha256": "f2e588d842137df9d08b1edf2d7560efb35cc546d3fe39ffa7655d36795a4c1a"
+          "sha256": "5283498418d778aff25a8af2005eb584fffca14e241dbc798be2eea862bb8fcc"
         },
         {
           "path": "AZ02-01_azure-vnet-udr-effective-routes.pdf",
-          "sha256": "fcfea5a2ebb2f0fe8268b573032b73a9de38d02bccbb9379e4dab926dd8d3fbb"
+          "sha256": "4536abe65574096d8ea7a7223f93126c3e3f0992a1ebaf5f8ed91f23b0742745"
         },
         {
           "path": "AZ02-02_azure-nsg-asg-network-diagnostics.pdf",
-          "sha256": "ef038d94d7857634bdcb304e61449015e9da3429bf96cc9daa389fb9a0555bb3"
+          "sha256": "08290e53415ac6dea499760d0ec65cc92125250a7f4e41ce335b6291815b1c9e"
         },
         {
           "path": "AZ02-03_azure-private-dns-link-endpoint.pdf",
-          "sha256": "d1512750f5058d45fe2b31b9831c8995ba758bedd6a6ab6cbf631c732d16cb3d"
+          "sha256": "36ee6265296caae92985d2cedc7bfa0cdd5ded4356ee0a88c216f6f197b90c48"
         },
         {
           "path": "AZ02-04_azure-load-balancer-application-gateway-front-door.pdf",
-          "sha256": "890003763a0ad6d3e3f6bdc7db1209c1cdc9aa2747d73d152dc1f2fc7ff6ba09"
+          "sha256": "c4d7c884e77960ab655c241657fae339bb3a28ca3af328ef5ee23ff07969537f"
         },
         {
           "path": "AZ03-01_microsoft-entra-tokens-azure-rbac.pdf",
-          "sha256": "9d24048113971779f3b4a27a8882a63a3adfa39f16a0106d9b70f089bd530893"
+          "sha256": "877fca425acc234dae72a51160498d04c8d38ad266a6f64b19578520274605fe"
         },
         {
           "path": "AZ03-02_managed-identity-key-vault-federation.pdf",
-          "sha256": "246e6351a80d23a192111519542e2733eeb692654c21793057c9536df3ec323c"
+          "sha256": "6e314f6d556ed149695de26c6825a60d50f8a5b42850c99c4187bda4782f986f"
         },
         {
           "path": "AZ03-03_azure-policy-activity-log-defender-cloud.pdf",
-          "sha256": "998a8bd3c800c1b24efb85fba63b00aea0db93ba8c668ceb92b0deed88662d92"
+          "sha256": "91906d60ff927d20682ecd88221f8762f17abbe230563525bd045e5f53ab96c3"
         },
         {
           "path": "AZ04-01_vm-vmss-managed-disk-operations.pdf",
-          "sha256": "a2f6050207e00e8f41bd46f950ae4528aea8b87aca64dc0b52536a238fd62180"
+          "sha256": "39a7b7fe83889ea71e05b30befd59cddc12b6a6ca3e98c560eb151627dcc7b1d"
         },
         {
           "path": "AZ04-02_appservice-container-apps-deployment.pdf",
-          "sha256": "70d1a2a057cc7a9b72fdc946b016062d4ac52fa3893f3444d31b0260afcd2989"
+          "sha256": "f2a7c2be944bcb00d0d68f9b38d56ae2c4e3e5388cc6b91d835c7d7bb89b93de"
         },
         {
           "path": "AZ04-03_aks-acr-readiness.pdf",
-          "sha256": "7d592081a64130bc9eec169ed90a83c6f43a834b4fdbf6535467a9154145a048"
+          "sha256": "13d5bf31eeaa4823a76f25e386069578f2cb77680bc6bb35834bfa3b074d3070"
         },
         {
           "path": "AZ04-04_storage-sql-boundaries.pdf",
-          "sha256": "a5701f4166896ec829028c7fefab196f840400fcbb1b087ed780723dffa0c178"
+          "sha256": "0b1e5ee8bbb1bae7d230dfab9565d820f7087ade8c674c1a30e405806641340c"
         },
         {
           "path": "AZ05-01_monitor-metrics-alerts.pdf",
-          "sha256": "e22e512958d4c3a507b7ed97a23ca3484f7f4209a737478a537866c9464a72bc"
+          "sha256": "2e0bc172ea5271b0b2982d3df7b84a677f4aab339d506bf70d1304a4c8aae422"
         },
         {
           "path": "AZ05-02_log-analytics-kql-app-insights.pdf",
-          "sha256": "f04152eca1abaab1932f02c61db5bb84a424290dd50b729f2684ea47379ce4d1"
+          "sha256": "7cf1c8f4d45bbf9c1d8fee724878dc9f4a1786de0dff0f50d2364de23162b36e"
         },
         {
           "path": "AZ05-03_azure-cli-powershell-resource-graph.pdf",
-          "sha256": "cb037a2ccab1f6e681b43f522953ca8145f1be0e27241d538d8faecec2ef08cd"
+          "sha256": "88c17b3d91180a33b0220238a58c7e65f4b3414f6b5b3d2306abf828390c0fa1"
         },
         {
           "path": "AZ06-01_azure-backup-restore-site-recovery.pdf",
-          "sha256": "1c68f0857ab0ef84b44b00756c447bcdcac8353dc1986995a8e53502ea6b068f"
+          "sha256": "2c59b0fc06aba242fa453ac9f29b75215f0e394d6951698f6cdcbaa81d3624f6"
         },
         {
           "path": "AZ06-02_incident-response-rca-integrated-banking-case.pdf",
-          "sha256": "5ff3544b7dfd3913e21d29ec0c18f75c457a4347756b36f826f253453db53ef9"
+          "sha256": "c346f4dd90ef5b724b83d5edb62e028ba3c9aaa1d967f49195f541832fc25362"
         },
         {
           "path": "AZ07-01_terraform-core-provider-graph-state-plan-import.pdf",
-          "sha256": "d3320171a648203b9b2a1a02a346fff895df8b184875d182aac23edf83ce15f0"
+          "sha256": "fe7e9f863aef4dfcea1e63a76a92ae9a33d3c9d88060e648cac7fcd47f019e42"
         },
         {
           "path": "AZ07-02_azure-remote-state-locking-drift.pdf",
-          "sha256": "3389730b7359defdc977fcfa960e5f81324a37f3fd3f5ff37414391c73a86c0b"
+          "sha256": "b7101ba412186359cae0f6f725fdb55e7fa76fb47f9c2aa072b7b80eef1796e1"
         },
         {
           "path": "AZ07-03_azure-devops-pipelines-workload-identity.pdf",
-          "sha256": "2047ab9d40e6c68148aea3ed8b30a9b3e4af797bf565ea8a9a7a0f9ff963dc0e"
+          "sha256": "c20e6a75cc25b24c91b54ef45f7bbaa70b23e8955b52814d954b80ff8937ae05"
         },
         {
           "path": "AZ08-01_azure-hybrid-routing-enterprise-dns.pdf",
-          "sha256": "0d90e353b8fd118d2c8e1a00b64aae2ab13780d179cd372c4156e7ba43bd5eac"
+          "sha256": "b19a95e22703c368a23d08771eac03c550e57e6cb9b7b1f72684289f96e05e34"
         },
         {
           "path": "FIN-01_azure-finops-resource-cost-recovery.pdf",
-          "sha256": "f2d3af711571fc6163adfb12d81c73b5af43963d6b103d972be6198bcc8a5ab7"
+          "sha256": "54c3888d903ac15720fe9b87611e6a2339ef7c4b558268a8c6996f70b2c00bbc"
         }
       ],
       "entry_count": 23,
-      "sha256": "07744df5d37101eb0bb4c50f3baf5963d467de1e0550d8bf7f91631d3a5244de",
-      "size_bytes": 29872678
+      "sha256": "29a4ebe975812eca32ad5969d8adc7251c7b0fa3b1abf44bc95b38397eac491d",
+      "size_bytes": 29676707
     },
     "Azure-CloudOps-Sources.zip": {
       "entries": [
         {
-          "path": "COST_LEDGER.md",
-          "sha256": "1645551ce22362e5fd763a0c80550ce52e3b1ab5baf49f7228bcd14b94e40848"
-        },
-        {
           "path": "CURRICULUM.md",
-          "sha256": "9f0f0c7fae0af7d4fbdab72bba885924cf68a9fcb8c695d034994c76b3739d67"
-        },
-        {
-          "path": "E0_INDEPENDENT_AUDIT.md",
-          "sha256": "700cfe86ea752e4dc4d513b2769ea5069a5b5bc5b0ee5ef85e40338a5808bb02"
-        },
-        {
-          "path": "E10_INDEPENDENT_REPLAY.md",
-          "sha256": "d0b53d4acf980e48a0757089430e8a3973d8f084bcec49fd7738cff5d91974c9"
-        },
-        {
-          "path": "E2_LOCAL_SUBSTRATE.md",
-          "sha256": "b1cc68e66ffa07335e660ab051a1b4e9f47235c9d1521f0a1f3d12976a7e69c0"
-        },
-        {
-          "path": "E3_TERRAFORM_ENGINEERING.md",
-          "sha256": "430553714c19f71d0578ada3fcf7b6d21ab050816af14c421398700265b57408"
-        },
-        {
-          "path": "E4_STATE_CONTROLLED_DELIVERY.md",
-          "sha256": "de170d578f7d1f50816961192672eca42e63630d61b44354217ec30aedb2a506"
-        },
-        {
-          "path": "E5_AZURE_DEVOPS_DELIVERY.md",
-          "sha256": "96f29f163cd2fecd4dcd698e9950d3aeefb92154e9c8cc6ba4c7fbf376ad1641"
-        },
-        {
-          "path": "E6_DIAGNOSTICS_AUTOMATION.md",
-          "sha256": "8ed7cbf56294fb603df715e535a5d5f77fea702b36872c141e711cbf0d0cfbfd"
-        },
-        {
-          "path": "E7_INCIDENT_CONTRACTS.md",
-          "sha256": "ff862f8342e3ece01d0a85f1b2b8889d5476966a645b84fe1d77928d61189218"
-        },
-        {
-          "path": "E8_LOCAL_INCIDENTS.md",
-          "sha256": "da5dc8f39efbfb4f30ba13b597ecec2cc266a95461e87d47b86cba087e9ff953"
-        },
-        {
-          "path": "FINAL_ACCEPTANCE_REPORT.md",
-          "sha256": "18811feb37909e2754826c80f2dba3da7a38519b35aab90f1c8e745b04d4e901"
-        },
-        {
-          "path": "L0_READ_ONLY_PREFLIGHT.md",
-          "sha256": "ec9fdca2b7de6b75600347c6ea91f03d155a66e89a84459e154e966c382e40d7"
-        },
-        {
-          "path": "LAB_ENVIRONMENT.md",
-          "sha256": "27f9b70cf626e80358726b5166c932e4df2d64444262c6f6a0c561cb90c2d72d"
-        },
-        {
-          "path": "LIVE_LAB_CATALOGUE.md",
-          "sha256": "7fe29b7066373869689f84c4f8f5af719f596c23effe468431fd21f1c65e8aee"
-        },
-        {
-          "path": "LIVE_LAB_INDEX.md",
-          "sha256": "31c88a274105db3e07adc52bbe86dd82af5acfc127ef8bc94db4eda34d6f96ea"
+          "sha256": "fe3fdae1fe5a066ae08c8fe29587bdbed534fc7119d580ee0460dbe429eb57f1"
         },
         {
           "path": "PROGRESS.md",
-          "sha256": "8eed7548acf889df0b7b80f672bad3a8bab8fc12ac4acfa1922529de45b4d114"
+          "sha256": "7e7efebe4f8e97d34c046987cc74e652dec5fd7b0409db7513860feb6aa3920f"
         },
         {
           "path": "README.md",
-          "sha256": "bd3fb85b851a56f03b7d5c5db7ae974d20b15230b4165c44a0a715b918abde21"
-        },
-        {
-          "path": "REFERENCE_ANALYSIS.md",
-          "sha256": "e27d801913ed56a55260fc34976b649bb91cbfb79240b4e04670176d7b05f454"
-        },
-        {
-          "path": "RELEASE_ACCEPTANCE.md",
-          "sha256": "ea74660c059205e4dcfe84e67263505f1f08e2b4ab1eb6df758ae2ff3fe900be"
-        },
-        {
-          "path": "SOURCE_MAP.md",
-          "sha256": "6e385f1567a6377c53100dae0315a5f96ca2418df3091e71b53532576cc20164"
-        },
-        {
-          "path": "V1_0_1_TEXTBOOK_REVIEW.md",
-          "sha256": "52d9d575e7b4355bf101868fb4b44e3e3c05fc3725ada3a16fcf8648989f8611"
-        },
-        {
-          "path": "VERIFICATION_MATRIX.md",
-          "sha256": "4cf672a82c8e6d18649b90a61cfc02dff6be4778e5edf5be2955fba5c8be912a"
+          "sha256": "22c9d69b5505af4d8097bedae791a2fc362d1f81cd4d3c8f243d926698575978"
         },
         {
           "path": "architecture/README.md",
@@ -234,12 +154,8 @@
           "sha256": "1d63dd3d0e558a09e2b38eec8c73882ee944645f662005144ca3a1eb9a453af5"
         },
         {
-          "path": "chapters/AZ00-01/ACCEPTANCE.md",
-          "sha256": "5af89413d0027c52b23842a2f0b93cc2de4c17d4ea6c038606c51759c22aff1f"
-        },
-        {
           "path": "chapters/AZ00-01/chapter.md",
-          "sha256": "a9ef9d45f7819e995e497060c30e29604931ef5a492d0ce916027fab57b95605"
+          "sha256": "1b9d4cff1ae6bfc9d7a3923166ef4d94b3c0dc748292b6e17a5908463dd8cba2"
         },
         {
           "path": "chapters/AZ00-01/figures/arm-request-lifecycle.svg",
@@ -259,7 +175,7 @@
         },
         {
           "path": "chapters/AZ00-01/labs/README.md",
-          "sha256": "7168aa27fa4546fe52c338446197a494484ce369c4a1be2ce445b166a445bed3"
+          "sha256": "b3aaa32f39ded02433eb9facb2267195d20a599fc9b21297411ea4feb9207082"
         },
         {
           "path": "chapters/AZ00-01/labs/scope-model/scenarios/banking-lz.json",
@@ -274,12 +190,8 @@
           "sha256": "fb7841074b0b501f48f5081bbb3d91199e4bc83226a06f03ab01cb7731e843cd"
         },
         {
-          "path": "chapters/AZ01-01/ACCEPTANCE.md",
-          "sha256": "780baa4d36ce91c3e968061c06d0a7c4e8d7e102b7115661ac502290dffba097"
-        },
-        {
           "path": "chapters/AZ01-01/chapter.md",
-          "sha256": "92dbf567d99a38baaca44dd12cebd6ee6fa23bbaaae3b09263414eafb9ce22d9"
+          "sha256": "ae8bcae7292b068174a5d815bfb2e1d78707580e52eb34e12ff893ac84dbd3e3"
         },
         {
           "path": "chapters/AZ01-01/figures/critical-flow.svg",
@@ -299,7 +211,7 @@
         },
         {
           "path": "chapters/AZ01-01/labs/README.md",
-          "sha256": "cf980097715fcd60ff02f47b72a08fd028b24700c517e439047ef1bddee71300"
+          "sha256": "e4ab06becf30e7eafd755116f2b445f23c2e41e4d42ce1019ca4e3c06182ffdf"
         },
         {
           "path": "chapters/AZ01-01/labs/reliability-model/reliability_model.py",
@@ -314,12 +226,8 @@
           "sha256": "04fdd0afbcb18ea445a96a5b159694f7718eafc9aed9b2a9390e6c6b5993900a"
         },
         {
-          "path": "chapters/AZ02-01/ACCEPTANCE.md",
-          "sha256": "b2ddaa28a5ba7025c3d1cec80bb197313ce678b1546cfa4051f6f4019d59e709"
-        },
-        {
           "path": "chapters/AZ02-01/chapter.md",
-          "sha256": "8eabca8e8117e048670cf1aaae07b36deca2ca3f16aef6eb12197b03704769d1"
+          "sha256": "3284809d53b9173548a6d777907d1367d52a5b1d3a078d099b7db8d2b0dc0174"
         },
         {
           "path": "chapters/AZ02-01/figures/asymmetric-path.svg",
@@ -354,12 +262,8 @@
           "sha256": "6b7fa4278a6090b6eb953d19a6318f31f8ae57f28e1aecdecb181802aec07117"
         },
         {
-          "path": "chapters/AZ02-02/ACCEPTANCE.md",
-          "sha256": "afc3f0752facea122ecacaa9feaa944506fd76335a85711d575a4d277c778a59"
-        },
-        {
           "path": "chapters/AZ02-02/chapter.md",
-          "sha256": "9b0406731c0d0851baa537cd18f29c27b12eeb04ccefa39f95889d82a7cc0623"
+          "sha256": "2c7340215ceb9ee5221aea07740ce014cdd604de0661cdcab7215fdf4bff2441"
         },
         {
           "path": "chapters/AZ02-02/figures/figs.py",
@@ -394,12 +298,8 @@
           "sha256": "2a5259752ce4fae59efbaed3830d0f04ae61023c7f09ea7e397594f6f8c5080b"
         },
         {
-          "path": "chapters/AZ02-03/ACCEPTANCE.md",
-          "sha256": "fb54fd3a9dc74890b15ae7bd786ae80ab75034f3b122ddd6829b75b2d10e2531"
-        },
-        {
           "path": "chapters/AZ02-03/chapter.md",
-          "sha256": "646dbfd3f432bcf97e8aa840d81a867a62a34ddc5bdfd4d18ad587dbf9aaa111"
+          "sha256": "8267b79f6348c9f6efc63a7ebdd9a33340f71e1105c90e8360c1f5b82229fb4e"
         },
         {
           "path": "chapters/AZ02-03/figures/dns-split-horizon.svg",
@@ -434,12 +334,8 @@
           "sha256": "bde695f8fb2641a0e51aa8fd5c4705cdc8a7d93d2dd7c17b34ca6ebbd84eb3cc"
         },
         {
-          "path": "chapters/AZ02-04/ACCEPTANCE.md",
-          "sha256": "f550a4997fd85b6a23d6d3420be5d17e95fb8fe47d5aa6b62359881342b739d9"
-        },
-        {
           "path": "chapters/AZ02-04/chapter.md",
-          "sha256": "ad80c76042d853bc2c99314410d69836332d5dbd252132a1f6f210af9bca26af"
+          "sha256": "db85e79334ecd773264fe247d45c0b1100569e1ba5a72c9e66736104ec9f5345"
         },
         {
           "path": "chapters/AZ02-04/figures/appgw-route-probe.svg",
@@ -474,12 +370,8 @@
           "sha256": "045e435688b3f9d702573377335ab73592934613db1d961e60c02013353f78ea"
         },
         {
-          "path": "chapters/AZ03-01/ACCEPTANCE.md",
-          "sha256": "15e2f7b687a41d1bb94c1e68653055c87dc156fc387d50a16e84ae26640045d7"
-        },
-        {
           "path": "chapters/AZ03-01/chapter.md",
-          "sha256": "329edac0bd7349f87f9a2c40008818f8e5f2110c3f11d53c57e8819db12f0539"
+          "sha256": "947f970ec16ea86d9aa9e1f3f2a6cebcc5e1f09d395d1d9d23c9f6d065ed77fe"
         },
         {
           "path": "chapters/AZ03-01/figures/figs.py",
@@ -514,12 +406,8 @@
           "sha256": "e4165b0be0192ba88cccd8815bfad785e905ceb2f3a6c3a55e9cdbdffed2dde7"
         },
         {
-          "path": "chapters/AZ03-02/ACCEPTANCE.md",
-          "sha256": "15d767b5b4ca80e39152dff59ff3f9dc9c58be32db5c32a7ab819f1101b4cab3"
-        },
-        {
           "path": "chapters/AZ03-02/chapter.md",
-          "sha256": "4ffc339061b8c099405213cdc4761f786ff22188452edb7bcd7c0c5e61047c5d"
+          "sha256": "191f08d14b9e8e2d43e33231fbf885aeb98801171ca035e07b959e438b23b9eb"
         },
         {
           "path": "chapters/AZ03-02/figures/federated-token-exchange.svg",
@@ -554,12 +442,8 @@
           "sha256": "e799ebdaabdabd35d41005094b50f1b939c5f1eea9ba35e150f8ee1faccb7581"
         },
         {
-          "path": "chapters/AZ03-03/ACCEPTANCE.md",
-          "sha256": "2eb8e3430484dbcd2ef100b91d1f17810a569f6d0ec5b223676da1688b67d7d6"
-        },
-        {
           "path": "chapters/AZ03-03/chapter.md",
-          "sha256": "b9e5b10c305abc0dcd6156522ac45be921146c415a6f1ee185ade91870fcd020"
+          "sha256": "3429d39b58163d447647d32de5daf643af71a31394ba45ff9d1c3dc58f0d1aa7"
         },
         {
           "path": "chapters/AZ03-03/figures/activity-evidence.svg",
@@ -594,12 +478,8 @@
           "sha256": "4b71d9a019a3e7ceaf5c7b157e548bed8d1ee87349c5d47e3b145746d0d0b137"
         },
         {
-          "path": "chapters/AZ04-01/ACCEPTANCE.md",
-          "sha256": "33704da0183ee36408567d0c69241d89e2c0851a2772a5ec8e08d724f8c2aad4"
-        },
-        {
           "path": "chapters/AZ04-01/chapter.md",
-          "sha256": "2296c0eb7f6e9521264de422083146a03d152951a719eb6402ae75466fec9c21"
+          "sha256": "9e392f32c6629bd397844650acb54d73140a681a9754680f171e0e8d4aec9164"
         },
         {
           "path": "chapters/AZ04-01/figures/figs.py",
@@ -634,12 +514,8 @@
           "sha256": "4be326aaaba81397695382795ec77250ababce9cab9e9bebe10e5fc8bce62148"
         },
         {
-          "path": "chapters/AZ04-02/ACCEPTANCE.md",
-          "sha256": "c78d0237965fa39e0e1873a94c06e635115a592881b77807f267ac2e1b79c449"
-        },
-        {
           "path": "chapters/AZ04-02/chapter.md",
-          "sha256": "5369d405a1de01fb42689a1dbd3b65abd9bdf6985802fff09270c680ed05f49b"
+          "sha256": "0b4b05ffefa1dcc7d668443fe3656cd128d46491cbb6479e8274b7e46ef2c864"
         },
         {
           "path": "chapters/AZ04-02/figures/container-app-scopes.svg",
@@ -678,12 +554,8 @@
           "sha256": "d0739a5074cd104d422146c694ed10a7972f2f3d143ed68479164a81ec16d94d"
         },
         {
-          "path": "chapters/AZ04-03/ACCEPTANCE.md",
-          "sha256": "2d5a03a222c9cbc11f4e013c73dfeb8f88419b6917a0fa800de8e9643b4a5800"
-        },
-        {
           "path": "chapters/AZ04-03/chapter.md",
-          "sha256": "b77eeb7a69bf41f218157682180d159f68227480c21fb799cb04616d30d9475a"
+          "sha256": "7f4d0496723c8842458cc8f6f07241fb1f96de34b86c889b46d3a4a0414b7e74"
         },
         {
           "path": "chapters/AZ04-03/figures/figs.py",
@@ -726,12 +598,8 @@
           "sha256": "8d5336609f3becafba8a0bc0c27bf58304d2ea42c706f02733d3a38ce1012cd5"
         },
         {
-          "path": "chapters/AZ04-04/ACCEPTANCE.md",
-          "sha256": "788703c824fa42219f65933f40c8828556d8512d896394c741e606c98b14b874"
-        },
-        {
           "path": "chapters/AZ04-04/chapter.md",
-          "sha256": "710565f5d9877be03daa657fc9422213511dd7d27c89283581fd634ede9dff63"
+          "sha256": "a9511b140b7658c7d7903825d9015ececf423d805ff447ef327ff245d5645082"
         },
         {
           "path": "chapters/AZ04-04/figures/figs.py",
@@ -774,12 +642,8 @@
           "sha256": "6ffe560626eb025f8a104df5c67f0ad9f5c1a11c128aba44add2a68140b5323e"
         },
         {
-          "path": "chapters/AZ05-01/ACCEPTANCE.md",
-          "sha256": "9f341565a16699547bd24d0418d34d5a7f85630a0378f893515b3d1c8bcd35f8"
-        },
-        {
           "path": "chapters/AZ05-01/chapter.md",
-          "sha256": "3c1b5314392e943b30d77004f47f2cf3f14c2db777ab739a53cbbb1780a5a916"
+          "sha256": "f2369c8f6d85d0c0441de84bd3eed2abf1fe42a38fdc56ad877f8db23c1e47e4"
         },
         {
           "path": "chapters/AZ05-01/figures/aggregation-dimensions.svg",
@@ -822,12 +686,8 @@
           "sha256": "6bb19851020f69deb20eef1d0ba4afec3d01f71f839ea46facf418e841f95a09"
         },
         {
-          "path": "chapters/AZ05-02/ACCEPTANCE.md",
-          "sha256": "4eed3879e146a306cdc13d8f14923f10286c1084616542f713a0a16ef9937b00"
-        },
-        {
           "path": "chapters/AZ05-02/chapter.md",
-          "sha256": "c55ba57c27d2fcb7b9ca6d3d7d3564042c70a265b6674c5e18a64e4ac321854d"
+          "sha256": "1101fc52f68d8c5b1f6412c1c3aea524cc0509500b6fc4ad1b408f98b35f440b"
         },
         {
           "path": "chapters/AZ05-02/figures/figs.py",
@@ -855,7 +715,7 @@
         },
         {
           "path": "chapters/AZ05-02/labs/telemetry-triage/README.md",
-          "sha256": "00cf49b1b6042643108d447aa6c46bd35a2b8b102d237308f49f4af9afcd5168"
+          "sha256": "bf3c58d75358ea4ecb68f35c025297369ad66182dfc9df4e3eff4cb3cf47ba69"
         },
         {
           "path": "chapters/AZ05-02/labs/telemetry-triage/fixtures/telemetry-cases.json",
@@ -898,12 +758,8 @@
           "sha256": "72cd4544e713ad8c0f21080ef3c0dc532bb4836be9f2e39f304d09970cefa3ee"
         },
         {
-          "path": "chapters/AZ05-03/ACCEPTANCE.md",
-          "sha256": "498bf12342205f3ebeccd77419d5997d30287113a9d0635d4ccfcf2c8191d116"
-        },
-        {
           "path": "chapters/AZ05-03/chapter.md",
-          "sha256": "8ae2d546317a8d58bacdb3a73ed6fd490c80016a5b95f1eca824e417eadfb643"
+          "sha256": "a6adbb1499ec0712a446f90bce7f4b04eebfbe74fcad8fff69137553e9ecc3b0"
         },
         {
           "path": "chapters/AZ05-03/figures/completeness-checks.svg",
@@ -950,12 +806,8 @@
           "sha256": "d77809df6cd5e5ec75d373c28fc8ba340cf4a9b89c2f4b1c0c1dddae0819cf7a"
         },
         {
-          "path": "chapters/AZ06-01/ACCEPTANCE.md",
-          "sha256": "607ef3baf2a903763ce9be3ed2394fd5e2782ff303ee577c21e6697e40180d69"
-        },
-        {
           "path": "chapters/AZ06-01/chapter.md",
-          "sha256": "72a68243d4eef4a4a8d96e45f2a8c7548f61e686f83ae127b6406eb524d01054"
+          "sha256": "bcc1e5db4468b4325756f984707cac1291394d7f2bdffcb096f2bbfe999051eb"
         },
         {
           "path": "chapters/AZ06-01/figures/backup-vs-replication.svg",
@@ -983,7 +835,7 @@
         },
         {
           "path": "chapters/AZ06-01/labs/recovery-model/README.md",
-          "sha256": "38003e7c4832b8e41823afd6299f763936ca287526b4907d13fbb5cd69f2d761"
+          "sha256": "92e77c274297ab09b04923a53105114a76af104f00e8c0bf504de4ff662a8432"
         },
         {
           "path": "chapters/AZ06-01/labs/recovery-model/fixtures/recovery-cases.json",
@@ -998,12 +850,8 @@
           "sha256": "c1e74455c7e55a01a5d70aca580c53484aa5240374c443fad0826cbcd6a521f1"
         },
         {
-          "path": "chapters/AZ06-02/ACCEPTANCE.md",
-          "sha256": "be80615703431de77484d2a68a8cc4aff65b4f58ea72dfa5f44d99a6466991a7"
-        },
-        {
           "path": "chapters/AZ06-02/chapter.md",
-          "sha256": "b82d6472e22c63f93b3ac6721a5a987b0ff7d3ee7f8e360c83308a6ff1c50bc3"
+          "sha256": "e88b8885febe9ac5308b1826e71ba104adfb45ac100942d18de503c57da86a52"
         },
         {
           "path": "chapters/AZ06-02/figures/bounded-repair.svg",
@@ -1046,12 +894,8 @@
           "sha256": "8c0fa2711583e8ce7cc84193a72211fd41f1e6f5b497cb182ab9fa102c11e297"
         },
         {
-          "path": "chapters/AZ07-01/ACCEPTANCE.md",
-          "sha256": "cec75513d882af7d2f1c2d5fe53b887bcdd41e2285da1f1ab2785e78ae09dfd8"
-        },
-        {
           "path": "chapters/AZ07-01/chapter.md",
-          "sha256": "5df683b37629dde5b0dee5ea622d0e780d937a78f42605f840afde81f19976a5"
+          "sha256": "b3649fd355e14c7347eefb3f5b06dfe1ca1323ec4ac1bc8002822766cf660115"
         },
         {
           "path": "chapters/AZ07-01/figures/core-provider-arm.svg",
@@ -1106,12 +950,8 @@
           "sha256": "3ea4065007bb23b47ecb31dcec148c8a3cab1495c2f43a2584503b7de07125db"
         },
         {
-          "path": "chapters/AZ07-02/ACCEPTANCE.md",
-          "sha256": "facba2befe2416a8381e4cdc6514814dbd8e079dc3c13422610938185c9a2c1a"
-        },
-        {
           "path": "chapters/AZ07-02/chapter.md",
-          "sha256": "08dfa19c47bacdbc6bf3087e789e4ad2b1d1fa5a8dbc1324f0142063094de8c5"
+          "sha256": "a4189876b87f9ea129d4398bb37d036fef9d6c1c6333ccbe59159d0f7a2edc16"
         },
         {
           "path": "chapters/AZ07-02/figures/backend-boundaries.svg",
@@ -1170,12 +1010,8 @@
           "sha256": "a2056b66fb575c7c4778d472d1ba35a38f6295d1f973a1a3dc58bcf44511701c"
         },
         {
-          "path": "chapters/AZ07-03/ACCEPTANCE.md",
-          "sha256": "748d925d0a2a11ebd06d71b345d26c9f2cdc226617fb6fe015c5092bbefe5cf9"
-        },
-        {
           "path": "chapters/AZ07-03/chapter.md",
-          "sha256": "6b210ecfd925e5ddaec7c428a158e24afe776393baa449ca23e7930f888eb92a"
+          "sha256": "f624905afab7da850ee57519af60a15b61e20022088ffcaab102a4c9187d1d01"
         },
         {
           "path": "chapters/AZ07-03/figures/approved-plan-flow.svg",
@@ -1203,7 +1039,7 @@
         },
         {
           "path": "chapters/AZ07-03/labs/azure-pipelines/README.md",
-          "sha256": "910544ef9c00700eccb7fb7f86dcaca91b89790e4d355bdc7c9bc1650aeef1b5"
+          "sha256": "d8ef16485f7bd9edfed6b6f93c3ade58c5aeeaa67d03f6a6f083656f7bd24f68"
         },
         {
           "path": "chapters/AZ07-03/labs/azure-pipelines/azure-pipelines.yml",
@@ -1246,12 +1082,8 @@
           "sha256": "bb0fd4b165fe6b6843b6eb6ac3c1a4485d8cec908615aad976f7ea7bd6e31f2c"
         },
         {
-          "path": "chapters/AZ08-01/ACCEPTANCE.md",
-          "sha256": "70924d5c7e358f38dc1d2a0aa47586c7f65331f2711239616337ad7749efd69a"
-        },
-        {
           "path": "chapters/AZ08-01/chapter.md",
-          "sha256": "1bb0e9d9c40c9bfef1e2242ba85673c3ea96c3c98c116a2c88c9c99ad575550c"
+          "sha256": "ea4b68596e73d982d703d71f70e37cc3a00451917e720b7c18e92b298233661e"
         },
         {
           "path": "chapters/AZ08-01/figures/diagnose-hybrid-planes.svg",
@@ -1279,7 +1111,7 @@
         },
         {
           "path": "chapters/AZ08-01/labs/hybrid-connectivity/FUTURE-LIVE-READONLY.md",
-          "sha256": "5b8c8f70b04df548a4058c15fa6dd57abac3b14b628af565343f8ffce982673a"
+          "sha256": "364f4a6f5f5964a536d138d21819fa28c975d7d65940de9990bebf0830190446"
         },
         {
           "path": "chapters/AZ08-01/labs/hybrid-connectivity/README.md",
@@ -1298,12 +1130,8 @@
           "sha256": "e7f4962f7ebe4b08a1aeeafbc612e384cba6c09b738f36e3f0f7f5de6e57fde2"
         },
         {
-          "path": "chapters/FIN-01/ACCEPTANCE.md",
-          "sha256": "b8f07a9efe322da5f2a16ba254f54978ec1891190f0a551e1aba7b53ab6991c2"
-        },
-        {
           "path": "chapters/FIN-01/chapter.md",
-          "sha256": "9d03bb00001efd2e4ec43568c617d75a87958ab1c0f88a99aa986ab0f99078c1"
+          "sha256": "58cfefd5367a77b70cf7dd9d243ca44d96162e271310065976026a7756135513"
         },
         {
           "path": "chapters/FIN-01/figures/cost-allocation.svg",
@@ -1331,7 +1159,7 @@
         },
         {
           "path": "chapters/FIN-01/labs/cost-recovery/FUTURE-LIVE-READONLY.md",
-          "sha256": "21265a667196366cb46b97d9e4d4b26282cc5cf2745fe2fd0e797844cc594b7f"
+          "sha256": "5d280aa695cd173e0ae6260d74c2244ba55cf02b8b05f85f6d2c9dda5cc1405c"
         },
         {
           "path": "chapters/FIN-01/labs/cost-recovery/README.md",
@@ -1351,11 +1179,11 @@
         },
         {
           "path": "incidents/CONTRACTS.md",
-          "sha256": "7824cc18b9b50d21cc6056c0867a380e6f8300a3b961a4f96c475f5a6e8cfb16"
+          "sha256": "e9d5787cce3edec609dd12d88a17ab259e8d25f34d3069a6ca9f1fe22598ffea"
         },
         {
           "path": "incidents/README.md",
-          "sha256": "84e04653fcfd47325c14895ee5ac43f21c0c6b880be00ef5b0aed2e8b8183882"
+          "sha256": "438c78346bfeef04ce4ff0d0b1b0fa31fbe3274ab1d37149aadda5b4067f6bd9"
         },
         {
           "path": "incidents/evidence/IR-01_local-dns.json",
@@ -1532,6 +1360,194 @@
         {
           "path": "incidents/tests/test_ir11_watchdog.py",
           "sha256": "935a24e3c0bd3aab8725e528695dec787bbc4abe85bfc9df829f4f7a69828903"
+        },
+        {
+          "path": "maintainer/EDITORIAL_FREEZE.md",
+          "sha256": "b88be5cbe2feca01f13a5af419d8930943f4ccd3fe7fb9b6562e09e7e6014aca"
+        },
+        {
+          "path": "maintainer/LIVE_LAB_CATALOGUE.md",
+          "sha256": "2b0078478d77dee33e4d3370e3691d9c103f13209523444555bf2bf8633e6a69"
+        },
+        {
+          "path": "maintainer/README.md",
+          "sha256": "010c43e38d07c7b0d72283becd1ea9ff437d32a86c4726e948eb165e2cca52e7"
+        },
+        {
+          "path": "maintainer/SOURCE_MAP.md",
+          "sha256": "d235c69e036edd3fa424f7ebb9a60dd3b7f5aaa2f7943a24bf5a7ef5814bc085"
+        },
+        {
+          "path": "maintainer/V1_0_1_TEXTBOOK_REVIEW.md",
+          "sha256": "d293415c13f03208ae8edabc1f76df4a0396e93b18f990d33770e13bb8f765a5"
+        },
+        {
+          "path": "maintainer/history/AZURE_SPECIALTY_ROADMAP.md",
+          "sha256": "c9810a28b5881eddf143b427d6f963d42964fc508cebfb1e2280ff1535e45991"
+        },
+        {
+          "path": "maintainer/history/COST_LEDGER.md",
+          "sha256": "c0e201eed052f0db3c2e6a5dc676f7c040dd57f5a83babdeb54ea763c0f87d74"
+        },
+        {
+          "path": "maintainer/history/E0_INDEPENDENT_AUDIT.md",
+          "sha256": "700cfe86ea752e4dc4d513b2769ea5069a5b5bc5b0ee5ef85e40338a5808bb02"
+        },
+        {
+          "path": "maintainer/history/E10_INDEPENDENT_REPLAY.md",
+          "sha256": "e77e2edafe42a6fa60643e5237ac2ff6d20e766269b6c0e79b2a606fe57373ba"
+        },
+        {
+          "path": "maintainer/history/E2_LOCAL_SUBSTRATE.md",
+          "sha256": "b1cc68e66ffa07335e660ab051a1b4e9f47235c9d1521f0a1f3d12976a7e69c0"
+        },
+        {
+          "path": "maintainer/history/E3_TERRAFORM_ENGINEERING.md",
+          "sha256": "430553714c19f71d0578ada3fcf7b6d21ab050816af14c421398700265b57408"
+        },
+        {
+          "path": "maintainer/history/E4_STATE_CONTROLLED_DELIVERY.md",
+          "sha256": "de170d578f7d1f50816961192672eca42e63630d61b44354217ec30aedb2a506"
+        },
+        {
+          "path": "maintainer/history/E5_AZURE_DEVOPS_DELIVERY.md",
+          "sha256": "96f29f163cd2fecd4dcd698e9950d3aeefb92154e9c8cc6ba4c7fbf376ad1641"
+        },
+        {
+          "path": "maintainer/history/E6_DIAGNOSTICS_AUTOMATION.md",
+          "sha256": "8ed7cbf56294fb603df715e535a5d5f77fea702b36872c141e711cbf0d0cfbfd"
+        },
+        {
+          "path": "maintainer/history/E7_INCIDENT_CONTRACTS.md",
+          "sha256": "5d46cc24e4e130bdd67220b8df86484bd665b36103607095c991c1a282eda417"
+        },
+        {
+          "path": "maintainer/history/E8_LOCAL_INCIDENTS.md",
+          "sha256": "42df58388fb85ffe3815c0fbc15b9bbcdcc694f3a4bbe9e2b5757cb8eb41df95"
+        },
+        {
+          "path": "maintainer/history/FINAL_ACCEPTANCE_REPORT.md",
+          "sha256": "ed3b5b7af304f47f2284c738adca0e9f2a14971106980abd7e0199980b9725ff"
+        },
+        {
+          "path": "maintainer/history/L0_READ_ONLY_PREFLIGHT.md",
+          "sha256": "fe25271a81190c8d2e490559ad1be7eabf99deb3023f21d429a3b2c620e40eaa"
+        },
+        {
+          "path": "maintainer/history/LAB_ENVIRONMENT.md",
+          "sha256": "27f9b70cf626e80358726b5166c932e4df2d64444262c6f6a0c561cb90c2d72d"
+        },
+        {
+          "path": "maintainer/history/LIVE_LAB_INDEX.md",
+          "sha256": "826a12a9cee275541f21d806f0db3b18af6e557b3b69c1a2f8bc940cb6482288"
+        },
+        {
+          "path": "maintainer/history/PROJECT_PROGRESS_HISTORY.md",
+          "sha256": "7a5b451441768751deac5ddd19ef47f74ba56a8a6f9ab215103574fdf07f2ae1"
+        },
+        {
+          "path": "maintainer/history/REFERENCE_ANALYSIS.md",
+          "sha256": "e27d801913ed56a55260fc34976b649bb91cbfb79240b4e04670176d7b05f454"
+        },
+        {
+          "path": "maintainer/history/RELEASE_ACCEPTANCE.md",
+          "sha256": "ea74660c059205e4dcfe84e67263505f1f08e2b4ab1eb6df758ae2ff3fe900be"
+        },
+        {
+          "path": "maintainer/history/VERIFICATION_MATRIX.md",
+          "sha256": "7a315bc0ca916bb851d3e521a0e5a9894e4d3e782c2fd759c81adde832061920"
+        },
+        {
+          "path": "maintainer/lecture-acceptance/AZ00-01.md",
+          "sha256": "91ac88a12fa5d8ff11382aa1a876600cb39199ef96936b1e3852f66ffa73228c"
+        },
+        {
+          "path": "maintainer/lecture-acceptance/AZ01-01.md",
+          "sha256": "8155d3a2a457a10e76bc357cd5b96e1f4ec29a4b8e73bfd2f50a5b7c0d459fd0"
+        },
+        {
+          "path": "maintainer/lecture-acceptance/AZ02-01.md",
+          "sha256": "298fc5ace8a0bb686a2c605d5704d76a66661780f73a36a21c3192b1a6dc6f4e"
+        },
+        {
+          "path": "maintainer/lecture-acceptance/AZ02-02.md",
+          "sha256": "ba490af73a18363fe463fc4df8c8ed73e0037f91d4f33ccfca0b85e6cbc901e7"
+        },
+        {
+          "path": "maintainer/lecture-acceptance/AZ02-03.md",
+          "sha256": "a5232c03f2cf3e9f77e6e09e1c3da682a8afd91955e15118bb9162acc77d2eeb"
+        },
+        {
+          "path": "maintainer/lecture-acceptance/AZ02-04.md",
+          "sha256": "e2dec8d30df6036318032e15c07fca3a9b32f2420c6e93263688555ee9549e95"
+        },
+        {
+          "path": "maintainer/lecture-acceptance/AZ03-01.md",
+          "sha256": "9674b4c9d84945d45e31f285a1272b14ecabab420cc62fbc8ab5f79499a4c741"
+        },
+        {
+          "path": "maintainer/lecture-acceptance/AZ03-02.md",
+          "sha256": "f39b257c0e4271c9eeca993b9cd6e81b4e81fad8b91a148bbd6854f0fa93ca5d"
+        },
+        {
+          "path": "maintainer/lecture-acceptance/AZ03-03.md",
+          "sha256": "679f45cb047b9094ef8a01d5babc8e3d6ccd524887ff05dd7b8ac28e5768c70e"
+        },
+        {
+          "path": "maintainer/lecture-acceptance/AZ04-01.md",
+          "sha256": "b0e096cd87deb2cedb534744e354302ffa1b8db5a3247b434844bb05c52bf269"
+        },
+        {
+          "path": "maintainer/lecture-acceptance/AZ04-02.md",
+          "sha256": "e43307403c08c6940e275c0842a532a0522e9f34716a0f78fd4f7348da0c516f"
+        },
+        {
+          "path": "maintainer/lecture-acceptance/AZ04-03.md",
+          "sha256": "898e1400fbcd6947a5aba8700c4df203e2320ba9ae9eb05ef2f688d0667c4663"
+        },
+        {
+          "path": "maintainer/lecture-acceptance/AZ04-04.md",
+          "sha256": "c795994e26d60d2c81b1d5afb6f1225c747804faa0a66df9a8becd5d02ad813f"
+        },
+        {
+          "path": "maintainer/lecture-acceptance/AZ05-01.md",
+          "sha256": "42ee9ab5962c1d6d6a6c1878d49a10acbe67669133d60ecbb2d41fc3ea920564"
+        },
+        {
+          "path": "maintainer/lecture-acceptance/AZ05-02.md",
+          "sha256": "2694d087a07ad45609b0453bdfe781bc062369a2007d84d0863240246c6ed7c0"
+        },
+        {
+          "path": "maintainer/lecture-acceptance/AZ05-03.md",
+          "sha256": "906eec5953d691a2e31cad9fd1ba261a1e79b0a1b1f7f8cff118be0e536d9fa9"
+        },
+        {
+          "path": "maintainer/lecture-acceptance/AZ06-01.md",
+          "sha256": "7b5fcc818e1d803a274914508d04b2a44acb1d081684d86f1501be78c690629d"
+        },
+        {
+          "path": "maintainer/lecture-acceptance/AZ06-02.md",
+          "sha256": "63a60798e78db9bd763963b5cc614c114e2b0766d1a9d22c6e8ea7286e052ca1"
+        },
+        {
+          "path": "maintainer/lecture-acceptance/AZ07-01.md",
+          "sha256": "766ba9a2e1e348eac9e4ee339d08a74a7554c480b98a2ce2ef9d48422d79e874"
+        },
+        {
+          "path": "maintainer/lecture-acceptance/AZ07-02.md",
+          "sha256": "4a01b6afef41bf256fee005e6e89c1f8dad37b783d366cf463b75f6a837cd525"
+        },
+        {
+          "path": "maintainer/lecture-acceptance/AZ07-03.md",
+          "sha256": "ca3c212dcbe58af904470863bc8c6d1f0e231edbe228d7cd1d1d49ada1eb504c"
+        },
+        {
+          "path": "maintainer/lecture-acceptance/AZ08-01.md",
+          "sha256": "6bd8691ddb04c73b4a5794ee03089b927d365aa9adc64d7c835fb48301faa244"
+        },
+        {
+          "path": "maintainer/lecture-acceptance/FIN-01.md",
+          "sha256": "ae3641caf5ea6fad03d16b0d5e1aebf94a79b79de37911355bbb9abd6e8b5bc8"
         },
         {
           "path": "terraform/azure-enterprise-reference/.terraform.lock.hcl",
@@ -1811,16 +1827,16 @@
         },
         {
           "path": "tools/verify_repository.py",
-          "sha256": "e9ab157e9513e97e64808fe0cb7435fb84e0cee99def01e1c9dd5fb67aefb00b"
+          "sha256": "8e810d6e3f869e37c84d10d5376fb7485e07e26978c501831c35e708467ad500"
         },
         {
           "path": "tools/verify_terraform.py",
           "sha256": "cbf3fc6fc5d61f99cdffcc143e5ac5d39be2704077358ae25ba827d00ef80ba6"
         }
       ],
-      "entry_count": 429,
-      "sha256": "22ce2ec3ec07a0554b5c2ac65e87fec97f231906bef67f15ccb8fff88a292408",
-      "size_bytes": 1062518
+      "entry_count": 433,
+      "sha256": "704ac1686551305b578cfe52752ec2678c5e6b060f84b26887ca723577a4a70e",
+      "size_bytes": 1086232
     }
   },
   "format_version": 2,

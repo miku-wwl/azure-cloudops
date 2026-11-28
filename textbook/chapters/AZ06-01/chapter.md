@@ -117,7 +117,7 @@ Get-FileHash -Algorithm SHA256 -LiteralPath $RestoredFixturePath
 
 对照备份前同一文件的摘要。数据库按引擎检查一致性及交易不变量。例中 09:52 point → 10:00 故障 → 10:43 业务验收，RPO 8 分钟、RTO 43 分钟。若 job Completed 但摘要不合，查源 VM、恢复点、盘与一致性，延后接流，再选可验证的恢复点。源 VM 保留现状。
 
-**按工作负载选工具。** 常规 Azure VM 用 Recovery Services vault 的 VM backup。受支持的 Managed Disk 也可由 Backup vault 的 Azure Disk Backup 保护，恢复盘还需做应用验证。Azure SQL Database 由平台备份实现 PITR（AZ04-04）。ASR 是复制和故障转移，隔离 Test failover 后走专用 cleanup。核算受保护实例、留存、恢复算力与存储；停止保护和删除备份是不同操作。本轮只有下方离线模型。
+**按工作负载选工具。** 常规 Azure VM 用 Recovery Services vault 的 VM backup。受支持的 Managed Disk 也可由 Backup vault 的 Azure Disk Backup 保护，恢复盘还需做应用验证。Azure SQL Database 由平台备份实现 PITR（AZ04-04）。ASR 是复制和故障转移，隔离 Test failover 后走专用 cleanup。核算受保护实例、留存、恢复算力与存储；停止保护和删除备份是不同操作。
 
 ## 离线实验：恢复结果不是一个布尔状态
 
@@ -165,6 +165,10 @@ RPO = 14:30 − 14:02 = 28 分钟，不满足 15 分钟目标。RTO 从业务中
 5. **校验数据：** 选择适用于该数据的 hash、记录数、数据库原生一致性和关键业务不变量，保留原始验证输出。
 6. **验证服务路径：** 从真实调用位置检查认证、DNS、依赖、读写交易和用户路径；区分单机健康与业务可用。
 7. **关闭演练：** 清理 test failover 资源并核对残留；正式 failover 则确认 reprotect/failback、责任人、数据同步方向和费用复查。[3][8][10][11]
+
+## 本讲要点
+
+备份恢复、磁盘还原和 Site Recovery failover 是不同工作流，按 workload 选择机制与目标。恢复点还要通过数据完整性、应用探针、RPO/RTO 和隔离/清理检查；作业成功不等于业务已恢复。
 
 ## 参考资料
 

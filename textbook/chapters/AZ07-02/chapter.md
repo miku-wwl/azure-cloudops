@@ -101,7 +101,7 @@ Terraform 的 `terraform show -json` 能提供 `resource_changes[].change.action
 
 这条链有两种不同的互斥：本地原子目录仅在多个执行进程共享同一受保护文件系统时有效；生产流水线还必须在 Azure DevOps Environment 上配置服务端独占锁与审批，并把可持久化的防重放存储放到受保护的共享服务。AzureRM Blob lease 则保护一个远端 State key 的 Terraform 写操作。任何一层都不能替代其他层。流水线 YAML 可以引用 Environment，却不能自行证明该 Environment 的服务端审批、检查、分支策略或权限已配置。[1][6]
 
-仓库中的 `tools/controlled_apply.py` 实现验证器，不包含审批私钥或真实审批发行端。单元测试每次在临时目录生成一次性 Ed25519 密钥，验证绑定和拒绝路径；它证明本地代码合同，不是 Azure DevOps 服务端审批，也不是已配置的生产信任根。Azure 远端 backend 的可选 HCL 位于 `terraform/azure-remote-state-backend/`，保留 Entra ID + OIDC 参数，并刻意没有运行 `terraform init`。[1][16]
+审批载荷把代码、目标范围、运行和计划摘要绑定在一起；验证端还必须从受保护的信任根核对签名与授权。单独可编辑的 JSON 或一个有效签名，都不能证明审批人身份与部署权限正确。生产环境还需在 Azure DevOps 服务端配置审批、资源授权和独占锁；YAML 只能引用这些设置，不能证明它们已启用。远端 backend 示例保留 Entra ID 与 OIDC 配置，适合后续按获批环境演练。[1][16]
 
 ```python
 signer["public_key"].verify(signature, canonical_json(payload))
@@ -114,7 +114,7 @@ if sha256_file(sealed_plan).casefold() != authorization.plan_sha256:
 
 ## 配置演练：从 key 和租约查到唯一的 writer
 
-**企业设计练习，当前未访问 Azure。** 给一套非生产 stack 指定唯一的 `resource_group_name`、`storage_account_name`、`container_name`、`key`。可在 Storage → Containers 核对容器及 Blob，在 Data protection 核对 versioning、软删除与保留；用已保护的 tfbackend 配置和 Entra/OIDC 读写身份控制该 key。Backend 身份的 Blob 数据权限与 AzureRM Provider 管理资源的权限单独设计。示例可读 `azure-enterprise-reference/versions.tf` 和 AZ07-03 的 Secure Files 配置。
+**企业设计练习（仅设计）。** 给一套非生产 stack 指定唯一的 `resource_group_name`、`storage_account_name`、`container_name`、`key`。可在 Storage → Containers 核对容器及 Blob，在 Data protection 核对 versioning、软删除与保留；用已保护的 tfbackend 配置和 Entra/OIDC 读写身份控制该 key。Backend 身份的 Blob 数据权限与 AzureRM Provider 管理资源的权限单独设计。示例可读 `azure-enterprise-reference/versions.tf` 和 AZ07-03 的 Secure Files 配置。
 
 两个 runner 同 key 时，B 等 A 释放锁或报告 lock refusal。先确认 A 的 run、lease 所有者与执行状态；未证实 A 结束前不解除锁。两个 key 虽分开加锁，却不能阻止它们写同一个实际 NSG。若状态损坏，先停止 writer，保留当前状态与版本、查 `lineage`/`serial`，按审批恢复适当版本到隔离验证路径。用真实对象清单、普通 Plan 差异和业务验证确认恢复后才重新接入。旧备份按保留策略处理；版本/事务可能计费。下方本地两进程实验不需要 Azure 权限。
 
@@ -128,15 +128,19 @@ python scripts/verify_lab.py
 Pop-Location
 ~~~
 
-Windows Terraform 1.15.5 的实测中，Apply 正持有本地 State 时，第二个 Terraform `plan -lock-timeout=0s` 进程收到 `Error acquiring the state lock`。导入 `terraform_data.imported[0]` 后 Plan 为 0 差异，再用 `state rm` 移除该 state-only 地址。带外改文件触发 exit code 2 和 local provider 的 `+ create`；refresh-only 移除了 State 绑定而未改文件，普通 Apply 随后恢复声明内容。改写临时 HCL 中的期望内容后，Apply 更新文件；恢复原 HCL 并生成新 Plan，Apply 把文件恢复到旧声明。把 State 文件移开后，`state push` 从备份恢复了 `local_file.marker`，后续 Plan 为 0 差异；最后本地资源已 destroy。这里验证的是 Windows 本地文件锁、local Provider 行为和 Terraform State CLI，不是 Azure Blob lease 或 AzureRM drift 实测。
+本地实验中，第二个 Terraform 进程在 State 被占用时立即收到 lock refusal。实验还展示了文件内容发生带外变化后，Plan 如何报告差异，以及调整声明并重新 Apply 后如何恢复。备份恢复和 State CLI 操作只影响临时的本地实验目录；这些观察解释了并发与漂移诊断，不能代替 Azure Blob lease 或 AzureRM 资源上的现场验证。
 
 ::: lab
-**评审题**：两个独立 key 若同时声明管理同一个 NSG，为什么租约仍挡不住双重管理？如果事故期间的带外修改需要保留，应先改哪份配置，何时选择 refresh-only，最终用什么 Plan 和业务检查证明恢复？哪些结论必须等 Stage 3 才能用 Azure 证据确认？
+**思考题：** 两个独立 key 若同时声明管理同一个 NSG，为什么租约仍挡不住双重管理？如果事故期间的带外修改需要保留，应先改哪份配置，何时选择 refresh-only，最终用什么 Plan 和业务检查证明恢复？
 :::
 
 ::: solution
-**参考推理。** 双 key 的锁各管自己的 Blob，两个 state 都可能声称管理同一资源；审查资源 ID 与所有权，再选择唯一 writer。若获批保留带外改动，先协调声明与实际对象。refresh-only 适用于接受已确认的实况进入 State，不会修改资源或 HCL；正常 Plan 仍要检查是否有逆转动作。再用服务的实际业务探针核验。Azure Blob lease、远程身份和真实 AzureRM 刷新都需要另取证，下面参考资料给出机制依据。
+**参考推理。** 双 key 的锁各自只保护自己的 Blob，审查实际资源 ID 并指定唯一 writer。若获批保留带外改动，先同步声明与实况；refresh-only 只更新 State，不修改资源或 HCL，随后仍要检查普通 Plan 是否会逆转改动。最后通过服务探针确认业务恢复。
 :::
+
+## 本讲要点
+
+Azure Blob lease 保护同一个 backend key 的并发 State 写入，不保护跨 key 的资源所有权或带外变更。State 恢复要比较 lineage/serial 并先在隔离副本验证；受控 Apply 还需把审批与精确 Plan、代码和目标绑定。
 
 ## 参考资料
 
@@ -156,6 +160,6 @@ Windows Terraform 1.15.5 的实测中，Apply 正持有本地 State 时，第二
 14. [Terraform import command](https://developer.hashicorp.com/terraform/cli/commands/import) — 资源类型决定 ID 形式，且并非每种资源均支持 ImportState。
 15. [Terraform `show`](https://developer.hashicorp.com/terraform/cli/commands/show) 与 [Terraform JSON output format](https://developer.hashicorp.com/terraform/internals/json-format) — `terraform show -json` 可检查 saved Plan 的 actions；JSON 可能包含敏感状态与计划值。
 16. [Ed25519 signing and verification](https://cryptography.io/en/latest/hazmat/primitives/asymmetric/ed25519/) — 本地 verifier 所用签名 API；验证仍依赖外部可信公钥来源和身份策略。
-17. [terraform_data](https://developer.hashicorp.com/terraform/language/resources/terraform-data) 与本讲 Stage 2 实现和离线测试：`textbook/tools/controlled_apply.py`、`textbook/tools/tests/test_controlled_apply.py`、`textbook/terraform/azure-remote-state-backend/`。本地拒绝/通过合同已执行；Azure DevOps 环境、远端 backend 与生产信任根均 NOT_RUN。
+17. [terraform_data](https://developer.hashicorp.com/terraform/language/resources/terraform-data) — 可用本地资源演示不需要 Azure API 的 State 操作。
 
 ---

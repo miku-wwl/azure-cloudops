@@ -93,7 +93,7 @@ PE NIC 不是普通 VM NIC 的诊断对象。当前 Private Endpoint 文档说�
 
 因此不能把 `az network nic list-effective-nsg` 对普通 VM NIC 的输出，或某 VM 到 endpoint 的 IP Flow Verify 结果，直接当成 PE NIC 的完整规则视图。先检查实际 PE 状态、DNS zone group、zone records、links 和客户端 resolver；再检查访问路径中的 VM/NVA/firewall、TCP 443 和服务端 network policy。任何主动 connection probe 都只针对 owner 明确授权的测试 endpoint 执行；探测成功仍要单独做 Blob 数据面的最小授权读测试。
 
-## Worked example：DNS 是私网 IP，为什么读取 Blob 仍然失败？
+## 演算示例：DNS 是私网 IP，为什么读取 Blob 仍然失败？
 
 假设 `payments-spoke` 的 VM 以原始 FQDN 查询 `settlementarchive.blob.core.windows.net`，得到 `10.60.4.7`。这只证明在这次查询所使用的 resolver、缓存状态和客户端上下文下，返回了这个私网地址。下一步先核对 PE connection state、PE NIC 所在 subnet 的网络策略，再检查路由与 TCP/TLS；只有 HTTP 请求抵达 Storage 后，服务端才会依照数据面身份判断是否允许 `Blob List` 或读取对象。
 
@@ -166,7 +166,7 @@ if answer.kind == "PRIVATE_ENDPOINT":
     return answer, "PRIVATE_ACCESS_ALLOWED"
 ~~~
 
-**本地观察（2026-11-26，Python 3.13.9）：** 18 项测试全部通过。示例结果包括：linked zone + A 记录 + Approved PE 得到 `10.60.4.7`；自定义 DNS 不转发则走 fixture public answer，且在 public network access disabled 时被拒；linked zone 无 A 且无 fallback 返回 NXDOMAIN；fallback 在公网访问关闭时仍被拒；Pending PE 即使有私有 A 记录也不能走 private path；私有解析与 Approved PE 仍不能替代 data authorization。
+**本地模型输出：** linked zone 中的 A 记录与 Approved PE 指向 `10.60.4.7`；未转发的自定义 DNS 返回 fixture 中的 public answer，公网访问关闭后请求被拒。缺少 A 记录时得到 NXDOMAIN；Pending PE 即使已有私有 A 记录也不能通行；私有解析和 Approved PE 都不能替代 data authorization。
 
 ~~~text
 payments-spoke-private-success: DNS=PRIVATE_ENDPOINT 10.60.4.7; data-path=PRIVATE_ACCESS_ALLOWED
@@ -178,12 +178,12 @@ private-address-without-data-authorization: DNS=PRIVATE_ENDPOINT 10.60.4.7; data
 ~~~
 
 :::: why
-**保真边界：** 这是合成决策表，不是 Azure Private DNS emulator。它不发送真实 DNS 查询，不实现递归解析、CNAME 数据包、TTL/cache、NXDOMAIN SOA、Azure DNS、VNet link API、Private Resolver、Private DNS zone group、Storage firewall 规则、PE NIC、路由、NSG、TLS、证书、SAS、Managed Identity、RBAC 或 Storage API。`public_ip` 是 RFC 5737 文档测试地址，不可路由；`data_authorized` 是调用者输入，不是权限求值。测试只证明 fixture 下的算法结果。
+**模型边界：** 这是合成决策表，不是 Azure Private DNS emulator。它不发送真实 DNS 查询，也不实现递归解析、CNAME、TTL/cache、Azure DNS、VNet link、Private Resolver、Private DNS zone group、Storage firewall、PE NIC、路由、NSG、TLS、证书、SAS、Managed Identity、RBAC 或 Storage API。`public_ip` 是 RFC 5737 文档测试地址；`data_authorized` 是输入值，不是权限求值。输出仅说明 fixture 下的算法结果。
 ::::
 
 ## 配置演练：让支付应用只从私网读取 Blob
 
-**未来 Azure 练习，当前未执行。** 选已授权的 spoke、客户端和非生产数据。在同一帐户准备非敏感 Blob。配置权限分别落到 Storage、PE/subnet 和 Private DNS zone；不同 owner 要安排连接审批。读取 Blob 的身份单独授权。按 IaC 学习可阅读 `textbook/terraform/modules/storage/main.tf` 与同级的 `private_endpoint/main.tf`：模块把 Storage ID、`blob` 与 zone 名传给 PE。模块从禁用公用访问的帐户起步；现网迁移则需预验后关闭。[1–5]
+**未来 Azure 练习（文档步骤，未执行）。** 使用已授权的 spoke、客户端和非生产数据。Storage、PE/subnet 与 Private DNS zone 分别由其资源 owner 配置；读取 Blob 的身份单独授权。IaC 示例见 Storage 与 Private Endpoint 模块：它们把 Storage ID、`blob` 子资源和 zone 名传给 PE。示例从禁用公用访问的帐户起步；现网迁移应先验证私网访问再关闭公网。[1–5]
 
 | 步骤 | 归属与配置 | 放行依据 |
 |---|---|---|
@@ -195,9 +195,9 @@ private-address-without-data-authorization: DNS=PRIVATE_ENDPOINT 10.60.4.7; data
 
 **预测与最小修复。** 在本地 fixture 的 linked spoke，原 FQDN 落到 `10.60.4.7`。已加 VNet link 却解析到公网地址，先查实际 resolver 与转发，再核对 A 记录和缓存。私网解析正确但返回 403 时，从 Storage 错误码区分公网路径限制和对象权限。修复具体失败门后用同一调用方重跑。结束后释放独占 PE 和关联，按留存要求处理帐户与数据，保留共用 zone/link。PE、DNS、存储和流量有独立计费。
 
-## Read-only 诊断命令与未来 live lab
+## Read-only 诊断命令
 
-以下检查清单供未来获批的非生产 scope 使用。本轮未执行这些命令。先从观察到问题的客户端查询原始 FQDN。
+以下只读命令是文档模板，尚未在 Azure 执行。从观察到问题的客户端查询原始 FQDN，并先填入获批的资源值。
 
 ~~~powershell
 # Set all variables to owner-approved names before running from the spoke.
@@ -229,9 +229,7 @@ az storage account show --resource-group $StorageResourceGroup `
 
 先核对实际 PE connection state、FQDN/private IP、zone group、VNet links、A record 和 Storage public network setting。再比较来自 linked VNet、custom DNS 与授权 on-prem resolver 的解析。若网络层显示可达，才在获得明确数据访问授权后，用最小读取请求验证目标 Blob 操作；预先记录认证方式、容器/对象、request ID 和错误码。不要在学习笔记里贴出 storage key、SAS token、principal ID 或完整 account connection string。
 
-**未来 live lab 状态：** `LIVE_NOT_RUN`。费用要按选定区域、offer、运行时长及数据留存估算。计入 PE、Private DNS、Resolver endpoint/ruleset、客户端和存储等依赖。V1.0.1 授权预算 USD 0.00，课内仅运行本地模型。上述云端操作需另行获批。[7][8]
-
-## Fault cards：定位失败发生在哪道门
+## 故障卡：定位失败发生在哪道门
 
 :::: {.fault title="故障 1｜VM 得到公网 IP，Storage public access 已关闭"}
 - **症状**：客户端可以解析 Storage FQDN，却超时或被拒；PE 已存在。
@@ -257,7 +255,7 @@ az storage account show --resource-group $StorageResourceGroup `
 - **恢复验证**：使用同一 hostname 和受支持的认证路径，对指定测试对象执行最小读请求，并记录网络和授权边界。
 ::::
 
-## Exercises：将解析、网络与授权分开
+## 练习：将解析、网络与授权分开
 
 :::: {.exercise title="练习 1｜Spoke 的 DNS 回答为什么不同？"}
 `payments-spoke` 中的 Azure-provided DNS 能查询 linked private zone；`reporting-spoke` 使用 custom DNS，但没有 conditional forwarder；两台 VM 请求同一 Storage FQDN。说明最可能的解析差异，并列出至少两项尚未证明的条件。
@@ -303,19 +301,19 @@ DNS answer、PE status、TCP/TLS probe 与 Blob 读请求回答不同问题。Lo
 :::
 ::::
 
-## Live lab evidence record
+## Private Link 诊断记录模板
 
 在经批准的未来实验中，把每一条观测绑定到同一 client、service FQDN、时间窗口与请求。记录 resolver/VM/VNet、回答类型与 IP、Private Endpoint 状态、zone/link/record、被测端口、TLS hostname 结果、Storage HTTP status/request ID 和认证方式类别。不要记录 token、key、SAS 或完整连接串；读失败和访问未授权也应保留为负面证据。
 
-| Evidence stage | Minimum record | Claim boundary |
+| 诊断阶段 | 最小记录 | 结论边界 |
 |---|---|---|
 | DNS | client + resolver + query time + original FQDN + answer/TTL | 只解释此次 name resolution |
 | Endpoint / path | PE state + private IP + link/zone group + route/probe | 不证明 TLS 或 Blob 权限 |
 | TLS / request | original hostname + certificate result + Storage status/request ID | 不把 403 当成 DNS failure |
 | Data authorization | identity/credential type + intended data operation + allow/deny | 不外推到其他对象或身份 |
-## References 与研究记录
+## 参考资料
 
-本讲于 **2026-11-26** 查阅 Microsoft Learn 与 Azure pricing 官方页面。标注的 source-page revision 日期取自页面本身；价格以部署前选定 region、协议/offer 与当前计算器结果为准。下列命令没有在 Azure 登录或订阅中运行。
+Private Link、DNS 服务和价格可能随区域与账户条件变化；部署前按当前 offer、运行时长和数据量重新估算费用。
 
 ::: refs
 1. [What is a private endpoint?](https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-overview) — NIC/private IP、目标子资源、批准状态与仅 Approved 可发流量；页更新 2026-08-11。
@@ -326,7 +324,5 @@ DNS answer、PE status、TCP/TLS probe 与 Blob 读请求回答不同问题。Lo
 6. [Manage network policies for private endpoints](https://learn.microsoft.com/en-us/azure/private-link/disable-private-endpoint-network-policy) and [Private endpoint overview](https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-overview) — subnet network policy 默认行为、selective NSG/UDR 配置、PE NIC diagnostics limitations；页更新分别 2025-04-25 与 2026-08-11。
 7. [Azure DNS pricing](https://azure.microsoft.com/en-us/pricing/details/dns/) — private DNS zone/query 与 Private Resolver endpoint/ruleset 收费维度；需按当前区域、账户与运行时长估价。
 8. [Azure Private Link pricing](https://azure.microsoft.com/en-us/pricing/details/private-link/) — endpoint-hours、data processing 与传输费；partial-hour 和账户价格应在部署前复核。
-9. [Azure CLI `az network private-endpoint`](https://learn.microsoft.com/en-us/cli/azure/network/private-endpoint?view=azure-cli-latest), [`az network private-dns link vnet`](https://learn.microsoft.com/en-us/cli/azure/network/private-dns/link/vnet?view=azure-cli-latest), and [`az network private-dns record-set a`](https://learn.microsoft.com/en-us/cli/azure/network/private-dns/record-set/a?view=azure-cli-latest) — 只读查询命令语法及当前 `NxDomainRedirect` 选项；本讲未在 Azure 执行。
+9. [Azure CLI `az network private-endpoint`](https://learn.microsoft.com/en-us/cli/azure/network/private-endpoint?view=azure-cli-latest), [`az network private-dns link vnet`](https://learn.microsoft.com/en-us/cli/azure/network/private-dns/link/vnet?view=azure-cli-latest), and [`az network private-dns record-set a`](https://learn.microsoft.com/en-us/cli/azure/network/private-dns/record-set/a?view=azure-cli-latest) — 只读查询命令语法及当前 `NxDomainRedirect` 选项。
 :::
-
-本讲插图是机制图，不是 Portal 实拍。本地实验使用虚构资源、文档保留地址和离线逻辑；它没有验证 Azure DNS、Private Link、Storage TLS、网络路径或访问授权。未来 live lab 仍需 Stage 3 的授权、成本、资源范围与清理门禁。

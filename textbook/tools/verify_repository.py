@@ -66,12 +66,16 @@ def check_curriculum_and_sources() -> int:
     source_ids = {
         path.name
         for path in (ROOT / "chapters").iterdir()
-        if path.is_dir() and (path / "chapter.md").is_file() and (path / "ACCEPTANCE.md").is_file()
+        if (
+            path.is_dir()
+            and (path / "chapter.md").is_file()
+            and (ROOT / "maintainer" / "lecture-acceptance" / f"{path.name}.md").is_file()
+        )
     }
     if source_ids != set(ids):
         fail(f"curriculum/source mismatch: missing sources={sorted(set(ids) - source_ids)}, extra={sorted(source_ids - set(ids))}")
 
-    source_map = (ROOT / "SOURCE_MAP.md").read_text(encoding="utf-8")
+    source_map = (ROOT / "maintainer" / "SOURCE_MAP.md").read_text(encoding="utf-8")
     missing_map = [lecture for lecture in ids if not re.search(rf"(?<![A-Z0-9]){re.escape(lecture)}(?![A-Z0-9])", source_map)]
     if missing_map:
         fail("source map is missing lecture IDs: " + ", ".join(missing_map))
@@ -122,7 +126,7 @@ def check_internal_markdown_links() -> int:
 
 
 def check_e9_catalogue() -> int:
-    path = ROOT / "LIVE_LAB_CATALOGUE.md"
+    path = ROOT / "maintainer" / "LIVE_LAB_CATALOGUE.md"
     source = path.read_text(encoding="utf-8")
     sections = re.split(r"(?m)^## (LAB-[A-Z0-9-]+)\s+—", source)
     found: dict[str, set[str]] = {}

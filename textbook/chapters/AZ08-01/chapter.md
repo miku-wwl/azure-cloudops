@@ -116,7 +116,7 @@ python textbook/chapters/AZ08-01/labs/hybrid-connectivity/hybrid_contract.py
 python -m unittest discover -s textbook/chapters/AZ08-01/labs/hybrid-connectivity/tests -v
 ~~~
 
-未来获批 Azure 只读的权限、输出和恢复边界见 [作业手册](labs/hybrid-connectivity/FUTURE-LIVE-READONLY.md)。本轮未连接 Azure；fixture 中的 `privatelink` 查询只是帮助验证模型的最长后缀，客户端使用原服务 FQDN。
+未来 Azure 只读练习的权限、命令和输出边界见[作业手册](labs/hybrid-connectivity/FUTURE-LIVE-READONLY.md)。fixture 中的 `privatelink` 查询仅演示最长后缀匹配；客户端仍使用原服务 FQDN。
 
 真实只读排障时，先固定一笔失败请求的源 VNet/subnet、源 IP、目标 IP、查询名与时间。路由侧查看 peer 状态、通告/接收的目标前缀、gateway transit 和两向 effective routes；DNS 侧同时确认客户端配置的 resolver、条件转发或 ruleset link、命中 suffix、目标 endpoint、Private DNS zone link 与 53 端口路径。不要用 `ping` 代替 DNS，也不要用一次成功的 DNS 响应证明业务 TCP 路径已通。
 
@@ -146,6 +146,10 @@ python -m unittest discover -s textbook/chapters/AZ08-01/labs/hybrid-connectivit
 2. 对同一连接的真实 IP 查双方前缀来源与下一跳。上题回程要找的是 `10.41.0.0/16`，即使交易网 `/24` 在双方可见，缺失回程或 ER/VPN 分走两台有状态设备仍会失败。比较成功和失败的五元组，补查设备会话和两端探针；宽放 NSG 不会修复非对称路径。
 3. SQL 正向使用企业 DNS → `database.windows.net` forwarder → inbound VIP → hub 链接的 zone。企业内域走 spoke → 绑定 ruleset → outbound → `10.1.0.53`。先核对链接、命中规则和 UDP/TCP 53，修复后用同一客户端查询。增加 SQL zone link 并不会修复反向企业解析。
 4. 给每类分支列出所需目标前缀、隔离条件、故障切换耗时和成本上限。以多个站点的代表性路由演算比较自管 UDR/NVA 运维负担和 Standard Virtual WAN 的托管范围；任何方案先满足隔离和回程，再比较成本。
+
+## 本讲要点
+
+先选择直接 peering、hub gateway/NVA 或 Virtual WAN 等 transit 模型，再沿源和回程分别计算有效路由与下一跳。BGP session up 不等于目标前缀已传播；Private DNS 解析、TCP 可达、TLS 和应用授权也要分层验证。
 
 ## 参考资料
 

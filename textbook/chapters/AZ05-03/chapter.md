@@ -70,7 +70,7 @@ Resources
 下面的 CLI 和 PowerShell 片段是获批只读盘点的参考模板。将显式 subscription ID 换成获批值。多订阅盘点时，Resource Graph 可一次接收获批列表，直接 ARM 列表通常逐一指定订阅。项目实际采集走下文的 REST 路径。[7][8]
 
 ```powershell
-# Reference only — not executed; use only after the separate Stage 3 gates.
+# 文档命令示例：先替换为获批的订阅范围。
 $subscriptionId = "<approved-subscription-id>"
 $kql = 'Resources | project id, name, type, subscriptionId, resourceGroup, location | order by id asc'
 
@@ -84,11 +84,11 @@ Search-AzGraph -Query $kql -Subscription $subscriptionId -First 1000
 
 排查差异时，先将查询范围固定为小而明确的 subscription ID 集合，导出 `id`、`type` 和 `subscriptionId` 等可比较字段。用 Resource Graph 回答跨范围的探索问题，再对关心的订阅用 ARM 资源列表检查差异；差异存在时标注“来源与读取时间”，不要仅靠 name 或 `count()` 做一对一对账。若涉及较大的租户范围，观察限流配额响应；将请求分组到 subscription 或 resource group 通常比并行轰炸查询更合适。[5][10]
 
-### 实测：Graph 扩展不可用时如何保留清单约束
+### 现场观察：扩展不可用时保留查询范围
 
-在 Azure for Students 的获批订阅中，Windows CLI 无法安装 Resource Graph 扩展。仓库的清单工具自动改走 `az rest`，在查询请求体中显式传入该订阅和 KQL，并继续核查截断与续页标记。Resource Graph 的这个 `POST` 执行查询；请求不创建或更新资源。[11]
+一次获批的只读盘点中，Windows CLI 无法安装 Resource Graph 扩展；查询改用 `az rest`，在请求体中显式传入订阅范围和 KQL，并继续检查截断与续页标记。Resource Graph 的 POST 请求执行查询，不创建或更新资源。[11]
 
-实测返回 **1 页、3 条 Network Watcher 资源**，与同一订阅可见的 ARM 清单对上。报告只保留资源类型和数量。这只能说明本次身份、范围和读取时刻的一致性。若响应声明结果被截断而没有续页 token，工具将这次清单标为不完整。
+查询返回 **1 页、3 条 Network Watcher 资源**，与同一订阅可见的 ARM 清单一致。这只说明该身份、scope 和读取时点相符；若结果被截断且没有续页 token，清单必须标为不完整。
 
 ## 分页：把结果集完整取回来
 
@@ -129,7 +129,7 @@ python -m unittest discover -s textbook/chapters/AZ05-03/labs/inventory-model -p
 python textbook/chapters/AZ05-03/labs/inventory-model/inventory_model.py
 ```
 
-`queries/` 中的 KQL 文件只作为静态参考模板。Python 实验不实现 KQL、Azure RBAC、ARM API、Resource Graph 索引或令牌认证。fixture 中的 `readable`、资源集合、删除事件与 subscription allowlist 都是合成输入；测试通过只验证本地模型行为，不代表真实 Azure 中可见的资源范围、索引延迟、分页 token 或计费情况。
+`queries/` 中的 KQL 文件是参考模板。Python 实验不实现 KQL、Azure RBAC、ARM API、Resource Graph 索引或令牌认证；`readable`、资源集合、删除事件和 subscription allowlist 都是合成输入。模型输出只描述这些输入，不推断真实 Azure 的可见范围、索引延迟、分页 token 或费用。
 
 ## 练习与参考答案
 
@@ -156,6 +156,10 @@ python textbook/chapters/AZ05-03/labs/inventory-model/inventory_model.py
 ::: solution
 不能。它列的是本地已保存 context。当前账户能看到哪些 subscription 应从订阅枚举和实际授权范围核验；还要确认 tenant、context 是否刷新以及每个资源的 RBAC `read` 可见性。不要把本机缓存条数当成云端授权清单。
 :::
+
+## 本讲要点
+
+每份资源清单都要记录身份、subscription scope、查询时间、分页状态和索引新鲜度。Resource Graph 适合跨范围探索；对关键资源差异，用显式范围的 ARM 查询复核并保留续页结果。
 
 ## 参考资料
 

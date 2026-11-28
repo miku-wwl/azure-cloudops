@@ -114,7 +114,7 @@ az role assignment list --all `
 az role definition list --name "<role-name-or-id>" --output json
 ~~~
 
-以上是文档语法示例，没有在本项目的 Azure session 中执行。若要判断 Blob 数据权限，需进一步读取匹配角色中的 `DataActions` 与 `NotDataActions`，不要只看表格中的角色名称。assignment 上的 `condition` 也可能改变适用范围；CLI 返回列表只能说明当前身份可见的配置，不等价于服务端对同一请求的最终授权结果。[4][7][9]
+以上是文档语法示例。判断 Blob 数据权限时，进一步读取匹配角色中的 `DataActions` 与 `NotDataActions`，不要只看角色名称。assignment 上的 `condition` 也可能改变适用范围；CLI 返回列表只说明当前身份可见的配置，不等价于服务端对同一请求的最终授权结果。[4][7][9]
 
 排障时先保存一次真实失败的请求元数据：客户端拿 token 的 authority/tenant、资源 API、调用时间、resource ID、HTTP method/API operation、服务错误码和 correlation/request ID。再核对 token 的来源与预期 audience；服务端报告具体 operation 与 resource；检查 principal object ID 是否属于正确 tenant；然后比对角色定义和目标 scope 上直接及继承的 assignments。不要把“401 就一定是 token”或“403 就一定是 RBAC 缺角色”当作跨服务规则；必须以具体服务的响应详情和日志字段为准。
 
@@ -182,7 +182,7 @@ sibling-scope-is-not-inherited: DENY at RBAC; no matching principal assignment a
 - **处理方向**：先找出发生分叉的第一个字段，再改最窄的配置。检查并复验服务文档描述的授权传播窗口；不要因短暂未生效而直接扩大 scope。仅看到一个角色名或一次成功请求，不足以证明所有实例、所有 scope 和所有 API 都通过。
 ::::
 
-## Exercises：在增加权限前先定位边界
+## 练习：在增加权限前先定位边界
 
 :::: {.exercise title="练习 1｜audience 与 RBAC 的先后顺序"}
 工作负载持有一个 issuer 与有效期都符合 API 配置的 token，`aud` 指向 Azure Resource Manager；它把 token 发往 Storage Blob endpoint。该 principal 同时在 Storage account 上有 Blob Data Reader。预计先在哪个阶段发生什么？要收集哪些字段区分 token 边界与数据授权问题？
@@ -228,9 +228,9 @@ role assignment 向下作用于子 scope，不会从子资源横向授权兄弟�
 :::
 ::::
 
-## References 与研究记录
+## 参考资料
 
-本讲于 **2026-11-26** 查阅 Microsoft Learn、Microsoft identity platform 与 Azure CLI 官方文档。以下内容用于机制解释与只读诊断命令语法；没有在 Azure 中获取 token、查询租户或角色、进行登录或执行角色变更。服务配置与页面可能更新，部署前应按当前租户、云环境和 API 文档重新确认。
+Role assignment 列表是授权判断的输入之一，不是 API 最终决定本身。使用诊断命令前，按目标 tenant、Azure cloud 和 API 版本核对其范围与参数。
 
 ::: refs
 1. [Access token claims reference — Microsoft identity platform](https://learn.microsoft.com/en-us/entra/identity-platform/access-token-claims-reference) — `aud`、`iss`、`tid`、时间 claims，以及 v1/v2 access-token 差异。
@@ -244,7 +244,7 @@ role assignment 向下作用于子 scope，不会从子资源横向授权兄弟�
 9. [az role definition — Azure CLI reference](https://learn.microsoft.com/en-us/cli/azure/role/definition?view=azure-cli-latest) — 使用角色名或 ID 查看 role definition 的语法。
 :::
 
-## 现场证据记录：留结论所需的最少上下文
+## 诊断记录：留下可复核的结论
 
 以下模板面向未来已授权的现场调查。它只要求记录定位拒绝边界所需的信息，不保存原始 bearer token、client secret、签名密钥或完整敏感主体资料。若 API 响应包含个人信息、资源敏感名称或内部 IP，须按项目数据分类规则脱敏后才能进入教材或共享报告。
 

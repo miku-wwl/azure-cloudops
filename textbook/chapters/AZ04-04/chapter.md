@@ -135,7 +135,7 @@ GRANT SELECT ON OBJECT::dbo.PaymentSummary TO [app-pay-reader];
 
 此处假定主体和视图已存在且 Entra 主体可被解析。客户端验证 TLS，连接 `<server>.database.windows.net` 并指定目标 DB 与获批身份。TCP 成功而登录失败时查 token 目标和 DB 用户；已登录却 SELECT 被拒时查对象授予。检查对象授权比扩大管理员权限更精准。
 
-**恢复与验收。** Blob 在 Data protection 选支持的版本、软删除和保留周期。先用小对象验证版本找回，容器误删走容器恢复。SQL 在 Backups 查保留与最早时间，从数据库 Restore 选故障前的 UTC 时间并恢复到隔离的新数据库。比较记录数、金额与写入标记，再做受控读写；先保留生产连接串。结束时按保留要求移除自己的试验库、对象、端点及临时授权。算力、备份、Blob 版本、端点均可能计费。本轮只有下方本地模型。
+**恢复与验收。** Blob 在 Data protection 选择受支持的版本、软删除和保留周期；先用小对象验证找回，容器误删则走容器恢复。SQL 在 Backups 核对保留与最早时间，选择故障前的 UTC 时间并恢复到隔离的新数据库。比较记录数、金额与写入标记，再做受控读写；生产连接配置保持不变。结束时按保留要求移除独占试验库、对象、端点及临时授权。算力、备份、Blob 版本和端点均可能计费。下方实验在本地运行。
 
 ## 离线实验：根据证据定位失败门
 
@@ -146,7 +146,7 @@ python -m unittest discover -s textbook/chapters/AZ04-04/labs/data-boundary-mode
 python textbook/chapters/AZ04-04/labs/data-boundary-model/azure_data_boundary_model.py
 ```
 
-示例输出 `sql-redirect-ports-blocked-after-handshake: PASS` 代表 fixture 预期分类是“握手之后的 Redirect 端口受阻”，而不是密码错误；它不是一次真实连接。其他 fixture 展示 public endpoint/DNS 选错、Storage management role 不含 Blob data access、SAS 无法穿透 public network disable、HNS 与 Blob PITR 不兼容、SQL LTR 备份未核实等边界。
+一个合成案例把“连接握手后 Redirect 端口受阻”与密码错误区分开；它不是一次真实 SQL 连接。其他案例分别演示 public endpoint/DNS 选错、管理面角色不含 Blob data access、SAS 不能绕过 public network disable、HNS 与 Blob PITR 的限制，以及尚未核实 SQL LTR 备份的情况。
 
 实验不调用 Azure CLI，不读取本机凭据，不发送 DNS/网络请求，不连接 SQL，不执行 Storage 读写或恢复。它只检查合成字段，不会验证角色、DNS、端口、备份和目标数据库是否真实存在。
 
@@ -184,11 +184,11 @@ Storage 账号禁用了 public network access。应用使用标准 Blob FQDN，E
 
 设计一个从 workload 到 Blob 读取、再到 Azure SQL 灾难恢复的证据链。指出哪几项能由本章合成 fixture 证明，哪些需要从实际 VNet/DNS、Entra、SQL database 和备份清单中读取，哪些必须通过经批准的恢复演练与业务不变量验证。
 
-## 本讲总结
+## 本讲要点
 
 Storage 和 SQL 的请求都要通过 DNS/endpoint、网络、身份认证、数据授权及目标状态等多个门。Private Endpoint 依赖 DNS 把标准 FQDN 导向私有 IP；Storage data role 与 ARM 管理角色不同；SQL TCP 握手也不等于 Redirect、TLS、登录和数据库授权均已成功。恢复机制必须匹配 Blob、container、account 或数据库的资源范围，并基于真实存在且仍在保留期内的恢复点。新的恢复目标还要验证数据、权限、连通性和应用切换。只有现场访问、备份清单和受控恢复演练，才能提供超出离线模型的证据。
 
-## Primary references
+## 参考资料
 
 [附] [Storage redundancy](https://learn.microsoft.com/en-us/azure/storage/common/storage-redundancy) · [Prevent Shared Key](https://learn.microsoft.com/en-us/azure/storage/common/shared-key-authorization-prevent) · [User delegation SAS](https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-user-delegation-sas-create-cli) · [Entra SQL authentication configuration](https://learn.microsoft.com/en-us/azure/azure-sql/database/authentication-aad-configure?view=azuresql)
 

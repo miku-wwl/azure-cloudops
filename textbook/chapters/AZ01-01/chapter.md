@@ -83,7 +83,7 @@ Microsoft 的 Reliability checklist 把这套工作分成连续决策：保持�
 
 在完全独立的故障假设下，串行依赖的可用率可近似相乘：入口 99.99% × 应用 99.95% × 数据库 99.95% × 身份路径 99.99% ≈ **99.88%**。两个各自为 99.9% 且彼此独立的并行副本，其“至少一个可用”的概率是 `1 - (1 - .999)² = 99.9999%`。这些只是数学示例：共同电源、同一发布、共享网络、错误配置或测量分母会破坏独立假设，公式不能代替故障模型，也不能宣称 Azure 服务的实测 SLA。
 
-## Worked example：API 仍健康，付款路径却停了
+## 演算示例：API 仍健康，付款路径却停了
 
 虚构的清算服务把关键流目标定为月度 99.95%，支付写入的 RTO 为 30 分钟，恢复时 RPO 不超过 5 分钟。这些数字只用于工程推演，真实服务须由业务、法务和运营共同批准。监控合成探针以“创建后读取并核对一笔测试付款”作为成功判定，而不是只检查 VM heartbeat 或 HTTP 200。
 
@@ -109,7 +109,7 @@ Microsoft 的 Reliability checklist 把这套工作分成连续决策：保持�
 - **前提**：Python 3.11+；不需要 Azure CLI、登录、订阅或容器。
 - **输入**：`labs/reliability-model/scenarios/settlement.json`，拓扑和故障名均为虚构。
 - **方法**：确定性 AND/OR 路径检查；SLO 预算只按分钟换算。
-- **验证**：运行 12 个测试，检查一次 FD 故障、一 Zone 故障、共享身份故障和全 Region 故障。
+- **观察**：分别切换 FD、Zone、共享身份和 Region 故障，比较关键业务流是否仍有完整依赖路径。
 - **成本与清理**：不调用云端，不创建资源，不产生 Azure 费用；删除可忽略的 Python `__pycache__` 即可。
 :::
 
@@ -123,7 +123,7 @@ python reliability_model.py
 
 模型将给出 `zone-redundant` 设计在 Zone 1 故障时可用，但在共享身份或 Region 故障时不可用；“三 Zone app + 单 Zone ledger”在 ledger 所在区故障时不可用。Availability Set 设计可承受一个 VM FD 故障，但对更大的 datacenter 事件没有跨区保证。未建模的事件会输出 `NOT_MODELED`，不会被误报为 `AVAILABLE`。
 
-**本地观察（2026-11-26，Python 3.13.9）：** 12 项单元测试全部通过。矩阵对 Zone 1 outage 给出：单区 ledger 设计 `UNAVAILABLE`，zone-redundant 关键路径 `AVAILABLE`；同一模型在 shared identity 与 region outage 下给出 `UNAVAILABLE`。30 天时间型 SLO 99.95% 的预算输出为 21.60 分钟。以上是 fixture 结果，不是 Azure 运行观察。
+**本地模型输出：** Zone 1 故障时，单区 ledger 设计为 UNAVAILABLE，跨区关键路径仍为 AVAILABLE；共享身份或整个 Region 故障时，两种设计都不可用。30 天时间型 SLO 为 99.95% 时，模型算得 error budget 为 21.60 分钟。这些结果来自给定 fixture。
 
 ~~~text
 zone-1-outage:
@@ -140,7 +140,7 @@ Time-based SLO 99.95000% over 43200 minutes allows 21.60 minutes of bad time.
 **证据边界：** 该程序只检查 JSON 里列出的逻辑依赖。它没有概率分布、真实 Azure SKU、健康探针、容量竞争、复制延迟、DNS/网络协议、SLA 计算或恢复操作；它不是 Azure 模拟器，也不证明任一云服务的 failover。模型结论只能帮助设计测试问题。
 ::::
 
-## Fault cards：先问用户路径，再问副本数
+## 故障卡：先问用户路径，再问副本数
 
 :::: {.fault title="故障 1｜跨 Zone API 返回健康，但账本提交失败"}
 - **症状**：HTTP health endpoint 成功，结算关键流超时或重复提交。
@@ -166,7 +166,7 @@ Time-based SLO 99.95000% over 43200 minutes allows 21.60 minutes of bad time.
 - **恢复验证**：记录服务恢复时间、恢复数据点、完整性核验、用户流探针和返回主区域的条件。
 ::::
 
-## Exercises：从目标推回设计
+## 练习：从目标推回设计
 
 :::: {.exercise title="练习 1｜算可用率预算"}
 某 30 天窗口的时间型可用率 SLO 为 99.9%。最多允许多少分钟不可用？本月已记录 35 分钟不可用，预算剩余多少？说明请求成功率 SLI 是否也能这样按时间换算。
@@ -212,7 +212,7 @@ SLI 衡量用户体验，SLO 是工作负载目标，error budget 是该目标�
 :::
 ::::
 
-## 参考资料与研究记录
+## 参考资料
 
 资料复核采用 Microsoft Learn。区域与 SKU 支持查各服务的 reliability guide、可用区表和 SLA 条款。图示为原理图，故障矩阵是本地演算。
 

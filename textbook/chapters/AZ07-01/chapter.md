@@ -148,21 +148,15 @@ terraform -chdir=textbook/chapters/AZ07-01/labs/terraform-core test
 
 labs/core-model/ 的标准库 Python 模型补充了 Provider 选择、DAG 排序、State 一对一绑定、生命周期动作和导入计划检查。它是显式简化的教学模型，不是 Terraform Core 的另一种实现，不验证 AzureRM/AzAPI schema、Azure API 行为、真实 State、Provider 注册或云端 Plan。
 
-## E3 扩展实验：用真实 Provider schema 做离线 Plan
+## 离线 Azure 配置练习：用 Provider schema 审阅 Plan
 
-Stage 2 增加了一个独立 Azure reference root：`textbook/terraform/azure-enterprise-reference/`。它使用可复用的 network、private endpoint、VM、AKS、Key Vault、Storage、Registry 与 monitoring modules，并在 root 组合身份、角色、Recovery Services vault 和 AzAPI policy assignment。它消费明确的既有 resource group，不创建 resource group。
+Azure reference root 将 network、private endpoint、VM、AKS、Key Vault、Storage、Registry 与 monitoring modules 组合起来，并在 root 配置身份、角色、Recovery Services vault 和 AzAPI policy assignment。它接收明确的既有 resource group，不创建资源组。
 
-该 root 锁定 AzureRM 5.15.0 与 AzAPI 2.14.0。Provider 配置关闭 CLI、MSI 与 OIDC 登录路径，并将 AzureRM 的自动 resource-provider 注册设为 `none`；AzAPI 使用 `skip_provider_registration = true`。资源类别全部默认关闭。若以后启用资源，Terraform preconditions 还要求准确的订阅/资源组 allowlist、书面授权引用、成本估算、短运行时和剩余预算。AKS 的 node resource group 也必须单独加入 allowlist，因为 AKS 会在其中创建资源。
+该 root 锁定 AzureRM 5.15.0 与 AzAPI 2.14.0。Provider 配置关闭 CLI、MSI 与 OIDC 登录路径，并将 AzureRM 自动 resource-provider 注册设为 `none`；AzAPI 使用 `skip_provider_registration = true`。资源类别默认关闭。若启用资源，Terraform preconditions 要求准确的订阅/资源组 allowlist、书面授权、成本估算、运行时限和剩余预算。AKS 的 node resource group 也必须单独列入 allowlist。
 
 资源安全字段还需结合服务路径理解：VM 只接受 SSH public key 且没有 public IP；AKS 控制平面使用 private cluster；Storage、Key Vault 与 ACR 使用 private endpoint；Storage 关闭 shared key；Key Vault 启用 RBAC 与 purge protection。Log Analytics 把 Entra authentication 作为本地认证的关闭条件，但互联网 ingestion/query 仍开启，因为本模块没有构建 Private Link Scope。Key Vault 删除后仍可能处于软删除保留期；Recovery Services vault 本身尚无 backup policy 或受保护项目。这些选项不能单凭 `terraform validate` 推导出端到端服务可用，任何 live 设计都须再次核实目标区域、SKU、网络和费用。
 
-E3 的 `terraform test` 明确使用 mock providers，而且每条 `run` 都写 `command = plan`。代表性测试覆盖默认零 Azure 类别、私网 Storage、audit-only (`DoNotEnforce`) Policy、完整企业类别图，以及未授权、未列入 allowlist、超预算负例。执行入口还会从子进程环境移除 `ARM_*`、`AZURE_*` 与 `TF_*` 变量。Registry 下载 provider 是网络访问，但 mock test 不向 Azure 发请求、不注册 provider、不 apply 或 destroy。成功只证明本地 HCL/schema/plan 合同；不证明 API、DNS、RBAC propagation、价格或真实 Azure 行为。[20–23]
-
-```powershell
-python textbook/tools/verify_terraform.py
-```
-
-该执行入口覆盖全仓 Terraform roots：recursive fmt check、`terraform init -backend=false`、validate 与 mock-provider tests。不要把 mock test 的费用输入样例当成价格资料；它只是验证本地 guard 的合成数值。
+Terraform mock plan 使用离线 provider，不登录 Azure、不注册 resource provider，也不执行 apply/destroy；Provider 插件下载仍会访问 registry。这个检查只说明本地 HCL、schema 和 guard 在合成输入下的结果，不能证明 API、DNS、RBAC propagation、价格或真实 Azure 行为。[20–23]
 
 ::: {.lab .nobreak}
 **练习：审阅一个 Terraform 变更**
@@ -178,9 +172,13 @@ python textbook/tools/verify_terraform.py
 
 ## 计划审阅演练：从 module 地址追到真实接口
 
-**本地与企业设计。** 使用上面的 E3 离线命令和现有 root。`textbook/terraform/azure-enterprise-reference/versions.tf` 负责锁定 AzureRM/AzAPI Provider、禁用 CLI/MSI fallback 和自动 RP 注册；根调用把 network 的 subnet ID 传给 Storage 模块，模块将 Storage account ID 传给 PE。输入引用提供依赖；不要用额外的 `depends_on` 解决拼错的 resource ID。AzAPI 使用显式资源类型和 API schema，AzureRM 使用该版本的类型化资源，两者均应按实际目标和版本判断。
+**配置推演。** Root 通过 network 的 subnet ID 调用 Storage 模块，再把 Storage account ID 传给 Private Endpoint。输入引用已经表达依赖；不要用额外的 `depends_on` 掩盖拼错的 resource ID。AzAPI 使用显式资源类型和 API schema，AzureRM 使用当前锁定版本的类型化资源。
 
-**先预测再审阅。** 把同一只读设计场景画成 VNet → subnet → PE，以及 Storage → PE 两个前置边。若审批计划把一个合成的 Storage 替换动作当作预期的 DNS 修复，先核对资源地址、构成替换的字段、作用域以及原对象是否已被绑定。`terraform validate` 成功也无法替代计划审阅。用现有的 mock plan 检查配置差异，错误时修引用或提议值并生成新 plan。线上 import 需要资源读取与 State 管理权限，后续 Apply 另授权，见 AZ07-02/03。既有 E3 复验使用本地临时副本，无需 Azure，临时目录由命令清理。
+**先预测再审阅。** 画出 VNet → subnet → PE，以及 Storage → PE 两条依赖边。若 Plan 提议替换 Storage 来修复 DNS，先查资源地址、替换字段、scope 和现有对象的 State 绑定。`terraform validate` 不能替代 Plan review；修正引用或输入后必须生成新 Plan。线上 import 需要资源读取与 State 管理权限，后续 Apply 另行审阅（AZ07-02/03）。
+
+## 本讲要点
+
+Terraform Core 生成图与计划，Provider 负责对接 API，State 绑定资源地址与远端对象。Plan 是待审阅提案，Import 只改变 State 管理关系；应用前复核目标 scope、Provider 版本和真实差异。
 
 ## 参考资料
 

@@ -114,7 +114,7 @@ Key Vault 的 control plane 用于创建、配置、标记或删除 vault；data
 
 该顺序用于整理诊断材料，不代表所有服务端错误都按相同顺序返回。Key Vault SDK 可能先收到带 `WWW-Authenticate` 的 401 challenge，再根据 tenant 和 resource 信息请求 token；network/firewall 结果也可能取决于请求实际走到哪一条 endpoint。[10]
 
-## Worked example：CI workflow 通过 UAMI 读取部署配置
+## 演算示例：CI workflow 通过 UAMI 读取部署配置
 
 设想 `ledger` 仓库的 `main` branch workflow 需要从 `kv-ledger-prod` 读取一项部署配置。UAMI `ci-ledger-reader` 在 Entra 中配置一条 FIC：issuer 是 GitHub 的 OIDC endpoint，subject 精确对应该仓库和分支，audience 是 `api://AzureADTokenExchange`。workflow 取得的外部 OIDC assertion 若三项全部匹配，Entra 就将其交换为代表 `ci-ledger-reader` 的 access token。
 
@@ -142,19 +142,19 @@ python textbook/chapters/AZ03-02/labs/credential-flow/credential_flow_model.py
 以下是虚构 fixture 的预期输出片段，不来自 Entra、Azure 或真实 workflow：
 
 ~~~text
-managed-identity-secret-read: ALLOW at COMPLETE; all fixture gates passed
+managed-identity-secret-read: ALLOW — identity, token, network and data-role conditions match the synthetic scenario
 multiple-identities-require-selector: DENY at CREDENTIAL; multiple user-assigned identities require an explicit selector
-federated-workload-secret-read: ALLOW at COMPLETE; all fixture gates passed
+federated-workload-secret-read: ALLOW — the federated claims and Key Vault data role match the synthetic scenario
 contributor-is-control-plane-only: DENY at AUTHZ; no Key Vault data role grants this operation
 network-blocks-authorized-identity: DENY at NETWORK; vault network path is blocked by the fixture
 wrong-final-token-audience: DENY at TOKEN; Entra access token audience is not Key Vault
 ~~~
 
-测试还覆盖 FIC subject 大小写不符、外部 audience 错误、把 exchange audience 误用为 Key Vault audience、未附加的 UAMI、没有数据角色、遗留 access policy 仅在对应模式下生效，以及 key-vault Contributor 不具有 secret data read。RBAC 的角色权限在模型中只是少量符号化映射，不是 Azure 完整 role definition；scope inheritance、deny assignment、ABAC condition、PIM、group membership、token signature/lifetime、token caching、permission propagation、claims challenge、实际 Key Vault 网络行为均不在模型内。
+出现拒绝时，按身份选择器、issuer/subject/audience、目标数据角色与网络路径逐段定位；这类 fixture 只演示原因分类。实际角色权限还受 scope inheritance、deny assignment、ABAC、PIM、组成员、token 签名与有效期、缓存和传播时间影响，必须按目标 Azure 服务及租户配置核查。
 
 ## 只读诊断准备：先确认 principal，再查目标 vault
 
-未来获准的只读诊断可以先取得明确的 vault resource ID 和已确认的 tenant-local principal object ID，再检查 vault 的 permission model 和对应 scope 上的 role assignment。下方 CLI 只是文档语法模板，本项目没有 Azure 登录，也没有运行它：
+只读诊断先取得获批的 vault resource ID 与已确认的 tenant-local principal object ID，再检查 vault 的 permission model 和对应 scope 上的 role assignment。下方 CLI 是可按目标环境填入参数的命令模板：
 
 ~~~powershell
 $vaultScope = "/subscriptions/<subscription-id>/resourceGroups/<resource-group>/" +
@@ -195,7 +195,7 @@ az role assignment list `
 - **处理方向**：补齐确实缺失的最小 data role 或修复真实网络路径；不要给 `Key Vault Contributor` 当作 secret role，也不要仅为排错打开所有网络入口。
 ::::
 
-## Exercises：避免修错边界
+## 练习：避免修错边界
 
 :::: {.exercise title="练习 1｜选择哪份 UAMI？"}
 一个 App Service 同时有 system-assigned identity 与两份 UAMI。应用 SDK 省略 identity selector，token 成功取得，但其 principal 没有目标 vault 的 Secrets User。解释可能原因，并给出可验证的修复方式。
@@ -221,9 +221,11 @@ FIC audience 用于匹配来自 GitHub 的外部 assertion。exchange 成功后�
 检查调用端 DNS 是否解析到预期 private endpoint，路由与 endpoint 链路是否可达，vault firewall/private networking 配置与请求来源是否匹配，并用 request ID 对照 vault diagnostic logs。题设中的 data role 已覆盖 secret read；Contributor 管理 vault control plane，也不会让被阻断的请求穿越网络边界。应定位网络路径，不扩大角色或放开公共访问。
 ::::
 
-**本讲总结：** 选对身份，分别匹配 FIC 输入与 Key Vault token 的 audience，再独立核验 network 和 data role；先定位拒绝证据，再改最小范围配置。
+## 本讲要点
 
-## Primary references
+选对身份，分别匹配 FIC 输入与 Key Vault token 的 audience，再独立核验 network 和 data role；先定位拒绝证据，再改最小范围配置。
+
+## 参考资料
 
 1. [Managed identities for Azure resources overview](https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/overview)
 2. [Managed identities developer introduction and guidelines](https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/overview-for-developers)；[managed identities FAQ](https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/managed-identities-faq)

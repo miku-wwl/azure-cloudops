@@ -140,7 +140,7 @@ python probe_model.py
 
 **模型边界：** 不创建 server、不发网络包、不实现 X.509/SNI、不模拟 Front Door edge mesh、latency 采样、weight/session affinity、WAF、Application Gateway rule 执行、Load Balancer flow hashing/连接状态、Azure API 或 Azure authorization。HTTPS 的 Application Gateway fixture 只读取一个人工输入的“证书与 hostname 校验通过”布尔值；它不是证书解析器。Load Balancer HTTPS probe 的证书行为不在模型范围内。
 
-## Fault cards：沿实际数据路径收集证据
+## 故障卡：沿实际数据路径收集证据
 
 :::: {.fault title="故障 1｜TCP probe 全绿，付款 API 持续返回 503"}
 - **症状**：Load Balancer 将所有 VM 视为健康；访问 /charge 返回 503。
@@ -166,7 +166,7 @@ python probe_model.py
 - **恢复验证**：确认满足成功样本阈值，观察健康 origin 恢复；用同一客户端请求确认预期路由与状态码。
 ::::
 
-## Exercises：预测差异，再选择证据
+## 练习：预测差异，再选择证据
 
 :::: {.exercise title="练习 1｜302 与 TCP listener"}
 同一个 TCP 8443 listener 正常接受连接；根路径返回 302，/ready 返回 200。分别预测 Load Balancer TCP probe、Load Balancer HTTP probe（path=/）、Application Gateway 默认 probe 与 Front Door（path=/）的状态，并说明为何这不能证明实际付款请求成功。
@@ -212,11 +212,11 @@ Front Door 在所有 origin 不健康时仍可能 round robin 到 origin 集合�
 :::
 ::::
 
-## Future read-only / live evidence record
+## 入口诊断记录模板
 
-这份记录模板用于通过 Stage 3 成本与授权门禁后的实验。本讲没有 Azure 登录、资源清单查询、probe、WAF 请求或 billing query。
+这份记录模板用于经批准的现场诊断：记录探针来源、UTC 时间、请求路径、观察结果与下一项可区分的证据。
 
-| Evidence stage | 最小记录 | 能证明什么 |
+| 诊断阶段 | 最小记录 | 可以说明什么 |
 |---|---|---|
 | Topology | client hostname、时间、每一跳 Front Door/App Gateway/LB 资源与配置版本 | 确定请求和 probe 的入口范围 |
 | Probe | pool/origin、probe protocol/method/path/Host、样本阈值、最近结果与响应 | 解释此配置下的一次健康判断 |
@@ -225,7 +225,7 @@ Front Door 在所有 origin 不健康时仍可能 round robin 到 origin 集合�
 | Business | 请求 ID、API path、真实响应码、无副作用的功能断言 | 说明应用路径是否达到预期 |
 | Cost / cleanup | 资源清单、region/SKU/runtime、估算、删除与 residual audit、billing status | 记录实际项目花费与尚未结算部分 |
 
-Application Gateway v2 的官方计费说明区分资源可用期间的固定成本与 capacity-unit 成本；Front Door 按 profile 小时或部分小时及 request/traffic 维度计费。Load Balancer 也有与 SKU/流量配置相关的价格维度。由于当前没有批准的区域、offer、SKU、规模、运行时间或 Azure 账单数据，本讲不作部署成本估值，也不将离线实验记为 Azure spend evidence。[14]
+设计容量时分别估算 Application Gateway v2 的资源固定成本与 capacity-unit 成本、Front Door 的 profile 时长及请求/流量成本，以及 Load Balancer 的 SKU 和流量成本。根据实际区域、offer、SKU、规模与运行时长核对当前价格；离线实验不构成 Azure 成本记录。[14]
 
 遇到入口故障时，可以用下表选择第一份最能区分假设的证据；它帮助缩小调查范围，不替代对完整请求链的验证。
 
@@ -237,7 +237,7 @@ Application Gateway v2 的官方计费说明区分资源可用期间的固定成
 | 客户端得到 403 | WAF policy action、listener/rule 命中、应用授权日志 | 403 一定是 backend probe 失败 |
 | 客户端连接超时 | 请求经过的每一跳、DNS/路由/NSG、listener 与 probe source/path | probe 成功就证明了所有客户端路径 |
 
-## References 与研究记录
+## 参考资料
 
 参考 Microsoft Learn 与 Azure 官方定价。新部署需复核规格、接口、费用和限制；本地实验使用合成探针样本。
 

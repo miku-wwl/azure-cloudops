@@ -11,4 +11,4 @@ The synthetic JSON fixture treats a critical flow as required AND stages, with O
 
 The probability formulas assume independent component failures, and the topology matrix is deterministic. Neither is an Azure service or RBAC emulator. This lab does not authenticate, make network calls, inject faults, produce an Azure SLA, measure live SLI, or create resources.
 
-Cloud status: LIVE_NOT_RUN. Local results are changed only from actual test and command output recorded in `textbook/PROGRESS.md`.
+This exercise uses a deterministic local model, not an Azure service. It does not authenticate, call a network endpoint, inject a cloud fault, measure an Azure SLI, or create resources.

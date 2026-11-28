@@ -40,11 +40,11 @@ workspace 中的 Azure table 通常有服务定义的 schema；custom table 的 
 
 ![图 15-1：原创配置示意。VM 的 AMA、资源诊断设置和应用 OpenTelemetry 走不同路径，最终从各自目标表验证。](figures/telemetry-data-path.svg)
 
-日志查询需要对 workspace 具有查询数据权限；Log Analytics Reader 是文档中的一个内置角色示例。跨工作区查询会扩大范围和数据量，也会增加查询开销。对于本地练习或复盘，先选最小资源/workspace scope 和最短有用时间窗。KQL 执行会消耗查询资源；不要在 Stage 1 把查询模板连接到实际订阅或工作区。[2][4]
+日志查询需要对 workspace 具有查询数据权限；Log Analytics Reader 是一个内置角色示例。跨 workspace 查询会扩大数据范围和开销，因此先选最小 scope 与最短有用时间窗。KQL 查询本身也会消耗查询资源。[2][4]
 
 ## 配置演练：从 Windows VM 采一条性能计数器
 
-**未来 Azure 练习，当前未执行。** 目标是证明一台获批 VM 的 CPU 计数器进入指定 workspace 的 `Perf` 表。选受支持的 Windows VM、同意使用的 workspace 与管理身份。创建/修改 AMA 扩展、DCR 及关联需要对应写权限。查询 `Perf` 需在对应访问模式和范围授予日志查询权限。下述是单计数器最小配置，生产环境按数据成本与隐私要求裁剪。[12–14]
+**Azure 配置练习（文档步骤，未执行）。** 目标是验证一台 Windows VM 的 CPU 计数器进入指定 workspace 的 `Perf` 表。选择受支持的 VM、workspace 与管理身份；修改 AMA 扩展、DCR 及关联需要相应写权限，查询 `Perf` 需要该范围的日志读取权限。下例只收集一个计数器，生产配置应按数据成本与隐私要求裁剪。[12–14]
 
 | 对象 | 操作与关键字段 | 独立验证 |
 |---|---|---|
@@ -160,7 +160,7 @@ python -m unittest discover -s textbook/chapters/AZ05-02/labs/telemetry-triage -
 python textbook/chapters/AZ05-02/labs/telemetry-triage/telemetry_model.py
 ```
 
-`queries/` 下的七条 KQL 模板均维持 `NOT_RUN`。先在本地判断时间过滤、加权样本和关联结果，再用 Python 输出对照。模型只解释 fixture 的 `time_minute`、ID 和样本，不连接 workspace 或运行 KQL。本轮也未执行上文的 `Perf` 文档查询。
+`queries/` 下的七条 KQL 模板均为 `NOT_RUN`。先在本地预测时间过滤、加权样本和关联结果，再用 Python 输出对照。模型只解释 fixture 的 `time_minute`、ID 和样本，不连接 workspace 或运行 KQL。
 
 ## 练习与参考答案
 
@@ -187,6 +187,10 @@ python textbook/chapters/AZ05-02/labs/telemetry-triage/telemetry_model.py
 ::: solution
 不能。核对 workspace 和表 schema、时间过滤、OperationId、应用的依赖插桩与采集支持情况、exporter/连接配置、sampling 和延迟。把结论写成“当前查询范围内未观察到 dependency 行”，直到取得能验证调用路径的证据。
 :::
+
+## 本讲要点
+
+先沿“数据源 → AMA/DCR/DCR association → workspace 表”确认采集，再按时间窗、`ItemCount` 和 operation/parent ID 解释 KQL 结果。诊断设置与应用遥测是不同路径；没有日志可能表示未采集或延迟，七条 KQL 模板仍需在目标 workspace 核对 schema 后再运行。
 
 ## 参考资料
 

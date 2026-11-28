@@ -150,6 +150,10 @@ python textbook/chapters/AZ05-01/labs/metric-alert-model/metric_alert_model.py
 都不是。Acknowledge 属于人工响应，不证明监控条件恢复；处理规则的抑制影响后续动作处理，不改写告警规则评估的 Fired 状态。应分别检查当前条件、响应状态与动作处理证据。
 :::
 
+## 本讲要点
+
+选择告警规则时，先固定指标资源范围、命名空间和维度，再判断聚合、评估频率与 lookback 是否符合故障时间尺度。Fired/Resolved 状态、Action Group 通知和 Alert Processing Rules 是不同证据；沿规则历史与接收端记录逐层定位。
+
 ## 参考资料
 
 ::: refs

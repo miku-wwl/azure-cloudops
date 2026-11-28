@@ -2,7 +2,7 @@
 
 Status at E7: all contracts were specified; none of the twelve had been executed as a live Azure incident. E8 later verified all eight mandatory local scenarios; the four non-mandatory incidents remain design-only. No local result is represented as a live Azure pass.
 
-The per-card live entries preserve the E7/E8 checkpoint. The final observed Azure attempt and deferral states are recorded in the [live-lab index](../LIVE_LAB_INDEX.md).
+The per-card live entries preserve the E7/E8 checkpoint. The final observed Azure attempt and deferral states are recorded in the [live-lab index](../maintainer/history/LIVE_LAB_INDEX.md).
 
 ## Status and scope vocabulary
 

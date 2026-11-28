@@ -130,7 +130,7 @@ Node upgrade 会增加临时容量或使用 maxUnavailable，逐步 cordon/drain
 
 ## 配置演练：为什么有 Pod 却没有可用 endpoint？
 
-**未来获批的私有 AKS 练习，未执行。** 使用隔离 namespace、获批 ACR 镜像和能访问 API server 的客户端。Azure 管理面核对 `networkProfile.networkPlugin`、`networkPluginMode`、kubelet identity 和 registry permission mode。仓库 `textbook/terraform/modules/aks/main.tf` 有实际的 `network_profile`、节点池和 OIDC 配置；用真实字段判断网络模式。ACR 按 RBAC-only/ABAC 模式授权 kubelet，应用的 workload identity 用于运行后的数据访问（AZ03-02）。
+**未来 Azure 练习（文档配置，未执行）。** 使用隔离 namespace、获批 ACR 镜像和能访问 API server 的客户端。在 AKS 管理面检查 `networkProfile.networkPlugin`、`networkPluginMode`、kubelet identity 和 registry permission mode。Terraform AKS 模块展示 `network_profile`、节点池和 OIDC 字段。ACR 按 RBAC-only/ABAC 模式授权 kubelet；workload identity 管理应用启动后的数据访问（AZ03-02）。
 
 | Kubernetes 配置 | 放什么 | 如何判定失败门 |
 |---|---|---|
@@ -145,20 +145,20 @@ kubectl --context $Context -n $Namespace get endpointslice `
 kubectl --context $Context -n $Namespace get pdb
 ~~~
 
-若 Pod 已 ready 且标签正确但 HTTP 仍超时，查 EndpointSlice 端口与容器实际监听，修复 `targetPort` 后复验同一 HTTP。Azure 资源权限与 Kubernetes RBAC 分开授予。结束后仅回收试验 namespace、镜像等独占对象。节点、registry、日志与网络可能持续计费；以下模型全部离线。
+若 Pod 已 ready 且标签正确但 HTTP 仍超时，检查 EndpointSlice 端口与容器监听，修复 `targetPort` 后复验同一请求。Azure 资源权限与 Kubernetes RBAC 分开授予。结束后回收独占 namespace 和镜像；节点、registry、日志与网络可能持续计费。下方模型在本地运行。
 
 ## 离线实验：逐层判定失败门
 
 运行固定 JSON fixture 的本地 `aks-readiness-model`。模型针对请求资源、taint/toleration、autoscaler 边界、ACR RBAC/ABAC pull、workload identity 信任、probe 状态、Service DNS 和 PDB drain 输出诊断类别及下一项检查。它不访问 Azure、Docker、AKS API、OIDC endpoint、DNS、registry 或任何网络；不读取用户凭据，也不创建 Kubernetes 对象。
 
-本机 Docker daemon 当前不可用，因此不创建 kind 集群。合成模型验证的是明确写出的约束与诊断分流，不模拟 Kubernetes scheduler、kubelet、Azure CNI、CoreDNS、ACR authorization 或 AKS upgrade 实现。
+合成模型验证明确写出的约束与诊断分流；它不模拟 Kubernetes scheduler、kubelet、Azure CNI、CoreDNS、ACR authorization 或 AKS upgrade 实现。
 
 ```powershell
 python -m unittest discover -s textbook/chapters/AZ04-03/labs/aks-readiness-model -p "test_*.py" -v
 python textbook/chapters/AZ04-03/labs/aks-readiness-model/aks_readiness_model.py
 ```
 
-未来连接已批准集群后的只读首查模板如下。先确认当前 kube context、namespace 与目标集群，再执行范围内的读操作；不执行 `apply`、`rollout restart`、`cordon`、`drain`、`scale`、role assignment 或 registry 更新。`kubectl` 访问集群本身仍需要对应 Kubernetes RBAC，Azure CLI 命令需要已批准的 subscription/resource scope；这些模板没有在本讲构建或测试时执行。[1][8][12]
+以下只读命令是文档示例，尚未在 Azure 执行。先确认 kube context、namespace 与目标集群；kubectl 访问集群需要 Kubernetes RBAC，Azure CLI 访问资源则需要相应的 Azure scope。[1][8][12]
 
 ```powershell
 kubectl config current-context
@@ -211,11 +211,11 @@ Pod 以前成功 pull，当前事件出现 401。已知 kubelet identity 仍有 
 
 请设计一个从 Git commit 到 AKS Pod Ready 的分层证据链，说明 image digest、ACR kubelet 权限、ABAC 条件、node pool constraints、DNS/egress、startup/readiness、Service endpoint 和 upgrade PDB 如何影响发布门。指出哪些信息可由离线 fixture 证明，哪些必须由目标 Azure subscription 与真实业务流量证明。
 
-## 本讲总结
+## 本讲要点
 
 从 API 对象到业务请求，Pod 要经过调度、镜像拉取、进程启动、readiness、Service endpoint、DNS 与网络路径。Control-plane、kubelet 和 workload identity 不能互换；Azure CNI Overlay 的地址规划和 SNAT 不替代 DNS/NSG/网络策略；HPA、Cluster Autoscaler 与 node-pool upgrade 也控制不同资源。每次修复都应以当前失败层的证据为起点，并以 Ready endpoint 与真实请求路径恢复作终点。
 
-## Primary references
+## 参考资料
 
 [1] [AKS core concepts](https://learn.microsoft.com/en-us/azure/aks/core-aks-concepts) · [2] [AKS cluster reliability and probes](https://learn.microsoft.com/en-us/azure/aks/best-practices-app-cluster-reliability) · [3] [AKS Automatic and Standard](https://learn.microsoft.com/en-us/azure/aks/intro-aks-automatic)
 

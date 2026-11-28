@@ -63,7 +63,7 @@ NSG 可以关联到 subnet、NIC，或两者。Azure 对入站流量先处理 su
 
 设计账本访问时，还要注意默认的 `AllowVNetInBound` 会允许其 tag 范围内的 VNet 流量。若目标是“只允许 API 访问数据库 1433”，需要把 `Allow API → Ledger` 放在 `Deny other → Ledger` 前面，随后让更低优先级的明确 deny 覆盖默认 VNet allow。只增加 allow 规则不等于完成最小权限设计。
 
-## Worked example：为什么 8443 的 Allow 没有生效？
+## 演算示例：为什么 8443 的 Allow 没有生效？
 
 目标是从 `edge-proxy-01`（`asg-edge`）访问 `pay-api-01`（`asg-pay-api`）的 TCP 8443。两张 NSG 分别关联 subnet 和 NIC：
 
@@ -143,7 +143,7 @@ Connection Troubleshoot 的目标比 IP Flow Verify 更宽：它可以对 TCP �
 - **前提**：Python 3.11+；本地终端；无需 Azure CLI、身份登录、订阅或容器。
 - **输入**：`labs/nsg-model/scenarios/banking-payment.json`；ASG membership 与规则均为合成。
 - **方法**：每张 fixture NSG 内 first-match；逐层汇总；只对显式允许的五元组记录 flow state。
-- **验证**：运行 13 项测试，检查第一匹配 deny、ASG 成员、两层 NSG、已建立回包与新连接。
+- **观察**：追踪 first-match deny、ASG 成员匹配、subnet 与 NIC 两层规则，并比较既有连接回包和新连接的结果。
 - **成本与清理**：没有 Azure API 调用，不创建资源；删除本地 `__pycache__` 即可。
 :::
 
@@ -157,7 +157,7 @@ Pop-Location
 ~~~
 ::::
 
-**本地观察（2026-11-26，Python 3.13.9）：** 13 项测试全部通过。合成 inbound packet 在 subnet NSG 被 priority 110 Allow，但在 NIC NSG 被 priority 100 Deny；同一模型中的 API→ledger outbound 由两层 Allow 并记录 flow state，ledger 回包以 `ALLOW_ESTABLISHED_FLOW` 返回。此结果是 fixture 输出，不是 Azure 运行结果。
+**本地模型输出：** 合成 inbound packet 在 subnet NSG 被 priority 110 Allow，却在 NIC NSG 被 priority 100 Deny；API→ledger outbound 通过两层 Allow 后记录 flow state，ledger 回包以 `ALLOW_ESTABLISHED_FLOW` 返回。
 
 ~~~text
 edge-to-api-blocked-at-nic:
@@ -178,10 +178,10 @@ ledger-response-on-established-flow:
 ~~~
 
 :::: why
-**模型边界：** 它只检查 fixture 中的自定义 IPv4 TCP/UDP 规则与一个简化 flow-state 表；没有实现 Azure 默认 NSG rules、真实 `VirtualNetwork` service tag 扩展、AVNM 管理规则、effective-NSG API、ICMP、连接探针、NVA 路由、VM OS 防火墙或应用监听。未命中自定义规则返回 `NOT_MODELED_DEFAULT_RULES`，不会冒充实际默认结果。测试证明 JSON 输入在该算法下的结果，不证明 Azure 应用规则的结果。
+**模型边界：** 它只检查 fixture 中的自定义 IPv4 TCP/UDP 规则与简化 flow-state 表；不实现 Azure 默认 NSG 规则、`VirtualNetwork` service tag 展开、AVNM 管理规则、effective-NSG API、ICMP、连接探针、NVA 路由、VM OS 防火墙或应用监听。未命中自定义规则时返回 `NOT_MODELED_DEFAULT_RULES`；输出只描述该算法对输入的判断。
 ::::
 
-## Fault cards：把安全规则问题缩到一个层次
+## 故障卡：把安全规则问题缩到一个层次
 
 :::: {.fault title="故障 1｜规则列表有 Allow，IP Flow Verify 返回 Denied"}
 - **症状**：目标 8443 有一条 allow 规则，Network Watcher 仍报告 Access denied。
@@ -207,7 +207,7 @@ ledger-response-on-established-flow:
 - **恢复验证**：确认新连接命中预期规则，旧连接行为与已知 flow state 一致，用户关键操作成功。
 ::::
 
-## Exercises：验证 packet、flow 与业务
+## 练习：验证 packet、flow 与业务
 
 :::: {.exercise title="练习 1｜判断两个 scope 的实际结果"}
 edge proxy 的 TCP 8443 inbound 在 subnet NSG 命中 priority 110 Allow；NIC NSG 同方向有 priority 100 Any→API Deny 和 priority 110 Edge→API Allow。最终结果是什么？跨两张 NSG 的 priority 110 与 100 应怎样比较？
@@ -253,9 +253,9 @@ Effective NSG 看应用规则；IP Flow Verify 判单个 TCP/UDP packet 的安�
 :::
 ::::
 
-## References 与研究记录
+## 参考资料
 
-本讲于 2026-11-26 查阅 Microsoft Learn 与 Azure CLI 官方文档。NSG 限额、诊断能力、CLI 预览状态、agentless 区域和权限可能变化；部署或诊断前应重查目标 region、VM/NIC 状态与价格。命令没有在 Azure 环境运行。
+NSG 限额、诊断能力、预览状态、区域支持和价格可能变化；配置或排障前应按目标区域、VM 与 NIC 核对官方文档。
 
 ::: refs
 1. [Network security groups overview](https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview) — 五元组规则、priority、first match、默认规则、stateful flow record 与既有连接行为。

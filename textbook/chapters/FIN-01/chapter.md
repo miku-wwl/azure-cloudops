@@ -2,7 +2,7 @@
 id: FIN-01
 slug: azure-finops-resource-cost-recovery
 title: Azure FinOps 与资源成本回收
-subtitle: 从价格单位、归属分摊到已验证的清理
+subtitle: 从价格单位、成本归属到安全回收
 header: FIN-01 · Cost Recovery
 ---
 
@@ -16,7 +16,7 @@ header: FIN-01 · Cost Recovery
 ::: cover-meta
 - **讲次**：23 / 23
 - **核心机制**：meter 计费、成本可见性、分摊、承诺折扣、保留与清理
-- **证据边界**：合成账本、F1 估价与计费查询实测
+- **学习材料**：合成账本与成本查询案例
 - **工程结果**：形成可追溯、保留业务数据且能核实残留的回收流程
 :::
 :::::
@@ -73,11 +73,11 @@ Cost Management 的 cost analysis 可以按 scope、时间、service、resource�
 不要把四个数字混成一个“本月费用”：估算、Cost Management actual cost、amortized 归属和发票/付款状态各自回答不同问题。对账时同时记录时间范围、scope、币种、数据新鲜度和是否含信用额；毛额与信用额要分别留存。
 :::
 
-### 实测：F1 的计划价与计费查询
+### 案例：计划价与账单数据的边界
 
-LAB-IR-11 只批准 Australia East 的一项 Linux F1 计划、一项 Web App 和专用资源组，45 分钟内完成清理。项目依据 F1 免费规格、学生订阅权益和少量探针流量，在公开免费出网额度内估算 **USD 0.00 毛额**。地区清单与账户权益可做事前核对，实际区域容量由 Azure 在创建时判定。[15]
+一次短时、限定资源组的 F1 估价案例，基于公开免费规格、账户权益和少量探针流量，得到条件性毛额估算 **USD 0.00**。实际价格仍取决于区域、订阅权益和合同；实际区域容量由 Azure 在创建时判定。[15]
 
-早期 Cost Management 查询返回 HTTP 429。实测前后，按实验资源组过滤的当月查询均返回 HTTP 200、零条记录。专用资源组和计划在约 126 秒内确认清空，Web App 未创建。资源清单给出了回收证据。计费空结果只说明此范围和时点没有可用的费用行，账单仍需等用量入账后核对。[4]
+第一次 Cost Management 查询返回 HTTP 429；随后按资源组查询返回 HTTP 200，但没有费用记录。实验计划和资源组已清理，Web App 未创建。计费空结果仅表示此范围与时点没有可用的费用行，不能证明最终账单为零。[4]
 
 ## 让每笔费用有明确归属
 
@@ -135,13 +135,13 @@ VM `Stopped` 与 `Deallocated` 不是同一个费用状态。guest OS 关机后�
 
 如获批设置预算，在 Cost Management → Budgets → Add 选 scope、日期与金额，配置实际/预测通知阈值和目标联系人。可用 80%（USD 128）与 100%（USD 160）作为合成阈值。预算 owner 负责配置，练习不触发真实通知；budget 达阈值提供事件与响应机会，消费可能继续。发现 detached disk 时先查 `managedBy`、源 VM 的 `deleteOption` 与保留批准，必要时由 owner 处理单一磁盘。再查实际 ID/保留资源及同一时间段刷新后的 meter，区分延迟与持续费用。
 
-本轮额外 Azure 预算 USD 0.00。合成实验只读本地 JSON，不生成资源，练习副本可直接丢弃。未来验证按相同 scope 重审通知、单独撤掉实验预算；计费未刷新前保留待对账状态。
+合成实验只读本地 JSON，不创建资源。费用数据可能延迟；在账单刷新前，应保留待对账状态。
 
 ## 本地实验：成本账本不丢数，也不误删
 
 附带的 [cost-recovery lab](labs/cost-recovery/README.md) 读取纯合成账本，分别汇总 actual/amortized、gross charges/credits、标签归属、共享池分配、按小时的未用承诺、预算阈值和资源保留决策。修订 fixture 后，逐项模拟 `Stopped`、`Deallocated`、detached disk、未归属 shared cost、跨视图混加和超预算等情形。结果只证明测试输入符合明确的教学合同，不模拟 Azure 的定价引擎、账单、Tag inheritance、reservation matching 或资源删除行为。
 
-Windows 命令、样例输出与断言边界见 lab README。本地账本实验不访问 Azure。获批订阅的 Cost Management、Advisor 和残留清单查询步骤另见[只读手册](labs/cost-recovery/FUTURE-LIVE-READONLY.md)。上述 LAB-IR-11 实测使用按实验资源组过滤的成本查询。
+Windows 命令和实验材料见 lab README。本地账本实验不访问 Azure；获批订阅的 Cost Management、Advisor 与残留资源查询步骤见[只读手册](labs/cost-recovery/FUTURE-LIVE-READONLY.md)。
 
 ### 演算：把账本对到成本中心
 
@@ -182,7 +182,7 @@ Payments 的 USD 101.00 = 直接费用 USD 80.00 + 共享网络 USD 30.00 × 70%
 4. 每小时未使用的计划承诺不会滚到周三；单个高峰不能抵消多个低谷。查看按小时历史、季节性、计划资格/范围、折后有效费率、reserved benefit、承诺期限和合同价，再与按需价格比较。
 5. 先按资源 ID 和 meter 对账，列举磁盘/快照/恢复点等依赖；请数据 owner 确认保留和恢复需求。只对经批准的资源执行最小清理；记下残留清单和时间，等待 cost data refresh 和后续账期后在同一 scope/time window 核实。
 
-## 本讲小结
+## 本讲要点
 
 成本回收先要把价格假设、计费记录、费用归属与业务保留需求分开核对。预算告警和 Advisor 建议只提供信号；direct/shared/unallocated 分配必须能复算；Reservations 与 Savings Plans 需要按实际负载周期检查利用率。停机、deallocation 和删除只改变部分资源状态，回收完成仍需检查残留资源，并在成本数据刷新后以相同 scope、meter 和时间窗口复核结果。
 

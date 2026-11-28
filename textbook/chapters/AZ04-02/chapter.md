@@ -102,7 +102,7 @@ Ingress 决定请求能否抵达 container app：确认环境的 internal/extern
 
 **预测一道故障。** B 健康且已部署，生产仍全为 A。App Service 查 swap 历史和 source/target；Container Apps 看 multiple mode 权重与版本标签。0% 权重不会因重建镜像改变。A、B 同时返回 403，优先查共享依赖配置和生产 identity。同一业务输入应同时证明状态码、响应体和 build ID。
 
-只读命令见下节。练习结束清理自己的槽、计划或 ACA revision/环境前核对共用依赖。槽占用计划容量；容器副本、日志和网络按使用条件计费。本轮云端步骤未执行，本地模型无需 Azure。
+清理独占 slot、plan 或 ACA revision/environment 前先核对共用依赖。slot 占用计划容量；容器副本、日志和网络按使用情况计费。下方确定性模型在本地运行。
 
 ## 用同一条 release contract 诊断和回退
 
@@ -118,18 +118,18 @@ Ingress 决定请求能否抵达 container app：确认环境的 internal/extern
 
 multiple mode 回退时，可在旧 revision 仍 active 且所需配置兼容的条件下把 ingress 权重设回旧版本，并验证真实业务探针；App Service 可在原 slot 仍保留且数据兼容时反向 swap。若旧 revision 已 deprovision、旧内容不在 slot、app-wide 设置已变更，或数据库写入已经改变，则需显式部署已知版本、恢复兼容配置或执行数据补救。自动流量切换不保证状态回滚。
 
-下面两条是未来可用于查看 slot 与 revision 的只读命令模板；本讲构建、测试和发布时均未执行。它们仍会访问 Azure subscription，只有 Stage 3 L0 批准具体 subscription、resource 和查询范围后才能使用。输出只描述平台配置，不代表 smoke test 或业务 SLI 已通过。[1][4]
+以下只读命令是文档示例，尚未在 Azure 执行。它们检查 slot 与 revision 配置，不证明 smoke test 或业务 SLI 已通过。[1][4]
 
 ~~~bash
 az webapp deployment slot list --resource-group <approved-rg> --name <approved-app>
 az containerapp revision list --resource-group <approved-rg> --name <approved-container-app>
 ~~~
 
-### 实测：发布在计划核验阶段停止
+### 现场观察：预检未通过
 
-LAB-IR-11 获批在 Australia East 创建专用资源组和 Linux F1 计划，再计划向单一 Web App 依次发布原版、故障版和原版 ZIP。Azure Activity Log 记录了资源组和计划创建成功。计划详情中的 F1/Free 已通过检查，CLI 输出却省略了脚本读取的顶层 `reserved` 字段。脚本在创建 Web App 前停止，随后确认计划与资源组均已删除。[11]
+一次受限的 Azure 操作在 Australia East 创建了临时资源组和 Linux F1 计划。计划字段未能确认 Linux 配置，流程因此在创建 Web App 前停止；随后验证资源组和计划均已清理。[11]
 
-创建成功只解决了控制面的一部分。开始发布前还要从 ARM 计划详情核对 `properties.reserved` 和目标范围，再用同一 HTTPS 探针核对实际版本、HTTP 状态和响应体。本次云端流程停在第一道核验。`200 → 500 → 200` 来自两份 ZIP 在本机的运行，Azure 上的发布与回退仍待验证。
+这只验证了控制面资源创建，未验证应用发布。先从 ARM 计划详情确认 `properties.reserved` 与目标范围，再用同一 HTTPS 探针检查版本、状态码和响应体。`200 → 500 → 200` 来自本地运行的两份应用包；Azure 上的发布与回退尚未验证。
 
 ## 离线实验：模型版本、全局配置与路由要分开回退
 
@@ -177,9 +177,11 @@ release-b 因新 secret 的格式而失败；将 ingress weight 回到 release-a
 
 **参考答案：** probe 可能只检查进程或浅层路径；它不能证明所有业务依赖、身份授权、请求内容、跨区下游或 SLA 均可用。增加针对关键交易的 smoke test 和业务指标门。
 
-**本讲总结：** slot、revision、app-wide configuration 与生产路由是不同对象。逐层验证部署、配置、identity、probe、ingress 和业务请求；回退时分别恢复代码、流量、配置及数据兼容状态。
+## 本讲要点
 
-## Primary references
+slot、revision、app-wide configuration 与生产路由是不同对象。逐层验证部署、配置、identity、probe、ingress 和业务请求；回退时分别恢复代码、流量、配置及数据兼容状态。
+
+## 参考资料
 
 [1] [Deployment slots](https://learn.microsoft.com/en-us/azure/app-service/deploy-staging-slots) · [2] [App Service Health Check](https://learn.microsoft.com/en-us/azure/app-service/monitor-instances-health-check)<br>
 [3] [App Service managed identity](https://learn.microsoft.com/en-us/azure/app-service/overview-managed-identity) · [4] [Container Apps revisions](https://learn.microsoft.com/en-us/azure/container-apps/revisions)<br>

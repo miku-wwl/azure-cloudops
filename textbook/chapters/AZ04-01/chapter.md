@@ -95,7 +95,7 @@ Managed Disk 有自己的 IOPS 与吞吐配额；VM size 也有磁盘 I/O 配额
 5. **分析 VMSS 模型推进。** 比较 VMSS model 与 instance model、升级模式、批次和 health gate。将模式支持性作为独立前提验证。
 6. **分析 I/O 限制。** 同时比较 disk 与 VM 的 IOPS/throughput 边界，并确认 host caching、磁盘集合和观测时间窗。
 
-下面的 Azure CLI 命令只读取一个指定 VM 的 instance view。**它仍会访问 Azure subscription；本讲构建和测试阶段未执行。** 只有未来 Stage 3 L0 已批准的 subscription、resource group、VM 和查询范围内才可运行。该输出也不会自动提供完整的应用或 guest 健康结论。[8]
+下面的 Azure CLI 命令是指定 VM 的只读 instance-view 示例，尚未在 Azure 执行。它显示平台状态，不提供完整的应用或 guest 健康结论；实际使用时应明确限定资源组与 VM。[8]
 
 ~~~bash
 az vm get-instance-view --resource-group <approved-rg> --name <approved-vm>
@@ -103,7 +103,7 @@ az vm get-instance-view --resource-group <approved-rg> --name <approved-vm>
 
 ## Azure Update Manager：评估、补丁环与业务恢复
 
-**目标与环境。** 为两个虚构的独立 Azure VM `pay-a`、`pay-b` 设计一次安全更新。在未来获批的非生产环境，先确认 OS、映像、区域和更新源受支持。两台机器承载同一健康探针，隔离一台后仍须满足容量要求。下面是 Portal 步骤和读取模板，未在 Azure 执行。本章的 Python 实验照常在本地运行，只模拟 VM 证据信号。[9–13]
+**场景与范围。** 为两个虚构的独立 Azure VM `pay-a`、`pay-b` 设计一次安全更新。在非生产环境先确认 OS、映像、区域和更新源受支持；隔离一台后，剩余 VM 仍须满足容量要求。以下 Portal 步骤是配置示例，未在 Azure 执行；Python 实验只模拟 VM 证据信号。[9–13]
 
 | 配置归属 | 在哪里查看或设置 | 如何证明生效 |
 |---|---|---|
@@ -204,9 +204,11 @@ Boot diagnostics 有最新截图，但应用健康扩展为 Unknown。列出两�
 **参考答案：** 截图只证明当时有启动画面；应用未就绪、依赖失败或 probe 配置错误都可能让 endpoint 仍不可达、状态为 Unknown。
 :::
 
-**本讲总结：** 分开读取 power、provisioning、guest、app 和 billing/resource 证据；VMSS desired model 不等于实例已推进，disk 与 VM 各有限额。遇到模式文档冲突时，保留未决项并按当前 API 矩阵复核。
+## 本讲要点
 
-## Primary references
+分开读取 power、provisioning、guest、app 和 billing/resource 证据；VMSS desired model 不等于实例已推进，disk 与 VM 各有限额。遇到模式文档冲突时，保留未决项并按当前 API 矩阵复核。
+
+## 参考资料
 
 [9] [Update Manager prerequisites](https://learn.microsoft.com/en-us/azure/update-manager/prerequisites) · [10] [Scheduled patching](https://learn.microsoft.com/en-us/azure/update-manager/scheduled-patching)<br>
 [11] [Update Manager troubleshooting](https://learn.microsoft.com/en-us/azure/update-manager/troubleshoot) · [12] [Roles and permissions](https://learn.microsoft.com/en-us/azure/update-manager/roles-permissions) · [13] [Update Manager pricing](https://azure.microsoft.com/en-us/pricing/details/azure-update-management-center/)

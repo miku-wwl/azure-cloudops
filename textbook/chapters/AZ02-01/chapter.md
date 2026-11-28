@@ -72,7 +72,7 @@ Azure 先找覆盖目的 IP 的最长（最具体）前缀。若 route table 有
 
 本地诊断时，先写出五元组的两侧端点与每个可见路由上下文：正向源 subnet / 目的 IP、反向源上下文 / 原客户端 IP、预期检查实例。然后对两向分别计算路由。相同的“去程已到达”日志只能证明请求到达某个观测点；没有成功的返回路径，TCP 建连和业务读写仍会失败。
 
-## Worked example：从候选项推出实际下一跳
+## 演算示例：从候选项推出实际下一跳
 
 虚构支付 subnet 有以下候选项：
 
@@ -130,7 +130,7 @@ az network watcher show-next-hop `
 - **前提**：Python 3.11+；本地终端；无需 Azure CLI、身份登录、订阅或容器。
 - **输入**：`labs/route-model/scenarios/banking-hub-spoke.json`，所有地址、VM、NVA 与路由均为合成数据。
 - **方法**：IPv4 前缀包含与窄化的路由选择；遇到特殊 system route 或同优先级多路由时拒绝猜测。
-- **验证**：运行 16 个单元测试，并分别检查 `/24`、`/16`、`/0`、None blackhole、asymmetric 与 symmetric 路径；负例还验证未知 next-hop 拼写和无效 next-hop IP 会被拒绝。
+- **观察**：比较 `/24`、`/16`、`/0` 与更具体路由的下一跳；区分 blackhole 和非对称回程，并确认无效的下一跳字段会被拒绝。
 - **成本与清理**：程序没有 Azure API；不创建网络或其他资源。可删除本地 `__pycache__`。
 :::
 
@@ -144,9 +144,7 @@ Pop-Location
 ~~~
 ::::
 
-**本地观察（2026-11-26，Python 3.13.9）：** 13 个单元测试通过。`172.20.40.15` 选择 `/24` UDR；`172.20.8.15` 选择同前缀 UDR 而不是 BGP；非合作方目的选择 `/0` UDR 而不是 system Internet。返回通过 `10.20.0.8` 的变体被标记 `ASYMMETRIC_AT_STATEFUL_INSPECTOR`；回到 `.4` 的变体被标记 `SYMMETRIC_THROUGH_INSPECTOR`。
-
-**E0 审计复验（2026-11-27）：** 发现模型原先接受拼错的 `next_hop_type`，可能把无效 fixture 当成有效选路；现依官方 next-hop 类型边界拒绝未知值、拒绝非 `VirtualAppliance` 路由上的 `next_hop_ip`，并自动将已知特殊 next-hop 标为不支持而不猜测。新增 3 个负例，16 个测试通过。现有 Azure 行为仍未查询。
+**本地模型输出：** `172.20.40.15` 选择 `/24` UDR；`172.20.8.15` 选择同前缀 UDR 而不是 BGP；非合作方目的选择 `/0` UDR 而不是 system Internet。若回程改走 `10.20.0.8`，模型标记有状态设备路径不对称；回到 `.4` 则路径对称。
 
 ~~~text
 return-via-other-nva:
@@ -164,7 +162,7 @@ return-via-same-nva:
 **模型边界：** 代码只模拟 fixture 明确列出的 IPv4 prefix、普通 system/BGP/UDR 路由和简单下一跳选择。它不建模 Azure NIC effective-route 查询、special VNet/peering/service-endpoint 规则、BGP 收敛、ECMP、路由传播开关、UDR 生效时序、NVA 转发、gateway datapath、NSG、DNS、TCP 建连或真实流量。它没有 Azure 客户端，也不是 emulator；输出只证明给定 JSON 的选择结果。
 ::::
 
-## Fault cards：从具体方向找区分证据
+## 故障卡：从具体方向找区分证据
 
 :::: {.fault title="故障 1｜Next Hop 指向预期 NVA，但 TCP 仍超时"}
 - **症状**：指定 VM 与目的地址的 Next Hop 显示 `VirtualAppliance`，端口连接仍失败。
@@ -190,7 +188,7 @@ return-via-same-nva:
 - **恢复验证**：从两端重新发起连接，观察同一会话在预期检查器上建立并完成，不以单向探测代替。
 ::::
 
-## Exercises：算路由，再选验证方法
+## 练习：算路由，再选验证方法
 
 :::: {.exercise title="练习 1｜重叠路由谁获胜？"}
 一个 subnet 的路由有 `0.0.0.0/0 system → Internet`、`0.0.0.0/0 UDR → NVA .4`、`172.20.0.0/16 BGP → VPN gateway`、`172.20.0.0/16 UDR → NVA .4` 和 `172.20.40.0/24 UDR → NVA .8`。分别计算目的 `172.20.40.15`、`172.20.8.15`、`203.0.113.10` 的路由。若目的 `172.20.40.15` 的 `/24` 改成 `None`，意味着什么？
@@ -236,9 +234,9 @@ Next Hop 是单方向的点查询。有状态网络设备要同时核对去程�
 :::
 ::::
 
-## References 与研究记录
+## 参考资料
 
-本讲于 2026-11-26 查阅 Microsoft Learn 与 Azure CLI 官方文档。路由功能、预览状态、region 和服务支持会变化；真实变更前须重新核对目标 VNet、具体 SKU、传播状态、Next Hop 输出及成本。命令没有在 Azure 环境运行。
+路由功能、预览状态、区域支持与费用会变化；实际配置前应核对目标 VNet 的有效路由、Next Hop、SKU 和成本。
 
 ::: refs
 1. [Virtual network traffic routing](https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-udr-overview) — route table、system/BGP/UDR、longest prefix、同前缀来源优先级、特殊路由和 ECMP preview。

@@ -102,15 +102,13 @@ Azure Well-Architected 的事故管理建议定义角色、升级路径、沟通
 
 从 10:03 UTC 首次失败到 10:21 UTC 完成稳定窗口，合成案例的操作恢复时间为 18 分钟；告警检测延迟为 1 分钟。该时长只描述 fixture 中的事件，不是生产 MTTR、Azure SLA 或真实服务承诺。恢复、修复、RCA 和预防分别记录，避免用一次修复的成功推断所有副作用已消失。
 
-**实测｜发布前停止。** LAB-IR-11 的 Activity Log 记录了 F1 计划创建成功。CLI 响应缺少核验脚本预期的 Linux 字段，脚本在创建应用前中止。修正后从 [ARM 计划详情](https://learn.microsoft.com/en-us/rest/api/appservice/app-service-plans/get?view=rest-appservice-2025-03-01) 核对 `properties.reserved=true`。首次创建请求到确认清理约 126 秒。应用尚未上线，应用故障和恢复时间留空。
+## 因果链演练：从 403 到授权修复
 
-## 调查演练：拿 E03、E05、E06 做一张因果单
+合成案例从 `10:03` 首次失败到 `10:21` 业务验证结束，共 18 分钟，低于 30 分钟目标。Storage 返回 403；对照请求主体、角色变更时间和 container scope 后，发现工作负载使用了新主体，但它没有覆盖目标 Blob 操作的角色。若角色快照晚于失败时间，先按 UTC 对齐事件。再用网络观测与 SQL 遥测排除相似假设；Activity Log 可定位部署或角色变更，应用失败仍需 trace 和 request ID 支持。
 
-**本地合成，已通过现有模型验证。** 从 fixture 读出 `10:03`（首笔失败）与 `10:21`（业务验证结束），算得恢复耗时 18 分钟，低于 30 分钟目标。`E03` 提供关联操作的 Storage 403，`E05` 说明请求用了新主体，`E06` 与该时刻的角色范围对应。若只看到后到的角色快照，优先确认事件时间和主体。用 `E07`/`E08` 缩小网络假设，用 `E09` 查 SQL 的反证。Activity Log 可定位部署或角色变更，应用真实失败需依赖 trace 与 request ID 证明。
+**最小修复与复验。** 由 Storage owner 在目标 container scope 为正确主体设置数据角色（AZ03-01），并用原支付探针、幂等性检查和无关容器的拒绝结果复验。调查时以资源 ID、UTC 窗口和 correlation ID 对齐 Activity Log、资源日志与应用 trace。
 
-**批准最小修复。** 实际企业操作由资源 owner 在 Storage container → Access control (IAM) 为正确主体设置数据角色（AZ03-01），且必须对照审批 scope。用同一支付探针、幂等性与无关容器拒绝结果验证。未来调查可从 Monitor → Activity Log 用资源 ID 与 UTC 过滤，看 Logs 的关联 ID，并只给调查人批准的查询权限。真实日志获取、写权限和更改成本需分别评估；这里不做云端操作。
-
-## 离线事故模型与运行记录
+## 本地事故实验：检验因果和恢复
 
 用 Python 3.11+ 在仓库根目录运行，下列输入只有合成 `fixtures/bank-incident.json`。先预测 scope 修复、探针、数据与 5 分钟稳定窗口的结论，再对照模型输出。若失败，先核对使用的 JSON 和 UTC 时间；复位测试副本即可，无需云清理或费用。
 
@@ -119,28 +117,9 @@ python -m unittest discover -s textbook/chapters/AZ06-02/labs/incident-model -p 
 python textbook/chapters/AZ06-02/labs/incident-model/incident_model.py
 ~~~
 
-运行结果只覆盖合成证据与本地验收规则。Azure Activity Log 由平台自动生成，导出到 workspace 才需诊断设置；具体资源日志和应用遥测走各自采集链，并可能有延迟（AZ03-03、AZ05-02）。原 P7 八项 mandatory local incident 的 `PASS` 依据是各自的本地实验证据。
+运行结果只覆盖合成证据与本地规则。Azure Activity Log 由平台生成；导出到 workspace 才需要诊断设置。资源日志和应用遥测走各自采集链，并可能延迟（AZ03-03、AZ05-02）。
 
-## 对照 V3 的十二项 Incident 合同
-
-下表给出排查入口，不替代 `AZURE_SPECIALTY_ROADMAP.md` 和 `LIVE_LAB_INDEX.md` 中每个 ID 的独立前置条件、受控注入、同探针恢复与清理合同。
-
-| ID | 首要区分证据 | 本地状态要求 |
-|---|---|---|
-| IR-01 Private DNS | FQDN / resolver / IP 与 TCP 分开检查 | Mandatory；同 FQDN 复验 |
-| IR-02 NSG / filtering | DNS 后看有效规则、路径与拒绝 | Mandatory；只恢复必要流量 |
-| IR-03 UDR / route | 有效路由和下一跳，区别 NSG | Design/optional |
-| IR-04 Peering | 两端状态、路由传播与转发设置 | Design/optional |
-| IR-05 身份权限 | token/audience、数据面 403、角色 scope | Mandatory；最小权限 allow/deny |
-| IR-06 Key Vault | 网络、audience、数据权限、secret 状态 | Design/optional |
-| IR-07 镜像拉取 | Pod event：tag、registry auth 或网络 | Mandatory；Ready + 应用探针 |
-| IR-08 Terraform lock / drift | 锁所有者与 plan 差异分别取证 | Mandatory；留锁/plan/范围 |
-| IR-09 Azure Policy | 目标 scope、assignment、effect、deny | Design/optional |
-| IR-10 Alert failure | 输入、规则求值、状态与通知分开查 | Mandatory；同故障再触发 |
-| IR-11 Deployment regression | 版本、同探针、数据兼容 | Mandatory；回退后同探针 |
-| IR-12 Data loss / restore | 原 checksum/数量、隔离恢复、读回 | Mandatory；RPO/RTO + cleanup |
-
-### 事故复盘练习
+## 事故复盘练习
 
 1. 若 `rates` 的 Resource Logs 没有返回记录，但 Application Insights trace 有一个 Storage 403，你会把资源日志的缺失标为反证还是未知？还要核实哪些数据源配置和时间范围？
 2. `Resource Health = Available` 是否足以关闭“Azure 平台问题”假设？写出一个更准确的结论和一条后续检查。
@@ -148,6 +127,10 @@ python textbook/chapters/AZ06-02/labs/incident-model/incident_model.py
 4. 若容器级角色修复通过同探针，但重复幂等键写出两条支付记录，事故可否关闭？按本讲验收门解释。
 
 **参考答案：** (1) 未知；核对诊断设置、类别/模式、时间窗与关联 ID。(2) 不足；只记录快照未见匹配事件，继续查 Service Health 和业务路径。(3) trace 中的 403、主体映射和缺失角色是直接证据；补精确角色后同一请求成功才是受控复验。(4) 不可关闭；账本重复记录表示业务完整性未恢复。
+
+## 本讲要点
+
+先按 UTC 和 request/correlation ID 建立时间线，再让竞争假设给出可证伪预测。修复应只改变已确认边界，并用同一业务探针、数据完整性和负向权限检查证明恢复；合成案例与云端观测要分开陈述。
 
 ## 参考资料
 

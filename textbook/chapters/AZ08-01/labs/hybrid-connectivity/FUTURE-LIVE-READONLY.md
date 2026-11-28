@@ -1,12 +1,12 @@
 # Future Azure observation runbook (read-only)
 
-**Status: NOT_RUN.** This is a future plan for an owner-authorized, existing hybrid topology. It creates, updates, tests, disconnects, or deletes no Azure resource. Do not run it until the Stage 3 L0 scope, identity, exact subscription/resource allowlist, and query budget have been approved.
+**未来授权的只读练习；尚未执行。** 仅适用于已有混合网络拓扑；不会创建、更新、测试、断开或删除 Azure 资源。执行前由资源 owner 明确批准身份、订阅与资源范围、查询目的和数据处理方式。
 
 ## Aim and prerequisites
 
 Observe a single, already existing path from an approved workload spoke to an approved branch prefix, and its DNS lookups in both directions. Prefer a nonproduction fixture with an approved private FQDN. Do not use a live payment or customer name unless the data owner authorizes the query. Record an opaque case ID, UTC time, source subnet/NIC, destination prefix, DNS query name, and intended resolver path. Keep resource IDs, IPs, customer names, and command output in the approved local evidence store; redact before sharing.
 
-Prerequisites are an owner-provided subscription/resource-group/VNet/NIC/gateway/resolver inventory; Azure CLI installed; the `dns-resolver` extension already present if its commands are needed; a corporate-side DNS client and an approved Azure-side test client already available; and explicit authorization to issue the exact management-plane reads and DNS questions listed below. Do not install an extension, change CLI context, sign in, enumerate subscriptions, or test DNS until the L0 instructions authorize those steps. The current Microsoft Learn CLI reference says `dns-resolver` commands require Azure CLI 2.75.0 or later and auto-install the extension on first use; check and approve that local change separately.
+Prerequisites are an owner-provided subscription/resource-group/VNet/NIC/gateway/resolver inventory; Azure CLI installed; the `dns-resolver` extension already present if its commands are needed; a corporate-side DNS client and an approved Azure-side test client already available; and explicit authorization to issue the management-plane reads and DNS questions listed below. Do not install an extension, change CLI context, sign in, enumerate subscriptions, or test DNS until the authorization record explicitly includes those steps. The current Microsoft Learn CLI reference says `dns-resolver` commands require Azure CLI 2.75.0 or later and auto-install the extension on first use; check and approve that local change separately.
 
 ## Permission boundary
 
@@ -16,7 +16,7 @@ The permission strings above are source-analysed from [Azure permissions for Net
 
 ## Read-only Azure CLI observations
 
-Fill placeholders from the approved scope outside the repository. Run only those commands that are on the L0 allowlist. The first commands read paired peering settings; the next commands read BGP session/learned-prefix state and effective routes on an already-running NIC. These do not modify configuration.
+Fill placeholders from the approved scope outside the repository. Run only those commands that are on the approved resource allowlist. The first commands read paired peering settings; the next commands read BGP session/learned-prefix state and effective routes on an already-running NIC. These do not modify configuration.
 
 ```powershell
 $subscription = '<approved-subscription-id>'

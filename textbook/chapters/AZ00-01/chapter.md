@@ -74,7 +74,7 @@ Resource Provider 是一组面向 Azure resource types 的 REST operations。例
 
 ### 只读检查示例
 
-下面的命令会查询订阅里的 Provider 元数据。它是命令参考，不是本次执行记录；运行前需要一个已授权的登录会话和相应读权限。本任务没有调用 Azure CLI、切换默认订阅或注册 Provider。
+下列命令用于检查当前订阅的 Provider 元数据。执行前确认 Azure CLI 登录上下文与订阅范围，并具备读取权限；查询不会注册或更改 Provider。
 
 ~~~powershell
 # 先用只读方式检查当前上下文；不要静默切换订阅
@@ -86,7 +86,7 @@ az provider show --namespace Microsoft.Storage --query "{state:registrationState
 
 第一条命令会输出敏感的 tenant 与 subscription 标识。不要把原始响应写入 Git、截图或公开日志。若只看注册状态，仍须进一步针对实际 resource type 检查 API version 与 locations。生产工具宜要求调用者明确目标 subscription，避免读取隐式默认上下文后让操作落到另一个订阅。
 
-## Worked example：一个资源部署失败，先沿证据分叉
+## 演算示例：一个资源部署失败，先沿证据分叉
 
 假设 pipeline 想创建一个 Private DNS Zone，收到错误 MissingSubscriptionRegistration。团队不应先提高权限或在 tenant 范围注册多个 Provider，而应先确认请求的 ARM subscription scope 与实际目标，然后用只读 API检查：
 
@@ -135,7 +135,7 @@ az provider show --namespace Microsoft.Storage --query "{state:registrationState
 
 ## 配置演练：在准入表里写清每项资源归属
 
-**练习边界。** 用本讲下方的合成管理组树规划一个支付开发环境，先为 `rg-pay-dev` 填管理单，再用本地模型核对继承。Portal 路径供未来获批查看，当前未操作 Azure。
+**练习。** 用下方的合成管理组树规划支付开发环境，为 `rg-pay-dev` 填写管理单，再用本地模型核对继承。Portal 路径帮助你熟悉配置位置。
 
 | 对象 | Portal 配置位置与字段 | 预期与故障证据 |
 |---|---|---|
@@ -153,8 +153,7 @@ az provider show --namespace Microsoft.Storage --query "{state:registrationState
 - **前提**：Python 3.11+；无需 Azure CLI 登录、订阅或第三方依赖。
 - **输入**：scenarios/banking-lz.json，全部为虚构 scope、principal 和操作。
 - **架构**：root management group → platform/workload management groups → subscription → resource group → resource。
-- **变更**：只执行纯 Python 计算；不访问网络，不创建 Azure 资源。
-- **验证状态**：LOCAL_VERIFIED：2026-11-26 在本机 Python 3.13.9 上执行 7/7 单元测试；它不验证 Azure RBAC enforcement。
+- **实验范围**：本地 Python 模型只计算合成数据中的继承关系。
 - **成本与清理**：Azure 增量费用 USD 0；运行后无云端或本地服务需要清理。
 :::
 
@@ -167,20 +166,18 @@ python scope_model.py
 
 先预测 dev-operators 能否读取开发 Storage Account 的 Blob、生产 Blob，以及能否修改 Storage Account 控制面配置。
 
-**实际观察（本机 Python 3.13.9，2026-11-26）：**7 项单元测试全部通过。程序输出显示开发资源上的 fixture 的 DevNetworkOperator 与 Storage Blob Data Reader 分别命中 Actions 和 DataActions；生产订阅没有继承开发 RG 角色。root 管理组的 Reader 则沿 fixture 的祖先链到达生产资源。
+**演练观察：**程序输出显示开发资源上的 fixture 的 DevNetworkOperator 与 Storage Blob Data Reader 分别命中 Actions 和 DataActions；生产订阅没有继承开发 RG 角色。root 管理组的 Reader 则沿 fixture 的祖先链到达生产资源。
 
 ~~~text
-Ran 7 tests in 0.004s
-OK
 dev-operators -> storage-dev [control] Microsoft.Storage/storageAccounts/read: ALLOW; grants=DevNetworkOperator (illustrative)@rg-dev
 dev-operators -> storage-dev [data] Microsoft.Storage/storageAccounts/blobServices/containers/blobs/read: ALLOW; grants=Storage Blob Data Reader@storage-dev
 dev-operators -> storage-prod [control] Microsoft.Network/virtualNetworks/write: NO MATCH; grants=none
 platform-auditors -> storage-prod [control] Microsoft.Resources/subscriptions/read: ALLOW; grants=Reader@tenant-root
 ~~~
 
-本地代码的结果只描述输入 fixture。换一套 parent 或 role assignment，模型就会得出另一结果。它不是 az role assignment list 的替代，也没有伪装成订阅的真实观察。Azure subscription 授权、Provider 注册和 resource provider operation 在本讲都没有执行；它们仍是 LIVE_NOT_RUN。
+本地模型只说明给定 fixture 的继承结果，不能代替实际订阅中的 role assignment 检查。订阅查询和 Provider 注册在本讲仅作为文档示例。
 
-## Fault cards：把相似报错拆成可验证假设
+## 故障卡：把相似报错拆成可验证假设
 
 ::: {.fault title="故障 1｜NoRegisteredProviderFound"}
 - **症状**：部署报 Provider 未注册、API version 不支持或 location 无匹配。
@@ -206,7 +203,7 @@ platform-auditors -> storage-prod [control] Microsoft.Resources/subscriptions/re
 - **恢复验证**：确认 operation 与 resource state 成功，并使用工作负载探针验证预期行为。
 :::
 
-## Exercises：用 scope 和状态推理
+## 练习：用 scope 和状态推理
 
 ::: {.exercise title="练习 1｜订阅放在哪一层？"}
 一个平台团队维护共享 DNS、监控和网络连接；三个业务单元各自有 Dev 与 Prod。要求平台能维护共享能力，业务单元负责 workload，Prod 与 Dev 的预算和配额不得相互隐藏。请给出一个 management-group / subscription 边界草图，并指出哪些差异不应靠增加 management group 表达。
@@ -252,9 +249,7 @@ scope_model.py 是 allow-only 教学模型。它能让继承和兄弟 scope 边�
 :::
 ::::
 
-## 参考资料与研究记录
-
-本讲使用 Microsoft Learn 官方文档独立核查 Azure 行为。访问日期：2026-11-26。文中把官方 contract、架构建议与本地 fixture 结果分开标注。
+## 参考资料
 
 ::: refs
 1. [Azure Resource Manager overview](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/overview) · [Control plane and data plane](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/control-plane-and-data-plane)
@@ -263,4 +258,4 @@ scope_model.py 是 allow-only 教学模型。它能让继承和兄弟 scope 边�
 4. [Azure landing zones](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/) · [Management groups](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/design-area/resource-org-management-groups) · [Subscription design](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/design-area/resource-org-subscriptions)
 5. [Azure RBAC scope](https://learn.microsoft.com/en-us/azure/role-based-access-control/scope-overview) · [Azure Policy scope](https://learn.microsoft.com/en-us/azure/governance/policy/concepts/scope)
 :::
-图为原创原理示意。本讲给出已验证的本地结果；其中的订阅查询和 provider 注册是文档示例。历史只读范围见 [L0 记录](../../L0_READ_ONLY_PREFLIGHT.md)。
+图为机制示意。本地 fixture 结果与订阅行为分开；本文中的订阅查询和 Provider 注册命令仅作配置参考。

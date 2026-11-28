@@ -104,7 +104,7 @@ Deny 与 Enforce 只适用于一部分 Azure recommendations。Deny 依 Azure Po
 
 ![图 9-3｜Defender 提供姿态评估，只有选定配置才路由到 Azure Policy enforcement](figures/defender-policy-bridge.svg)
 
-## Worked example：同一个账户，四种不同的证据
+## 演算示例：同一个账户，四种不同的证据
 
 某团队创建名为 stledgerprod 的 Storage account，设置为允许 public network。组织在上级 scope 配置一项 Audit assignment。创建请求成功后，Azure Policy 将配置标成 non-compliant；Defender for Cloud 也可能出现相应的 MCSB recommendation。此时 Activity Log 可帮助确认 ARM write 是否开始、由谁执行、结果如何，但不能证明读取了哪一个 blob。
 
@@ -114,7 +114,7 @@ Deny 与 Enforce 只适用于一部分 Azure recommendations。Deny 依 Azure Po
 
 ## 配置演练：将公共 Blob 风险先纳入审计
 
-**未来获批 Azure 配置，未执行。** 在 Portal → Policy → Assignments → Assign policy，先选测试 RG、适用的 Storage 策略定义与参数。检查 assignment 的 `scope`、`policyDefinitionId`、`parameters`、`notScopes` 和 `enforcementMode`。若想评估 Deny 的影响，可用 `DoNotEnforce` 预览评估，也可另选支持的 Audit effect。前者是分配行为，后者来自策略定义或其参数。
+**配置示例（未执行）。** 在 Portal → Policy → Assignments → Assign policy 中选测试 RG、Storage 策略定义与参数。检查 assignment 的 `scope`、`policyDefinitionId`、`parameters`、`notScopes` 和 `enforcementMode`。评估 Deny 的影响可用 `DoNotEnforce` 预览，也可选择支持的 Audit effect；前者是分配行为，后者来自策略定义或参数。
 
 **先预测。** 已存在的帐户评估为 Non-compliant，且在 `DoNotEnforce` 下提交可成功，符合配置。去 Policy → Compliance 查看 assignment ID、资源 ID、评估时间与具体属性，再用 Activity Log 查同一资源操作与 UTC 时间、status 和 correlation ID。下方模型可先演算 Deny/Audit/数据面操作。先修测试帐户的单个属性并等待评估刷新，再看相同范围。Defender 建议与付费 plan 分开查；练习不需要开启收费计划。
 
@@ -150,15 +150,15 @@ defender-deny-enabled: REQUEST_ENFORCEMENT_VIA_AZURE_POLICY_DENY
 
 ## 只读诊断模板：在逐项获批的范围执行
 
-历史 L0 已在限定范围完成只读验证，见 [L0 只读记录](../../L0_READ_ONLY_PREFLIGHT.md)。本轮只阅读记录；以下命令模板未执行。未来使用时仍需明确批准命令、主体、scope 和最短 UTC 时间窗。
+以下是只读诊断模板，尚未在 Azure 执行。使用前应明确主体、资源 scope 与最短有用的 UTC 时间窗。
 
 ~~~powershell
-# 观察一个资源最近的 Policy compliance state（仅在获批的 L0 scope 内执行）
+# 查询一个资源最近的 Policy compliance state（限于获批的资源范围）
 az policy state list `
   --resource "/subscriptions/<approved-subscription>/resourceGroups/<approved-rg>/providers/Microsoft.Storage/storageAccounts/<approved-account>" `
   --top 50
 
-# 观察一个 resource group 最近的 ARM Activity Log（仅在获批的 L0 scope 内执行）
+# 查询一个 resource group 最近的 ARM Activity Log（限于获批的资源范围）
 az monitor activity-log list `
   --resource-group "<approved-resource-group>" `
   --offset 7d `
@@ -210,9 +210,11 @@ Defender for Cloud 显示 MCSB recommendation；门户摘要分数下周变高�
 确认该 recommendation 支持 Deny；找到对应 Policy definition 与有效 assignment，核对 effect、scope、条件、资源类型和请求执行路径；再用获批的具体请求结果或 Policy event/compliance details 验证。Secure Score 是姿态摘要，且不同门户模型不相同；分值变化不能证明某个 request-time Deny 生效。
 ::::
 
-**本讲总结：** Policy effect 决定规则怎样作用于请求与现有资源；Activity Log 只覆盖它定义的管理事件边界；Defender recommendation 需与实际 enforcement 配置分开验证。用和问题匹配的日志源、assignment 与请求证据，避免从分数或日志缺项推出超出证据的结论。
+## 本讲要点
 
-## Primary references
+Policy effect 决定规则怎样作用于请求与现有资源；Activity Log 只覆盖它定义的管理事件边界；Defender recommendation 需与实际 enforcement 配置分开验证。用和问题匹配的日志源、assignment 与请求证据，避免从分数或日志缺项推出超出证据的结论。
+
+## 参考资料
 
 [附] [Policy assignment structure](https://learn.microsoft.com/en-us/azure/governance/policy/concepts/assignment-structure)
 
